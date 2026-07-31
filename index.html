@@ -1,54 +1,74 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>SSC Exam Explorer</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+    }
+  </script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
   <style>
     body { font-family: 'Inter', sans-serif; }
     .folder-card, .quiz-card { transition: all 0.2s ease-in-out; }
   </style>
 </head>
-<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col">
+<body class="bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-100 min-h-screen flex flex-col transition-colors duration-300">
 
   <!-- Header -->
-  <header class="border-b border-slate-800/80 bg-slate-900/50 backdrop-blur-md sticky top-0 z-50">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-      <div class="flex items-center gap-3">
-        <div class="w-9 h-9 rounded-xl bg-indigo-600/20 text-indigo-400 flex items-center justify-center font-bold text-lg border border-indigo-500/30">
+  <header class="border-b border-slate-200 dark:border-slate-800/80 bg-white/70 dark:bg-slate-900/50 backdrop-blur-md sticky top-0 z-50 transition-colors duration-300">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-3">
+      
+      <div class="flex items-center gap-3 min-w-0">
+        <div class="w-9 h-9 shrink-0 rounded-xl bg-indigo-600/10 dark:bg-indigo-600/20 text-indigo-600 dark:text-indigo-400 flex items-center justify-center font-bold text-lg border border-indigo-500/20 dark:border-indigo-500/30">
           📂
         </div>
-        <div>
-          <h1 class="text-base font-semibold text-white tracking-wide">SSC Quiz Explorer</h1>
-          <p class="text-xs text-slate-400">Dynamic Hierarchy Explorer</p>
+        <div class="truncate">
+          <h1 class="text-base font-semibold text-slate-900 dark:text-white tracking-wide truncate">SSC Quiz Explorer</h1>
+          <p class="text-xs text-slate-500 dark:text-slate-400 truncate">Dynamic Hierarchy Explorer</p>
         </div>
       </div>
 
-      <!-- Quick Search Bar -->
-      <div class="relative w-48 sm:w-64">
-        <input 
-          type="text" 
-          id="searchInput" 
-          placeholder="Search any quiz or file..." 
-          oninput="handleSearch()" 
-          class="w-full bg-slate-900 border border-slate-800 rounded-lg px-3 py-1.5 text-xs text-slate-200 placeholder-slate-500 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
-        />
+      <!-- Controls Right: Search + Theme Toggle -->
+      <div class="flex items-center gap-3">
+        <!-- Quick Search Bar -->
+        <div class="relative w-36 sm:w-64">
+          <input 
+            type="text" 
+            id="searchInput" 
+            placeholder="Search quiz..." 
+            oninput="handleSearch()" 
+            class="w-full bg-slate-100 dark:bg-slate-900 border border-slate-300 dark:border-slate-800 rounded-lg px-3 py-1.5 text-xs text-slate-800 dark:text-slate-200 placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-colors"
+          />
+        </div>
+
+        <!-- Day/Night Theme Toggle Button -->
+        <button 
+          id="themeToggleBtn"
+          onclick="toggleTheme()" 
+          title="Toggle Day/Night Theme"
+          class="p-2 rounded-xl border border-slate-300 dark:border-slate-800 bg-slate-100 dark:bg-slate-900 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-800 transition-all flex items-center justify-center shrink-0"
+        >
+          <span id="themeIcon" class="text-sm">🌙</span>
+        </button>
       </div>
+
     </div>
   </header>
 
   <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-1 w-full">
     
     <!-- Breadcrumb Navigation Bar -->
-    <nav id="breadcrumbBar" class="flex items-center flex-wrap gap-2 mb-8 bg-slate-900/60 p-3 rounded-xl border border-slate-800/80 text-xs">
+    <nav id="breadcrumbBar" class="flex items-center flex-wrap gap-2 mb-8 bg-white dark:bg-slate-900/60 p-3 rounded-xl border border-slate-200 dark:border-slate-800/80 text-xs shadow-sm dark:shadow-none transition-colors">
       <!-- Injected via JavaScript -->
     </nav>
 
     <!-- Folder Navigation Section -->
     <section id="folderSection" class="mb-10">
-      <h2 class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-4">Folders</h2>
+      <h2 class="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-4">Folders</h2>
       <div id="folderGrid" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
         <!-- Injected via JavaScript -->
       </div>
@@ -56,7 +76,7 @@
 
     <!-- Quiz Files Section -->
     <section id="fileSection">
-      <h2 class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-4">Quiz Websites</h2>
+      <h2 class="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-4">Quiz Websites</h2>
       <div id="fileGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         <!-- Injected via JavaScript -->
       </div>
@@ -65,17 +85,17 @@
   </main>
 
   <!-- Embedded Modal View -->
-  <div id="quizModal" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md z-50 hidden flex flex-col">
-    <div class="p-4 bg-slate-900 border-b border-slate-800 flex items-center justify-between">
-      <h3 id="modalTitle" class="text-sm font-semibold text-white truncate">Quiz Title</h3>
-      <button onclick="closeQuizModal()" class="px-3 py-1 bg-red-600/20 hover:bg-red-600/30 text-red-400 text-xs rounded-lg border border-red-500/30 transition-colors">
+  <div id="quizModal" class="fixed inset-0 bg-slate-900/60 dark:bg-slate-950/90 backdrop-blur-md z-50 hidden flex flex-col">
+    <div class="p-4 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between shadow-sm">
+      <h3 id="modalTitle" class="text-sm font-semibold text-slate-900 dark:text-white truncate">Quiz Title</h3>
+      <button onclick="closeQuizModal()" class="px-3 py-1 bg-red-500/10 hover:bg-red-500/20 text-red-600 dark:text-red-400 text-xs rounded-lg border border-red-500/20 transition-colors">
         ✕ Close Quiz
       </button>
     </div>
     <iframe id="quizIframe" class="w-full flex-1 border-0" src=""></iframe>
   </div>
 
-  <footer class="border-t border-slate-800/60 py-4 text-center text-xs text-slate-500">
+  <footer class="border-t border-slate-200 dark:border-slate-800/60 py-4 text-center text-xs text-slate-500 dark:text-slate-500 transition-colors">
     SSC Exam Explorer • Hierarchical Folder System
   </footer>
 
@@ -160,10 +180,36 @@
 ];
     // AUTO-GENERATED-END
 
-    // Current folder state array, e.g. ["Subjects", "Maths", "Algebra"]
+    // Theme Toggle Functionality
+    function initTheme() {
+      const savedTheme = localStorage.getItem('theme');
+      if (savedTheme === 'light') {
+        document.documentElement.classList.remove('dark');
+        document.getElementById('themeIcon').innerText = '☀️';
+      } else {
+        document.documentElement.classList.add('dark');
+        document.getElementById('themeIcon').innerText = '🌙';
+      }
+    }
+
+    function toggleTheme() {
+      const isDark = document.documentElement.classList.contains('dark');
+      if (isDark) {
+        document.documentElement.classList.remove('dark');
+        localStorage.setItem('theme', 'light');
+        document.getElementById('themeIcon').innerText = '☀️';
+      } else {
+        document.documentElement.classList.add('dark');
+        localStorage.setItem('theme', 'dark');
+        document.getElementById('themeIcon').innerText = '🌙';
+      }
+    }
+
+    // Current folder state array
     let currentPath = [];
 
     function initExplorer() {
+      initTheme();
       renderExplorer();
     }
 
@@ -180,7 +226,7 @@
       // Root Home Button
       const homeBtn = document.createElement('button');
       homeBtn.onclick = () => navigateToFolder([]);
-      homeBtn.className = `px-2.5 py-1 rounded-lg hover:bg-slate-800 transition-colors ${currentPath.length === 0 ? 'text-indigo-400 font-semibold' : 'text-slate-400'}`;
+      homeBtn.className = `px-2.5 py-1 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors ${currentPath.length === 0 ? 'text-indigo-600 dark:text-indigo-400 font-semibold' : 'text-slate-500 dark:text-slate-400'}`;
       homeBtn.innerHTML = `🏠 Root`;
       bar.appendChild(homeBtn);
 
@@ -191,14 +237,14 @@
         const targetPath = [...pathAccumulator];
         
         const separator = document.createElement('span');
-        separator.className = 'text-slate-600';
+        separator.className = 'text-slate-400 dark:text-slate-600';
         separator.innerText = '/';
         bar.appendChild(separator);
 
         const folderBtn = document.createElement('button');
         folderBtn.onclick = () => navigateToFolder(targetPath);
         const isLast = index === currentPath.length - 1;
-        folderBtn.className = `px-2 py-1 rounded-lg hover:bg-slate-800 transition-colors ${isLast ? 'text-indigo-400 font-semibold bg-indigo-500/10' : 'text-slate-400'}`;
+        folderBtn.className = `px-2 py-1 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors ${isLast ? 'text-indigo-600 dark:text-indigo-400 font-semibold bg-indigo-50 dark:bg-indigo-500/10' : 'text-slate-500 dark:text-slate-400'}`;
         folderBtn.innerText = folderName;
         bar.appendChild(folderBtn);
       });
@@ -247,12 +293,12 @@
         subfolders.forEach(subfolder => {
           const card = document.createElement('div');
           card.onclick = () => navigateToFolder([...currentPath, subfolder]);
-          card.className = "folder-card bg-slate-900/80 border border-slate-800 rounded-xl p-4 flex items-center gap-3 cursor-pointer hover:border-indigo-500/50 hover:bg-slate-900 hover:shadow-lg";
+          card.className = "folder-card bg-white dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 rounded-xl p-4 flex items-center gap-3 cursor-pointer hover:border-indigo-500/50 dark:hover:border-indigo-500/50 hover:shadow-md dark:hover:shadow-lg transition-all";
           card.innerHTML = `
             <div class="text-2xl">📁</div>
             <div class="truncate">
-              <h3 class="text-xs font-semibold text-white truncate">${subfolder}</h3>
-              <p class="text-[10px] text-slate-500">Folder</p>
+              <h3 class="text-xs font-semibold text-slate-800 dark:text-white truncate">${subfolder}</h3>
+              <p class="text-[10px] text-slate-400 dark:text-slate-500">Folder</p>
             </div>
           `;
           folderGrid.appendChild(card);
@@ -263,7 +309,7 @@
       if (filesAtThisLevel.length === 0) {
         if (subfolders.length === 0) {
           fileGrid.innerHTML = `
-            <div class="col-span-full py-12 text-center text-slate-500 text-sm">
+            <div class="col-span-full py-12 text-center text-slate-400 dark:text-slate-500 text-sm">
               This folder is empty.
             </div>
           `;
@@ -274,24 +320,24 @@
         fileSection.classList.remove('hidden');
         filesAtThisLevel.forEach(file => {
           const card = document.createElement('div');
-          card.className = "quiz-card bg-slate-900/80 border border-slate-800/80 rounded-xl p-5 flex flex-col justify-between hover:border-slate-700 hover:shadow-xl";
+          card.className = "quiz-card bg-white dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800/80 rounded-xl p-5 flex flex-col justify-between hover:border-slate-300 dark:hover:border-slate-700 shadow-sm dark:shadow-none hover:shadow-md transition-all";
           card.innerHTML = `
             <div>
               <div class="flex items-center gap-2 mb-2">
                 <span class="text-lg">📄</span>
-                <span class="text-[10px] text-indigo-400 bg-indigo-500/10 px-2 py-0.5 rounded border border-indigo-500/20 font-mono">Quiz Page</span>
+                <span class="text-[10px] text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-500/10 px-2 py-0.5 rounded border border-indigo-200 dark:border-indigo-500/20 font-mono">Quiz Page</span>
               </div>
-              <h3 class="text-sm font-semibold text-white mb-2">${file.title}</h3>
-              <p class="text-[11px] text-slate-500 font-mono truncate mb-4" title="${file.path}">${file.path}</p>
+              <h3 class="text-sm font-semibold text-slate-800 dark:text-white mb-2">${file.title}</h3>
+              <p class="text-[11px] text-slate-400 dark:text-slate-500 font-mono truncate mb-4" title="${file.path}">${file.path}</p>
             </div>
             
             <div class="grid grid-cols-2 gap-2">
               <button onclick="openQuizModal('${file.path}', '${file.title}')" 
-                 class="inline-flex items-center justify-center bg-indigo-600/20 hover:bg-indigo-600 text-indigo-300 hover:text-white text-xs font-medium py-2 rounded-lg transition-colors border border-indigo-500/30">
+                 class="inline-flex items-center justify-center bg-indigo-50 dark:bg-indigo-600/20 hover:bg-indigo-600 text-indigo-600 dark:text-indigo-300 hover:text-white text-xs font-medium py-2 rounded-lg transition-colors border border-indigo-200 dark:border-indigo-500/30">
                 Modal View
               </button>
               <a href="${file.path}" target="_self" 
-                 class="inline-flex items-center justify-center bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-medium py-2 rounded-lg transition-colors border border-slate-700">
+                 class="inline-flex items-center justify-center bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 text-xs font-medium py-2 rounded-lg transition-colors border border-slate-200 dark:border-slate-700">
                 Direct Link
               </a>
             </div>
@@ -321,25 +367,25 @@
       );
 
       if (searchResults.length === 0) {
-        fileGrid.innerHTML = `<div class="col-span-full py-12 text-center text-slate-500 text-sm">No quizzes found matching "${query}".</div>`;
+        fileGrid.innerHTML = `<div class="col-span-full py-12 text-center text-slate-400 dark:text-slate-500 text-sm">No quizzes found matching "${query}".</div>`;
         return;
       }
 
       searchResults.forEach(file => {
         const card = document.createElement('div');
-        card.className = "quiz-card bg-slate-900/80 border border-slate-800/80 rounded-xl p-5 flex flex-col justify-between hover:border-slate-700";
+        card.className = "quiz-card bg-white dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800/80 rounded-xl p-5 flex flex-col justify-between hover:border-slate-300 dark:hover:border-slate-700 shadow-sm dark:shadow-none transition-all";
         card.innerHTML = `
           <div>
             <div class="flex items-center gap-2 mb-2">
               <span class="text-lg">🔍</span>
-              <span class="text-[10px] text-slate-400 font-mono">${file.folders.join(' / ')}</span>
+              <span class="text-[10px] text-slate-500 dark:text-slate-400 font-mono">${file.folders.join(' / ')}</span>
             </div>
-            <h3 class="text-sm font-semibold text-white mb-2">${file.title}</h3>
-            <p class="text-[11px] text-slate-500 font-mono truncate mb-4">${file.path}</p>
+            <h3 class="text-sm font-semibold text-slate-800 dark:text-white mb-2">${file.title}</h3>
+            <p class="text-[11px] text-slate-400 dark:text-slate-500 font-mono truncate mb-4">${file.path}</p>
           </div>
           <div class="grid grid-cols-2 gap-2">
-            <button onclick="openQuizModal('${file.path}', '${file.title}')" class="bg-indigo-600/20 hover:bg-indigo-600 text-indigo-300 hover:text-white text-xs font-medium py-2 rounded-lg border border-indigo-500/30">Modal View</button>
-            <a href="${file.path}" class="bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-medium py-2 rounded-lg text-center border border-slate-700">Direct Link</a>
+            <button onclick="openQuizModal('${file.path}', '${file.title}')" class="bg-indigo-50 dark:bg-indigo-600/20 hover:bg-indigo-600 text-indigo-600 dark:text-indigo-300 hover:text-white text-xs font-medium py-2 rounded-lg border border-indigo-200 dark:border-indigo-500/30 transition-colors">Modal View</button>
+            <a href="${file.path}" class="bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 text-xs font-medium py-2 rounded-lg text-center border border-slate-200 dark:border-slate-700 transition-colors">Direct Link</a>
           </div>
         `;
         fileGrid.appendChild(card);
