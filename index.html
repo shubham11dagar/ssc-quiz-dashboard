@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SSC Exam Dashboard</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+    .subject-btn, .quiz-card { transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1); }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col">
+
+  <header class="border-b border-slate-800/80 bg-slate-900/50 backdrop-blur-md sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="w-9 h-9 rounded-xl bg-indigo-600/20 text-indigo-400 flex items-center justify-center font-bold text-lg border border-indigo-500/30">
+          ⚡
+        </div>
+        <div>
+          <h1 class="text-base font-semibold text-white tracking-wide">SSC Prep Dashboard</h1>
+          <p class="text-xs text-slate-400">Automated Static Quiz Hub</p>
+        </div>
+      </div>
+
+      <div class="relative w-48 sm:w-64">
+        <input 
+          type="text" 
+          id="searchInput" 
+          placeholder="Search topic or path..." 
+          oninput="renderQuizzes()" 
+          class="w-full bg-slate-900 border border-slate-800 rounded-lg px-3 py-1.5 text-xs text-slate-200 placeholder-slate-500 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
+        />
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-1 w-full">
+    <section class="mb-10">
+      <div class="flex items-center justify-between mb-4">
+        <h2 class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Select Subject</h2>
+      </div>
+      <div id="subjectGrid" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3"></div>
+    </section>
+
+    <section>
+      <div class="flex items-center justify-between mb-4">
+        <h2 id="currentCategoryTitle" class="text-lg font-semibold text-white">All Quizzes</h2>
+        <span id="quizCountTag" class="text-xs bg-slate-800 text-slate-300 px-2.5 py-1 rounded-full border border-slate-700">0 Quizzes</span>
+      </div>
+
+      <div id="quizGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+    </section>
+  </main>
+
+  <div id="quizModal" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md z-50 hidden flex flex-col">
+    <div class="p-4 bg-slate-900 border-b border-slate-800 flex items-center justify-between">
+      <h3 id="modalTitle" class="text-sm font-semibold text-white truncate">Quiz Title</h3>
+      <button onclick="closeQuizModal()" class="px-3 py-1 bg-red-600/20 hover:bg-red-600/30 text-red-400 text-xs rounded-lg border border-red-500/30 transition-colors">
+        ✕ Close Quiz
+      </button>
+    </div>
+    <iframe id="quizIframe" class="w-full flex-1 border-0" src=""></iframe>
+  </div>
+
+  <footer class="border-t border-slate-800/60 py-4 text-center text-xs text-slate-500">
+    SSC Exam Prep Hub • Automatically Synced via GitHub Actions
+  </footer>
+
+  <script>
+    // AUTO-GENERATED-START
+    const autoScannedQuizzes = [];
+    // AUTO-GENERATED-END
+
+    let activeSubject = "ALL";
+
+    function initDashboard() {
+      renderSubjects();
+      renderQuizzes();
+    }
+
+    function getUniqueSubjects() {
+      const subjects = new Set(autoScannedQuizzes.map(q => q.subject));
+      return ["ALL", ...Array.from(subjects)];
+    }
+
+    function renderSubjects() {
+      const subjectGrid = document.getElementById('subjectGrid');
+      subjectGrid.innerHTML = '';
+      const subjects = getUniqueSubjects();
+
+      subjects.forEach(subj => {
+        const isActive = subj === activeSubject;
+        const btn = document.createElement('button');
+        btn.onclick = () => selectSubject(subj);
+        
+        btn.className = `subject-btn flex items-center justify-between p-3 rounded-xl border text-left cursor-pointer ${
+          isActive 
+            ? 'bg-indigo-600/10 border-indigo-500 text-white shadow-lg shadow-indigo-500/10' 
+            : 'bg-slate-900/60 border-slate-800 text-slate-400 hover:bg-slate-800/60 hover:border-slate-700'
+        }`;
+
+        const count = subj === "ALL" ? autoScannedQuizzes.length : autoScannedQuizzes.filter(q => q.subject === subj).length;
+
+        btn.innerHTML = `
+          <span class="text-xs font-medium truncate">${subj}</span>
+          <span class="text-[10px] bg-slate-800 text-slate-400 px-1.5 py-0.5 rounded border border-slate-700">${count}</span>
+        `;
+        subjectGrid.appendChild(btn);
+      });
+    }
+
+    function selectSubject(subjectName) {
+      activeSubject = subjectName;
+      renderSubjects();
+      renderQuizzes();
+    }
+
+    function renderQuizzes() {
+      const quizGrid = document.getElementById('quizGrid');
+      const searchQuery = document.getElementById('searchInput').value.toLowerCase();
+      quizGrid.innerHTML = '';
+
+      let filtered = activeSubject === "ALL" 
+        ? autoScannedQuizzes 
+        : autoScannedQuizzes.filter(q => q.subject === activeSubject);
+
+      if (searchQuery) {
+        filtered = filtered.filter(q => 
+          q.title.toLowerCase().includes(searchQuery) || 
+          q.path.toLowerCase().includes(searchQuery) ||
+          q.tag.toLowerCase().includes(searchQuery)
+        );
+      }
+
+      document.getElementById('currentCategoryTitle').innerText = activeSubject === "ALL" ? "All Quizzes" : activeSubject;
+      document.getElementById('quizCountTag').innerText = `${filtered.length} Available`;
+
+      if (filtered.length === 0) {
+        quizGrid.innerHTML = `
+          <div class="col-span-full py-12 text-center text-slate-500 text-sm">
+            No quiz files found in this category.
+          </div>
+        `;
+        return;
+      }
+
+      filtered.forEach(quiz => {
+        const card = document.createElement('div');
+        card.className = "quiz-card bg-slate-900/80 border border-slate-800/80 rounded-xl p-5 flex flex-col justify-between hover:border-slate-700 hover:shadow-xl hover:translate-y-[-2px]";
+        
+        card.innerHTML = `
+          <div>
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-[10px] font-semibold tracking-wider text-indigo-400 bg-indigo-500/10 border border-indigo-500/20 px-2 py-0.5 rounded-full uppercase">
+                ${quiz.tag}
+              </span>
+            </div>
+            <h3 class="text-sm font-semibold text-white mb-1.5 leading-snug">${quiz.title}</h3>
+            <p class="text-[11px] text-slate-500 font-mono truncate mb-4" title="${quiz.path}">${quiz.path}</p>
+          </div>
+          
+          <div class="grid grid-cols-2 gap-2">
+            <button onclick="openQuizModal('${quiz.path}', '${quiz.title}')" 
+               class="inline-flex items-center justify-center bg-indigo-600/20 hover:bg-indigo-600 text-indigo-300 hover:text-white text-xs font-medium py-2 rounded-lg transition-colors border border-indigo-500/30">
+              Modal View
+            </button>
+            <a href="${quiz.path}" target="_self" 
+               class="inline-flex items-center justify-center bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-medium py-2 rounded-lg transition-colors border border-slate-700">
+              Direct Link
+            </a>
+          </div>
+        `;
+        quizGrid.appendChild(card);
+      });
+    }
+
+    function openQuizModal(path, title) {
+      document.getElementById('modalTitle').innerText = title;
+      document.getElementById('quizIframe').src = path;
+      document.getElementById('quizModal').classList.remove('hidden');
+    }
+
+    function closeQuizModal() {
+      document.getElementById('quizIframe').src = '';
+      document.getElementById('quizModal').classList.add('hidden');
+    }
+
+    initDashboard();
+  </script>
+</body>
+</html>
