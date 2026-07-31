@@ -1,5 +1,6 @@
 import os
 import json
+import re
 
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
 
@@ -7,8 +8,11 @@ def scan_files():
     all_files = []
     
     for root, dirs, files in os.walk(ROOT_DIR):
-        # Skip hidden directories like .github or .git
+        # Ignore hidden directories like .github or .git
         dirs[:] = [d for d in dirs if not d.startswith('.')]
+        
+        # Sort files alphabetically so 01-, 02-, 03- load in strict numerical order
+        files.sort()
         
         for file in files:
             if file.endswith(".html") and file != "index.html":
@@ -16,11 +20,18 @@ def scan_files():
                 rel_path = os.path.relpath(full_path, ROOT_DIR).replace("\\", "/")
                 
                 parts = rel_path.split("/")
-                # Folder path parts excluding the file name
-                folder_parts = parts[:-1] 
+                folder_parts = parts[:-1]
                 
+                # Extract filename without extension
+                raw_filename = os.path.splitext(file)[0]
+                
+                # STRIP NUMBER PREFIX (e.g., "01-Minerals Part 1" -> "Minerals Part 1")
+                # Removes leading digits followed by hyphens, underscores, or spaces
+                clean_filename = re.sub(r'^\d+[\s\-_]*', '', raw_filename)
+                
+                # Format to Clean Title Case
                 clean_title = (
-                    os.path.splitext(file)[0]
+                    clean_filename
                     .replace("-", " ")
                     .replace("_", " ")
                     .title()
@@ -29,7 +40,7 @@ def scan_files():
                 all_files.append({
                     "title": clean_title,
                     "path": rel_path,
-                    "folders": folder_parts  # Array of nested folder names e.g. ["MCQ", "Maths", "Algebra"]
+                    "folders": folder_parts
                 })
                 
     return all_files
@@ -55,7 +66,7 @@ def update_index_html(file_list):
         
         with open(index_path, "w", encoding="utf-8") as f:
             f.write(new_content)
-        print(f"✅ Indexed {len(file_list)} files matching exact folder hierarchy.")
+        print(f"✅ Indexed {len(file_list)} files with clean prefix stripping.")
     else:
         print("❌ Error: AUTO-GENERATED markers missing in index.html!")
 
