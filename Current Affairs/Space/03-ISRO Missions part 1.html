@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SSC Space & Science Tech Exam Prep Quiz</title>
+  <style>
+    :root {
+      --bg-color: #f1f5f9;
+      --card-bg: #ffffff;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --border-color: #e2e8f0;
+      --primary: #2563eb;
+      --primary-hover: #1d4ed8;
+      --correct-bg: #dcfce7;
+      --correct-border: #22c55e;
+      --correct-text: #14532d;
+      --incorrect-bg: #fee2e2;
+      --incorrect-border: #ef4444;
+      --incorrect-text: #7f1d1d;
+      --accent-box-bg: #f8fafc;
+      --accent-box-border: #cbd5e1;
+      --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+    }
+
+    [data-theme="dark"] {
+      --bg-color: #0f172a;
+      --card-bg: #1e293b;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --border-color: #334155;
+      --primary: #3b82f6;
+      --primary-hover: #60a5fa;
+      --correct-bg: #064e3b;
+      --correct-border: #10b981;
+      --correct-text: #ecfdf5;
+      --incorrect-bg: #7f1d1d;
+      --incorrect-border: #f87171;
+      --incorrect-text: #fef2f2;
+      --accent-box-bg: #0f172a;
+      --accent-box-border: #475569;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+      padding: 12px;
+    }
+
+    .quiz-container {
+      background: var(--card-bg);
+      width: 100%;
+      max-width: 800px;
+      height: 100%;
+      max-height: 680px;
+      border-radius: 12px;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border-color);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    /* Header */
+    .header {
+      padding: 12px 20px;
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: var(--card-bg);
+      flex-shrink: 0;
+    }
+
+    .header-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .theme-toggle-btn {
+      background: transparent;
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      padding: 6px 12px;
+      border-radius: 20px;
+      cursor: pointer;
+      font-size: 0.8rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s ease;
+    }
+
+    .theme-toggle-btn:hover {
+      background: var(--accent-box-bg);
+    }
+
+    /* Progress & Tracker Bar */
+    .tracker-bar {
+      padding: 8px 20px;
+      background: var(--accent-box-bg);
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      flex-shrink: 0;
+    }
+
+    .progress-bar-container {
+      width: 100%;
+      height: 4px;
+      background-color: var(--border-color);
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      background-color: var(--primary);
+      width: 0%;
+      transition: width 0.3s ease;
+    }
+
+    /* Main Content Area */
+    .main-body {
+      padding: 16px 20px;
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      overflow-y: auto;
+    }
+
+    /* Question Formatting */
+    .question-box {
+      font-size: 1rem;
+      font-weight: 600;
+      line-height: 1.4;
+      color: var(--text-main);
+      margin-bottom: 12px;
+    }
+
+    /* Options */
+    .options-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .option-btn {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      padding: 10px 14px;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      text-align: left;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .option-btn:hover:not(:disabled) {
+      border-color: var(--primary);
+      background-color: var(--accent-box-bg);
+    }
+
+    .option-btn:disabled {
+      cursor: default;
+    }
+
+    .option-btn.correct {
+      background-color: var(--correct-bg) !important;
+      border-color: var(--correct-border) !important;
+      color: var(--correct-text) !important;
+      font-weight: 600;
+    }
+
+    .option-btn.incorrect {
+      background-color: var(--incorrect-bg) !important;
+      border-color: var(--incorrect-border) !important;
+      color: var(--incorrect-text) !important;
+    }
+
+    /* Explanation Box */
+    .explanation-box {
+      background: var(--accent-box-bg);
+      border-left: 4px solid var(--primary);
+      padding: 10px 12px;
+      border-radius: 0 6px 6px 0;
+      font-size: 0.85rem;
+      line-height: 1.35;
+      color: var(--text-main);
+      display: none;
+      margin-bottom: 8px;
+    }
+
+    .explanation-box.active {
+      display: block;
+    }
+
+    /* Footer / Action */
+    .footer {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      padding-top: 8px;
+      border-top: 1px solid var(--border-color);
+      flex-shrink: 0;
+    }
+
+    .btn-next {
+      background-color: var(--primary);
+      color: #ffffff;
+      border: none;
+      padding: 10px 20px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background 0.2s ease;
+    }
+
+    .btn-next:hover {
+      background-color: var(--primary-hover);
+    }
+
+    .btn-next:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    /* End Screen */
+    .results-screen {
+      display: none;
+      flex-direction: column;
+      height: 100%;
+      padding: 20px;
+      overflow: hidden;
+    }
+
+    .results-screen.active {
+      display: flex;
+    }
+
+    .summary-card {
+      background: var(--accent-box-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 16px;
+      text-align: center;
+      margin-bottom: 16px;
+      flex-shrink: 0;
+    }
+
+    .score-percentage {
+      font-size: 2rem;
+      font-weight: 800;
+      color: var(--primary);
+    }
+
+    .stats-row {
+      display: flex;
+      justify-content: center;
+      gap: 24px;
+      margin-top: 8px;
+      font-size: 0.9rem;
+      font-weight: 600;
+    }
+
+    .stat-correct { color: var(--correct-border); }
+    .stat-incorrect { color: var(--incorrect-border); }
+
+    .breakdown-container {
+      flex-grow: 1;
+      overflow-y: auto;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 12px;
+      margin-bottom: 16px;
+    }
+
+    .breakdown-title {
+      font-size: 0.95rem;
+      font-weight: 700;
+      margin-bottom: 12px;
+      padding-bottom: 6px;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .breakdown-item {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      padding: 10px;
+      margin-bottom: 10px;
+      font-size: 0.85rem;
+    }
+
+    .breakdown-item-q {
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+
+    .breakdown-item-ans {
+      margin-top: 4px;
+    }
+
+    .ans-marked { color: var(--incorrect-border); }
+    .ans-correct { color: var(--correct-border); }
+
+    .results-actions {
+      display: flex;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    @media (max-width: 600px) {
+      body { padding: 0; }
+      .quiz-container { height: 100vh; max-height: 100vh; border-radius: 0; border: none; }
+      .question-box { font-size: 0.95rem; }
+      .option-btn { font-size: 0.85rem; padding: 8px 12px; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="quiz-container">
+    <!-- Header -->
+    <header class="header">
+      <div class="header-title">
+        <span>🚀</span> SSC Space & Tech Prep
+      </div>
+      <button class="theme-toggle-btn" id="themeToggleBtn" onclick="toggleTheme()">
+        <span id="themeIcon">🌙</span> <span id="themeText">Dark Mode</span>
+      </button>
+    </header>
+
+    <!-- Progress Indicator -->
+    <div class="progress-bar-container">
+      <div class="progress-bar-fill" id="progressBar"></div>
+    </div>
+    <div class="tracker-bar">
+      <span id="questionTracker">Question 1/22</span>
+      <span id="scoreTracker">Score: 0</span>
+    </div>
+
+    <!-- Active Quiz Body -->
+    <main class="main-body" id="quizBody">
+      <div class="top-content">
+        <div class="question-box" id="questionText">
+          Loading Question...
+        </div>
+
+        <div class="options-grid" id="optionsContainer">
+          <!-- Options rendered dynamically -->
+        </div>
+
+        <div class="explanation-box" id="explanationBox">
+          <strong>Explanation:</strong> <span id="explanationText"></span>
+        </div>
+      </div>
+
+      <footer class="footer">
+        <button class="btn-next" id="nextBtn" onclick="nextQuestion()" disabled>Next Question</button>
+      </footer>
+    </main>
+
+    <!-- Results Screen -->
+    <div class="results-screen" id="resultsScreen">
+      <div class="summary-card">
+        <h2>Quiz Completed!</h2>
+        <div class="score-percentage" id="scorePercent">0%</div>
+        <div class="stats-row">
+          <span class="stat-correct">Correct: <span id="correctCount">0</span></span>
+          <span class="stat-incorrect">Incorrect: <span id="incorrectCount">0</span></span>
+        </div>
+      </div>
+
+      <div class="breakdown-container">
+        <div class="breakdown-title">Review & Mistakes Breakdown</div>
+        <div id="breakdownList">
+          <!-- Mistakes or full review items rendered here -->
+        </div>
+      </div>
+
+      <div class="results-actions">
+        <button class="btn-next" onclick="restartQuiz()">Restart Quiz</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const questionsData = [
+      {
+        id: 1,
+        question: "Which launch vehicle was used to launch the GSAT-7R (CMS-03) multiband communication satellite in its 5th operational flight on November 02, 2025?",
+        options: ["(A) PSLV-C58", "(B) LVM3-M5", "(C) GSLV Mk II", "(D) PSLV-C30"],
+        answer: 1,
+        explanation: "GSAT-7R (CMS-03) was launched onboard LVM3-M5 in its 5th operational flight on November 02, 2025."
+      },
+      {
+        id: 2,
+        question: "The GSAT-7R (CMS-03) satellite, weighing approximately 4,400 kg, was primarily launched as a replacement for which aging satellite?",
+        options: ["(A) GSAT-7 (Rukmini)", "(B) NVS-02", "(C) AstroSat", "(D) EOS-09"],
+        answer: 0,
+        explanation: "According to the provided text, GSAT-7R (CMS-03) is a replacement for the aging GSAT-7 (Rukmini) satellite launched in 2013, with the Indian Navy as its primary beneficiary."
+      },
+      {
+        id: 3,
+        question: "Under \"India's Space Vision 2047\", what is the target year set for the landing of an Indian on the Moon?",
+        options: ["(A) 2028", "(B) 2032", "(C) 2035", "(D) 2040"],
+        answer: 3,
+        explanation: "The Space Vision 2047 target table explicitly mentions 2040 as the target year for the \"Landing of an Indian on Moon\"."
+      },
+      {
+        id: 4,
+        question: "Which of the following target years is correctly matched with its achievement as per \"India's Space Vision 2047\"?",
+        options: [
+          "(A) Establishment of BAS 1st module – 2035",
+          "(B) Venus Orbiter Mission (VOM) – 2028",
+          "(C) Bharatiya Antariksh Station (BAS) – 2028",
+          "(D) Development of Next Generation Satellite Launch Vehicle (NGLV) – 2040"
+        ],
+        answer: 1,
+        explanation: "According to the Space Vision 2047 chart, Venus Orbiter Mission (VOM) is targeted for 2028. BAS 1st module is 2028, full BAS is 2035, and NGLV is 2032."
+      },
+      {
+        id: 5,
+        question: "ISRO launched the next-generation US communication satellite BlueBird Block-2 using which launch vehicle?",
+        options: ["(A) PSLV-C60", "(B) GSLV Mk II", "(C) LVM3-M6", "(D) H3-24L"],
+        answer: 2,
+        explanation: "ISRO launched the 6,100 kg BlueBird Block-2 satellite onboard its heaviest vehicle, LVM3-M6, under a commercial agreement with AST SpaceMobile via NewSpace India Ltd (NSIL)."
+      },
+      {
+        id: 6,
+        question: "In the SpaDeX (Space Docking Experiment) mission, what were the designations given to the two small spacecraft used to validate in-space docking?",
+        options: [
+          "(A) SDX01 (Chaser) and SDX02 (Target)",
+          "(B) POEM-1 and POEM-2",
+          "(C) L-Band and S-Band",
+          "(D) Cruise Stage and Descent Stage"
+        ],
+        answer: 0,
+        explanation: "SpaDeX involved two small spacecraft named SDX01 (Chaser) and SDX02 (Target), each weighing about 220 kg."
+      },
+      {
+        id: 7,
+        question: "With the successful execution of the SpaDeX mission, India became the _____ country to demonstrate in-space rendezvous and docking technology.",
+        options: ["(A) 2nd", "(B) 3rd", "(C) 4th", "(D) 5th"],
+        answer: 2,
+        explanation: "India became the 4th country in the world to do so, after the USA, Russia, and China."
+      },
+      {
+        id: 8,
+        question: "Which payload instrument onboard Aditya-L1 detected solar flare 'kernels' by linking plasma heating during solar activity?",
+        options: ["(A) VELC", "(B) SUIT", "(C) SoLEXS", "(D) PAPA"],
+        answer: 1,
+        explanation: "The text states that SUIT detected solar flare 'kernels' linking plasma heating, while VELC observed Coronal Mass Ejections (CMEs)."
+      },
+      {
+        id: 9,
+        question: "Aditya-L1 is positioned in a halo orbit around the Sun-Earth L1 Lagrange point, which is located at approximately what distance from Earth?",
+        options: ["(A) 470 km", "(B) 747 km", "(C) 1.5 million km", "(D) 6000 km"],
+        answer: 2,
+        explanation: "Aditya-L1 is positioned at the Sun-Earth L1 Lagrange point, which is 1.5 million km from Earth."
+      },
+      {
+        id: 10,
+        question: "Who served as the Pilot from ISRO (India) during the Axiom Mission 4 (Ax-4) crewed spaceflight to the International Space Station?",
+        options: ["(A) Peggy Whitson", "(B) Shubhanshu Shukla", "(C) Slawosz Uznanski-Wisniewski", "(D) Tibor Kapu"],
+        answer: 1,
+        explanation: "In Axiom Mission 4, Peggy Whitson was the Commander, while Shubhanshu Shukla (ISRO, India) served as the Pilot."
+      },
+      {
+        id: 11,
+        question: "The joint NISAR (NASA-ISRO Synthetic Aperture Radar) satellite features dual-frequency radar instruments. Which agency provided the S-Band SAR?",
+        options: ["(A) NASA", "(B) JAXA", "(C) ISRO", "(D) ESA"],
+        answer: 2,
+        explanation: "As per the NISAR components table, the L-Band SAR (1.25 GHz) is associated with NASA, while the S-Band SAR (3.2 GHz) is associated with ISRO."
+      },
+      {
+        id: 12,
+        question: "What is the designated orbital repeat cycle and altitude of the NISAR satellite in its sun-synchronous orbit?",
+        options: [
+          "(A) 650 km with a 10-day repeat cycle",
+          "(B) 747 km with a 12-day repeat cycle",
+          "(C) 470 km with a 15-day repeat cycle",
+          "(D) 6000 km with a 96-hour repeat cycle"
+        ],
+        answer: 1,
+        explanation: "NISAR operates in a sun-synchronous orbit at an altitude of 747 km with an orbital period of 100 minutes (12 day repeat cycle)."
+      },
+      {
+        id: 13,
+        question: "Regarding NISAR launches, the 100th Launch from SDSC SHAR (GSLV-F15/NVS-02) carried payload into GTO, whereas the 101st Launch (PSLV-C61/EOS-09) placed its payload into:",
+        options: [
+          "(A) Low Earth Orbit (LEO)",
+          "(B) Halo Orbit",
+          "(C) SSPO (Sun Synchronous Polar Orbit)",
+          "(D) Medium Earth Orbit (MEO)"
+        ],
+        answer: 2,
+        explanation: "The NISAR launches comparison table clearly shows the orbit for the 101st launch (PSLV-C61/EOS-09) as SSPO (Sun Synchronous Polar Orbit)."
+      },
+      {
+        id: 14,
+        question: "India's first human underwater submersible vehicle developed for the Samudrayaan Mission is named:",
+        options: ["(A) ROSUB-6000", "(B) MATSYA 6000", "(C) SDX01", "(D) LVM3-M5"],
+        answer: 1,
+        explanation: "India is set to launch its first human underwater submersible MATSYA 6000 as part of the Samudrayaan Mission. (ROSUB-6000 is the depth-rated Remotely Operated Vehicle developed by NIOT)."
+      },
+      {
+        id: 15,
+        question: "What is the maximum endurance of the Samudrayaan human submersible in case of an emergency?",
+        options: ["(A) 12 hours", "(B) 24 hours", "(C) 48 hours", "(D) 96 hours"],
+        answer: 3,
+        explanation: "The Samudrayaan submersible has an operational endurance of 12 hours, which extends to 96 hours in case of an emergency."
+      },
+      {
+        id: 16,
+        question: "The LUPEX (Lunar Polar Exploration) mission, also known as Chandrayaan-5, is a collaborative effort between ISRO and which international space agency?",
+        options: ["(A) NASA (USA)", "(B) JAXA (Japan)", "(C) ESA (Europe)", "(D) Roscosmos (Russia)"],
+        answer: 1,
+        explanation: "The LUPEX mission (Chandrayaan-5) is a collaborative effort between ISRO (India) and JAXA (Japan) to investigate water resources in the Moon's south polar region."
+      },
+      {
+        id: 17,
+        question: "In the LUPEX mission, which entity is responsible for supplying the 350 kg rover and the H3-24L launch vehicle?",
+        options: ["(A) ISRO", "(B) NASA", "(C) JAXA", "(D) ESA"],
+        answer: 2,
+        explanation: "ISRO provides the lander and select instruments, while JAXA supplies the 350 kg rover, H3-24L launch vehicle, and additional instruments."
+      },
+      {
+        id: 18,
+        question: "AstroSat, India's first dedicated multi-wavelength space observatory launched in 2015 via PSLV-C30, operates in which orbit?",
+        options: [
+          "(A) 650 km near-equatorial Low Earth Orbit (LEO)",
+          "(B) 747 km Sun-Synchronous Orbit",
+          "(C) Geosynchronous Transfer Orbit (GTO)",
+          "(D) Sun-Earth L1 Halo Orbit"
+        ],
+        answer: 0,
+        explanation: "AstroSat weighs approximately 1,513 kg and was launched into a 650 km near-equatorial Low Earth Orbit (LEO)."
+      },
+      {
+        id: 19,
+        question: "Which ISRO satellite, launched on January 1, 2024 onboard PSLV-C58, is India's first (and world's second) dedicated polarimetry observatory?",
+        options: ["(A) AstroSat", "(B) XPoSat", "(C) CMS-03", "(D) NVS-02"],
+        answer: 1,
+        explanation: "XPoSat (X-ray Polarimeter Satellite) was launched on PSLV-C58's 60th flight on Jan 1, 2024, as India's first and the world's second dedicated space mission to study X-ray polarization."
+      },
+      {
+        id: 20,
+        question: "India’s maiden interplanetary mission, Mars Orbiter Mission (MOM / Mangalyaan), was launched using which vehicle?",
+        options: ["(A) PSLV-C25", "(B) PSLV-C30", "(C) PSLV-C57", "(D) LVM3"],
+        answer: 0,
+        explanation: "Mangalyaan was launched on November 5, 2013, via PSLV-C25 from Sriharikota and entered Mars orbit after a 298-day journey on September 24, 2014."
+      },
+      {
+        id: 21,
+        question: "Which of the following was NOT a payload carried onboard the Mars Orbiter Mission (Mangalyaan)?",
+        options: [
+          "(A) Mars Colour Camera (MCC)",
+          "(B) Methane Sensor for Mars (MSM)",
+          "(C) Thermal Infrared Imaging Spectrometer (TIS)",
+          "(D) Mars Orbit Dust Experiment (MODEX)"
+        ],
+        answer: 3,
+        explanation: "MCC, MSM, TIS, MENCA, and LAP were payloads on MOM (Mangalyaan-1). MODEX is an orbiting payload planned for Mars Lander Mission (Mangalyaan-2)."
+      },
+      {
+        id: 22,
+        question: "The Mars Lander Mission (MLM - Mangalyaan 2) is planned to be launched using which rocket with an estimated total spacecraft mass of around 4,500 kg?",
+        options: ["(A) PSLV-C58", "(B) LVM3 (GSLV Mk III)", "(C) Falcon 9", "(D) H3-24L"],
+        answer: 1,
+        explanation: "The revised Mars Lander Mission (MLM) will have a total spacecraft mass of around 4,500 kg, to be launched by an LVM3 (GSLV Mk III) rocket."
+      }
+    ];
+
+    let currentQuestionIdx = 0;
+    let score = 0;
+    let userAnswers = [];
+
+    // Elements
+    const questionTextEl = document.getElementById('questionText');
+    const optionsContainerEl = document.getElementById('optionsContainer');
+    const explanationBoxEl = document.getElementById('explanationBox');
+    const explanationTextEl = document.getElementById('explanationText');
+    const nextBtn = document.getElementById('nextBtn');
+    const progressBar = document.getElementById('progressBar');
+    const questionTracker = document.getElementById('questionTracker');
+    const scoreTracker = document.getElementById('scoreTracker');
+
+    // Theme Management
+    function toggleTheme() {
+      const body = document.documentElement;
+      const isDark = body.getAttribute('data-theme') === 'dark';
+      if (isDark) {
+        body.removeAttribute('data-theme');
+        document.getElementById('themeIcon').textContent = '🌙';
+        document.getElementById('themeText').textContent = 'Dark Mode';
+      } else {
+        body.setAttribute('data-theme', 'dark');
+        document.getElementById('themeIcon').textContent = '☀️';
+        document.getElementById('themeText').textContent = 'Light Mode';
+      }
+    }
+
+    function initQuiz() {
+      currentQuestionIdx = 0;
+      score = 0;
+      userAnswers = [];
+      document.getElementById('quizBody').style.display = 'flex';
+      document.getElementById('resultsScreen').classList.remove('active');
+      renderQuestion();
+    }
+
+    function renderQuestion() {
+      const q = questionsData[currentQuestionIdx];
+      questionTextEl.innerHTML = `<strong>Q${currentQuestionIdx + 1}.</strong> ${q.question}`;
+      
+      // Update Trackers
+      questionTracker.textContent = `Question ${currentQuestionIdx + 1}/${questionsData.length}`;
+      scoreTracker.textContent = `Score: ${score}`;
+      progressBar.style.width = `${((currentQuestionIdx) / questionsData.length) * 100}%`;
+
+      // Reset options & explanation
+      optionsContainerEl.innerHTML = '';
+      explanationBoxEl.classList.remove('active');
+      nextBtn.disabled = true;
+
+      q.options.forEach((opt, idx) => {
+        const btn = document.createElement('button');
+        btn.className = 'option-btn';
+        btn.textContent = opt;
+        btn.onclick = () => selectOption(idx);
+        optionsContainerEl.appendChild(btn);
+      });
+    }
+
+    function selectOption(selectedIdx) {
+      const q = questionsData[currentQuestionIdx];
+      const buttons = optionsContainerEl.querySelectorAll('.option-btn');
+      
+      // Save Answer
+      userAnswers.push({
+        questionIdx: currentQuestionIdx,
+        selected: selectedIdx,
+        correct: q.answer
+      });
+
+      // Disable all buttons
+      buttons.forEach(btn => btn.disabled = true);
+
+      if (selectedIdx === q.answer) {
+        buttons[selectedIdx].classList.add('correct');
+        score++;
+        scoreTracker.textContent = `Score: ${score}`;
+      } else {
+        buttons[selectedIdx].classList.add('incorrect');
+        buttons[q.answer].classList.add('correct');
+      }
+
+      // Show Explanation
+      explanationTextEl.textContent = q.explanation;
+      explanationBoxEl.classList.add('active');
+
+      // Enable Next
+      nextBtn.disabled = false;
+    }
+
+    function nextQuestion() {
+      currentQuestionIdx++;
+      if (currentQuestionIdx < questionsData.length) {
+        renderQuestion();
+      } else {
+        showResults();
+      }
+    }
+
+    function showResults() {
+      document.getElementById('quizBody').style.display = 'none';
+      const resultsScreen = document.getElementById('resultsScreen');
+      resultsScreen.classList.add('active');
+
+      const total = questionsData.length;
+      const percentage = Math.round((score / total) * 100);
+
+      document.getElementById('scorePercent').textContent = `${percentage}%`;
+      document.getElementById('correctCount').textContent = score;
+      document.getElementById('incorrectCount').textContent = total - score;
+
+      const breakdownList = document.getElementById('breakdownList');
+      breakdownList.innerHTML = '';
+
+      userAnswers.forEach((ans) => {
+        const q = questionsData[ans.questionIdx];
+        const item = document.createElement('div');
+        item.className = 'breakdown-item';
+        
+        const isCorrect = ans.selected === ans.correct;
+
+        item.innerHTML = `
+          <div class="breakdown-item-q">Q${ans.questionIdx + 1}: ${q.question}</div>
+          <div class="breakdown-item-ans">
+            Marked: <span class="${isCorrect ? 'ans-correct' : 'ans-marked'}">${q.options[ans.selected]}</span>
+          </div>
+          ${!isCorrect ? `<div class="breakdown-item-ans">Correct: <span class="ans-correct">${q.options[ans.correct]}</span></div>` : ''}
+          <div style="margin-top: 4px; font-size: 0.8rem; color: var(--text-muted);">
+            <em>${q.explanation}</em>
+          </div>
+        `;
+        breakdownList.appendChild(item);
+      });
+    }
+
+    function restartQuiz() {
+      initQuiz();
+    }
+
+    // Initialize on load
+    window.onload = initQuiz;
+  </script>
+</body>
+</html>
