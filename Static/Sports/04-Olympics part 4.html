@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SSC Exam Prep: Olympics Facts Quiz</title>
+  <style>
+    :root {
+      --bg-color: #0f172a;
+      --card-bg: #1e293b;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --accent: #38bdf8;
+      --accent-hover: #0284c7;
+      --border: #334155;
+      --option-bg: #334155;
+      --option-hover: #475569;
+      --correct: #10b981;
+      --correct-bg: rgba(16, 185, 129, 0.15);
+      --incorrect: #ef4444;
+      --incorrect-bg: rgba(239, 68, 68, 0.15);
+      --box-bg: #0f172a;
+      --shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
+    }
+
+    [data-theme="light"] {
+      --bg-color: #f1f5f9;
+      --card-bg: #ffffff;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --accent: #2563eb;
+      --accent-hover: #1d4ed8;
+      --border: #e2e8f0;
+      --option-bg: #f8fafc;
+      --option-hover: #e2e8f0;
+      --correct: #059669;
+      --correct-bg: #d1fae5;
+      --incorrect: #dc2626;
+      --incorrect-bg: #fee2e2;
+      --box-bg: #f8fafc;
+      --shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+    }
+
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 12px;
+      overflow: hidden;
+    }
+
+    .quiz-container {
+      background-color: var(--card-bg);
+      width: 100%;
+      max-width: 820px;
+      height: 100%;
+      max-height: 94vh;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+      display: flex;
+      flex-direction: column;
+      padding: 16px 20px;
+      position: relative;
+    }
+
+    /* Header */
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 12px;
+      flex-shrink: 0;
+    }
+
+    .title-area h1 {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--accent);
+    }
+
+    .meta-info {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .badge {
+      background: var(--option-bg);
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      border: 1px solid var(--border);
+    }
+
+    .theme-toggle {
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--text-main);
+      font-size: 1.2rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 4px;
+      border-radius: 50%;
+    }
+
+    /* Progress Bar */
+    .progress-bar-container {
+      width: 100%;
+      height: 4px;
+      background-color: var(--border);
+      border-radius: 2px;
+      margin-bottom: 12px;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+
+    .progress-bar {
+      height: 100%;
+      background-color: var(--accent);
+      width: 0%;
+      transition: width 0.3s ease;
+    }
+
+    /* Quiz Body Layout */
+    .quiz-body {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      overflow-y: auto;
+      padding-right: 4px;
+    }
+
+    .question-section {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .question-text {
+      font-size: 0.98rem;
+      font-weight: 600;
+      line-height: 1.4;
+    }
+
+    /* Complex Question Formats */
+    .callout-box {
+      background-color: var(--box-bg);
+      border-left: 3px solid var(--accent);
+      border-top: 1px solid var(--border);
+      border-right: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      padding: 8px 12px;
+      border-radius: 0 6px 6px 0;
+      font-size: 0.88rem;
+      margin: 4px 0;
+    }
+
+    .callout-box ol {
+      padding-left: 18px;
+    }
+
+    .callout-box li {
+      margin-bottom: 4px;
+    }
+
+    .match-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 4px 0;
+      font-size: 0.85rem;
+      background: var(--box-bg);
+      border-radius: 6px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+    }
+
+    .match-table th, .match-table td {
+      padding: 6px 10px;
+      border: 1px solid var(--border);
+      text-align: left;
+    }
+
+    .match-table th {
+      background: var(--option-bg);
+      color: var(--accent);
+    }
+
+    /* Options */
+    .options-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .option-btn {
+      background-color: var(--option-bg);
+      border: 1px solid var(--border);
+      color: var(--text-main);
+      padding: 9px 12px;
+      border-radius: 6px;
+      font-size: 0.9rem;
+      text-align: left;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .option-btn:hover:not(:disabled) {
+      background-color: var(--option-hover);
+      border-color: var(--accent);
+    }
+
+    .option-btn:disabled {
+      cursor: default;
+    }
+
+    .option-btn.correct {
+      background-color: var(--correct-bg) !important;
+      border-color: var(--correct) !important;
+      color: var(--correct) !important;
+      font-weight: 600;
+    }
+
+    .option-btn.incorrect {
+      background-color: var(--incorrect-bg) !important;
+      border-color: var(--incorrect) !important;
+      color: var(--incorrect) !important;
+      font-weight: 600;
+    }
+
+    /* Explanation Area */
+    .explanation-box {
+      background-color: var(--box-bg);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 8px 12px;
+      font-size: 0.85rem;
+      display: none;
+      margin-top: 8px;
+      line-height: 1.35;
+    }
+
+    .explanation-box strong {
+      color: var(--accent);
+    }
+
+    /* Footer & Navigation */
+    .footer {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      padding-top: 8px;
+      border-top: 1px solid var(--border);
+      margin-top: 6px;
+      flex-shrink: 0;
+    }
+
+    .btn-next {
+      background-color: var(--accent);
+      color: #ffffff;
+      border: none;
+      padding: 8px 20px;
+      border-radius: 6px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      cursor: pointer;
+    }
+
+    .btn-next:hover {
+      background-color: var(--accent-hover);
+    }
+
+    /* Results Screen Layout */
+    .results-container {
+      display: none;
+      flex-direction: column;
+      height: 100%;
+      overflow: hidden;
+    }
+
+    .results-header {
+      text-align: center;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 12px;
+      flex-shrink: 0;
+    }
+
+    .score-summary {
+      display: flex;
+      justify-content: space-around;
+      background: var(--box-bg);
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      margin-bottom: 12px;
+      flex-shrink: 0;
+    }
+
+    .score-item {
+      text-align: center;
+    }
+
+    .score-item .number {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--accent);
+    }
+
+    .score-item .label {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    .breakdown-title {
+      font-size: 0.9rem;
+      font-weight: 600;
+      margin-bottom: 8px;
+      flex-shrink: 0;
+    }
+
+    .breakdown-list {
+      flex: 1;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      padding-right: 4px;
+      margin-bottom: 12px;
+    }
+
+    .breakdown-card {
+      background: var(--box-bg);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 10px;
+      font-size: 0.85rem;
+    }
+
+    .breakdown-card .q-title {
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+
+    .ans-tag {
+      display: block;
+      margin-top: 2px;
+    }
+
+    .ans-user { color: var(--incorrect); }
+    .ans-correct { color: var(--correct); }
+
+    .btn-restart {
+      background-color: var(--accent);
+      color: #ffffff;
+      border: none;
+      padding: 10px 24px;
+      border-radius: 6px;
+      font-weight: 600;
+      font-size: 0.95rem;
+      cursor: pointer;
+      width: 100%;
+      flex-shrink: 0;
+    }
+  </style>
+</head>
+<body>
+
+<div class="quiz-container">
+  <!-- HEADER -->
+  <div class="header">
+    <div class="title-area">
+      <h1>SSC Exam Prep: Olympics Facts</h1>
+    </div>
+    <div class="meta-info">
+      <span class="badge" id="question-counter">Q 1/20</span>
+      <button class="theme-toggle" id="theme-btn" title="Toggle Theme">🌙</button>
+    </div>
+  </div>
+
+  <div class="progress-bar-container" id="progress-container">
+    <div class="progress-bar" id="progress-bar"></div>
+  </div>
+
+  <!-- QUIZ DISPLAY -->
+  <div class="quiz-body" id="quiz-screen">
+    <div class="question-section">
+      <div class="question-text" id="question-text"></div>
+      <div id="complex-format-container"></div>
+      <div class="options-grid" id="options-container"></div>
+      <div class="explanation-box" id="explanation-box"></div>
+    </div>
+
+    <div class="footer">
+      <button class="btn-next" id="next-btn" style="display: none;" onclick="nextQuestion()">Next Question ➔</button>
+    </div>
+  </div>
+
+  <!-- RESULTS DISPLAY -->
+  <div class="results-container" id="results-screen">
+    <div class="results-header">
+      <h2>Quiz Complete!</h2>
+    </div>
+
+    <div class="score-summary">
+      <div class="score-item">
+        <div class="number" id="res-score">0 / 20</div>
+        <div class="label">Score</div>
+      </div>
+      <div class="score-item">
+        <div class="number" id="res-percent">0%</div>
+        <div class="label">Percentage</div>
+      </div>
+      <div class="score-item">
+        <div class="number" id="res-correct" style="color: var(--correct);">0</div>
+        <div class="label">Correct</div>
+      </div>
+      <div class="score-item">
+        <div class="number" id="res-incorrect" style="color: var(--incorrect);">0</div>
+        <div class="label">Incorrect</div>
+      </div>
+    </div>
+
+    <div class="breakdown-title">Incorrect Answers Review:</div>
+    <div class="breakdown-list" id="breakdown-list"></div>
+
+    <button class="btn-restart" onclick="restartQuiz()">Restart Quiz</button>
+  </div>
+</div>
+
+<script>
+  const quizData = [
+    {
+      q: "In which Olympics was Golf reintroduced after 112 years?",
+      options: ["A) Tokyo 2020", "B) Rio 2016", "C) Paris 2024", "D) London 1900"],
+      correct: 1,
+      exp: "As per the notes, Golf was reintroduced after 112 years at the Rio 2016 Olympics."
+    },
+    {
+      q: "Who among the following became the first female gymnast from India to reach the finals in the Olympics?",
+      options: ["A) Bhavani Devi", "B) Lovlina Borgohain", "C) Dipa Karmakar", "D) Mirabai Chanu"],
+      correct: 2,
+      exp: "Dipa Karmakar was the first female gymnast to reach the final (at the Rio 2016 Olympics)."
+    },
+    {
+      q: "Which medal was won by Sakshi Malik in Wrestling at the Rio 2016 Olympics?",
+      options: ["A) Gold", "B) Silver", "C) Bronze", "D) None of the above"],
+      correct: 2,
+      exp: "Sakshi Malik won a Bronze medal in Wrestling at Rio 2016."
+    },
+    {
+      q: "Consider the following statements regarding the Rio 2016 Olympics:",
+      type: "statement",
+      statements: [
+        "It was the 1st time the Olympics were held in South America.",
+        "India made its Olympic debut in Golf at this event."
+      ],
+      prompt: "Which of the statement(s) given above is/are correct?",
+      options: ["A) 1 only", "B) 2 only", "C) Both 1 and 2", "D) Neither 1 nor 2"],
+      correct: 2,
+      exp: "Rio 2016 marked India's golf debut and was held in South America for the 1st time."
+    },
+    {
+      q: "What was the throw distance achieved by Neeraj Chopra to win the Gold Medal in Javelin at the Tokyo 2020 Olympics?",
+      options: ["A) 87.58 m", "B) 88.00 m", "C) 86.58 m", "D) 89.94 m"],
+      correct: 0,
+      exp: "Neeraj Chopra won Gold in Javelin with a throw of 87.58m at Tokyo 2020."
+    },
+    {
+      q: "Which Indian weightlifter won a Silver medal at the Tokyo 2020 Olympics and belongs to the state of Manipur?",
+      options: ["A) Lovlina Borgohain", "B) Mirabai Chanu", "C) Bhavani Devi", "D) Manu Bhaker"],
+      correct: 1,
+      exp: "Mirabai Chanu (Weightlifting, Silver) is from Manipur."
+    },
+    {
+      q: "Who among the following was the 1st Indian fencer to participate in the Olympics?",
+      options: ["A) Dipa Karmakar", "B) Lovlina Borgohain", "C) Bhavani Devi", "D) Manu Bhaker"],
+      correct: 2,
+      exp: "Bhavani Devi (from Tamil Nadu) was the 1st Indian fencer in the Olympics (Tokyo 2020)."
+    },
+    {
+      q: "Which sport made its Olympic debut ('introduced 1st time') at the Tokyo 2020 Olympics?",
+      options: ["A) Golf", "B) Fencing", "C) Surfing", "D) Javelin"],
+      correct: 2,
+      exp: "Surfing was introduced for the 1st time at Tokyo 2020."
+    },
+    {
+      q: "How many total medals did India win at the Tokyo 2020 Olympics, marking its highest Olympic medal tally?",
+      options: ["A) 5", "B) 6", "C) 7", "D) 8"],
+      correct: 2,
+      exp: "Tokyo 2020 marked India's highest Olympic medal tally of 7 medals."
+    },
+    {
+      q: "Match the athlete with the sport they represented at the Tokyo 2020 Olympics:",
+      type: "match",
+      matches: [
+        { colA: "1. Lovlina Borgohain", colB: "(i) Wrestling" },
+        { colA: "2. Ravi Dahiya", colB: "(ii) Badminton" },
+        { colA: "3. PV Sindhu", colB: "(iii) Boxing" }
+      ],
+      options: [
+        "A) 1-(i), 2-(ii), 3-(iii)",
+        "B) 1-(iii), 2-(i), 3-(ii)",
+        "C) 1-(ii), 2-(i), 3-(iii)",
+        "D) 1-(iii), 2-(ii), 3-(i)"
+      ],
+      correct: 1,
+      exp: "Lovlina Borgohain (Boxing), Ravi Dahiya (Wrestling), and PV Sindhu (Badminton)."
+    },
+    {
+      q: "Which city became the 2nd city in history after London to host the Summer Olympics three times (1900, 1924 & 2024)?",
+      options: ["A) Tokyo", "B) Rio", "C) Paris", "D) Athens"],
+      correct: 2,
+      exp: "Paris became the 2nd city to host summer olympics 3 times (1900, 1924 & 2024) after London."
+    },
+    {
+      q: "At the Paris 2024 Olympics, who became the 1st Indian woman to win a medal in shooting?",
+      options: ["A) Manu Bhaker", "B) Swapnil Kusale", "C) Lovlina Borgohain", "D) Bhavani Devi"],
+      correct: 0,
+      exp: "Manu Bhaker (10m air pistol) was the 1st woman in Shooting to win an Olympic medal (Bronze)."
+    },
+    {
+      q: "Who is India's youngest ever Olympic medalist as per the Paris 2024 records?",
+      options: ["A) Neeraj Chopra", "B) Swapnil Kusale", "C) Sarabjot Singh", "D) Aman Sehrawat"],
+      correct: 3,
+      exp: "Aman Sehrawat (Wrestling 57kg) is India's Youngest ever Olympic medalist."
+    },
+    {
+      q: "In which event did Swapnil Kusale win a Bronze medal for India at the Paris 2024 Olympics?",
+      options: ["A) 10m air pistol", "B) 50m rifle 3 positions Men", "C) Mixed 10m air pistol", "D) Javelin throw"],
+      correct: 1,
+      exp: "Swapnil Kusale won Bronze in the 50m rifle 3 positions Men event."
+    },
+    {
+      q: "What was special about the participation ratio achieved for the first time at the Paris 2024 Olympics?",
+      options: [
+        "A) 100% women participation",
+        "B) Equal participation (50% men + 50% women)",
+        "C) 75% men + 25% women participation",
+        "D) 60% women + 40% men participation"
+      ],
+      correct: 1,
+      exp: "Paris 2024 achieved equal gender participation for the first time (50% men + 50% women)."
+    },
+    {
+      q: "Where was the 1st ever Olympics opening ceremony held outside a stadium?",
+      options: [
+        "A) Along the Thames River (London)",
+        "B) Along the Seine River (Paris)",
+        "C) Copacabana Beach (Rio)",
+        "D) Tokyo Bay (Tokyo)"
+      ],
+      correct: 1,
+      exp: "The 1st ever opening ceremony outside a stadium took place along the Seine river in Paris."
+    },
+    {
+      q: "What unique material was contained inside the medals awarded at the Paris 2024 Olympics?",
+      options: [
+        "A) Gold from the Louvre Museum",
+        "B) Original iron from the Eiffel Tower",
+        "C) Bronze from the Arc de Triomphe",
+        "D) Silver from Notre-Dame Cathedral"
+      ],
+      correct: 1,
+      exp: "Paris 2024 Olympic medals contained original iron from the Eiffel Tower."
+    },
+    {
+      q: "Manu Bhaker won her second Bronze medal at Paris 2024 in the Mixed 10m air pistol event pairing with whom?",
+      options: ["A) Swapnil Kusale", "B) Aman Sehrawat", "C) Sarabjot Singh", "D) Ravi Dahiya"],
+      correct: 2,
+      exp: "Manu Bhaker paired with Sarabjot Singh in the Mixed 10m air pistol event to win Bronze."
+    },
+    {
+      q: "What was the total medal tally for India at the Paris 2024 Olympics?",
+      options: ["A) 5 medals", "B) 6 medals", "C) 7 medals", "D) 4 medals"],
+      correct: 1,
+      exp: "India won a total of 6 medals at Paris 2024."
+    },
+    {
+      q: "Which medal did Neeraj Chopra win at the Paris 2024 Olympics?",
+      options: ["A) Gold", "B) Silver", "C) Bronze", "D) None"],
+      correct: 1,
+      exp: "Neeraj Chopra won a Silver medal at the Paris 2024 Olympics."
+    }
+  ];
+
+  let currentQ = 0;
+  let userAnswers = [];
+  let score = 0;
+
+  // DOM Elements
+  const questionText = document.getElementById("question-text");
+  const complexFormatContainer = document.getElementById("complex-format-container");
+  const optionsContainer = document.getElementById("options-container");
+  const explanationBox = document.getElementById("explanation-box");
+  const nextBtn = document.getElementById("next-btn");
+  const questionCounter = document.getElementById("question-counter");
+  const progressBar = document.getElementById("progress-bar");
+  const quizScreen = document.getElementById("quiz-screen");
+  const resultsScreen = document.getElementById("results-screen");
+
+  // Theme Management
+  const themeBtn = document.getElementById("theme-btn");
+  themeBtn.addEventListener("click", () => {
+    const currentTheme = document.documentElement.getAttribute("data-theme");
+    const newTheme = currentTheme === "dark" ? "light" : "dark";
+    document.documentElement.setAttribute("data-theme", newTheme);
+    themeBtn.textContent = newTheme === "dark" ? "🌙" : "☀️";
+  });
+
+  function loadQuestion() {
+    const item = quizData[currentQ];
+    
+    // Counter & Progress
+    questionCounter.textContent = `Q ${currentQ + 1}/${quizData.length}`;
+    progressBar.style.width = `${((currentQ) / quizData.length) * 100}%`;
+
+    // Reset Elements
+    questionText.textContent = `${currentQ + 1}. ${item.q}`;
+    complexFormatContainer.innerHTML = "";
+    optionsContainer.innerHTML = "";
+    explanationBox.style.display = "none";
+    nextBtn.style.display = "none";
+
+    // Format Complex Questions
+    if (item.type === "statement") {
+      let html = `<div class="callout-box"><ol type="1">`;
+      item.statements.forEach(st => { html += `<li>${st}</li>`; });
+      html += `</ol></div>`;
+      if (item.prompt) html += `<div style="margin-top:6px; font-weight:600; font-size: 0.9rem;">${item.prompt}</div>`;
+      complexFormatContainer.innerHTML = html;
+    } else if (item.type === "match") {
+      let html = `<table class="match-table"><thead><tr><th>List I</th><th>List II</th></tr></thead><tbody>`;
+      item.matches.forEach(m => {
+        html += `<tr><td>${m.colA}</td><td>${m.colB}</td></tr>`;
+      });
+      html += `</tbody></table>`;
+      complexFormatContainer.innerHTML = html;
+    }
+
+    // Options Rendering
+    item.options.forEach((opt, index) => {
+      const btn = document.createElement("button");
+      btn.className = "option-btn";
+      btn.textContent = opt;
+      btn.onclick = () => selectOption(index);
+      optionsContainer.appendChild(btn);
+    });
+  }
+
+  function selectOption(selectedIndex) {
+    const item = quizData[currentQ];
+    const buttons = optionsContainer.querySelectorAll(".option-btn");
+
+    // Record User Answer
+    userAnswers[currentQ] = selectedIndex;
+
+    // Highlight Correct/Incorrect
+    buttons.forEach((btn, idx) => {
+      btn.disabled = true;
+      if (idx === item.correct) {
+        btn.classList.add("correct");
+      }
+      if (idx === selectedIndex && selectedIndex !== item.correct) {
+        btn.classList.add("incorrect");
+      }
+    });
+
+    if (selectedIndex === item.correct) {
+      score++;
+    }
+
+    // Display Explanation Box
+    explanationBox.innerHTML = `<strong>Explanation:</strong> ${item.exp}`;
+    explanationBox.style.display = "block";
+
+    // Show Next Button
+    nextBtn.style.display = "inline-block";
+  }
+
+  function nextQuestion() {
+    currentQ++;
+    if (currentQ < quizData.length) {
+      loadQuestion();
+    } else {
+      showResults();
+    }
+  }
+
+  function showResults() {
+    progressBar.style.width = "100%";
+    quizScreen.style.display = "none";
+    document.getElementById("progress-container").style.display = "none";
+    resultsScreen.style.display = "flex";
+
+    const total = quizData.length;
+    const percentage = Math.round((score / total) * 100);
+    const incorrectCount = total - score;
+
+    document.getElementById("res-score").textContent = `${score} / ${total}`;
+    document.getElementById("res-percent").textContent = `${percentage}%`;
+    document.getElementById("res-correct").textContent = score;
+    document.getElementById("res-incorrect").textContent = incorrectCount;
+
+    const breakdownList = document.getElementById("breakdown-list");
+    breakdownList.innerHTML = "";
+
+    if (incorrectCount === 0) {
+      breakdownList.innerHTML = `<div style="text-align: center; color: var(--correct); padding: 20px;">🎉 Perfect Score! No incorrect answers!</div>`;
+      return;
+    }
+
+    userAnswers.forEach((ans, idx) => {
+      if (ans !== quizData[idx].correct) {
+        const item = quizData[idx];
+        const card = document.createElement("div");
+        card.className = "breakdown-card";
+
+        const userAnsText = ans !== undefined ? item.options[ans] : "Not Answered";
+        const correctAnsText = item.options[item.correct];
+
+        card.innerHTML = `
+          <div class="q-title">Q${idx + 1}: ${item.q}</div>
+          <span class="ans-tag ans-user">✖ Your Answer: ${userAnsText}</span>
+          <span class="ans-tag ans-correct">✓ Correct Answer: ${correctAnsText}</span>
+          <div style="margin-top: 6px; font-size: 0.8rem; color: var(--text-muted);"><strong>Explanation:</strong> ${item.exp}</div>
+        `;
+        breakdownList.appendChild(card);
+      }
+    });
+  }
+
+  function restartQuiz() {
+    currentQ = 0;
+    score = 0;
+    userAnswers = [];
+    resultsScreen.style.display = "none";
+    document.getElementById("progress-container").style.display = "block";
+    quizScreen.style.display = "flex";
+    loadQuestion();
+  }
+
+  // Initialize
+  loadQuestion();
+</script>
+</body>
+</html>
