@@ -1,0 +1,902 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SSC Mineral Resources Prep Quiz</title>
+  <style>
+    :root {
+      --bg-color: #f1f5f9;
+      --card-bg: #ffffff;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --border-color: #e2e8f0;
+      --accent-primary: #2563eb;
+      --accent-hover: #1d4ed8;
+      
+      --correct-bg: #dcfce7;
+      --correct-border: #22c55e;
+      --correct-text: #14532d;
+      
+      --incorrect-bg: #fee2e2;
+      --incorrect-border: #ef4444;
+      --incorrect-text: #7f1d1d;
+      
+      --callout-bg: #f8fafc;
+      --callout-border: #cbd5e1;
+      
+      --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+      --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+    }
+
+    [data-theme="dark"] {
+      --bg-color: #0f172a;
+      --card-bg: #1e293b;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --border-color: #334155;
+      --accent-primary: #3b82f6;
+      --accent-hover: #60a5fa;
+      
+      --correct-bg: #064e3b;
+      --correct-border: #10b981;
+      --correct-text: #ecfdf5;
+      
+      --incorrect-bg: #7f1d1d;
+      --incorrect-border: #f87171;
+      --incorrect-text: #fef2f2;
+      
+      --callout-bg: #0f172a;
+      --callout-border: #334155;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 12px;
+      overflow: hidden; /* Strict no vertical scrollbar on body */
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    /* Main Container */
+    .quiz-app {
+      width: 100%;
+      max-width: 820px;
+      height: 100%;
+      max-height: 680px;
+      background: var(--card-bg);
+      border-radius: 12px;
+      box-shadow: var(--shadow-md);
+      border: 1px solid var(--border-color);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      transition: background-color 0.3s ease, border-color 0.3s ease;
+    }
+
+    /* Header */
+    header {
+      padding: 12px 20px;
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: var(--card-bg);
+      flex-shrink: 0;
+    }
+
+    .app-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--accent-primary);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .theme-toggle-btn {
+      background: transparent;
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      padding: 6px 12px;
+      border-radius: 20px;
+      cursor: pointer;
+      font-size: 0.8rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s ease;
+    }
+
+    .theme-toggle-btn:hover {
+      background: var(--border-color);
+    }
+
+    /* Progress & Tracker Bar */
+    .progress-container {
+      padding: 10px 20px;
+      background: var(--callout-bg);
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 15px;
+      flex-shrink: 0;
+    }
+
+    .progress-bar-bg {
+      flex: 1;
+      height: 8px;
+      background: var(--border-color);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      width: 0%;
+      background: var(--accent-primary);
+      transition: width 0.3s ease;
+    }
+
+    .progress-text {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      white-space: nowrap;
+    }
+
+    /* Quiz Area Body */
+    .quiz-body {
+      padding: 16px 20px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      overflow-y: auto; /* Handles slight overflow on tiny phones */
+    }
+
+    /* Questions */
+    .question-prompt {
+      font-size: 1rem;
+      font-weight: 600;
+      line-height: 1.4;
+      margin-bottom: 12px;
+    }
+
+    /* Complex Question Container (Callouts/Tables) */
+    .complex-content {
+      background: var(--callout-bg);
+      border-left: 4px solid var(--accent-primary);
+      border-radius: 6px;
+      padding: 10px 14px;
+      margin-bottom: 12px;
+      font-size: 0.9rem;
+      border-top: 1px solid var(--border-color);
+      border-right: 1px solid var(--border-color);
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .match-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 4px;
+    }
+
+    .match-table th, .match-table td {
+      border: 1px solid var(--border-color);
+      padding: 6px 10px;
+      text-align: left;
+      font-size: 0.85rem;
+    }
+
+    .match-table th {
+      background: var(--card-bg);
+      font-weight: 600;
+    }
+
+    /* Options Grid */
+    .options-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    @media (max-width: 600px) {
+      .options-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .option-btn {
+      background: var(--card-bg);
+      border: 1.5px solid var(--border-color);
+      color: var(--text-main);
+      padding: 10px 14px;
+      border-radius: 8px;
+      text-align: left;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      line-height: 1.3;
+      font-weight: 500;
+    }
+
+    .option-btn:hover:not(:disabled) {
+      border-color: var(--accent-primary);
+      background: var(--callout-bg);
+    }
+
+    .option-btn:disabled {
+      cursor: not-allowed;
+    }
+
+    .option-btn.correct {
+      background-color: var(--correct-bg) !important;
+      border-color: var(--correct-border) !important;
+      color: var(--correct-text) !important;
+      font-weight: 600;
+    }
+
+    .option-btn.incorrect {
+      background-color: var(--incorrect-bg) !important;
+      border-color: var(--incorrect-border) !important;
+      color: var(--incorrect-text) !important;
+      font-weight: 600;
+    }
+
+    /* Explanation Box */
+    .explanation-box {
+      background: var(--callout-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 10px 14px;
+      font-size: 0.85rem;
+      line-height: 1.4;
+      display: none;
+      animation: fadeIn 0.3s ease;
+      margin-bottom: 10px;
+    }
+
+    .explanation-box.visible {
+      display: block;
+    }
+
+    .explanation-box strong {
+      color: var(--accent-primary);
+    }
+
+    /* Footer & Navigation */
+    .quiz-footer {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      padding-top: 4px;
+    }
+
+    .btn-next {
+      background: var(--accent-primary);
+      color: #ffffff;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: background 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .btn-next:hover {
+      background: var(--accent-hover);
+    }
+
+    .btn-next:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    /* End Results View */
+    .results-view {
+      display: none;
+      height: 100%;
+      flex-direction: column;
+      padding: 20px;
+      overflow-y: auto;
+    }
+
+    .results-view.active {
+      display: flex;
+    }
+
+    .results-header {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .results-score-card {
+      display: flex;
+      justify-content: space-around;
+      background: var(--callout-bg);
+      padding: 16px;
+      border-radius: 10px;
+      border: 1px solid var(--border-color);
+      margin-bottom: 20px;
+    }
+
+    .score-stat {
+      text-align: center;
+    }
+
+    .score-stat .val {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--accent-primary);
+    }
+
+    .score-stat .lbl {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+
+    .breakdown-title {
+      font-size: 1rem;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+
+    .incorrect-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .incorrect-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-left: 4px solid var(--incorrect-border);
+      padding: 12px;
+      border-radius: 6px;
+      font-size: 0.88rem;
+    }
+
+    .incorrect-card .q-text {
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+
+    .incorrect-card .ans-details {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      font-size: 0.82rem;
+    }
+
+    .user-ans {
+      color: var(--incorrect-border);
+      font-weight: 600;
+    }
+
+    .correct-ans {
+      color: var(--correct-border);
+      font-weight: 600;
+    }
+
+    .restart-btn {
+      background: var(--accent-primary);
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 0.95rem;
+      cursor: pointer;
+      align-self: center;
+      transition: background 0.2s ease;
+    }
+
+    .restart-btn:hover {
+      background: var(--accent-hover);
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="quiz-app">
+    <!-- Header -->
+    <header>
+      <div class="app-title">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/></svg>
+        <span>SSC Mineral Resources Quiz</span>
+      </div>
+      <button class="theme-toggle-btn" id="themeToggleBtn">
+        <span id="themeIcon">🌙</span>
+        <span id="themeText">Dark</span>
+      </button>
+    </header>
+
+    <!-- Quiz View -->
+    <div id="quizView" style="display: flex; flex-direction: column; height: 100%; width: 100%; overflow: hidden;">
+      <!-- Progress Bar -->
+      <div class="progress-container">
+        <div class="progress-bar-bg">
+          <div class="progress-bar-fill" id="progressFill"></div>
+        </div>
+        <div class="progress-text" id="progressText">Q 1 of 26</div>
+      </div>
+
+      <!-- Main Body -->
+      <div class="quiz-body">
+        <div>
+          <div class="question-prompt" id="questionPrompt">Loading question...</div>
+          <div id="complexContainer"></div>
+          <div class="options-grid" id="optionsGrid"></div>
+        </div>
+
+        <div>
+          <div class="explanation-box" id="explanationBox"></div>
+          <div class="quiz-footer">
+            <button class="btn-next" id="nextBtn" disabled>
+              <span>Next</span>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Results View -->
+    <div class="results-view" id="resultsView">
+      <div class="results-header">
+        <h2>Quiz Complete!</h2>
+        <p style="color: var(--text-muted); font-size: 0.9rem;">Here is your performance breakdown</p>
+      </div>
+
+      <div class="results-score-card">
+        <div class="score-stat">
+          <div class="val" id="scorePercentage">0%</div>
+          <div class="lbl">Score</div>
+        </div>
+        <div class="score-stat">
+          <div class="val" id="correctCount" style="color: var(--correct-border);">0</div>
+          <div class="lbl">Correct</div>
+        </div>
+        <div class="score-stat">
+          <div class="val" id="incorrectCount" style="color: var(--incorrect-border);">0</div>
+          <div class="lbl">Incorrect</div>
+        </div>
+      </div>
+
+      <div class="breakdown-title" id="breakdownTitle">Incorrect Answers Review</div>
+      <div class="incorrect-list" id="incorrectList"></div>
+
+      <button class="restart-btn" id="restartBtn">Restart Quiz</button>
+    </div>
+  </div>
+
+  <script>
+    // Quiz Data Array
+    const questions = [
+      {
+        id: 1,
+        question: "Which state holds the largest share of Potash reserves in India according to the given text?",
+        options: ["A) Madhya Pradesh", "B) Uttar Pradesh", "C) Rajasthan", "D) Karnataka"],
+        correct: 2,
+        explanation: "As per the notes, Rajasthan accounts for 89.1% of Potash distribution, followed by Madhya Pradesh (5.1%) and Uttar Pradesh (4.1%)."
+      },
+      {
+        id: 2,
+        question: "Which country leads globally in Potash?",
+        options: ["A) China", "B) Canada", "C) Chile", "D) Australia"],
+        correct: 1,
+        explanation: "The notes indicate Canada with a checkmark under the global reference for Potash."
+      },
+      {
+        id: 3,
+        question: "Potash is primarily used in which of the following applications according to the text?",
+        options: ["A) Battery manufacturing and aerospace", "B) Agriculture and water purification", "C) Nuclear energy and defense", "D) Electrical wiring and alloy production"],
+        correct: 1,
+        explanation: "The uses mentioned alongside Potash are Agriculture and Water purification."
+      },
+      {
+        id: 4,
+        question: "Which of the following ores are associated with Tungsten?",
+        options: ["A) Bauxite and Hematite", "B) Wolframite and Scheelite", "C) Malachite and Azurite", "D) Galena and Sphalerite"],
+        correct: 1,
+        explanation: "The notes specify that Tungsten is not found as a pure metal but occurs as Wolframite and Scheelite."
+      },
+      {
+        id: 5,
+        question: "What is the correct descending order of Indian states regarding Tungsten distribution?",
+        options: ["A) Rajasthan > Karnataka > Andhra Pradesh", "B) Karnataka > Rajasthan > Andhra Pradesh", "C) Andhra Pradesh > Karnataka > Rajasthan", "D) Karnataka > Andhra Pradesh > Rajasthan"],
+        correct: 1,
+        explanation: "The order specified in the notes for Tungsten is Karnataka > Raj > Andhra."
+      },
+      {
+        id: 6,
+        question: "Which country is associated with Tungsten in global context?",
+        options: ["A) Canada", "B) Chile", "C) China", "D) USA"],
+        correct: 2,
+        explanation: "China is written directly under Tungsten for its global position."
+      },
+      {
+        id: 7,
+        question: "The famous 'Chuquicamata' (चूकीकामाटा) mine in Chile is renowned for which mineral?",
+        options: ["A) Tungsten", "B) Gold", "C) Copper", "D) Lithium"],
+        correct: 2,
+        explanation: "The text links Chile and 'चूकीकामाटा' directly to Copper."
+      },
+      {
+        id: 8,
+        question: "Which Indian state has the highest reserves and which state has the highest production of Copper respectively?",
+        options: ["A) Madhya Pradesh (Reserves), Rajasthan (Production)", "B) Rajasthan (Reserves), Madhya Pradesh (Production)", "C) Jharkhand (Reserves), Odisha (Production)", "D) Karnataka (Reserves), Rajasthan (Production)"],
+        correct: 1,
+        explanation: "Under Copper, 'Reserve: Rajasthan (Khetri mines)' and 'Production: M.P. (Malanjkhand)' are explicitly mentioned."
+      },
+      {
+        id: 9,
+        question: "Match the following mines with their corresponding mineral/state as mentioned in the text:",
+        complexType: "match",
+        tableData: [
+          { list1: "1. Khetri Mines", list2: "(i) Copper / Madhya Pradesh" },
+          { list1: "2. Malanjkhand", list2: "(ii) Copper / Rajasthan" }
+        ],
+        options: ["A) 1-(i), 2-(ii)", "B) 1-(ii), 2-(i)", "C) Both 1 and 2 are incorrect", "D) 1-(i), 2-(i)"],
+        correct: 1,
+        explanation: "Khetri mines are in Rajasthan (Copper reserves) and Malanjkhand is in M.P. (Copper production)."
+      },
+      {
+        id: 10,
+        question: "Lithium is primarily extracted from which source according to the provided material?",
+        options: ["A) Hard rock pegmatites", "B) Brine Solution", "C) Volcanic ash", "D) Deep sea polymetallic nodules"],
+        correct: 1,
+        explanation: "The notes state: 'Lithium → extracted from Brine Solution'."
+      },
+      {
+        id: 11,
+        question: "Which country holds the top rank in Lithium Reserves and Production respectively?",
+        options: ["A) Australia (Reserves), Chile (Production)", "B) Chile (Reserves), Australia (Production)", "C) China (Reserves), Chile (Production)", "D) Argentina (Reserves), China (Production)"],
+        correct: 1,
+        explanation: "For Lithium: Reserve → Chile, Australia, Argentina; Production → Australia, Chile, China."
+      },
+      {
+        id: 12,
+        question: "Which region/body of water is known as the 'Salton Sea' in relation to Lithium?",
+        options: ["A) Lithium Triangle", "B) Lithium Valley (USA)", "C) Lithium Ridge", "D) Salt Flat Reserve"],
+        correct: 1,
+        explanation: "The notes highlight 'Lithium Valley → Salton Sea (USA)'."
+      },
+      {
+        id: 13,
+        question: "Which Indian regions are listed as having Lithium presence in the notes?",
+        options: ["A) J&K, Karnataka (Mandya), Raj, 36 garh, Jharkhand", "B) Odisha, MP, UP, Bihar", "C) Haryana, Punjab, Himachal Pradesh", "D) Tamil Nadu, Kerala, Andhra Pradesh"],
+        correct: 0,
+        explanation: "These exact states/locations are listed under the Lithium section."
+      },
+      {
+        id: 14,
+        question: "Which of the following natural resources is specifically noted for Andaman Nicobar?",
+        options: ["A) Coal", "B) Natural Gas", "C) Crude Oil", "D) Gold"],
+        correct: 1,
+        explanation: "A specific box note reads: 'Note: Andaman Nicobar → Natural Gas'."
+      },
+      {
+        id: 15,
+        question: "Which mineral is categorized as a 'Conflict Mineral' with China holding reserves and DRC (Democratic Republic of Congo) leading in production?",
+        options: ["A) Cobalt", "B) Tantalum", "C) Tin", "D) Lithium"],
+        correct: 1,
+        explanation: "Under '# conflict Minerals?', Tantalum is marked with Reserve: China and Production: DRC."
+      },
+      {
+        id: 16,
+        question: "Regarding Tin, which Indian state holds the Reserves and which holds the Production respectively?",
+        options: ["A) Haryana (Reserves), 36 garh (Production)", "B) 36 garh (Reserves), Haryana (Production)", "C) Rajasthan (Reserves), Odisha (Production)", "D) Bihar (Reserves), MP (Production)"],
+        correct: 0,
+        explanation: "For Tin: Global is China; Reserve → Haryana; Production → 36 garh (Chhattisgarh)."
+      },
+      {
+        id: 17,
+        question: "Where is the major Reserve of Gold located in India according to the text?",
+        options: ["A) Kolar (Karnataka)", "B) Hutti (Karnataka)", "C) Jamui (Bihar)", "D) Rajasthan"],
+        correct: 2,
+        explanation: "For Gold, Reserve lists Jamui (Bihar), Raj, Karnataka, whereas Production lists Karnataka (Kolar/Hutti)."
+      },
+      {
+        id: 18,
+        question: "Which Indian state is highlighted with a tick mark (✓) for Silver, Lead, and Zinc combined?",
+        options: ["A) Odisha", "B) Rajasthan", "C) Karnataka", "D) Madhya Pradesh"],
+        correct: 1,
+        explanation: "The text lists 'Silver, Lead, Zinc → Rajasthan ✓'."
+      },
+      {
+        id: 19,
+        question: "Which countries lead globally in Silver Reserves (R) and Production (P) respectively?",
+        options: ["A) Peru (Reserve) and Mexico (Production)", "B) Mexico (Reserve) and Peru (Production)", "C) China (Reserve) and USA (Production)", "D) Australia (Reserve) and Chile (Production)"],
+        correct: 0,
+        explanation: "Under Silver, arrows point to Peru (R) for Reserves and (P) Mexico for Production."
+      },
+      {
+        id: 20,
+        question: "Which state is NOT explicitly listed under Aluminium in the notes?",
+        options: ["A) Odisha", "B) 36 garh", "C) UP", "D) Rajasthan"],
+        correct: 3,
+        explanation: "Under Aluminium (Global: China), the listed Indian states are Odisha, 36 garh, and UP."
+      },
+      {
+        id: 21,
+        question: "Cobalt in India is located in Odisha, but it is mainly imported from which country?",
+        options: ["A) DRC", "B) Belgium", "C) China", "D) Australia"],
+        correct: 1,
+        explanation: "Under Cobalt (DRC, Odisha), it is specifically stated: 'Import → mainly Belgium'."
+      },
+      {
+        id: 22,
+        question: "Which Indian location is NOT mentioned under Coal Reserves in the text?",
+        options: ["A) Talcher (Odisha)", "B) Ibb (Odisha)", "C) Mandya (Karnataka)", "D) Jharkhand & 36 garh"],
+        correct: 2,
+        explanation: "Coal Reserves are listed as Odisha (Talcher, Ibb), Jharkhand & 36 garh. (Mandya is listed under Lithium)."
+      },
+      {
+        id: 23,
+        question: "What is the correct order of Coal Production among Indian states as given in the notes?",
+        options: ["A) Jharkhand > Odisha > 36 garh > MP", "B) Odisha > Jharkhand > 36 garh > MP", "C) 36 garh > Odisha > MP > Jharkhand", "D) Odisha > 36 garh > MP > Jharkhand"],
+        correct: 1,
+        explanation: "Under Coal Production (P), the sequence is explicitly written as: Odisha > Jharkhand > 36 garh > MP."
+      },
+      {
+        id: 24,
+        question: "Offshore areas minerals in geography are found in which zone?",
+        options: ["A) Continental Slope", "B) Continental Shelf", "C) Abyssal Plain", "D) Ocean Trench"],
+        correct: 1,
+        explanation: "The text asks '# offshore areas minerals?' and answers 'Continental shelf'."
+      },
+      {
+        id: 25,
+        question: "What is Carlsbad Ridge and what is its primary focus of exploration mentioned in the text?",
+        options: ["A) Indian Ocean — Gold exploration", "B) Arabian Sea — Polymetallic sulphides exploration", "C) Bay of Bengal — Petroleum exploration", "D) Pacific Ocean — Manganese nodules exploration"],
+        correct: 1,
+        explanation: "The text specifies 'Carlsberg ridge → Arabian Sea → explore Polymetallic sulphides'."
+      },
+      {
+        id: 26,
+        question: "Under the Mines & Minerals (Development & Regulation) Act 1957 (MMDR), how are Major and Minor minerals distinguished?",
+        options: [
+          "A) Major minerals have less economic value; Minor minerals have more economic value",
+          "B) Major minerals have more economic value; Minor minerals have less economic value",
+          "C) Major minerals are found offshore; Minor minerals are found onshore",
+          "D) Major minerals are non-metallic; Minor minerals are metallic"
+        ],
+        correct: 1,
+        explanation: "Under MMDR Act 1957, the classification diagram explicitly links 'Major minerals → more economic value' and 'Minor minerals → less economic value'."
+      }
+    ];
+
+    // State Variables
+    let currentIdx = 0;
+    let userAnswers = new Array(questions.length).fill(null);
+
+    // DOM Elements
+    const themeToggleBtn = document.getElementById('themeToggleBtn');
+    const themeIcon = document.getElementById('themeIcon');
+    const themeText = document.getElementById('themeText');
+    const quizView = document.getElementById('quizView');
+    const resultsView = document.getElementById('resultsView');
+    
+    const questionPrompt = document.getElementById('questionPrompt');
+    const complexContainer = document.getElementById('complexContainer');
+    const optionsGrid = document.getElementById('optionsGrid');
+    const explanationBox = document.getElementById('explanationBox');
+    const nextBtn = document.getElementById('nextBtn');
+    const progressFill = document.getElementById('progressFill');
+    const progressText = document.getElementById('progressText');
+
+    // Theme Switcher Logic
+    let isDark = false;
+    themeToggleBtn.addEventListener('click', () => {
+      isDark = !isDark;
+      document.body.setAttribute('data-theme', isDark ? 'dark' : 'light');
+      themeIcon.textContent = isDark ? '☀️' : '🌙';
+      themeText.textContent = isDark ? 'Light' : 'Dark';
+    });
+
+    // Load Question
+    function loadQuestion() {
+      const q = questions[currentIdx];
+      
+      // Update Progress
+      const progressPct = ((currentIdx + 1) / questions.length) * 100;
+      progressFill.style.width = `${progressPct}%`;
+      progressText.textContent = `Q ${currentIdx + 1} of ${questions.length}`;
+
+      // Reset UI elements
+      questionPrompt.textContent = `${q.id}. ${q.question}`;
+      complexContainer.innerHTML = '';
+      optionsGrid.innerHTML = '';
+      explanationBox.classList.remove('visible');
+      explanationBox.innerHTML = '';
+      nextBtn.disabled = true;
+
+      // Render Complex Types (if available)
+      if (q.complexType === 'match' && q.tableData) {
+        let tableHTML = `
+          <div class="complex-content">
+            <table class="match-table">
+              <thead>
+                <tr>
+                  <th>Mines/Locations</th>
+                  <th>Mineral / State</th>
+                </tr>
+              </thead>
+              <tbody>
+        `;
+        q.tableData.forEach(row => {
+          tableHTML += `
+            <tr>
+              <td>${row.list1}</td>
+              <td>${row.list2}</td>
+            </tr>
+          `;
+        });
+        tableHTML += `</tbody></table></div>`;
+        complexContainer.innerHTML = tableHTML;
+      }
+
+      // Render Options
+      const existingAnswer = userAnswers[currentIdx];
+      q.options.forEach((optText, index) => {
+        const btn = document.createElement('button');
+        btn.className = 'option-btn';
+        btn.textContent = optText;
+        btn.onclick = () => handleOptionSelect(index);
+
+        // If previously answered
+        if (existingAnswer !== null) {
+          btn.disabled = true;
+          if (index === q.correct) {
+            btn.classList.add('correct');
+          }
+          if (index === existingAnswer && existingAnswer !== q.correct) {
+            btn.classList.add('incorrect');
+          }
+        }
+
+        optionsGrid.appendChild(btn);
+      });
+
+      // Show explanation if already answered
+      if (existingAnswer !== null) {
+        showExplanation(q);
+        nextBtn.disabled = false;
+      }
+
+      // Update Next button text on last question
+      if (currentIdx === questions.length - 1) {
+        nextBtn.querySelector('span').textContent = 'Finish Quiz';
+      } else {
+        nextBtn.querySelector('span').textContent = 'Next';
+      }
+    }
+
+    // Option Selection Handler
+    function handleOptionSelect(selectedIndex) {
+      const q = questions[currentIdx];
+      userAnswers[currentIdx] = selectedIndex;
+
+      const optionBtns = optionsGrid.querySelectorAll('.option-btn');
+      optionBtns.forEach((btn, index) => {
+        btn.disabled = true;
+        if (index === q.correct) {
+          btn.classList.add('correct');
+        }
+        if (index === selectedIndex && selectedIndex !== q.correct) {
+          btn.classList.add('incorrect');
+        }
+      });
+
+      showExplanation(q);
+      nextBtn.disabled = false;
+    }
+
+    // Display Explanation Box
+    function showExplanation(q) {
+      explanationBox.innerHTML = `<strong>Explanation:</strong> ${q.explanation}`;
+      explanationBox.classList.add('visible');
+    }
+
+    // Navigation Buttons
+    nextBtn.addEventListener('click', () => {
+      if (currentIdx < questions.length - 1) {
+        currentIdx++;
+        loadQuestion();
+      } else {
+        showResults();
+      }
+    });
+
+    // Show End-Screen Results Summary
+    function showResults() {
+      quizView.style.display = 'none';
+      resultsView.classList.add('active');
+
+      let correctCount = 0;
+      let incorrectCount = 0;
+      const incorrectList = document.getElementById('incorrectList');
+      incorrectList.innerHTML = '';
+
+      userAnswers.forEach((ans, index) => {
+        const q = questions[index];
+        if (ans === q.correct) {
+          correctCount++;
+        } else {
+          incorrectCount++;
+          
+          // Construct incorrect breakdown card
+          const card = document.createElement('div');
+          card.className = 'incorrect-card';
+
+          const userAnsText = ans !== null ? q.options[ans] : "Not Answered";
+          const correctAnsText = q.options[q.correct];
+
+          card.innerHTML = `
+            <div class="q-text">Q${q.id}: ${q.question}</div>
+            <div class="ans-details">
+              <div>Your Answer: <span class="user-ans">${userAnsText}</span></div>
+              <div>Correct Answer: <span class="correct-ans">${correctAnsText}</span></div>
+            </div>
+          `;
+          incorrectList.appendChild(card);
+        }
+      });
+
+      const percentage = Math.round((correctCount / questions.length) * 100);
+      document.getElementById('scorePercentage').textContent = `${percentage}%`;
+      document.getElementById('correctCount').textContent = correctCount;
+      document.getElementById('incorrectCount').textContent = incorrectCount;
+
+      if (incorrectCount === 0) {
+        document.getElementById('breakdownTitle').textContent = "Perfect Score! No incorrect answers.";
+      } else {
+        document.getElementById('breakdownTitle').textContent = `Incorrect Answers Review (${incorrectCount})`;
+      }
+    }
+
+    // Restart Quiz
+    document.getElementById('restartBtn').addEventListener('click', () => {
+      currentIdx = 0;
+      userAnswers = new Array(questions.length).fill(null);
+      resultsView.classList.remove('active');
+      quizView.style.display = 'flex';
+      loadQuestion();
+    });
+
+    // Initialize App
+    loadQuestion();
+  </script>
+</body>
+</html>

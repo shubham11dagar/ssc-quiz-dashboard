@@ -1,0 +1,880 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MMDR & Mineral Resources Prep Quiz</title>
+  <style>
+    :root {
+      --bg-color: #f1f5f9;
+      --card-bg: #ffffff;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --border-color: #e2e8f0;
+      --primary: #2563eb;
+      --primary-hover: #1d4ed8;
+      --success-bg: #f0fdf4;
+      --success-border: #22c55e;
+      --success-text: #15803d;
+      --error-bg: #fef2f2;
+      --error-border: #ef4444;
+      --error-text: #b91c1c;
+      --callout-bg: #f8fafc;
+      --callout-border: #cbd5e1;
+      --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+    }
+
+    [data-theme="dark"] {
+      --bg-color: #0f172a;
+      --card-bg: #1e293b;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --border-color: #334155;
+      --primary: #3b82f6;
+      --primary-hover: #60a5fa;
+      --success-bg: #062c1b;
+      --success-border: #22c55e;
+      --success-text: #4ade80;
+      --error-bg: #3f1212;
+      --error-border: #ef4444;
+      --error-text: #fca5a5;
+      --callout-bg: #0f172a;
+      --callout-border: #475569;
+      --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.5);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+      padding: 12px;
+      transition: background-color 0.25s ease, color 0.25s ease;
+    }
+
+    .app-container {
+      width: 100%;
+      max-width: 780px;
+      height: 100%;
+      max-height: 650px;
+      background: var(--card-bg);
+      border-radius: 12px;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border-color);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      position: relative;
+    }
+
+    header {
+      padding: 10px 16px;
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: var(--card-bg);
+      flex-shrink: 0;
+    }
+
+    .app-title {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .badge {
+      background: var(--primary);
+      color: #fff;
+      font-size: 0.7rem;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .theme-toggle {
+      background: none;
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      padding: 4px 10px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.8rem;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      transition: all 0.2s;
+    }
+
+    .theme-toggle:hover {
+      border-color: var(--primary);
+    }
+
+    .progress-bar-container {
+      height: 4px;
+      width: 100%;
+      background: var(--border-color);
+      flex-shrink: 0;
+    }
+
+    .progress-bar {
+      height: 100%;
+      background: var(--primary);
+      width: 0%;
+      transition: width 0.3s ease;
+    }
+
+    .quiz-body {
+      flex: 1;
+      padding: 16px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .question-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+
+    .question-text {
+      font-size: 0.95rem;
+      font-weight: 600;
+      line-height: 1.4;
+      color: var(--text-main);
+    }
+
+    /* Complex Question Types Styling */
+    .callout-box {
+      background-color: var(--callout-bg);
+      border-left: 3px solid var(--primary);
+      border-top: 1px solid var(--border-color);
+      border-right: 1px solid var(--border-color);
+      border-bottom: 1px solid var(--border-color);
+      padding: 8px 12px;
+      border-radius: 0 6px 6px 0;
+      font-size: 0.85rem;
+      line-height: 1.4;
+      margin-top: 4px;
+    }
+
+    .callout-box ol, .callout-box ul {
+      padding-left: 18px;
+    }
+
+    .match-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 6px;
+      font-size: 0.82rem;
+    }
+
+    .match-table th, .match-table td {
+      border: 1px solid var(--border-color);
+      padding: 6px 8px;
+      text-align: left;
+    }
+
+    .match-table th {
+      background: var(--callout-bg);
+      font-weight: 600;
+    }
+
+    /* Options Styling */
+    .options-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-top: 4px;
+    }
+
+    .option-btn {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      padding: 8px 12px;
+      border-radius: 6px;
+      text-align: left;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      outline: none;
+    }
+
+    .option-btn:hover:not(:disabled) {
+      border-color: var(--primary);
+      background-color: var(--callout-bg);
+    }
+
+    .option-btn:disabled {
+      cursor: default;
+    }
+
+    .option-btn.selected-correct {
+      background-color: var(--success-bg) !important;
+      border-color: var(--success-border) !important;
+      color: var(--success-text) !important;
+      font-weight: 600;
+    }
+
+    .option-btn.selected-incorrect {
+      background-color: var(--error-bg) !important;
+      border-color: var(--error-border) !important;
+      color: var(--error-text) !important;
+      font-weight: 600;
+    }
+
+    .option-btn.show-correct {
+      border-color: var(--success-border) !important;
+      background-color: var(--success-bg) !important;
+      color: var(--success-text) !important;
+    }
+
+    /* Feedback Box */
+    .explanation-box {
+      background: var(--callout-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      padding: 8px 12px;
+      font-size: 0.8rem;
+      line-height: 1.35;
+      display: none;
+      animation: fadeIn 0.2s ease-in;
+    }
+
+    .explanation-box.visible {
+      display: block;
+    }
+
+    .explanation-title {
+      font-weight: 700;
+      margin-bottom: 2px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .explanation-title.correct { color: var(--success-text); }
+    .explanation-title.incorrect { color: var(--error-text); }
+
+    footer {
+      padding: 10px 16px;
+      border-top: 1px solid var(--border-color);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: var(--card-bg);
+      flex-shrink: 0;
+    }
+
+    .btn {
+      background: var(--primary);
+      color: #fff;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 6px;
+      font-weight: 600;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: background-color 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .btn:hover {
+      background: var(--primary-hover);
+    }
+
+    .btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    /* Results Screen */
+    .results-screen {
+      display: none;
+      flex-direction: column;
+      height: 100%;
+      padding: 16px;
+      overflow-y: auto;
+    }
+
+    .results-screen.active {
+      display: flex;
+    }
+
+    .results-header {
+      text-align: center;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border-color);
+      margin-bottom: 12px;
+    }
+
+    .score-summary {
+      display: flex;
+      justify-content: space-around;
+      margin: 12px 0;
+      gap: 8px;
+    }
+
+    .score-card {
+      background: var(--callout-bg);
+      border: 1px solid var(--border-color);
+      padding: 8px 12px;
+      border-radius: 8px;
+      text-align: center;
+      flex: 1;
+    }
+
+    .score-card .val {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--primary);
+    }
+
+    .score-card .lbl {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+
+    .breakdown-title {
+      font-size: 0.9rem;
+      font-weight: 700;
+      margin: 8px 0 6px 0;
+    }
+
+    .breakdown-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .review-item {
+      background: var(--callout-bg);
+      border: 1px solid var(--border-color);
+      border-left: 3px solid var(--error-border);
+      padding: 8px 10px;
+      border-radius: 0 6px 6px 0;
+      font-size: 0.8rem;
+    }
+
+    .review-item.correct-item {
+      border-left-color: var(--success-border);
+    }
+
+    .review-q {
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .review-ans {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      font-size: 0.75rem;
+    }
+
+    .review-ans .user-ans { color: var(--error-text); }
+    .review-ans .correct-ans { color: var(--success-text); }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(2px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="app-container">
+    <header>
+      <div class="app-title">
+        MMDR Prep <span class="badge">2026</span>
+      </div>
+      <div class="header-actions">
+        <button class="theme-toggle" id="themeToggleBtn">
+          <span id="themeIcon">🌙</span> <span id="themeText">Dark</span>
+        </button>
+      </div>
+    </header>
+
+    <div class="progress-bar-container" id="progressContainer">
+      <div class="progress-bar" id="progressBar"></div>
+    </div>
+
+    <!-- Active Quiz View -->
+    <main class="quiz-body" id="quizView">
+      <div class="question-header">
+        <span id="questionNum">Question 1 of 15</span>
+        <span id="scoreTracker">Score: 0</span>
+      </div>
+
+      <div class="question-text" id="questionText">Loading question...</div>
+      
+      <div id="complexContainer"></div>
+
+      <div class="options-grid" id="optionsGrid"></div>
+
+      <div class="explanation-box" id="explanationBox">
+        <div class="explanation-title" id="explanationTitle">Explanation</div>
+        <div id="explanationText"></div>
+      </div>
+    </main>
+
+    <footer id="quizFooter">
+      <div style="font-size: 0.75rem; color: var(--text-muted);" id="statusIndicator">
+        Select an answer to proceed
+      </div>
+      <button class="btn" id="nextBtn" disabled>
+        Next Question &rarr;
+      </button>
+    </footer>
+
+    <!-- End-Screen Results View -->
+    <div class="results-screen" id="resultsView">
+      <div class="results-header">
+        <h2>Quiz Completed!</h2>
+        <p style="font-size: 0.8rem; color: var(--text-muted);">Here is your performance summary</p>
+      </div>
+
+      <div class="score-summary">
+        <div class="score-card">
+          <div class="val" id="resScore">0/15</div>
+          <div class="lbl">Final Score</div>
+        </div>
+        <div class="score-card">
+          <div class="val" id="resPercent">0%</div>
+          <div class="lbl">Percentage</div>
+        </div>
+        <div class="score-card">
+          <div class="val" id="resCorrect" style="color: var(--success-text);">0</div>
+          <div class="lbl">Correct</div>
+        </div>
+        <div class="score-card">
+          <div class="val" id="resIncorrect" style="color: var(--error-text);">0</div>
+          <div class="lbl">Incorrect</div>
+        </div>
+      </div>
+
+      <div class="breakdown-title">Question Breakdown</div>
+      <div class="breakdown-list" id="breakdownList"></div>
+
+      <button class="btn" id="restartBtn" style="margin-top: auto; align-self: center; width: 100%; justify-content: center; padding: 10px;">
+        🔄 Restart Quiz
+      </button>
+    </div>
+  </div>
+
+  <script>
+    const questionsData = [
+      {
+        id: 1,
+        question: "Which of the following provisions is NOT associated with the MMDR (Amendment) Act 2025?",
+        options: [
+          "(A) Domestic production of critical minerals",
+          "(B) Zero waste mining",
+          "(C) Extraction of deep-seated minerals (200 m↓)",
+          "(D) Imposition of a cap on captive mine sales"
+        ],
+        correct: 3,
+        explanation: "As per the MMDR (Amendment) Act 2025 details, the Captive mine sales cap has been removed."
+      },
+      {
+        id: 2,
+        question: "Under the MMDR (Amendment) Act 2025, what percentage of extension is specified for a Composite License (Exploration + Mining)?",
+        options: [
+          "(A) 10% extension",
+          "(B) 20% extension",
+          "(C) 30% extension",
+          "(D) 50% extension"
+        ],
+        correct: 2,
+        explanation: "The provisions specify a 10% extension for a Mining Lease and a 30% extension for a Composite License."
+      },
+      {
+        id: 3,
+        question: "In which year was the District Mineral Foundation (DMF) established?",
+        options: [
+          "(A) 2012",
+          "(B) 2015",
+          "(C) 2017",
+          "(D) 2021"
+        ],
+        correct: 1,
+        explanation: "District Mineral Foundation (DMF) was established in 2015."
+      },
+      {
+        id: 4,
+        question: "To which authority does almost the entire revenue generated from mining go?",
+        options: [
+          "(A) Central Government",
+          "(B) State Government",
+          "(C) Panchayati Raj Institutions",
+          "(D) Ministry of Mines"
+        ],
+        correct: 1,
+        explanation: "Mining revenue almost entirely goes to the State Government ('Mining ka lagbhag sara part revenue ka -> State govt ko jata hai')."
+      },
+      {
+        id: 5,
+        question: "Which mineral schedule includes Notified Minerals such as Bauxite, Iron Ore, Limestone, and Manganese Ore?",
+        options: [
+          "(A) 1st Schedule",
+          "(B) 2nd Schedule",
+          "(C) 3rd Schedule",
+          "(D) 4th Schedule"
+        ],
+        correct: 3,
+        explanation: "Bauxite, Iron Ore, Limestone, and Manganese Ore are categorized as Notified Minerals under the 4th Schedule."
+      },
+      {
+        id: 6,
+        question: "According to the notes, what percentage of Rare Earth Permanent Magnets (REPM) components (such as Neodymium + Samarium) is imported from China?",
+        options: [
+          "(A) 30% – 50%",
+          "(B) 50% – 70%",
+          "(C) 60% – 90%",
+          "(D) 80% – 100%"
+        ],
+        correct: 2,
+        explanation: "Under the REPM Manufacturing scheme section, 60% - 90% is imported from China."
+      },
+      {
+        id: 7,
+        question: "What is the full expansion/objective of the SHAKTI Policy (2017)?",
+        options: [
+          "(A) Sustainable Harnessing and Kinetic Transport of Iron",
+          "(B) Harnessing & Allocating Koyla Transparently in India",
+          "(C) Strategic Allocation and Mining of Thermal Power",
+          "(D) Harnessing Solar & Wind Energy Policy"
+        ],
+        correct: 1,
+        explanation: "SHAKTI Policy (2017) stands for 'Harnessing & Allocating Koyla Transparently in India'."
+      },
+      {
+        id: 8,
+        question: "How many Critical Minerals and Rare Earth Minerals are specifically identified/listed in the provided notes, respectively?",
+        options: [
+          "(A) 30 and 17",
+          "(B) 25 and 15",
+          "(C) 17 and 30",
+          "(D) 30 and 20"
+        ],
+        correct: 0,
+        explanation: "Critical minerals are listed as 30 and Rare Earth minerals as 17."
+      },
+      {
+        id: 9,
+        question: "Regarding Graphite, which state holds the top position in Reserves, and which leads in Production in India?",
+        options: [
+          "(A) Reserves: Tamil Nadu | Production: Arunachal Pradesh",
+          "(B) Reserves: Arunachal Pradesh | Production: Tamil Nadu",
+          "(C) Reserves: Odisha | Production: Kerala",
+          "(D) Reserves: Rajasthan | Production: Karnataka"
+        ],
+        correct: 1,
+        explanation: "For Graphite, Indian distribution is: Reserves lead by Arunachal Pradesh, Production lead by Tamil Nadu."
+      },
+      {
+        id: 10,
+        question: "What is the primary natural source of Rare Earth Minerals mentioned in the document?",
+        options: [
+          "(A) Bauxite deposits",
+          "(B) Monazite-bearing beach placer sands",
+          "(C) Sedimentary limestone beds",
+          "(D) Deep ocean nodules"
+        ],
+        correct: 1,
+        explanation: "Rare Earth minerals are sourced primarily from Monazite bearing beach placer sands in Odisha, Kerala, AP, and TN."
+      },
+      {
+        id: 11,
+        question: "Which Indian states lead in Reserves (R) and Production (P) of Limestone, respectively?",
+        options: [
+          "(A) R: Rajasthan | P: Karnataka",
+          "(B) R: Karnataka | P: Rajasthan",
+          "(C) R: Andhra Pradesh | P: Odisha",
+          "(D) R: Assam | P: Gujarat"
+        ],
+        correct: 1,
+        explanation: "For Limestone, the reserves top state is Karnataka (R) and production top state is Rajasthan (P)."
+      },
+      {
+        id: 12,
+        question: "Which country ranks first globally in terms of Uranium Reserves and Production, respectively?",
+        options: [
+          "(A) Australia (Reserves), Kazakhstan (Production)",
+          "(B) Kazakhstan (Reserves), Australia (Production)",
+          "(C) Russia (Reserves), USA (Production)",
+          "(D) China (Reserves), Australia (Production)"
+        ],
+        correct: 0,
+        explanation: "For Uranium, Australia holds the top spot for Reserves, and Kazakhstan leads in Production."
+      },
+      {
+        id: 13,
+        question: "Which Indian state is listed as top leading state for Crude Oil Reserves, and which state leads in Production?",
+        options: [
+          "(A) Reserves: Gujarat | Production: Assam",
+          "(B) Reserves: Assam & Rajasthan | Production: Gujarat",
+          "(C) Reserves: Rajasthan | Production: Andhra Pradesh",
+          "(D) Reserves: Tamil Nadu | Production: Odisha"
+        ],
+        correct: 1,
+        explanation: "For Crude Oil, Reserves lead: Assam & Rajasthan, Production lead: Gujarat."
+      },
+      {
+        id: 14,
+        question: "Which of the following sequences represents the global order/countries associated with Crude Oil as listed in the source text?",
+        options: [
+          "(A) Venezuela > Saudi > Iran > Iraq",
+          "(B) Saudi > Venezuela > Iraq > Iran",
+          "(C) USA > Russia > Saudi > Venezuela",
+          "(D) Iran > Iraq > Venezuela > Saudi"
+        ],
+        correct: 0,
+        explanation: "The global order listed for Crude Oil reserves is Venezuela > Saudi > Iran > Iraq."
+      },
+      {
+        id: 15,
+        question: "For Natural Gas, which Indian state and global countries are highlighted in the provided notes?",
+        options: [
+          "(A) State: Gujarat | Global: USA, China",
+          "(B) State: Assam | Global: Russia, USA",
+          "(C) State: Rajasthan | Global: Venezuela, Saudi",
+          "(D) State: Odisha | Global: Australia, Kazakhstan"
+        ],
+        correct: 1,
+        explanation: "For Natural Gas, Assam represents the key domestic state, while Russia and USA are leading global countries."
+      }
+    ];
+
+    // App State
+    let currentIndex = 0;
+    let score = 0;
+    let userAnswers = new Array(questionsData.length).fill(null);
+    let isThemeDark = false;
+
+    // DOM Elements
+    const themeToggleBtn = document.getElementById("themeToggleBtn");
+    const themeIcon = document.getElementById("themeIcon");
+    const themeText = document.getElementById("themeText");
+    const progressBar = document.getElementById("progressBar");
+    const questionNum = document.getElementById("questionNum");
+    const scoreTracker = document.getElementById("scoreTracker");
+    const questionText = document.getElementById("questionText");
+    const complexContainer = document.getElementById("complexContainer");
+    const optionsGrid = document.getElementById("optionsGrid");
+    const explanationBox = document.getElementById("explanationBox");
+    const explanationTitle = document.getElementById("explanationTitle");
+    const explanationText = document.getElementById("explanationText");
+    const statusIndicator = document.getElementById("statusIndicator");
+    const nextBtn = document.getElementById("nextBtn");
+    const quizView = document.getElementById("quizView");
+    const quizFooter = document.getElementById("quizFooter");
+    const progressContainer = document.getElementById("progressContainer");
+    const resultsView = document.getElementById("resultsView");
+
+    // Theme Switcher
+    themeToggleBtn.addEventListener("click", () => {
+      isThemeDark = !isThemeDark;
+      document.documentElement.setAttribute("data-theme", isThemeDark ? "dark" : "light");
+      themeIcon.textContent = isThemeDark ? "☀️" : "🌙";
+      themeText.textContent = isThemeDark ? "Light" : "Dark";
+    });
+
+    // Initialize Quiz
+    function loadQuestion() {
+      const q = questionsData[currentIndex];
+      
+      // Update header
+      questionNum.textContent = `Question ${currentIndex + 1} of ${questionsData.length}`;
+      scoreTracker.textContent = `Score: ${score}`;
+      progressBar.style.width = `${((currentIndex) / questionsData.length) * 100}%`;
+
+      // Set Main Question Text
+      questionText.textContent = q.question;
+
+      // Complex Question Styling Container Reset
+      complexContainer.innerHTML = "";
+      if (q.statements) {
+        const callout = document.createElement("div");
+        callout.className = "callout-box";
+        let html = "<ol>";
+        q.statements.forEach(stmt => {
+          html += `<li>${stmt}</li>`;
+        });
+        html += "</ol>";
+        callout.innerHTML = html;
+        complexContainer.appendChild(callout);
+      } else if (q.matchData) {
+        const table = document.createElement("table");
+        table.className = "match-table";
+        let html = `<thead><tr><th>${q.matchData.colAHeader}</th><th>${q.matchData.colBHeader}</th></tr></thead><tbody>`;
+        for(let i = 0; i < q.matchData.listA.length; i++) {
+          html += `<tr><td>${q.matchData.listA[i]}</td><td>${q.matchData.listB[i]}</td></tr>`;
+        }
+        html += "</tbody>";
+        table.innerHTML = html;
+        complexContainer.appendChild(table);
+      }
+
+      // Render Options
+      optionsGrid.innerHTML = "";
+      q.options.forEach((optText, idx) => {
+        const btn = document.createElement("button");
+        btn.className = "option-btn";
+        btn.innerHTML = `<span>${optText}</span>`;
+        btn.addEventListener("click", () => selectOption(idx));
+        optionsGrid.appendChild(btn);
+      });
+
+      // Reset State
+      explanationBox.classList.remove("visible");
+      nextBtn.disabled = true;
+      statusIndicator.textContent = "Select an answer to proceed";
+
+      // If user already answered this (for state restoration)
+      if (userAnswers[currentIndex] !== null) {
+        restoreAnswer(userAnswers[currentIndex]);
+      }
+    }
+
+    function selectOption(selectedIndex) {
+      const q = questionsData[currentIndex];
+      userAnswers[currentIndex] = selectedIndex;
+
+      const isCorrect = selectedIndex === q.correct;
+      if (isCorrect) {
+        score++;
+        scoreTracker.textContent = `Score: ${score}`;
+      }
+
+      applyAnswerUI(selectedIndex, q.correct, isCorrect);
+    }
+
+    function applyAnswerUI(selectedIndex, correctIndex, isCorrect) {
+      const buttons = optionsGrid.querySelectorAll(".option-btn");
+      buttons.forEach((btn, idx) => {
+        btn.disabled = true;
+        if (idx === selectedIndex) {
+          btn.classList.add(isCorrect ? "selected-correct" : "selected-incorrect");
+        }
+        if (idx === correctIndex && !isCorrect) {
+          btn.classList.add("show-correct");
+        }
+      });
+
+      // Show Explanation
+      explanationTitle.textContent = isCorrect ? "✓ Correct Answer" : "✗ Incorrect Answer";
+      explanationTitle.className = `explanation-title ${isCorrect ? "correct" : "incorrect"}`;
+      explanationText.textContent = questionsData[currentIndex].explanation;
+      explanationBox.classList.add("visible");
+
+      statusIndicator.textContent = "Click Next to continue";
+      nextBtn.disabled = false;
+    }
+
+    function restoreAnswer(selectedIndex) {
+      const q = questionsData[currentIndex];
+      const isCorrect = selectedIndex === q.correct;
+      applyAnswerUI(selectedIndex, q.correct, isCorrect);
+    }
+
+    // Next Button Click
+    nextBtn.addEventListener("click", () => {
+      if (currentIndex < questionsData.length - 1) {
+        currentIndex++;
+        loadQuestion();
+      } else {
+        showResults();
+      }
+    });
+
+    // Results Dashboard Rendering
+    function showResults() {
+      quizView.style.display = "none";
+      quizFooter.style.display = "none";
+      progressContainer.style.display = "none";
+      resultsView.classList.add("active");
+
+      const percentage = Math.round((score / questionsData.length) * 100);
+      document.getElementById("resScore").textContent = `${score}/${questionsData.length}`;
+      document.getElementById("resPercent").textContent = `${percentage}%`;
+      document.getElementById("resCorrect").textContent = score;
+      document.getElementById("resIncorrect").textContent = questionsData.length - score;
+
+      const breakdownList = document.getElementById("breakdownList");
+      breakdownList.innerHTML = "";
+
+      questionsData.forEach((q, idx) => {
+        const userAns = userAnswers[idx];
+        const isCorrect = userAns === q.correct;
+
+        const item = document.createElement("div");
+        item.className = `review-item ${isCorrect ? "correct-item" : ""}`;
+
+        const userAnsText = userAns !== null ? q.options[userAns] : "Not Answered";
+        const correctAnsText = q.options[q.correct];
+
+        item.innerHTML = `
+          <div class="review-q">Q${idx + 1}: ${q.question}</div>
+          <div class="review-ans">
+            ${!isCorrect ? `<span class="user-ans">Your Answer: ${userAnsText}</span>` : ""}
+            <span class="correct-ans">Correct Answer: ${correctAnsText}</span>
+          </div>
+        `;
+        breakdownList.appendChild(item);
+      });
+    }
+
+    // Restart Quiz
+    document.getElementById("restartBtn").addEventListener("click", () => {
+      currentIndex = 0;
+      score = 0;
+      userAnswers.fill(null);
+
+      resultsView.classList.remove("active");
+      quizView.style.display = "flex";
+      quizFooter.style.display = "flex";
+      progressContainer.style.display = "block";
+
+      loadQuestion();
+    });
+
+    // Initial Load
+    loadQuestion();
+  </script>
+</body>
+</html>
