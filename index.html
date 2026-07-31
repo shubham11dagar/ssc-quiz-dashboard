@@ -3,34 +3,36 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>SSC Exam Dashboard</title>
+  <title>SSC Exam Explorer</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
   <style>
     body { font-family: 'Inter', sans-serif; }
-    .subject-btn, .quiz-card { transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1); }
+    .folder-card, .quiz-card { transition: all 0.2s ease-in-out; }
   </style>
 </head>
 <body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col">
 
+  <!-- Header -->
   <header class="border-b border-slate-800/80 bg-slate-900/50 backdrop-blur-md sticky top-0 z-50">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
       <div class="flex items-center gap-3">
         <div class="w-9 h-9 rounded-xl bg-indigo-600/20 text-indigo-400 flex items-center justify-center font-bold text-lg border border-indigo-500/30">
-          ⚡
+          📂
         </div>
         <div>
-          <h1 class="text-base font-semibold text-white tracking-wide">SSC Prep Dashboard</h1>
-          <p class="text-xs text-slate-400">Automated Static Quiz Hub</p>
+          <h1 class="text-base font-semibold text-white tracking-wide">SSC Quiz Explorer</h1>
+          <p class="text-xs text-slate-400">Dynamic Hierarchy Explorer</p>
         </div>
       </div>
 
+      <!-- Quick Search Bar -->
       <div class="relative w-48 sm:w-64">
         <input 
           type="text" 
           id="searchInput" 
-          placeholder="Search topic or path..." 
-          oninput="renderQuizzes()" 
+          placeholder="Search any quiz or file..." 
+          oninput="handleSearch()" 
           class="w-full bg-slate-900 border border-slate-800 rounded-lg px-3 py-1.5 text-xs text-slate-200 placeholder-slate-500 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
         />
       </div>
@@ -38,23 +40,31 @@
   </header>
 
   <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-1 w-full">
-    <section class="mb-10">
-      <div class="flex items-center justify-between mb-4">
-        <h2 class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Select Subject</h2>
+    
+    <!-- Breadcrumb Navigation Bar -->
+    <nav id="breadcrumbBar" class="flex items-center flex-wrap gap-2 mb-8 bg-slate-900/60 p-3 rounded-xl border border-slate-800/80 text-xs">
+      <!-- Injected via JavaScript -->
+    </nav>
+
+    <!-- Folder Navigation Section -->
+    <section id="folderSection" class="mb-10">
+      <h2 class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-4">Folders</h2>
+      <div id="folderGrid" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+        <!-- Injected via JavaScript -->
       </div>
-      <div id="subjectGrid" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3"></div>
     </section>
 
-    <section>
-      <div class="flex items-center justify-between mb-4">
-        <h2 id="currentCategoryTitle" class="text-lg font-semibold text-white">All Quizzes</h2>
-        <span id="quizCountTag" class="text-xs bg-slate-800 text-slate-300 px-2.5 py-1 rounded-full border border-slate-700">0 Quizzes</span>
+    <!-- Quiz Files Section -->
+    <section id="fileSection">
+      <h2 class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-4">Quiz Websites</h2>
+      <div id="fileGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <!-- Injected via JavaScript -->
       </div>
-
-      <div id="quizGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
     </section>
+
   </main>
 
+  <!-- Embedded Modal View -->
   <div id="quizModal" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md z-50 hidden flex flex-col">
     <div class="p-4 bg-slate-900 border-b border-slate-800 flex items-center justify-between">
       <h3 id="modalTitle" class="text-sm font-semibold text-white truncate">Quiz Title</h3>
@@ -66,190 +76,197 @@
   </div>
 
   <footer class="border-t border-slate-800/60 py-4 text-center text-xs text-slate-500">
-    SSC Exam Prep Hub • Automatically Synced via GitHub Actions
+    SSC Exam Explorer • Hierarchical Folder System
   </footer>
 
   <script>
     // AUTO-GENERATED-START
-    const fileTree = [
-  {
-    "title": "Set 1",
-    "path": "English/Set 1.html",
-    "folders": [
-      "English"
-    ]
-  },
-  {
-    "title": "Dams & Waterfalls",
-    "path": "Geography/Dams & Waterfalls.html",
-    "folders": [
-      "Geography"
-    ]
-  },
-  {
-    "title": "Minerals Part 2",
-    "path": "Geography/Minerals part 2.html",
-    "folders": [
-      "Geography"
-    ]
-  },
-  {
-    "title": "Minerals Part 1",
-    "path": "Geography/Minerals part 1.html",
-    "folders": [
-      "Geography"
-    ]
-  },
-  {
-    "title": "Olympics Part 3",
-    "path": "Static/Sports/Olympics part 3.html",
-    "folders": [
-      "Static",
-      "Sports"
-    ]
-  },
-  {
-    "title": "Olympics Part 2",
-    "path": "Static/Sports/Olympics part 2.html",
-    "folders": [
-      "Static",
-      "Sports"
-    ]
-  },
-  {
-    "title": "Olympics Part 1",
-    "path": "Static/Sports/Olympics part 1.html",
-    "folders": [
-      "Static",
-      "Sports"
-    ]
-  },
-  {
-    "title": "2. Launch Vehicles & Satellites",
-    "path": "Current Affairs/Space/2. Launch Vehicles & Satellites.html",
-    "folders": [
-      "Current Affairs",
-      "Space"
-    ]
-  },
-  {
-    "title": "1. Space History And Orbits",
-    "path": "Current Affairs/Space/1. Space history and orbits.html",
-    "folders": [
-      "Current Affairs",
-      "Space"
-    ]
-  },
-  {
-    "title": "Decimal To Fraction",
-    "path": "Maths/decimal to fraction.html",
-    "folders": [
-      "Maths"
-    ]
-  }
-];
+    const fileTree = [];
     // AUTO-GENERATED-END
 
-    let activeSubject = "ALL";
+    // Current folder state array, e.g. ["Subjects", "Maths", "Algebra"]
+    let currentPath = [];
 
-    function initDashboard() {
-      renderSubjects();
-      renderQuizzes();
+    function initExplorer() {
+      renderExplorer();
     }
 
-    function getUniqueSubjects() {
-      const subjects = new Set(autoScannedQuizzes.map(q => q.subject));
-      return ["ALL", ...Array.from(subjects)];
+    function navigateToFolder(pathArray) {
+      currentPath = pathArray;
+      document.getElementById('searchInput').value = '';
+      renderExplorer();
     }
 
-    function renderSubjects() {
-      const subjectGrid = document.getElementById('subjectGrid');
-      subjectGrid.innerHTML = '';
-      const subjects = getUniqueSubjects();
+    function renderBreadcrumbs() {
+      const bar = document.getElementById('breadcrumbBar');
+      bar.innerHTML = '';
 
-      subjects.forEach(subj => {
-        const isActive = subj === activeSubject;
-        const btn = document.createElement('button');
-        btn.onclick = () => selectSubject(subj);
+      // Root Home Button
+      const homeBtn = document.createElement('button');
+      homeBtn.onclick = () => navigateToFolder([]);
+      homeBtn.className = `px-2.5 py-1 rounded-lg hover:bg-slate-800 transition-colors ${currentPath.length === 0 ? 'text-indigo-400 font-semibold' : 'text-slate-400'}`;
+      homeBtn.innerHTML = `🏠 Root`;
+      bar.appendChild(homeBtn);
+
+      // Build intermediate breadcrumb steps
+      let pathAccumulator = [];
+      currentPath.forEach((folderName, index) => {
+        pathAccumulator.push(folderName);
+        const targetPath = [...pathAccumulator];
         
-        btn.className = `subject-btn flex items-center justify-between p-3 rounded-xl border text-left cursor-pointer ${
-          isActive 
-            ? 'bg-indigo-600/10 border-indigo-500 text-white shadow-lg shadow-indigo-500/10' 
-            : 'bg-slate-900/60 border-slate-800 text-slate-400 hover:bg-slate-800/60 hover:border-slate-700'
-        }`;
+        const separator = document.createElement('span');
+        separator.className = 'text-slate-600';
+        separator.innerText = '/';
+        bar.appendChild(separator);
 
-        const count = subj === "ALL" ? autoScannedQuizzes.length : autoScannedQuizzes.filter(q => q.subject === subj).length;
-
-        btn.innerHTML = `
-          <span class="text-xs font-medium truncate">${subj}</span>
-          <span class="text-[10px] bg-slate-800 text-slate-400 px-1.5 py-0.5 rounded border border-slate-700">${count}</span>
-        `;
-        subjectGrid.appendChild(btn);
+        const folderBtn = document.createElement('button');
+        folderBtn.onclick = () => navigateToFolder(targetPath);
+        const isLast = index === currentPath.length - 1;
+        folderBtn.className = `px-2 py-1 rounded-lg hover:bg-slate-800 transition-colors ${isLast ? 'text-indigo-400 font-semibold bg-indigo-500/10' : 'text-slate-400'}`;
+        folderBtn.innerText = folderName;
+        bar.appendChild(folderBtn);
       });
     }
 
-    function selectSubject(subjectName) {
-      activeSubject = subjectName;
-      renderSubjects();
-      renderQuizzes();
-    }
+    function renderExplorer() {
+      renderBreadcrumbs();
 
-    function renderQuizzes() {
-      const quizGrid = document.getElementById('quizGrid');
-      const searchQuery = document.getElementById('searchInput').value.toLowerCase();
-      quizGrid.innerHTML = '';
+      const folderGrid = document.getElementById('folderGrid');
+      const fileGrid = document.getElementById('fileGrid');
+      const folderSection = document.getElementById('folderSection');
+      const fileSection = document.getElementById('fileSection');
 
-      let filtered = activeSubject === "ALL" 
-        ? autoScannedQuizzes 
-        : autoScannedQuizzes.filter(q => q.subject === activeSubject);
+      folderGrid.innerHTML = '';
+      fileGrid.innerHTML = '';
 
-      if (searchQuery) {
-        filtered = filtered.filter(q => 
-          q.title.toLowerCase().includes(searchQuery) || 
-          q.path.toLowerCase().includes(searchQuery) ||
-          q.tag.toLowerCase().includes(searchQuery)
-        );
+      const currentDepth = currentPath.length;
+
+      // Filter files matching current folder depth
+      const matchingFiles = fileTree.filter(item => {
+        if (item.folders.length < currentDepth) return false;
+        for (let i = 0; i < currentDepth; i++) {
+          if (item.folders[i] !== currentPath[i]) return false;
+        }
+        return true;
+      });
+
+      // Find subfolders at current level
+      const subfolderSet = new Set();
+      const filesAtThisLevel = [];
+
+      matchingFiles.forEach(item => {
+        if (item.folders.length > currentDepth) {
+          subfolderSet.add(item.folders[currentDepth]);
+        } else if (item.folders.length === currentDepth) {
+          filesAtThisLevel.push(item);
+        }
+      });
+
+      // Render Subfolders
+      const subfolders = Array.from(subfolderSet);
+      if (subfolders.length === 0) {
+        folderSection.classList.add('hidden');
+      } else {
+        folderSection.classList.remove('hidden');
+        subfolders.forEach(subfolder => {
+          const card = document.createElement('div');
+          card.onclick = () => navigateToFolder([...currentPath, subfolder]);
+          card.className = "folder-card bg-slate-900/80 border border-slate-800 rounded-xl p-4 flex items-center gap-3 cursor-pointer hover:border-indigo-500/50 hover:bg-slate-900 hover:shadow-lg";
+          card.innerHTML = `
+            <div class="text-2xl">📁</div>
+            <div class="truncate">
+              <h3 class="text-xs font-semibold text-white truncate">${subfolder}</h3>
+              <p class="text-[10px] text-slate-500">Folder</p>
+            </div>
+          `;
+          folderGrid.appendChild(card);
+        });
       }
 
-      document.getElementById('currentCategoryTitle').innerText = activeSubject === "ALL" ? "All Quizzes" : activeSubject;
-      document.getElementById('quizCountTag').innerText = `${filtered.length} Available`;
+      // Render Files
+      if (filesAtThisLevel.length === 0) {
+        if (subfolders.length === 0) {
+          fileGrid.innerHTML = `
+            <div class="col-span-full py-12 text-center text-slate-500 text-sm">
+              This folder is empty.
+            </div>
+          `;
+        } else {
+          fileSection.classList.add('hidden');
+        }
+      } else {
+        fileSection.classList.remove('hidden');
+        filesAtThisLevel.forEach(file => {
+          const card = document.createElement('div');
+          card.className = "quiz-card bg-slate-900/80 border border-slate-800/80 rounded-xl p-5 flex flex-col justify-between hover:border-slate-700 hover:shadow-xl";
+          card.innerHTML = `
+            <div>
+              <div class="flex items-center gap-2 mb-2">
+                <span class="text-lg">📄</span>
+                <span class="text-[10px] text-indigo-400 bg-indigo-500/10 px-2 py-0.5 rounded border border-indigo-500/20 font-mono">Quiz Page</span>
+              </div>
+              <h3 class="text-sm font-semibold text-white mb-2">${file.title}</h3>
+              <p class="text-[11px] text-slate-500 font-mono truncate mb-4" title="${file.path}">${file.path}</p>
+            </div>
+            
+            <div class="grid grid-cols-2 gap-2">
+              <button onclick="openQuizModal('${file.path}', '${file.title}')" 
+                 class="inline-flex items-center justify-center bg-indigo-600/20 hover:bg-indigo-600 text-indigo-300 hover:text-white text-xs font-medium py-2 rounded-lg transition-colors border border-indigo-500/30">
+                Modal View
+              </button>
+              <a href="${file.path}" target="_self" 
+                 class="inline-flex items-center justify-center bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-medium py-2 rounded-lg transition-colors border border-slate-700">
+                Direct Link
+              </a>
+            </div>
+          `;
+          fileGrid.appendChild(card);
+        });
+      }
+    }
 
-      if (filtered.length === 0) {
-        quizGrid.innerHTML = `
-          <div class="col-span-full py-12 text-center text-slate-500 text-sm">
-            No quiz files found in this category.
-          </div>
-        `;
+    // Search Mode override
+    function handleSearch() {
+      const query = document.getElementById('searchInput').value.toLowerCase().trim();
+      if (!query) {
+        renderExplorer();
         return;
       }
 
-      filtered.forEach(quiz => {
+      document.getElementById('folderSection').classList.add('hidden');
+      document.getElementById('fileSection').classList.remove('hidden');
+
+      const fileGrid = document.getElementById('fileGrid');
+      fileGrid.innerHTML = '';
+
+      const searchResults = fileTree.filter(f => 
+        f.title.toLowerCase().includes(query) || 
+        f.path.toLowerCase().includes(query)
+      );
+
+      if (searchResults.length === 0) {
+        fileGrid.innerHTML = `<div class="col-span-full py-12 text-center text-slate-500 text-sm">No quizzes found matching "${query}".</div>`;
+        return;
+      }
+
+      searchResults.forEach(file => {
         const card = document.createElement('div');
-        card.className = "quiz-card bg-slate-900/80 border border-slate-800/80 rounded-xl p-5 flex flex-col justify-between hover:border-slate-700 hover:shadow-xl hover:translate-y-[-2px]";
-        
+        card.className = "quiz-card bg-slate-900/80 border border-slate-800/80 rounded-xl p-5 flex flex-col justify-between hover:border-slate-700";
         card.innerHTML = `
           <div>
-            <div class="flex items-center justify-between mb-2">
-              <span class="text-[10px] font-semibold tracking-wider text-indigo-400 bg-indigo-500/10 border border-indigo-500/20 px-2 py-0.5 rounded-full uppercase">
-                ${quiz.tag}
-              </span>
+            <div class="flex items-center gap-2 mb-2">
+              <span class="text-lg">🔍</span>
+              <span class="text-[10px] text-slate-400 font-mono">${file.folders.join(' / ')}</span>
             </div>
-            <h3 class="text-sm font-semibold text-white mb-1.5 leading-snug">${quiz.title}</h3>
-            <p class="text-[11px] text-slate-500 font-mono truncate mb-4" title="${quiz.path}">${quiz.path}</p>
+            <h3 class="text-sm font-semibold text-white mb-2">${file.title}</h3>
+            <p class="text-[11px] text-slate-500 font-mono truncate mb-4">${file.path}</p>
           </div>
-          
           <div class="grid grid-cols-2 gap-2">
-            <button onclick="openQuizModal('${quiz.path}', '${quiz.title}')" 
-               class="inline-flex items-center justify-center bg-indigo-600/20 hover:bg-indigo-600 text-indigo-300 hover:text-white text-xs font-medium py-2 rounded-lg transition-colors border border-indigo-500/30">
-              Modal View
-            </button>
-            <a href="${quiz.path}" target="_self" 
-               class="inline-flex items-center justify-center bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-medium py-2 rounded-lg transition-colors border border-slate-700">
-              Direct Link
-            </a>
+            <button onclick="openQuizModal('${file.path}', '${file.title}')" class="bg-indigo-600/20 hover:bg-indigo-600 text-indigo-300 hover:text-white text-xs font-medium py-2 rounded-lg border border-indigo-500/30">Modal View</button>
+            <a href="${file.path}" class="bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-medium py-2 rounded-lg text-center border border-slate-700">Direct Link</a>
           </div>
         `;
-        quizGrid.appendChild(card);
+        fileGrid.appendChild(card);
       });
     }
 
@@ -264,7 +281,7 @@
       document.getElementById('quizModal').classList.add('hidden');
     }
 
-    initDashboard();
+    initExplorer();
   </script>
 </body>
 </html>
