@@ -1,0 +1,1183 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SSC CGL Space Technology Practice Exam</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace']
+                    },
+                    colors: {
+                        brand: {
+                            50: '#eef2ff',
+                            100: '#e0e7ff',
+                            500: '#6366f1',
+                            600: '#4f46e5',
+                            700: '#4338ca',
+                            900: '#312e81'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Font Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            user-select: none;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        /* Custom scrollbar for results review list */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(156, 163, 175, 0.4);
+            border-radius: 9999px;
+        }
+        .dark ::-webkit-scrollbar-thumb {
+            background: rgba(75, 85, 99, 0.5);
+        }
+        /* Pulse animations for status indicators */
+        @keyframes subtlePulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.85; transform: scale(0.98); }
+        }
+        .animate-subtle-pulse {
+            animation: subtlePulse 2s infinite ease-in-out;
+        }
+        /* Custom highlight transitions */
+        .option-card {
+            transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+    </style>
+</head>
+<body class="bg-slate-100 text-slate-800 dark:bg-slate-950 dark:text-slate-100 h-screen w-screen overflow-hidden flex flex-col justify-between transition-colors duration-200">
+
+    <!-- TOP HEADER BAR (Compact Fixed Height ~56px) -->
+    <header class="h-14 bg-white/90 dark:bg-slate-900/90 backdrop-blur border-b border-slate-200 dark:border-slate-800 px-4 md:px-6 flex items-center justify-between shrink-0 z-20">
+        <div class="flex items-center space-x-3">
+            <div class="bg-indigo-600 text-white p-2 rounded-lg flex items-center justify-center shadow-md shadow-indigo-500/20">
+                <i class="fa-solid fa-rocket text-sm"></i>
+            </div>
+            <div>
+                <h1 class="text-sm md:text-base font-bold leading-tight tracking-tight text-slate-900 dark:text-white flex items-center gap-2">
+                    SSC Space Technology
+                    <span class="text-[10px] bg-indigo-100 dark:bg-indigo-950 text-indigo-700 dark:text-indigo-300 font-semibold px-2 py-0.5 rounded-full border border-indigo-200 dark:border-indigo-800">CGL / CHSL</span>
+                </h1>
+                <p class="text-[11px] text-slate-500 dark:text-slate-400 hidden sm:block">35 Standard Exam MCQs & Complex Matching Questions</p>
+            </div>
+        </div>
+
+        <!-- Right Side Header Tools -->
+        <div class="flex items-center space-x-3 md:space-x-4">
+            <!-- Timer Display -->
+            <div class="flex items-center space-x-1.5 bg-slate-100 dark:bg-slate-800 px-2.5 py-1 rounded-md text-xs font-mono font-medium text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
+                <i class="fa-regular fa-clock text-indigo-500"></i>
+                <span id="timer-display">00:00</span>
+            </div>
+
+            <!-- Score Pill -->
+            <div id="header-score-pill" class="flex items-center space-x-1 bg-indigo-50 dark:bg-indigo-950/60 px-2.5 py-1 rounded-md text-xs font-semibold text-indigo-700 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-800">
+                <i class="fa-solid fa-trophy text-amber-500"></i>
+                <span id="header-score">0 / 35</span>
+            </div>
+
+            <!-- Dark / Light Mode Toggle Button -->
+            <button id="theme-toggle-btn" class="p-2 rounded-lg bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 transition-colors" title="Toggle Light/Dark Theme">
+                <i class="fa-solid fa-moon text-sm dark:hidden"></i>
+                <i class="fa-solid fa-sun text-sm hidden dark:block text-amber-400"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- PROGRESS BAR (Thin line under header) -->
+    <div class="w-full bg-slate-200 dark:bg-slate-800 h-1 shrink-0">
+        <div id="progress-bar" class="bg-indigo-600 h-1 w-0 transition-all duration-300"></div>
+    </div>
+
+    <!-- MAIN QUIZ CONTAINER (Strictly optimized to fit current viewport height) -->
+    <main id="quiz-view" class="flex-1 min-h-0 p-2 sm:p-4 max-w-5xl w-full mx-auto flex flex-col justify-between gap-2 overflow-hidden">
+        
+        <!-- CARD CONTAINER -->
+        <div id="question-card" class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col justify-between flex-1 min-h-0 p-3.5 sm:p-5 overflow-hidden transition-all duration-200">
+            
+            <!-- Question Top Status Bar -->
+            <div class="flex items-center justify-between pb-2 border-b border-slate-100 dark:border-slate-800/80 shrink-0">
+                <div class="flex items-center space-x-2">
+                    <span id="question-badge" class="px-2.5 py-0.5 rounded-md text-xs font-bold bg-indigo-600 text-white shadow-sm">
+                        Q1 of 35
+                    </span>
+                    <span id="question-type-tag" class="px-2 py-0.5 rounded text-[11px] font-medium bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-700">
+                        Single Choice
+                    </span>
+                </div>
+                <div class="flex items-center space-x-2 text-xs text-slate-500 dark:text-slate-400">
+                    <span class="hidden sm:inline">Use keys <kbd class="px-1.5 py-0.5 bg-slate-100 dark:bg-slate-800 rounded border border-slate-300 dark:border-slate-700 font-mono text-[10px]">A-D</kbd> or <kbd class="px-1.5 py-0.5 bg-slate-100 dark:bg-slate-800 rounded border border-slate-300 dark:border-slate-700 font-mono text-[10px]">1-4</kbd></span>
+                    <button id="grid-toggle-btn" class="p-1 px-2 rounded hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-300 flex items-center gap-1 font-medium text-xs" title="View Question Palette">
+                        <i class="fa-solid fa-th"></i>
+                        <span class="hidden xs:inline">Palette</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Scrollable Content Area within Card (Handles prompt, complex boxes, and options) -->
+            <div class="flex-1 overflow-y-auto my-2 pr-1 space-y-3">
+                
+                <!-- Question Main Text Prompt -->
+                <div id="question-prompt" class="text-sm sm:text-base font-semibold text-slate-900 dark:text-slate-100 leading-snug">
+                    <!-- Dynamic Question Text Insertion -->
+                </div>
+
+                <!-- Complex Container (Statements or Matching Table dynamically inserted here) -->
+                <div id="complex-container" class="hidden"></div>
+
+                <!-- Sub Question Prompt (e.g. "Which of the statements given above is/are correct?") -->
+                <div id="sub-question-prompt" class="hidden text-xs sm:text-sm font-semibold text-slate-700 dark:text-slate-300 italic pt-1"></div>
+
+                <!-- OPTIONS CONTAINER GRID (Compact, 1 column mobile, 2 column desktop if options are brief) -->
+                <div id="options-container" class="grid grid-cols-1 gap-2 pt-1">
+                    <!-- Options populated via JS -->
+                </div>
+
+                <!-- EXPLANATION BOX (Reveals on answer) -->
+                <div id="explanation-box" class="hidden p-3 rounded-lg bg-emerald-50/90 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800/60 text-emerald-900 dark:text-emerald-200 text-xs sm:text-sm leading-relaxed shadow-inner">
+                    <div class="flex items-center space-x-1.5 font-bold mb-1 text-emerald-800 dark:text-emerald-300">
+                        <i class="fa-solid fa-lightbulb text-amber-500"></i>
+                        <span>Explanation & Verification:</span>
+                    </div>
+                    <p id="explanation-text" class="text-slate-700 dark:text-slate-300"></p>
+                </div>
+
+            </div>
+
+            <!-- ACTION BUTTONS FOOTER BAR (Always visible at bottom of card) -->
+            <div class="pt-2 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between shrink-0 gap-2">
+                <button id="prev-btn" class="px-3.5 py-2 rounded-lg border border-slate-300 dark:border-slate-700 text-slate-700 dark:text-slate-300 text-xs sm:text-sm font-medium hover:bg-slate-100 dark:hover:bg-slate-800 disabled:opacity-40 disabled:cursor-not-allowed transition-colors flex items-center space-x-1">
+                    <i class="fa-solid fa-chevron-left text-[10px]"></i>
+                    <span class="hidden sm:inline">Previous</span>
+                </button>
+
+                <div class="flex items-center space-x-2">
+                    <button id="skip-btn" class="px-3 py-2 rounded-lg text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-200 text-xs font-medium hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+                        Skip
+                    </button>
+                    <!-- NEXT QUESTION BUTTON (Prominent, right aligned) -->
+                    <button id="next-btn" class="px-4 sm:px-6 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white text-xs sm:text-sm font-bold shadow-md shadow-indigo-500/20 transition-all flex items-center space-x-2">
+                        <span id="next-btn-text">Next Question</span>
+                        <i class="fa-solid fa-arrow-right text-xs"></i>
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- QUESTION PALETTE MODAL / DRAWER -->
+    <div id="palette-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl max-w-lg w-full p-5 shadow-2xl flex flex-col max-h-[85vh]">
+            <div class="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
+                <h3 class="font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                    <i class="fa-solid fa-grid-2 text-indigo-500"></i> Question Overview
+                </h3>
+                <button id="close-palette-btn" class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 p-1">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+            
+            <div class="my-4 flex-1 overflow-y-auto">
+                <div id="palette-grid" class="grid grid-cols-5 sm:grid-cols-7 gap-2">
+                    <!-- Dynamic Question Buttons -->
+                </div>
+            </div>
+
+            <div class="pt-3 border-t border-slate-100 dark:border-slate-800 text-xs flex items-center justify-between text-slate-500 dark:text-slate-400">
+                <div class="flex items-center gap-3">
+                    <span class="flex items-center gap-1"><span class="w-3 h-3 rounded bg-emerald-500 inline-block"></span> Answered</span>
+                    <span class="flex items-center gap-1"><span class="w-3 h-3 rounded bg-amber-500 inline-block"></span> Skipped</span>
+                    <span class="flex items-center gap-1"><span class="w-3 h-3 rounded bg-slate-300 dark:bg-slate-700 inline-block"></span> Unvisited</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- RESULTS VIEW SUMMARY (Hidden by default) -->
+    <main id="results-view" class="hidden flex-1 min-h-0 p-3 sm:p-5 max-w-5xl w-full mx-auto flex flex-col justify-between overflow-hidden">
+        <div class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col flex-1 min-h-0 p-4 sm:p-6 overflow-hidden">
+            
+            <!-- Top Summary Header -->
+            <div class="flex flex-col sm:flex-row items-center justify-between pb-4 border-b border-slate-100 dark:border-slate-800 gap-3 shrink-0">
+                <div>
+                    <h2 class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                        <i class="fa-solid fa-chart-line text-indigo-500"></i> Performance Summary
+                    </h2>
+                    <p class="text-xs text-slate-500 dark:text-slate-400">SSC Space Technology Practice Test Completed</p>
+                </div>
+                <button id="restart-quiz-btn" class="px-5 py-2.5 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white text-xs sm:text-sm font-bold shadow-md shadow-indigo-500/20 transition-all flex items-center space-x-2">
+                    <i class="fa-solid fa-rotate-right"></i>
+                    <span>Restart Test</span>
+                </button>
+            </div>
+
+            <!-- Performance Score Cards Row -->
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 my-4 shrink-0">
+                <div class="p-3 bg-indigo-50/80 dark:bg-indigo-950/40 border border-indigo-100 dark:border-indigo-900/50 rounded-xl text-center">
+                    <span class="text-xs text-indigo-600 dark:text-indigo-400 font-medium">Final Score</span>
+                    <div id="summary-score-text" class="text-xl sm:text-2xl font-extrabold text-indigo-700 dark:text-indigo-300 mt-0.5">0 / 35</div>
+                </div>
+                <div class="p-3 bg-emerald-50/80 dark:bg-emerald-950/40 border border-emerald-100 dark:border-emerald-900/50 rounded-xl text-center">
+                    <span class="text-xs text-emerald-600 dark:text-emerald-400 font-medium">Accuracy</span>
+                    <div id="summary-accuracy-text" class="text-xl sm:text-2xl font-extrabold text-emerald-700 dark:text-emerald-300 mt-0.5">0%</div>
+                </div>
+                <div class="p-3 bg-emerald-50/80 dark:bg-emerald-950/40 border border-emerald-100 dark:border-emerald-900/50 rounded-xl text-center">
+                    <span class="text-xs text-emerald-600 dark:text-emerald-400 font-medium">Correct</span>
+                    <div id="summary-correct-text" class="text-xl sm:text-2xl font-extrabold text-emerald-600 dark:text-emerald-400 mt-0.5">0</div>
+                </div>
+                <div class="p-3 bg-rose-50/80 dark:bg-rose-950/40 border border-rose-100 dark:border-rose-900/50 rounded-xl text-center">
+                    <span class="text-xs text-rose-600 dark:text-rose-400 font-medium">Incorrect</span>
+                    <div id="summary-incorrect-text" class="text-xl sm:text-2xl font-extrabold text-rose-600 dark:text-rose-400 mt-0.5">0</div>
+                </div>
+            </div>
+
+            <!-- Question Review Header -->
+            <div class="flex items-center justify-between pt-2 pb-2 shrink-0">
+                <h3 class="font-bold text-sm sm:text-base text-slate-900 dark:text-slate-100 flex items-center gap-2">
+                    <i class="fa-solid fa-list-check text-indigo-500"></i> Review Questions
+                </h3>
+                <!-- Filter Tabs -->
+                <div class="flex bg-slate-100 dark:bg-slate-800 p-1 rounded-lg text-xs font-medium">
+                    <button id="filter-all-btn" class="px-3 py-1 rounded-md bg-white dark:bg-slate-700 text-slate-800 dark:text-white shadow-xs">All (35)</button>
+                    <button id="filter-wrong-btn" class="px-3 py-1 rounded-md text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white">Incorrect Only</button>
+                </div>
+            </div>
+
+            <!-- Scrollable Review List -->
+            <div id="review-list-container" class="flex-1 overflow-y-auto space-y-3 pr-2">
+                <!-- Javascript will populate breakdown cards here -->
+            </div>
+
+        </div>
+    </main>
+
+    <!-- FOOTER COPYRIGHT -->
+    <footer class="h-8 bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 px-4 flex items-center justify-between text-[11px] text-slate-400 shrink-0">
+        <span>SSC Space Technology Prep Module</span>
+        <span>ISRO / Space Tech Exam Standard</span>
+    </footer>
+
+    <script>
+        /* All 35 Questions encoded with strict accuracy to provided text */
+        const quizQuestions = [
+            {
+                id: 1,
+                type: "mcq",
+                question: "Which of the following serves as the primary payload for ISRO's PSLV-C62 mission?",
+                options: [
+                    "(A) EOS-08",
+                    "(B) INSAT-3DS",
+                    "(C) Earth Observation Satellite - N1 (EOS-N1) 'Anvesha'",
+                    "(D) GSAT-N2"
+                ],
+                answer: 2,
+                explanation: "The primary payload for the PSLV-C62 mission (launched from the First Launch Pad at Satish Dhawan Space Centre, Sriharikota) is Earth Observation Satellite - N1 (EOS-N1), also named 'Anvesha'."
+            },
+            {
+                id: 2,
+                type: "mcq",
+                question: "What is the lift-off mass and number of stages in the PSLV-C62 launch vehicle?",
+                options: [
+                    "(A) 260 tonnes and 4 stages",
+                    "(B) 4,700 kg and 3 stages",
+                    "(C) 1,752 kg and 2 stages",
+                    "(D) 2,379 kg and 4 stages"
+                ],
+                answer: 0,
+                explanation: "As per the characteristics mentioned in the source material, the PSLV-C62 vehicle has a lift-off mass of 260 tonnes and consists of 4 stages."
+            },
+            {
+                id: 3,
+                type: "mcq",
+                question: "During which stage did the PSLV-C62 mission encounter an anomaly?",
+                options: [
+                    "(A) Beginning of the PS1 stage",
+                    "(B) End of the PS3 stage",
+                    "(C) Mid-way through the PS2 stage",
+                    "(D) End of the PS4 stage"
+                ],
+                answer: 1,
+                explanation: "The source text explicitly states that the PSLV-C62 mission encountered an anomaly during the end of the PS3 stage."
+            },
+            {
+                id: 4,
+                type: "mcq",
+                question: "Which high-throughput communication satellite was launched using SpaceX's Falcon 9 launch vehicle for NewSpace India Limited (NSIL)?",
+                options: [
+                    "(A) EOS-N1",
+                    "(B) INSAT-3DS",
+                    "(C) GSAT-N2 (GSAT-20)",
+                    "(D) SR-0 DEMOSAT"
+                ],
+                answer: 2,
+                explanation: "GSAT-N2 (also known as GSAT-20) is a high-throughput communication satellite developed by ISRO for NSIL, launched via SpaceX's Falcon 9 vehicle."
+            },
+            {
+                id: 5,
+                type: "statement",
+                question: "Consider the following statements regarding the GSAT-N2 (GSAT-20) satellite:",
+                statements: [
+                    "It operates primarily in the Ka-Ka frequency band to provide broadband and in-flight connectivity.",
+                    "Its mission life is 14 years.",
+                    "It has a mass of 4,700 kg and is located in a Geostationary Orbit (GSO) slot at 68° East longitude."
+                ],
+                subQuestion: "Which of the statement(s) given above is/are correct?",
+                options: [
+                    "(A) 1 and 2 only",
+                    "(B) 2 and 3 only",
+                    "(C) 1 and 3 only",
+                    "(D) 1, 2, and 3"
+                ],
+                answer: 3,
+                explanation: "All three statements accurately reflect the specifications provided for GSAT-N2 in the text."
+            },
+            {
+                id: 6,
+                type: "mcq",
+                question: "The bus structure of the GSAT-N2 satellite is built using which material?",
+                options: [
+                    "(A) Aluminum-Lithium alloy",
+                    "(B) Titanium matrix composite",
+                    "(C) Carbon Fiber Reinforced Polymer",
+                    "(D) Kevlar reinforced ceramic"
+                ],
+                answer: 2,
+                explanation: "The text notes that the GSAT-N2 bus is built on the standard 14K bus, which is a Carbon Fiber Reinforced Polymer structure."
+            },
+            {
+                id: 7,
+                type: "mcq",
+                question: "The SSLV-D3 mission launched on August 16, 2024, carried which satellite as its primary payload?",
+                options: [
+                    "(A) SR-0 DEMOSAT",
+                    "(B) EOS-08",
+                    "(C) INSAT-3DS",
+                    "(D) EOS-N1"
+                ],
+                answer: 1,
+                explanation: "The primary payload for the SSLV-D3 mission—the third and final developmental flight of SSLV—was EOS-08, an Earth Observation Satellite designed for microsatellite-based research."
+            },
+            {
+                id: 8,
+                type: "mcq",
+                question: "Which organization developed the passenger satellite 'SR-0 DEMOSAT', launched as a secondary payload on the SSLV-D3 mission?",
+                options: [
+                    "(A) Agnikul Cosmos",
+                    "(B) Skyroot Aerospace",
+                    "(C) Space Kidz India",
+                    "(D) NewSpace India Limited"
+                ],
+                answer: 2,
+                explanation: "SR-0 DEMOSAT was a secondary passenger satellite developed by Space Kidz India."
+            },
+            {
+                id: 9,
+                type: "mcq",
+                question: "Into what type of orbit were the payloads of the SSLV-D3 mission successfully injected?",
+                options: [
+                    "(A) Geostationary Transfer Orbit (GTO)",
+                    "(B) Polar Sun-Synchronous Orbit at 800 km altitude",
+                    "(C) Circular Low Earth Orbit (LEO) at an altitude of 475 km with an inclination of 37.4°",
+                    "(D) High Earth Orbit at 35,786 km"
+                ],
+                answer: 2,
+                explanation: "Both satellites on the SSLV-D3 mission were injected into a circular LEO at an altitude of 475 km with an inclination of 37.4°."
+            },
+            {
+                id: 10,
+                type: "mcq",
+                question: "What is the name of the winged vehicle used by ISRO in its Reusable Launch Vehicle - Landing Experiment (RLV-LEX) series?",
+                options: [
+                    "(A) Dhanush",
+                    "(B) Vikram",
+                    "(C) Pushpak",
+                    "(D) Anvesha"
+                ],
+                answer: 2,
+                explanation: "The text specifies that 'The vehicle used in LEX tests is called Pushpak'."
+            },
+            {
+                id: 11,
+                type: "mcq",
+                question: "Which aircraft is used to carry the RLV vehicle as an underslung load during ISRO's landing experiments?",
+                options: [
+                    "(A) Indian Air Force Chinook helicopter",
+                    "(B) C-17 Globemaster III",
+                    "(C) HAL Dhruv",
+                    "(D) Mi-17 V5 helicopter"
+                ],
+                answer: 0,
+                explanation: "According to the source, an Indian Air Force Chinook helicopter carries the RLV as an underslung load."
+            },
+            {
+                id: 12,
+                type: "statement",
+                question: "With reference to the GSLV-F14/INSAT-3DS mission, consider the following statements:",
+                statements: [
+                    "INSAT-3DS is a third-generation meteorological satellite.",
+                    "It was launched using the GSLV-F14 rocket with an indigenous cryogenic upper stage (CE-7.5).",
+                    "The launch took place from the Second Launch Pad at SDSC-SHAR, Sriharikota on 17 February 2024."
+                ],
+                subQuestion: "Which of the above statements is/are correct?",
+                options: [
+                    "(A) 1 and 2 only",
+                    "(B) 2 and 3 only",
+                    "(C) 1 and 3 only",
+                    "(D) 1, 2, and 3"
+                ],
+                answer: 3,
+                explanation: "All three statements regarding the GSLV-F14/INSAT-3DS launch date, platform, launch vehicle, and site are correct based on the provided material."
+            },
+            {
+                id: 13,
+                type: "mcq",
+                question: "Which of the following is NOT listed as a primary payload of the INSAT-3DS satellite?",
+                options: [
+                    "(A) Imager",
+                    "(B) Sounder",
+                    "(C) LIBS (Laser-Induced Breakdown Spectroscopy)",
+                    "(D) Satellite-Aided Search and Rescue (SAS&R) transponder"
+                ],
+                answer: 2,
+                explanation: "INSAT-3DS carries an Imager, Sounder, Data Relay Transponder (DRT), and SAS&R transponder. LIBS is a payload of the Pragyan Rover on Chandrayaan-3."
+            },
+            {
+                id: 14,
+                type: "mcq",
+                question: "India's first human spaceflight program, Gaganyaan, aims to launch a crew of how many astronauts to a 400 km Low Earth Orbit for a 3-day mission?",
+                options: [
+                    "(A) 2 astronauts",
+                    "(B) 3 astronauts",
+                    "(C) 4 astronauts",
+                    "(D) 5 astronauts"
+                ],
+                answer: 1,
+                explanation: "The Gaganyaan program aims to launch a crew of three astronauts to a 400 km Low Earth Orbit for a three-day mission."
+            },
+            {
+                id: 15,
+                type: "mcq",
+                question: "On which date did ISRO conduct its first Integrated Air Drop Test (IADT-1) for the Gaganyaan mission?",
+                options: [
+                    "(A) Aug. 24, 2025",
+                    "(B) Aug. 16, 2024",
+                    "(C) July 14, 2023",
+                    "(D) Feb. 17, 2024"
+                ],
+                answer: 0,
+                explanation: "The text notes that ISRO conducted its first Integrated Air Drop Test (IADT-1) for the Gaganyaan mission on Aug. 24, 2025."
+            },
+            {
+                id: 16,
+                type: "mcq",
+                question: "In October 2024, the scope of the Gaganyaan programme was revised to include a total of how many missions?",
+                options: [
+                    "(A) 3 missions",
+                    "(B) 5 missions",
+                    "(C) 8 missions",
+                    "(D) 10 missions"
+                ],
+                answer: 2,
+                explanation: "The scope of the Gaganyaan programme was revised from three missions (G1, G2, H1) to eight missions in October 2024."
+            },
+            {
+                id: 17,
+                type: "mcq",
+                question: "In the revised 8-mission roadmap of the Gaganyaan program, which mission designation corresponds to the launch of BAS-01?",
+                options: [
+                    "(A) G3",
+                    "(B) G4",
+                    "(C) G5",
+                    "(D) H2"
+                ],
+                answer: 2,
+                explanation: "The text outlines that the revised plan includes three uncrewed missions (G1, G2, G3), two crewed missions (H1 & H2), a docking mission to any space station (G4), followed by the launch of BAS-01 and docking mission to BAS-01 (G5)."
+            },
+            {
+                id: 18,
+                type: "match",
+                question: "Match List-I (Chandrayaan Mission) with List-II (Launch Vehicle):",
+                list1Header: "List-I (Chandrayaan Mission)",
+                list2Header: "List-II (Launch Vehicle)",
+                pairs: [
+                    { key: "P. Chandrayaan-1", value: "1. Joint ISRO-JAXA launch vehicle (H3-24L)" },
+                    { key: "Q. Chandrayaan-2", value: "2. PSLV-C11" },
+                    { key: "R. Chandrayaan-3", value: "3. GSLV Mk-III / LVM3" },
+                    { key: "S. Chandrayaan-5 (LUPEX)", value: "4. LVM3 M4" }
+                ],
+                subQuestion: "Choose the correct matching code:",
+                options: [
+                    "(A) P-2, Q-3, R-4, S-1",
+                    "(B) P-3, Q-2, R-1, S-4",
+                    "(C) P-2, Q-4, R-3, S-1",
+                    "(D) P-1, Q-3, R-4, S-2"
+                ],
+                answer: 0,
+                explanation: "According to the Chandrayaan Programme summary table: Chandrayaan-1 used PSLV-C11; Chandrayaan-2 used GSLV Mk-III/LVM3; Chandrayaan-3 used LVM3 M4 (GSLV Mk III); Chandrayaan-5 (LUPEX) uses JAXA's H3-24L rocket."
+            },
+            {
+                id: 19,
+                type: "mcq",
+                question: "What major discovery was confirmed by the Moon Impact Probe (MIP) during the Chandrayaan-1 mission?",
+                options: [
+                    "(A) Discovery of subsurface liquid lava tubes",
+                    "(B) Confirmation of surface water molecules (H₂O)",
+                    "(C) Presence of high-density helium-3 reserves",
+                    "(D) Volcanic activity on the lunar far side"
+                ],
+                answer: 1,
+                explanation: "The Moon Impact Probe (MIP) intentionally crashed at the Lunar South Pole to confirm surface water molecules (H₂O)."
+            },
+            {
+                id: 20,
+                type: "mcq",
+                question: "Which planned lunar mission aims to collect lunar soil from the Mons Mouton region and return it to Earth?",
+                options: [
+                    "(A) Chandrayaan-3",
+                    "(B) Chandrayaan-4",
+                    "(C) Chandrayaan-5 (LUPEX)",
+                    "(D) Chang'e 4"
+                ],
+                answer: 1,
+                explanation: "Chandrayaan-4 is planned as a sample-return mission to land at the Mons Mouton region to collect and return lunar soil back to Earth."
+            },
+            {
+                id: 21,
+                type: "mcq",
+                question: "Chandrayaan-4 will consist of how many total modules split across two spacecraft stacks (requiring two LVM3 launches)?",
+                options: [
+                    "(A) 3 modules",
+                    "(B) 4 modules",
+                    "(C) 5 modules",
+                    "(D) 6 modules"
+                ],
+                answer: 2,
+                explanation: "As per the note in the Chandrayaan comparison table, Chandrayaan-4 will consist of five modules split into two spacecraft stacks."
+            },
+            {
+                id: 22,
+                type: "mcq",
+                question: "Which country's space agency is collaborating with ISRO on the Chandrayaan-5 (LUPEX) polar exploration mission?",
+                options: [
+                    "(A) NASA (USA)",
+                    "(B) Roscosmos (Russia)",
+                    "(C) CNES (France)",
+                    "(D) JAXA (Japan)"
+                ],
+                answer: 3,
+                explanation: "Chandrayaan-5 (LUPEX) is a joint ISRO-JAXA mission where JAXA is responsible for the launch vehicle (H3-24L) and the lunar rover."
+            },
+            {
+                id: 23,
+                type: "mcq",
+                question: "What is the exact landing site coordinates near the lunar South Pole where Chandrayaan-3 successfully soft-landed?",
+                options: [
+                    "(A) 68.00°S, 74.00°E",
+                    "(B) 69.37°S, 32.32°E",
+                    "(C) 45.12°N, 12.50°W",
+                    "(D) 37.40°S, 69.00°E"
+                ],
+                answer: 1,
+                explanation: "Chandrayaan-3's landing site near the lunar South Pole is located at 69.37°S, 32.32°E (Shiv Shakti Point)."
+            },
+            {
+                id: 24,
+                type: "mcq",
+                question: "Which payload carried by the Vikram Lander on Chandrayaan-3 was specifically intended for thermal measurements?",
+                options: [
+                    "(A) ILSA",
+                    "(B) LIBS",
+                    "(C) ChaSTE",
+                    "(D) SHAPE"
+                ],
+                answer: 2,
+                explanation: "The Vikram Lander featured ChaSTE for thermal payloads and ILSA for seismic payloads."
+            },
+            {
+                id: 25,
+                type: "mcq",
+                question: "Which payload was carried onboard the Propulsion Module of Chandrayaan-3?",
+                options: [
+                    "(A) APXS",
+                    "(B) SHAPE",
+                    "(C) ChaSTE",
+                    "(D) ILSA"
+                ],
+                answer: 1,
+                explanation: "The Propulsion Module (2,148 kg) carried the SHAPE payload."
+            },
+            {
+                id: 26,
+                type: "mcq",
+                question: "What is the planned budget approved by the Union Cabinet for India's maiden interplanetary mission to Venus, Shukrayaan-1 (Venus Orbiter Mission)?",
+                options: [
+                    "(A) ₹4,000 crore",
+                    "(B) ₹28,240 crore",
+                    "(C) ₹1,236 crore",
+                    "(D) ₹850 crore"
+                ],
+                answer: 2,
+                explanation: "The Venus Orbiter Mission (Shukrayaan-1) was formally approved by the Union Cabinet on September 18, 2024, with a budget of ₹1,236 crore."
+            },
+            {
+                id: 27,
+                type: "mcq",
+                question: "What is the expected transit duration for Shukrayaan-1 to reach Venusian orbit after its planned launch on March 29, 2028?",
+                options: [
+                    "(A) 14 days",
+                    "(B) 112 days",
+                    "(C) 310 days",
+                    "(D) 3 years"
+                ],
+                answer: 1,
+                explanation: "The text notes a 112-day journey for Shukrayaan-1, launching on March 29, 2028, and reaching Venusian orbit on July 19, 2028."
+            },
+            {
+                id: 28,
+                type: "match",
+                question: "Match List-I (Mission / System) with List-II (Description):",
+                list1Header: "List-I (Mission / System)",
+                list2Header: "List-II (Description)",
+                pairs: [
+                    { key: "P. TRISHNA", value: "1. Satellite-Based Augmentation System by ISRO & AAI" },
+                    { key: "Q. NavIC", value: "2. PSLV 4th stage used as an orbital platform" },
+                    { key: "R. GAGAN", value: "3. Thermal InfraRed Imaging Satellite (ISRO & CNES)" },
+                    { key: "S. POEM-4", value: "4. Indigenous positioning, navigation, and timing system" }
+                ],
+                subQuestion: "Choose the correct matching option:",
+                options: [
+                    "(A) P-3, Q-4, R-1, S-2",
+                    "(B) P-4, Q-3, R-2, S-1",
+                    "(C) P-3, Q-1, R-4, S-2",
+                    "(D) P-2, Q-4, R-1, S-3"
+                ],
+                answer: 0,
+                explanation: "TRISHNA = Thermal InfraRed Imaging Satellite developed by ISRO and CNES. NavIC = Indigenous satellite navigation system. GAGAN = GPS Aided GEO Augmented Navigation. POEM-4 = PSLV Orbital Experimental Module using PSLV's 4th stage."
+            },
+            {
+                id: 29,
+                type: "mcq",
+                question: "What is the primary function of the CROPS-1 module?",
+                options: [
+                    "(A) High-resolution weather forecasting",
+                    "(B) Unmanned module for growing plants in space",
+                    "(C) In-flight internet connectivity for aircraft",
+                    "(D) Subsurface lunar water drilling"
+                ],
+                answer: 1,
+                explanation: "CROPS-1 stands for Compact Research Module for Orbital Plant Studies, which is an unmanned module designed for growing plants in space."
+            },
+            {
+                id: 30,
+                type: "mcq",
+                question: "Which space mission became the first in world history to land a rover on the far side of the Moon at the Von Karman crater?",
+                options: [
+                    "(A) Chandrayaan-3",
+                    "(B) Chang'e 4",
+                    "(C) LUPEX",
+                    "(D) Gaganyaan G1"
+                ],
+                answer: 1,
+                explanation: "China's Chang'e 4 mission was the first to land a rover on the far side of the Moon in the Von Karman crater."
+            },
+            {
+                id: 31,
+                type: "mcq",
+                question: "What is the target operational timeline and approved investment for the Third Launch Pad (TLP) at SDSC SHAR, Sriharikota?",
+                options: [
+                    "(A) Target: 2027-28; Investment: ₹1,236 Crores",
+                    "(B) Target: 2029-30; Investment: ₹4,000 Crores",
+                    "(C) Target: 2025-26; Investment: ₹28,240 Crores",
+                    "(D) Target: 2032-33; Investment: ₹10,000 Crores"
+                ],
+                answer: 1,
+                explanation: "The Third Launch Pad (TLP) has an approved cabinet investment of ₹4,000 Crores and a target to be operational by 2029-30."
+            },
+            {
+                id: 32,
+                type: "mcq",
+                question: "Which heavy-lift, partially reusable rocket is being developed with an estimated budget of ~₹28,240 Crores to deliver up to ~30t payload to LEO and ~10t to GTO?",
+                options: [
+                    "(A) SSLV",
+                    "(B) PSLV-XL",
+                    "(C) NGLV (Next Generation Launch Vehicle)",
+                    "(D) Vikram-1"
+                ],
+                answer: 2,
+                explanation: "NGLV is a heavy-lift, partially reusable launch vehicle with a capacity of ~30t to LEO and ~10t to GTO, backed by a budget of ~₹28,240 Crores."
+            },
+            {
+                id: 33,
+                type: "mcq",
+                question: "Where is the dedicated launch complex for the Small Satellite Launch Vehicle (SSLV) being established?",
+                options: [
+                    "(A) Sriharikota, Andhra Pradesh",
+                    "(B) Kulasekarapattinam, Tamil Nadu",
+                    "(C) Thumba, Kerala",
+                    "(D) Wheeler Island, Odisha"
+                ],
+                answer: 1,
+                explanation: "The text states that technology transfer of SSLV was made to HAL (Sep 2025) and a dedicated launch complex is being established at Kulasekarapattinam, Tamil Nadu."
+            },
+            {
+                id: 34,
+                type: "mcq",
+                question: "The private suborbital demonstrator rocket 'Agnibaan SOrTeD' was launched by Agnikul Cosmos using which novel propulsion engine?",
+                options: [
+                    "(A) Kalam-1200",
+                    "(B) CE20 Cryogenic Engine",
+                    "(C) \"Agnilet\" - world's first single-piece, 3D-printed semi-cryogenic engine",
+                    "(D) CE-7.5 Cryogenic Engine"
+                ],
+                answer: 2,
+                explanation: "Agnibaan SOrTeD (launched May 30, 2024, from Agnikul's private launchpad \"Dhanush\") features \"Agnilet\", the world's first single-piece, 3D-printed semi-cryogenic engine."
+            },
+            {
+                id: 35,
+                type: "mcq",
+                question: "Which private Indian aerospace company conducted the first static test of the 'Kalam-1200' motor on August 8, 2025, for its launch vehicle 'Vikram-1'?",
+                options: [
+                    "(A) Agnikul Cosmos",
+                    "(B) Space Kidz India",
+                    "(C) Skyroot Aerospace",
+                    "(D) Bellatrix Aerospace"
+                ],
+                answer: 2,
+                explanation: "Vikram-1 is a private launch vehicle developed by Skyroot Aerospace, which conducted the first static test of its Kalam-1200 motor on Aug 8, 2025."
+            }
+        ];
+
+        let currentIndex = 0;
+        let userAnswers = new Array(quizQuestions.length).fill(null);
+        let secondsElapsed = 0;
+        let timerInterval = null;
+
+        // DOM elements
+        const quizView = document.getElementById('quiz-view');
+        const resultsView = document.getElementById('results-view');
+        const questionPrompt = document.getElementById('question-prompt');
+        const complexContainer = document.getElementById('complex-container');
+        const subQuestionPrompt = document.getElementById('sub-question-prompt');
+        const optionsContainer = document.getElementById('options-container');
+        const explanationBox = document.getElementById('explanation-box');
+        const explanationText = document.getElementById('explanation-text');
+        
+        const questionBadge = document.getElementById('question-badge');
+        const questionTypeTag = document.getElementById('question-type-tag');
+        const progressBar = document.getElementById('progress-bar');
+        const timerDisplay = document.getElementById('timer-display');
+        const headerScore = document.getElementById('header-score');
+        
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const nextBtnText = document.getElementById('next-btn-text');
+        const skipBtn = document.getElementById('skip-btn');
+        
+        const paletteModal = document.getElementById('palette-modal');
+        const gridToggleBtn = document.getElementById('grid-toggle-btn');
+        const closePaletteBtn = document.getElementById('close-palette-btn');
+        const paletteGrid = document.getElementById('palette-grid');
+
+        // Theme Toggle Handler
+        const themeToggleBtn = document.getElementById('theme-toggle-btn');
+        themeToggleBtn.addEventListener('click', () => {
+            document.documentElement.classList.toggle('dark');
+        });
+
+        // Initialize Timer
+        function startTimer() {
+            if (timerInterval) clearInterval(timerInterval);
+            secondsElapsed = 0;
+            timerInterval = setInterval(() => {
+                secondsElapsed++;
+                const mins = String(Math.floor(secondsElapsed / 60)).padStart(2, '0');
+                const secs = String(secondsElapsed % 60).padStart(2, '0');
+                timerDisplay.textContent = `${mins}:${secs}`;
+            }, 1000);
+        }
+
+        // Calculate current score
+        function calculateScore() {
+            let correct = 0;
+            userAnswers.forEach((ans, idx) => {
+                if (ans !== null && ans === quizQuestions[idx].answer) {
+                    correct++;
+                }
+            });
+            return correct;
+        }
+
+        function updateHeader() {
+            const answeredCount = userAnswers.filter(a => a !== null).length;
+            const currentScore = calculateScore();
+            headerScore.textContent = `${currentScore} / ${quizQuestions.length}`;
+            
+            // Progress Bar percentage based on position
+            const progress = ((currentIndex + 1) / quizQuestions.length) * 100;
+            progressBar.style.width = `${progress}%`;
+        }
+
+        function renderQuestion(index) {
+            const q = quizQuestions[index];
+            currentIndex = index;
+
+            // Update Header & Progress
+            questionBadge.textContent = `Q${q.id} of ${quizQuestions.length}`;
+            updateHeader();
+
+            // Question Type Label
+            if (q.type === 'statement') {
+                questionTypeTag.textContent = 'Statement-Based';
+                questionTypeTag.className = 'px-2 py-0.5 rounded text-[11px] font-medium bg-purple-100 text-purple-700 dark:bg-purple-950 dark:text-purple-300 border border-purple-200 dark:border-purple-800';
+            } else if (q.type === 'match') {
+                questionTypeTag.textContent = 'Match the Following';
+                questionTypeTag.className = 'px-2 py-0.5 rounded text-[11px] font-medium bg-sky-100 text-sky-700 dark:bg-sky-950 dark:text-sky-300 border border-sky-200 dark:border-sky-800';
+            } else {
+                questionTypeTag.textContent = 'Standard MCQ';
+                questionTypeTag.className = 'px-2 py-0.5 rounded text-[11px] font-medium bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-700';
+            }
+
+            // Set main text prompt
+            questionPrompt.textContent = q.question;
+
+            // Handle Complex Containers (Statements / Matching Tables)
+            complexContainer.className = 'hidden';
+            complexContainer.innerHTML = '';
+            subQuestionPrompt.className = 'hidden';
+
+            if (q.type === 'statement') {
+                complexContainer.className = 'block my-2.5 p-3 rounded-lg bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/80 shadow-xs';
+                let statementsHTML = `<div class="space-y-1.5 font-mono text-xs sm:text-sm text-slate-800 dark:text-slate-200">`;
+                q.statements.forEach((st, idx) => {
+                    statementsHTML += `
+                        <div class="flex items-start space-x-2">
+                            <span class="font-bold text-indigo-600 dark:text-indigo-400 shrink-0">${idx + 1}.</span>
+                            <span>${st}</span>
+                        </div>
+                    `;
+                });
+                statementsHTML += `</div>`;
+                complexContainer.innerHTML = statementsHTML;
+
+                subQuestionPrompt.textContent = q.subQuestion || "Which of the statement(s) given above is/are correct?";
+                subQuestionPrompt.className = 'block text-xs sm:text-sm font-semibold text-slate-700 dark:text-slate-300 italic pt-1';
+
+            } else if (q.type === 'match') {
+                complexContainer.className = 'block my-2.5 rounded-lg border border-slate-200 dark:border-slate-700/80 overflow-hidden shadow-xs text-xs sm:text-sm';
+                let tableHTML = `
+                    <div class="grid grid-cols-2 bg-slate-100 dark:bg-slate-800 font-bold text-slate-700 dark:text-slate-300 p-2 border-b border-slate-200 dark:border-slate-700">
+                        <div>${q.list1Header}</div>
+                        <div>${q.list2Header}</div>
+                    </div>
+                    <div class="divide-y divide-slate-100 dark:divide-slate-800 bg-white dark:bg-slate-900">
+                `;
+                q.pairs.forEach((pair) => {
+                    tableHTML += `
+                        <div class="grid grid-cols-2 p-2.5 text-slate-800 dark:text-slate-200">
+                            <div class="font-medium text-indigo-900 dark:text-indigo-200 pr-2">${pair.key}</div>
+                            <div class="text-slate-700 dark:text-slate-300">${pair.value}</div>
+                        </div>
+                    `;
+                });
+                tableHTML += `</div>`;
+                complexContainer.innerHTML = tableHTML;
+
+                subQuestionPrompt.textContent = q.subQuestion || "Choose the correct matching code:";
+                subQuestionPrompt.className = 'block text-xs sm:text-sm font-semibold text-slate-700 dark:text-slate-300 italic pt-1';
+            }
+
+            // Render Options
+            optionsContainer.innerHTML = '';
+            const isAnswered = userAnswers[index] !== null;
+            const selectedOption = userAnswers[index];
+
+            q.options.forEach((opt, optIdx) => {
+                const optBtn = document.createElement('button');
+                optBtn.className = `option-card text-left p-3 rounded-lg border text-xs sm:text-sm font-medium flex items-center justify-between w-full transition-all duration-150 cursor-pointer focus:outline-none`;
+
+                let btnStyles = 'bg-white dark:bg-slate-800/80 border-slate-200 dark:border-slate-700 hover:border-indigo-400 dark:hover:border-indigo-500 hover:bg-indigo-50/40 dark:hover:bg-indigo-950/20 text-slate-800 dark:text-slate-200';
+                let iconHTML = `<span class="w-5 h-5 rounded-full border border-slate-300 dark:border-slate-600 flex items-center justify-center text-[10px] text-slate-400 font-mono shrink-0">${String.fromCharCode(65 + optIdx)}</span>`;
+
+                if (isAnswered) {
+                    optBtn.disabled = true;
+                    optBtn.classList.remove('cursor-pointer');
+
+                    if (optIdx === q.answer) {
+                        // Always highlight correct answer in green once answered
+                        btnStyles = 'bg-emerald-50 dark:bg-emerald-950/60 border-emerald-500 text-emerald-900 dark:text-emerald-200 font-semibold ring-1 ring-emerald-500';
+                        iconHTML = `<i class="fa-solid fa-circle-check text-emerald-600 dark:text-emerald-400 text-base"></i>`;
+                    } else if (optIdx === selectedOption && selectedOption !== q.answer) {
+                        // Highlight user wrong selection in red
+                        btnStyles = 'bg-rose-50 dark:bg-rose-950/60 border-rose-500 text-rose-900 dark:text-rose-200 font-semibold ring-1 ring-rose-500';
+                        iconHTML = `<i class="fa-solid fa-circle-xmark text-rose-600 dark:text-rose-400 text-base"></i>`;
+                    } else {
+                        btnStyles = 'bg-slate-50 dark:bg-slate-900/40 border-slate-200 dark:border-slate-800 text-slate-400 dark:text-slate-600 opacity-60';
+                    }
+                }
+
+                optBtn.className += ` ${btnStyles}`;
+                optBtn.innerHTML = `
+                    <span class="pr-2 leading-tight">${opt}</span>
+                    ${iconHTML}
+                `;
+
+                optBtn.addEventListener('click', () => handleOptionSelect(index, optIdx));
+                optionsContainer.appendChild(optBtn);
+            });
+
+            // Show/Hide Explanation
+            if (isAnswered) {
+                explanationText.textContent = q.explanation;
+                explanationBox.classList.remove('hidden');
+            } else {
+                explanationBox.classList.add('hidden');
+            }
+
+            // Button States
+            prevBtn.disabled = index === 0;
+
+            if (index === quizQuestions.length - 1) {
+                nextBtnText.textContent = 'Finish Quiz';
+                nextBtn.className = 'px-5 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-xs sm:text-sm font-bold shadow-md shadow-emerald-500/20 transition-all flex items-center space-x-2';
+            } else {
+                nextBtnText.textContent = 'Next Question';
+                nextBtn.className = 'px-4 sm:px-6 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white text-xs sm:text-sm font-bold shadow-md shadow-indigo-500/20 transition-all flex items-center space-x-2';
+            }
+        }
+
+        function handleOptionSelect(qIndex, optIndex) {
+            if (userAnswers[qIndex] !== null) return; // Prevent changing after answered
+            
+            userAnswers[qIndex] = optIndex;
+            renderQuestion(qIndex);
+        }
+
+        // Navigation Actions
+        nextBtn.addEventListener('click', () => {
+            if (currentIndex < quizQuestions.length - 1) {
+                renderQuestion(currentIndex + 1);
+            } else {
+                finishQuiz();
+            }
+        });
+
+        prevBtn.addEventListener('click', () => {
+            if (currentIndex > 0) {
+                renderQuestion(currentIndex - 1);
+            }
+        });
+
+        skipBtn.addEventListener('click', () => {
+            if (currentIndex < quizQuestions.length - 1) {
+                renderQuestion(currentIndex + 1);
+            } else {
+                finishQuiz();
+            }
+        });
+
+        // Keyboard Shortcuts (1-4, A-D, Arrows)
+        document.addEventListener('keydown', (e) => {
+            if (resultsView.classList.contains('hidden') === false) return;
+
+            const key = e.key.toUpperCase();
+            if (['1', 'A'].includes(key)) handleOptionSelect(currentIndex, 0);
+            if (['2', 'B'].includes(key)) handleOptionSelect(currentIndex, 1);
+            if (['3', 'C'].includes(key)) handleOptionSelect(currentIndex, 2);
+            if (['4', 'D'].includes(key)) handleOptionSelect(currentIndex, 3);
+
+            if (e.key === 'ArrowRight' && currentIndex < quizQuestions.length - 1) {
+                renderQuestion(currentIndex + 1);
+            }
+            if (e.key === 'ArrowLeft' && currentIndex > 0) {
+                renderQuestion(currentIndex - 1);
+            }
+        });
+
+        function renderPaletteModal() {
+            paletteGrid.innerHTML = '';
+            quizQuestions.forEach((q, idx) => {
+                const btn = document.createElement('button');
+                const ans = userAnswers[idx];
+                let bgClass = 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-300 dark:border-slate-700';
+
+                if (ans !== null) {
+                    bgClass = 'bg-emerald-500 text-white font-bold border-emerald-600 shadow-xs';
+                } else if (idx === currentIndex) {
+                    bgClass = 'ring-2 ring-indigo-500 bg-indigo-100 text-indigo-700 dark:bg-indigo-950 dark:text-indigo-200 font-bold';
+                }
+
+                btn.className = `w-10 h-10 rounded-lg text-xs font-medium border flex items-center justify-center transition-all ${bgClass}`;
+                btn.textContent = idx + 1;
+                btn.addEventListener('click', () => {
+                    renderQuestion(idx);
+                    paletteModal.classList.add('hidden');
+                });
+                paletteGrid.appendChild(btn);
+            });
+        }
+
+        gridToggleBtn.addEventListener('click', () => {
+            renderPaletteModal();
+            paletteModal.classList.remove('hidden');
+        });
+
+        closePaletteBtn.addEventListener('click', () => {
+            paletteModal.classList.add('hidden');
+        });
+
+        paletteModal.addEventListener('click', (e) => {
+            if (e.target === paletteModal) paletteModal.classList.add('hidden');
+        });
+
+        function finishQuiz() {
+            if (timerInterval) clearInterval(timerInterval);
+
+            quizView.classList.add('hidden');
+            resultsView.classList.remove('hidden');
+
+            const total = quizQuestions.length;
+            const correct = calculateScore();
+            const answeredCount = userAnswers.filter(a => a !== null).length;
+            const incorrect = answeredCount - correct;
+            const percentage = Math.round((correct / total) * 100);
+
+            document.getElementById('summary-score-text').textContent = `${correct} / ${total}`;
+            document.getElementById('summary-accuracy-text').textContent = `${percentage}%`;
+            document.getElementById('summary-correct-text').textContent = correct;
+            document.getElementById('summary-incorrect-text').textContent = incorrect;
+
+            renderReviewList('all');
+        }
+
+        function renderReviewList(filter = 'all') {
+            const container = document.getElementById('review-list-container');
+            container.innerHTML = '';
+
+            quizQuestions.forEach((q, idx) => {
+                const userAns = userAnswers[idx];
+                const isCorrect = userAns === q.answer;
+                const isUnanswered = userAns === null;
+
+                if (filter === 'wrong' && isCorrect) return;
+
+                const card = document.createElement('div');
+                card.className = `p-3.5 rounded-xl border text-xs sm:text-sm space-y-2 ${
+                    isCorrect 
+                        ? 'bg-emerald-50/40 dark:bg-emerald-950/20 border-emerald-200 dark:border-emerald-900/50' 
+                        : isUnanswered
+                        ? 'bg-amber-50/40 dark:bg-amber-950/20 border-amber-200 dark:border-amber-900/50'
+                        : 'bg-rose-50/40 dark:bg-rose-950/20 border-rose-200 dark:border-rose-900/50'
+                }`;
+
+                let statusBadge = isCorrect 
+                    ? `<span class="px-2 py-0.5 rounded text-[11px] font-bold bg-emerald-100 text-emerald-800 dark:bg-emerald-900 dark:text-emerald-200"><i class="fa-solid fa-check mr-1"></i>Correct</span>`
+                    : isUnanswered
+                    ? `<span class="px-2 py-0.5 rounded text-[11px] font-bold bg-amber-100 text-amber-800 dark:bg-amber-900 dark:text-amber-200"><i class="fa-solid fa-minus mr-1"></i>Unanswered</span>`
+                    : `<span class="px-2 py-0.5 rounded text-[11px] font-bold bg-rose-100 text-rose-800 dark:bg-rose-900 dark:text-rose-200"><i class="fa-solid fa-xmark mr-1"></i>Incorrect</span>`;
+
+                let complexHTML = '';
+                if (q.type === 'statement') {
+                    complexHTML = `<div class="my-2 p-2.5 rounded bg-slate-100/70 dark:bg-slate-800/70 font-mono text-xs space-y-1">`;
+                    q.statements.forEach((st, sIdx) => {
+                        complexHTML += `<div><span class="font-bold text-indigo-500">${sIdx + 1}.</span> ${st}</div>`;
+                    });
+                    complexHTML += `</div>`;
+                } else if (q.type === 'match') {
+                    complexHTML = `<div class="my-2 rounded border border-slate-200 dark:border-slate-700 overflow-hidden text-xs">
+                        <div class="grid grid-cols-2 bg-slate-100 dark:bg-slate-800 font-bold p-1.5">
+                            <div>${q.list1Header}</div><div>${q.list2Header}</div>
+                        </div>`;
+                    q.pairs.forEach(p => {
+                        complexHTML += `<div class="grid grid-cols-2 p-1 border-t border-slate-200 dark:border-slate-800">
+                            <div class="font-medium">${p.key}</div><div>${p.value}</div>
+                        </div>`;
+                    });
+                    complexHTML += `</div>`;
+                }
+
+                card.innerHTML = `
+                    <div class="flex items-center justify-between gap-2">
+                        <span class="font-bold text-slate-900 dark:text-slate-100">Q${idx + 1}. ${q.question}</span>
+                        ${statusBadge}
+                    </div>
+                    ${complexHTML}
+                    <div class="space-y-1 pt-1 text-xs">
+                        <div class="text-slate-600 dark:text-slate-400">
+                            <strong>Your Answer:</strong> 
+                            <span class="${isCorrect ? 'text-emerald-600 font-semibold' : 'text-rose-600 font-semibold'}">
+                                ${userAns !== null ? q.options[userAns] : 'None Selected'}
+                            </span>
+                        </div>
+                        <div class="text-emerald-700 dark:text-emerald-300 font-semibold">
+                            <strong>Correct Answer:</strong> ${q.options[q.answer]}
+                        </div>
+                        <div class="mt-2 p-2 bg-white/80 dark:bg-slate-900/80 rounded border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-300">
+                            <strong class="text-slate-800 dark:text-slate-200">Explanation:</strong> ${q.explanation}
+                        </div>
+                    </div>
+                `;
+
+                container.appendChild(card);
+            });
+        }
+
+        // Filter button handlers
+        const filterAllBtn = document.getElementById('filter-all-btn');
+        const filterWrongBtn = document.getElementById('filter-wrong-btn');
+
+        filterAllBtn.addEventListener('click', () => {
+            filterAllBtn.className = 'px-3 py-1 rounded-md bg-white dark:bg-slate-700 text-slate-800 dark:text-white shadow-xs';
+            filterWrongBtn.className = 'px-3 py-1 rounded-md text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white';
+            renderReviewList('all');
+        });
+
+        filterWrongBtn.addEventListener('click', () => {
+            filterWrongBtn.className = 'px-3 py-1 rounded-md bg-white dark:bg-slate-700 text-slate-800 dark:text-white shadow-xs';
+            filterAllBtn.className = 'px-3 py-1 rounded-md text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white';
+            renderReviewList('wrong');
+        });
+
+        // Restart Quiz Handler
+        document.getElementById('restart-quiz-btn').addEventListener('click', () => {
+            userAnswers = new Array(quizQuestions.length).fill(null);
+            currentIndex = 0;
+            resultsView.classList.add('hidden');
+            quizView.classList.remove('hidden');
+            startTimer();
+            renderQuestion(0);
+        });
+
+        // Initialize on load
+        window.onload = function() {
+            startTimer();
+            renderQuestion(0);
+        };
+    </script>
+</body>
+</html>
