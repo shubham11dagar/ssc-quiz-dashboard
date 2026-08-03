@@ -1,0 +1,1159 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SSC Space & Technology Interactive Practice Quiz</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#f0f7ff',
+                            100: '#e0effe',
+                            500: '#3b82f6',
+                            600: '#2563eb',
+                            700: '#1d4ed8',
+                            800: '#1e40af',
+                            900: '#1e3a8a',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'Fira Code', 'monospace']
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        /* Custom scrollbar for inner scrollable panels */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(156, 163, 175, 0.4);
+            border-radius: 9999px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(156, 163, 175, 0.7);
+        }
+
+        /* Smooth scale animation on button tap */
+        .btn-active-scale:active {
+            transform: scale(0.98);
+        }
+
+        /* Subtle glow effects */
+        .glow-correct {
+            box-shadow: 0 0 15px rgba(34, 197, 94, 0.25);
+        }
+        .glow-wrong {
+            box-shadow: 0 0 15px rgba(239, 68, 68, 0.25);
+        }
+
+        /* Custom viewport lock for compact quiz screen */
+        @media (min-height: 600px) {
+            .compact-layout {
+                height: 100vh;
+                max-height: 100vh;
+                overflow: hidden;
+            }
+        }
+    </style>
+</head>
+<body class="bg-slate-100 dark:bg-slate-950 text-slate-800 dark:text-slate-100 transition-colors duration-200 antialiased">
+
+    <div id="app" class="compact-layout flex flex-col justify-between max-w-5xl mx-auto p-2 sm:p-4">
+
+        <!-- HEADER SECTION -->
+        <header class="flex-none bg-white dark:bg-slate-900 rounded-xl p-3 sm:p-4 shadow-sm border border-slate-200 dark:border-slate-800 mb-2 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="p-2 sm:p-2.5 bg-blue-500/10 text-blue-600 dark:text-blue-400 rounded-lg">
+                    <i class="fa-solid fa-shuttle-space text-lg sm:text-xl"></i>
+                </div>
+                <div>
+                    <div class="flex items-center gap-2">
+                        <h1 class="font-bold text-sm sm:text-base leading-tight tracking-tight text-slate-900 dark:text-white">
+                            Space & Tech Prep
+                        </h1>
+                        <span class="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-blue-100 text-blue-700 dark:bg-blue-900/50 dark:text-blue-300">
+                            SSC Tier I/II
+                        </span>
+                    </div>
+                    <p class="text-xs text-slate-500 dark:text-slate-400 hidden sm:block">
+                        Interactive Mock Test & Rapid Practice
+                    </p>
+                </div>
+            </div>
+
+            <!-- Header Controls & Metrics -->
+            <div class="flex items-center gap-2 sm:gap-4">
+                <!-- Live Score Counter -->
+                <div class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-100 dark:bg-slate-800 text-xs font-medium">
+                    <i class="fa-solid fa-trophy text-amber-500"></i>
+                    <span id="score-counter">Score: 0</span>
+                </div>
+
+                <!-- Jump Grid Drawer Trigger -->
+                <button id="btn-grid-modal" title="Question Palette" class="p-2 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 transition btn-active-scale">
+                    <i class="fa-solid fa-border-all text-sm"></i>
+                </button>
+
+                <!-- Dark / Light Theme Toggle -->
+                <button id="theme-toggle" title="Toggle Theme" class="p-2 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 transition btn-active-scale">
+                    <i id="theme-icon" class="fa-solid fa-moon text-sm"></i>
+                </button>
+            </div>
+        </header>
+
+        <!-- PROGRESS BAR -->
+        <div class="flex-none bg-white dark:bg-slate-900 rounded-xl px-4 py-2 shadow-sm border border-slate-200 dark:border-slate-800 mb-2">
+            <div class="flex justify-between items-center text-xs text-slate-500 dark:text-slate-400 mb-1.5 font-medium">
+                <span id="question-progress-text">Question 1 of 29</span>
+                <span id="percentage-text">0% Completed</span>
+            </div>
+            <div class="w-full bg-slate-200 dark:bg-slate-800 h-2 rounded-full overflow-hidden">
+                <div id="progress-bar" class="bg-blue-600 dark:bg-blue-500 h-full rounded-full transition-all duration-300" style="width: 3.4%;"></div>
+            </div>
+        </div>
+
+        <!-- MAIN QUIZ SCREEN -->
+        <main id="quiz-view" class="flex-1 min-h-0 flex flex-col bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 overflow-hidden relative">
+            
+            <!-- Question Header & Type Indicator -->
+            <div class="flex-none px-4 pt-3 pb-2 border-b border-slate-100 dark:border-slate-800/80 flex justify-between items-center bg-slate-50/50 dark:bg-slate-900/50">
+                <div class="flex items-center gap-2">
+                    <span id="question-badge" class="px-2.5 py-0.5 rounded-md text-[11px] font-semibold bg-indigo-50 dark:bg-indigo-950/80 text-indigo-600 dark:text-indigo-400 border border-indigo-200 dark:border-indigo-800">
+                        General MCQ
+                    </span>
+                    <span class="text-xs text-slate-400 dark:text-slate-500 hidden sm:inline">
+                        • Select the correct option
+                    </span>
+                </div>
+                <div id="keyboard-hint" class="text-[11px] text-slate-400 hidden sm:flex items-center gap-1 font-mono">
+                    <span class="px-1.5 py-0.5 rounded bg-slate-200 dark:bg-slate-800 border border-slate-300 dark:border-slate-700">1-4</span> / <span class="px-1.5 py-0.5 rounded bg-slate-200 dark:bg-slate-800 border border-slate-300 dark:border-slate-700">A-D</span> to choose
+                </div>
+            </div>
+
+            <!-- Scrollable Inner Content Area for Question Body & Explanation -->
+            <div id="question-scroll-container" class="flex-1 overflow-y-auto p-4 sm:p-5 space-y-4">
+                
+                <!-- Primary Question Prompt -->
+                <div id="question-prompt" class="text-sm sm:text-base font-semibold text-slate-900 dark:text-slate-100 leading-snug">
+                    <!-- Dynamic Text Injected Here -->
+                </div>
+
+                <!-- SPECIAL FORMATTING CONTAINERS (Injected dynamically) -->
+                <!-- Statement Container (For Statement-Based Questions) -->
+                <div id="statement-box" class="hidden space-y-2 my-2">
+                    <!-- Injected Statements Cards -->
+                </div>
+
+                <!-- Match-The-Following Container (2 Column Table / Card layout) -->
+                <div id="match-box" class="hidden my-2 overflow-x-auto">
+                    <!-- Injected Match Table -->
+                </div>
+
+                <!-- Options List Grid (Compact 2x2 on Desktop, Stacked on Mobile) -->
+                <div id="options-container" class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 pt-1">
+                    <!-- Injected Option Buttons -->
+                </div>
+
+                <!-- Instant Feedback Explanation Box (Collapsible/Dynamic) -->
+                <div id="explanation-box" class="hidden p-3.5 rounded-xl border text-xs sm:text-sm leading-relaxed transition-all duration-300">
+                    <div class="flex items-center gap-2 font-bold mb-1" id="explanation-title">
+                        <!-- Correct/Incorrect Badge -->
+                    </div>
+                    <p id="explanation-text" class="text-slate-700 dark:text-slate-300">
+                        <!-- Explanation details -->
+                    </p>
+                </div>
+
+            </div>
+
+            <!-- STICKY BOTTOM ACTION BAR -->
+            <footer class="flex-none p-3 bg-slate-50 dark:bg-slate-900/90 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between gap-3">
+                <button id="btn-prev" class="px-3.5 py-2 rounded-lg text-xs font-semibold border border-slate-300 dark:border-slate-700 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-800 transition disabled:opacity-40 disabled:cursor-not-allowed flex items-center gap-1.5 btn-active-scale">
+                    <i class="fa-solid fa-arrow-left"></i>
+                    <span>Previous</span>
+                </button>
+
+                <div class="flex items-center gap-2">
+                    <!-- Next / Submit Button -->
+                    <button id="btn-next" class="px-5 py-2 rounded-lg text-xs font-bold bg-blue-600 hover:bg-blue-700 text-white shadow-sm transition flex items-center gap-2 btn-active-scale">
+                        <span id="btn-next-label">Next Question</span>
+                        <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+                </div>
+            </footer>
+        </main>
+
+        <!-- RESULTS SUMMARY SCREEN (Hidden by Default) -->
+        <section id="results-view" class="hidden flex-1 flex flex-col bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 overflow-hidden p-4 sm:p-6 overflow-y-auto">
+            
+            <div class="text-center max-w-lg mx-auto py-4">
+                <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-blue-100 dark:bg-blue-900/40 text-blue-600 dark:text-blue-400 mb-3 text-2xl shadow-inner">
+                    <i class="fa-solid fa-award"></i>
+                </div>
+                <h2 class="text-2xl font-bold text-slate-900 dark:text-white">Quiz Completed!</h2>
+                <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-1">Here is a detailed summary of your SSC Space & Technology performance.</p>
+            </div>
+
+            <!-- Key Score Metrics Grid -->
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 my-4">
+                <div class="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/60 text-center">
+                    <span class="text-[11px] font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider block">Score</span>
+                    <span id="res-score" class="text-xl sm:text-2xl font-bold text-blue-600 dark:text-blue-400">0 / 29</span>
+                </div>
+                <div class="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/60 text-center">
+                    <span class="text-[11px] font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider block">Percentage</span>
+                    <span id="res-percentage" class="text-xl sm:text-2xl font-bold text-slate-800 dark:text-slate-100">0%</span>
+                </div>
+                <div class="p-3.5 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800/60 text-center">
+                    <span class="text-[11px] font-semibold text-emerald-600 dark:text-emerald-400 uppercase tracking-wider block">Correct</span>
+                    <span id="res-correct" class="text-xl sm:text-2xl font-bold text-emerald-600 dark:text-emerald-400">0</span>
+                </div>
+                <div class="p-3.5 rounded-xl bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800/60 text-center">
+                    <span class="text-[11px] font-semibold text-rose-600 dark:text-rose-400 uppercase tracking-wider block">Incorrect</span>
+                    <span id="res-incorrect" class="text-xl sm:text-2xl font-bold text-rose-600 dark:text-rose-400">0</span>
+                </div>
+            </div>
+
+            <!-- Filter Tabs for Question Breakdown -->
+            <div class="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-2 mb-3 mt-2">
+                <h3 class="font-bold text-sm text-slate-900 dark:text-slate-100 flex items-center gap-2">
+                    <i class="fa-solid fa-list-check text-blue-500"></i> Question Breakdown
+                </h3>
+                <div class="flex gap-1 bg-slate-100 dark:bg-slate-800 p-1 rounded-lg text-xs font-medium">
+                    <button id="filter-all" class="px-2.5 py-1 rounded-md bg-white dark:bg-slate-700 text-slate-800 dark:text-slate-100 shadow-sm transition">All</button>
+                    <button id="filter-wrong" class="px-2.5 py-1 rounded-md text-slate-600 dark:text-slate-400 hover:text-slate-900 transition">Incorrect Only</button>
+                </div>
+            </div>
+
+            <!-- Breakdown Review List -->
+            <div id="breakdown-list" class="flex-1 space-y-3 overflow-y-auto pr-1">
+                <!-- Dynamically populated review cards -->
+            </div>
+
+            <!-- Restart Button -->
+            <div class="pt-4 mt-auto border-t border-slate-200 dark:border-slate-800 flex justify-center">
+                <button id="btn-restart" class="px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl shadow-md transition flex items-center gap-2 btn-active-scale text-sm">
+                    <i class="fa-solid fa-rotate-right"></i>
+                    <span>Restart Quiz</span>
+                </button>
+            </div>
+        </section>
+
+    </div>
+
+    <!-- QUESTION PALETTE MODAL / DRAWER -->
+    <div id="grid-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white dark:bg-slate-900 rounded-2xl max-w-lg w-full border border-slate-200 dark:border-slate-800 p-5 shadow-2xl flex flex-col max-h-[85vh]">
+            <div class="flex justify-between items-center mb-4 pb-2 border-b border-slate-100 dark:border-slate-800">
+                <h3 class="font-bold text-base text-slate-900 dark:text-white flex items-center gap-2">
+                    <i class="fa-solid fa-grip text-blue-500"></i> Question Palette
+                </h3>
+                <button id="btn-close-modal" class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 p-1">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+            
+            <p class="text-xs text-slate-500 dark:text-slate-400 mb-3">Jump directly to any question in the set:</p>
+
+            <div id="palette-grid" class="grid grid-cols-5 sm:grid-cols-6 gap-2 overflow-y-auto p-1 flex-1">
+                <!-- Palette buttons dynamically added -->
+            </div>
+
+            <div class="mt-4 pt-3 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-[11px] text-slate-500">
+                <div class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-emerald-500 inline-block"></span> Correct</div>
+                <div class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-rose-500 inline-block"></span> Incorrect</div>
+                <div class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-slate-300 dark:bg-slate-700 inline-block"></span> Unanswered</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const questionsData = [
+            {
+                id: 1,
+                type: 'standard',
+                badge: 'Launch Vehicles',
+                question: "Which of the following is India’s first fully Make-in-India 32-bit microprocessor designed for launch vehicles?",
+                options: [
+                    "(A) KALPANA 3201",
+                    "(B) VIKRAM 3201",
+                    "(C) APSARA-U",
+                    "(D) PARAS-2"
+                ],
+                answer: 1,
+                explanation: "VIKRAM 3201 is the first fully Make-in-India 32-bit microprocessor specifically built for launch vehicles."
+            },
+            {
+                id: 2,
+                type: 'match',
+                badge: 'Match The Following',
+                prompt: "Match the following components with their respective descriptions:",
+                matchList: [
+                    { left: "1. KALPANA 3201", right: "i. Spectrograph at PRL, Mount Abu Observatory" },
+                    { left: "2. APSARA-U", right: "ii. 32-bit SPARC V8 RISC microprocessor" },
+                    { left: "3. Bharat Forecast System (BFS)", right: "iii. Upgraded research reactor by BARC" },
+                    { left: "4. PARAS-2", right: "iv. India’s first high-resolution weather model" }
+                ],
+                options: [
+                    "(A) 1-ii, 2-iii, 3-iv, 4-i",
+                    "(B) 1-iii, 2-ii, 3-iv, 4-i",
+                    "(C) 1-ii, 2-iii, 3-i, 4-iv",
+                    "(D) 1-iv, 2-i, 3-ii, 4-iii"
+                ],
+                answer: 0,
+                explanation: "KALPANA 3201 is a 32-bit SPARC V8 RISC microprocessor; APSARA-U is BARC's upgraded research reactor; BFS is India's first high-resolution weather model; and PARAS-2 is a spectrograph at PRL, Mount Abu Observatory."
+            },
+            {
+                id: 3,
+                type: 'standard',
+                badge: 'Conferences & Summits',
+                question: "What was the theme of the Global Space Exploration Conference (GLEX 2025) held in New Delhi?",
+                options: [
+                    "(A) Innovative Operations for Smart & Sustainable Mission Management",
+                    "(B) Reaching New Worlds: A Space Exploration Renaissance",
+                    "(C) Strategy and Vision for Indian Space Sector",
+                    "(D) Exploring Beyond Boundaries: The Next Frontier"
+                ],
+                answer: 1,
+                explanation: "The GLEX 2025 conference hosted in New Delhi from May 7–9, 2025, carried the theme 'Reaching New Worlds: A Space Exploration Renaissance'."
+            },
+            {
+                id: 4,
+                type: 'standard',
+                badge: 'International Events',
+                question: "Where was the 76th International Astronautical Congress (IAC 2025) held?",
+                options: [
+                    "(A) New Delhi",
+                    "(B) Vienna",
+                    "(C) Sydney",
+                    "(D) Bangalore"
+                ],
+                answer: 2,
+                explanation: "IAC 2025 was hosted in Sydney from Sep 29 to Oct 3, 2025, where ISRO and IN-SPACe established the India Space Pavilion."
+            },
+            {
+                id: 5,
+                type: 'standard',
+                badge: 'Mission Operations',
+                question: "The Spacecraft Mission Operations Conference (SMOPS-2026) was organized in which host city?",
+                options: [
+                    "(A) Sydney",
+                    "(B) Bangalore",
+                    "(C) New Delhi",
+                    "(D) Vienna"
+                ],
+                answer: 1,
+                explanation: "SMOPS-2026 was hosted in Bangalore from April 8–10, 2026, with the theme 'Innovative Operations for Smart & Sustainable Mission Management'."
+            },
+            {
+                id: 6,
+                type: 'statements',
+                badge: 'Statement Analysis',
+                prompt: "Which of the following international bodies or events will India host in 2026?",
+                statements: [
+                    "1. International Committee on GNSS (ICG)",
+                    "2. BRICS Heads of Space Agencies",
+                    "3. International Planetary Data Alliance"
+                ],
+                questionText: "Select the correct option:",
+                options: [
+                    "(A) Only 1 and 2",
+                    "(B) Only 2 and 3",
+                    "(C) Only 1 and 3",
+                    "(D) 1, 2, and 3"
+                ],
+                answer: 3,
+                explanation: "In 2026, India is scheduled to host all three: ICG, BRICS Heads of Space Agencies, and International Planetary Data Alliance."
+            },
+            {
+                id: 7,
+                type: 'standard',
+                badge: 'Astronomy & NASA',
+                question: "NASA reached a milestone by confirming how many exoplanets beyond our solar system?",
+                options: [
+                    "(A) 5,000",
+                    "(B) 6,000",
+                    "(C) 10,000",
+                    "(D) 4,500"
+                ],
+                answer: 1,
+                explanation: "NASA confirmed a milestone of 6,000 exoplanets beyond our solar system."
+            },
+            {
+                id: 8,
+                type: 'standard',
+                badge: 'ISRO Initiatives',
+                question: "What is the primary objective of the NE-SPARKS initiative launched by ISRO?",
+                options: [
+                    "(A) To provide training to foreign engineers on nanosatellite assembly",
+                    "(B) To ignite curiosity and foster awareness about space science among students from the North Eastern Region of India",
+                    "(C) To clean orbital space debris by the year 2030",
+                    "(D) To issue regulatory licenses for private space enterprises"
+                ],
+                answer: 1,
+                explanation: "NE-SPARKS (North East Students' Programme for Awareness, Reach, and Knowledge on Space) aims to bridge geographical and informational gaps for North Eastern Region (NER) students by taking them on visits to ISRO Centres in Bengaluru."
+            },
+            {
+                id: 9,
+                type: 'standard',
+                badge: 'Capacity Building',
+                question: "When and where was the UNNATI (UNispace Nanosatellite Assembly & Training by ISRO) program announced?",
+                options: [
+                    "(A) 2018 in Vienna",
+                    "(B) 2020 in New Delhi",
+                    "(C) 2023 in Bengaluru",
+                    "(D) 2024 in Sydney"
+                ],
+                answer: 0,
+                explanation: "India announced the UNNATI programme in 2018 in Vienna during the UNISPACE+50 Symposium."
+            },
+            {
+                id: 10,
+                type: 'standard',
+                badge: 'Space Policy',
+                question: "Under the Indian Space Policy 2023, which entity serves as the single-window autonomous regulatory agency for both governmental and non-governmental entities (NGEs)?",
+                options: [
+                    "(A) NSIL",
+                    "(B) DOS",
+                    "(C) IN-SPACe",
+                    "(D) ISRO"
+                ],
+                answer: 2,
+                explanation: "IN-SPACe (Indian National Space Promotion and Authorisation Centre) was established to act as a single-window autonomous regulatory agency that authorizes space activities for government and NGEs."
+            },
+            {
+                id: 11,
+                type: 'standard',
+                badge: 'Space Policy',
+                question: "Which role has been allocated to ISRO under the Indian Space Policy 2023 strategic framework?",
+                options: [
+                    "(A) Operating on commercial principles and leasing space assets",
+                    "(B) Focusing on advanced R&D, cutting-edge technology, and human spaceflight",
+                    "(C) Coordinating global space governance and dispute resolution",
+                    "(D) Managing single-window digital portals for FDI investments"
+                ],
+                answer: 1,
+                explanation: "Under the policy, ISRO transitions away from manufacturing operational systems and focuses on R&D, cutting-edge technology, and human spaceflight."
+            },
+            {
+                id: 12,
+                type: 'standard',
+                badge: 'Space Commerce',
+                question: "When was NewSpace India Limited (NSIL) established, and what is its primary responsibility?",
+                options: [
+                    "(A) 2018; Resolving international space disputes",
+                    "(B) 2019; Commercialization of space technologies and platforms",
+                    "(C) 2020; Regulating non-government space activities",
+                    "(D) 2022; Managing Earth observation geoportals"
+                ],
+                answer: 1,
+                explanation: "NSIL was established in 2019 as a PSU responsible for the commercialization of space technologies and platforms."
+            },
+            {
+                id: 13,
+                type: 'standard',
+                badge: 'Space Sustainability',
+                question: "What target year has been set by ISRO under the Debris-Free Space Mission (DFSM) to achieve zero debris creation for all Indian space missions?",
+                options: [
+                    "(A) 2025",
+                    "(B) 2028",
+                    "(C) 2030",
+                    "(D) 2033"
+                ],
+                answer: 2,
+                explanation: "ISRO announced DFSM in 2024 to achieve zero debris creation for all Indian space missions by the year 2030."
+            },
+            {
+                id: 14,
+                type: 'match',
+                badge: 'Match The Following',
+                prompt: "Under the Liberalised FDI Policy (2024) for India's space sector, match the activity with its allowable Automatic Route limit:",
+                matchList: [
+                    { left: "1. Satellite manufacturing, operations & data products", right: "i. Up to 49%" },
+                    { left: "2. Manufacturing of satellite components, systems & sub-systems", right: "ii. Up to 74%" },
+                    { left: "3. Launch vehicles, associated systems, and spaceports", right: "iii. 100%" }
+                ],
+                options: [
+                    "(A) 1-i, 2-ii, 3-iii",
+                    "(B) 1-ii, 2-iii, 3-i",
+                    "(C) 1-iii, 2-i, 3-ii",
+                    "(D) 1-ii, 2-i, 3-iii"
+                ],
+                answer: 1,
+                explanation: "FDI limits under the automatic route are: Up to 74% for satellite manufacturing/operations/data products; 100% for satellite components and sub-systems; and Up to 49% for launch vehicles and spaceports."
+            },
+            {
+                id: 15,
+                type: 'standard',
+                badge: 'Geoportals & Missions',
+                question: "Which of the following is NOT an Earth observation or geoportal platform operated by ISRO as per the provided text?",
+                options: [
+                    "(A) Bhoonidhi",
+                    "(B) MOSDAC",
+                    "(C) VEDAS",
+                    "(D) SPHEREx"
+                ],
+                answer: 3,
+                explanation: "Bhoonidhi, MOSDAC, VEDAS, and Bhuvan are ISRO's geoportals. SPHEREx is a NASA astrophysics space telescope."
+            },
+            {
+                id: 16,
+                type: 'statements',
+                badge: 'Statement Analysis',
+                prompt: "Consider the following statements regarding historical Apollo missions:",
+                statements: [
+                    "1. Apollo 11 was the first crewed Moon landing where Neil Armstrong, Buzz Aldrin, and Michael Collins all walked on the Moon's surface.",
+                    "2. Apollo 17 was the last Apollo Moon landing, where astronauts drove the LRV farther than any previous mission."
+                ],
+                questionText: "Which of the statements given above is/are correct?",
+                options: [
+                    "(A) 1 only",
+                    "(B) 2 only",
+                    "(C) Both 1 and 2",
+                    "(D) Neither 1 nor 2"
+                ],
+                answer: 1,
+                explanation: "Statement 1 is incorrect because Michael Collins stayed in lunar orbit while Armstrong and Aldrin walked on the Moon. Statement 2 is correct."
+            },
+            {
+                id: 17,
+                type: 'standard',
+                badge: 'Artemis Program',
+                question: "Regarding the Artemis II mission, which of the following statements is INCORRECT?",
+                options: [
+                    "(A) Launch architecture is propelled by the Space Launch System (SLS)",
+                    "(B) Spacecraft used is Orion Crew Module (CM-003, named Integrity) with ESM-2",
+                    "(C) The total mission duration is planned for 15 days",
+                    "(D) Mission crew includes Commander Reid Wiseman and Pilot Victor Glover"
+                ],
+                answer: 2,
+                explanation: "The planned duration for Artemis II is 9 days, 1 hour, and 32 minutes (Launch: 1 April 2026; Splashdown: 10 April 2026)."
+            },
+            {
+                id: 18,
+                type: 'standard',
+                badge: 'Artemis Crew',
+                question: "Who among the following is NOT a crew member of NASA's Artemis II mission?",
+                options: [
+                    "(A) Victor Glover",
+                    "(B) Christina Koch",
+                    "(C) Jeremy Hansen",
+                    "(D) Eugene N. Parker"
+                ],
+                answer: 3,
+                explanation: "The four crew members of Artemis II are Reid Wiseman, Victor Glover, Christina Koch, and Jeremy Hansen. Eugene N. Parker is the scientist after whom the Parker Solar Probe was named."
+            },
+            {
+                id: 19,
+                type: 'standard',
+                badge: 'ESA & ISRO Missions',
+                question: "The European Space Agency's (ESA) Proba-3 mission was launched using which launch vehicle?",
+                options: [
+                    "(A) Falcon 9",
+                    "(B) PSLV-C59",
+                    "(C) Delta IV Heavy",
+                    "(D) SLS"
+                ],
+                answer: 1,
+                explanation: "Proba-3 was launched using ISRO's PSLV-C59 rocket from the Satish Dhawan Space Centre (SDSC-SHAR) in Sriharikota."
+            },
+            {
+                id: 20,
+                type: 'standard',
+                badge: 'Proba-3 Technology',
+                question: "What is the unique technological concept demonstrated by the two spacecraft (CSC and OSC) of ESA's Proba-3 mission?",
+                options: [
+                    "(A) Retrieving carbon-rich samples from an asteroid",
+                    "(B) Creating an artificial solar eclipse on demand in orbit",
+                    "(C) Creating a 3D spectral survey map of the distant universe",
+                    "(D) Direct landing on the lunar south pole"
+                ],
+                answer: 1,
+                explanation: "Proba-3 consists of the Coronagraph Spacecraft (CSC) and Occulter Spacecraft (OSC) lining up to cast a precise shadow from one to the other, creating an artificial solar eclipse on demand."
+            },
+            {
+                id: 21,
+                type: 'standard',
+                badge: 'Astrophysics Telescopes',
+                question: "Which launch vehicle and orbit are associated with NASA’s SPHEREx astrophysics mission?",
+                options: [
+                    "(A) PSLV-C59; Highly Elliptical Earth Orbit",
+                    "(B) SpaceX Falcon 9; Sun-synchronous Low Earth Orbit (700 km)",
+                    "(C) Delta IV Heavy; L2 Lagrangian Point",
+                    "(D) Space Launch System; Earth-Moon transfer orbit"
+                ],
+                answer: 1,
+                explanation: "SPHEREx was launched on March 11, 2025, via a SpaceX Falcon 9 rocket into a Sun-synchronous Low Earth Orbit at an altitude of 700 km."
+            },
+            {
+                id: 22,
+                type: 'standard',
+                badge: 'Solar Probes',
+                question: "Which spacecraft is recorded as the fastest human-made object, having approached within ~3.8 million miles of the Sun's surface?",
+                options: [
+                    "(A) Parker Solar Probe",
+                    "(B) OSIRIS-REx",
+                    "(C) MAVEN",
+                    "(D) Proba-3"
+                ],
+                answer: 0,
+                explanation: "Parker Solar Probe was launched on 12 August 2018 to 'touch the Sun,' achieving speeds of ~430,000 mph as the fastest human-made object."
+            },
+            {
+                id: 23,
+                type: 'standard',
+                badge: 'Asteroid Missions',
+                question: "What was the target near-Earth asteroid of NASA’s OSIRIS-REx mission, and what is its renamed mission designation for studying Apophis in 2029?",
+                options: [
+                    "(A) Bennu; OSIRIS-APEX",
+                    "(B) M87; OSIRIS-NEXT",
+                    "(C) Ryugu; OSIRIS-EXT",
+                    "(D) Apophis; OSIRIS-REx II"
+                ],
+                answer: 0,
+                explanation: "OSIRIS-REx collected a ~250 g sample from asteroid Bennu. The spacecraft was subsequently renamed OSIRIS-APEX for its follow-on mission to study asteroid Apophis in 2029."
+            },
+            {
+                id: 24,
+                type: 'statements',
+                badge: 'Statement Analysis',
+                prompt: "Identify the key scientific findings from the sample returned by the OSIRIS-REx mission:",
+                statements: [
+                    "1. Bio-essential sugars",
+                    "2. Unique organic 'gum-like' substance",
+                    "3. High levels of supernova dust"
+                ],
+                questionText: "Select the correct option:",
+                options: [
+                    "(A) 1 and 2 only",
+                    "(B) 2 and 3 only",
+                    "(C) 1 and 3 only",
+                    "(D) 1, 2, and 3"
+                ],
+                answer: 3,
+                explanation: "Analysis of the returned asteroid sample revealed bio-essential sugars, a unique organic 'gum-like' substance, and high levels of supernova dust."
+            },
+            {
+                id: 25,
+                type: 'standard',
+                badge: 'Mars Exploration',
+                question: "Which NASA Martian orbiter mission concluded on June 3, 2026, after operating for over 11 years and discovering new types of Martian auroras?",
+                options: [
+                    "(A) MAVEN",
+                    "(B) Curiosity",
+                    "(C) Perseverance",
+                    "(D) Apollo 17"
+                ],
+                answer: 0,
+                explanation: "MAVEN (Mars Atmosphere and Volatile Evolution) arrived at Mars in September 2014, operated for over 11 years, and was officially declared concluded on June 3, 2026."
+            },
+            {
+                id: 26,
+                type: 'standard',
+                badge: 'Space Station Physics',
+                question: "The International Space Station (ISS) travels at an approximate speed of 28,000 km/h in Low Earth Orbit (LEO). How much time does it take to complete one full orbit around the Earth?",
+                options: [
+                    "(A) 45 minutes",
+                    "(B) 60 minutes",
+                    "(C) 90 minutes",
+                    "(D) 120 minutes"
+                ],
+                answer: 2,
+                explanation: "The ISS orbits at an altitude of about 400–430 km and completes one orbit of Earth every 90 minutes."
+            },
+            {
+                id: 27,
+                type: 'standard',
+                badge: 'Space Partnerships',
+                question: "The International Space Station (ISS) is operated by a partnership of how many space agencies?",
+                options: [
+                    "(A) 3 (NASA, ISRO, ESA)",
+                    "(B) 4 (NASA, Roscosmos, JAXA, ISRO)",
+                    "(C) 5 (NASA, Roscosmos, ESA, JAXA, CSA)",
+                    "(D) 6 (NASA, Roscosmos, ESA, JAXA, CSA, CNSA)"
+                ],
+                answer: 2,
+                explanation: "ISS is operated jointly by five space agencies: NASA (USA), Roscosmos (Russia), ESA (Europe), JAXA (Japan), and CSA (Canada)."
+            },
+            {
+                id: 28,
+                type: 'standard',
+                badge: 'Space Observatories',
+                question: "Where is the James Webb Space Telescope (JWST) located for its operational observations?",
+                options: [
+                    "(A) Low Earth Orbit (LEO) at 700 km altitude",
+                    "(B) Sun-synchronous polar orbit",
+                    "(C) L2 point, 1.5 million km from Earth",
+                    "(D) Highly Elliptical Earth Orbit at 60,500 km apogee"
+                ],
+                answer: 2,
+                explanation: "JWST works at the L2 point, situated approximately 1.5 million km away from Earth, rather than in Earth orbit."
+            },
+            {
+                id: 29,
+                type: 'standard',
+                badge: 'Black Hole Imaging',
+                question: "In 2019, the Event Horizon Telescope (EHT) released the first-ever image of a black hole's shadow in which galaxy?",
+                options: [
+                    "(A) Andromeda Galaxy",
+                    "(B) Messier 87 (M87)",
+                    "(C) Milky Way (Sagittarius A*)",
+                    "(D) Sombrero Galaxy"
+                ],
+                answer: 1,
+                explanation: "The EHT released the first-ever image of a black hole's shadow in galaxy Messier 87 (M87) in 2019, and later imaged Sagittarius A* at the center of the Milky Way in 2022."
+            }
+        ];
+
+        let currentIndex = 0;
+        let userAnswers = new Array(questionsData.length).fill(null); // stores selected option index
+        let totalScore = 0;
+
+        // DOM Element Cache
+        const quizView = document.getElementById('quiz-view');
+        const resultsView = document.getElementById('results-view');
+        const scoreCounter = document.getElementById('score-counter');
+        const questionProgressText = document.getElementById('question-progress-text');
+        const percentageText = document.getElementById('percentage-text');
+        const progressBar = document.getElementById('progress-bar');
+        
+        const questionBadge = document.getElementById('question-badge');
+        const questionPrompt = document.getElementById('question-prompt');
+        const statementBox = document.getElementById('statement-box');
+        const matchBox = document.getElementById('match-box');
+        const optionsContainer = document.getElementById('options-container');
+        const explanationBox = document.getElementById('explanation-box');
+        const explanationTitle = document.getElementById('explanation-title');
+        const explanationText = document.getElementById('explanation-text');
+        
+        const btnPrev = document.getElementById('btn-prev');
+        const btnNext = document.getElementById('btn-next');
+        const btnNextLabel = document.getElementById('btn-next-label');
+        
+        const gridModal = document.getElementById('grid-modal');
+        const paletteGrid = document.getElementById('palette-grid');
+
+        const themeToggleBtn = document.getElementById('theme-toggle');
+        const themeIcon = document.getElementById('theme-icon');
+
+        function initTheme() {
+            if (localStorage.getItem('theme') === 'light') {
+                document.documentElement.classList.remove('dark');
+                themeIcon.className = 'fa-solid fa-sun text-amber-500';
+            } else {
+                document.documentElement.classList.add('dark');
+                themeIcon.className = 'fa-solid fa-moon text-slate-300';
+            }
+        }
+
+        themeToggleBtn.addEventListener('click', () => {
+            if (document.documentElement.classList.contains('dark')) {
+                document.documentElement.classList.remove('dark');
+                localStorage.setItem('theme', 'light');
+                themeIcon.className = 'fa-solid fa-sun text-amber-500';
+            } else {
+                document.documentElement.classList.add('dark');
+                localStorage.setItem('theme', 'dark');
+                themeIcon.className = 'fa-solid fa-moon text-slate-300';
+            }
+        });
+
+        function renderQuestion(index) {
+            const q = questionsData[index];
+            const hasAnswered = userAnswers[index] !== null;
+
+            // Reset scroll position to top when switching questions
+            document.getElementById('question-scroll-container').scrollTop = 0;
+
+            // Update Progress Header
+            questionProgressText.textContent = `Question ${index + 1} of ${questionsData.length}`;
+            const percentage = Math.round(((index + 1) / questionsData.length) * 100);
+            percentageText.textContent = `${percentage}% Completed`;
+            progressBar.style.width = `${percentage}%`;
+            
+            // Badge text & color
+            questionBadge.textContent = q.badge || 'General MCQ';
+
+            // Clear special display boxes
+            statementBox.classList.add('hidden');
+            statementBox.innerHTML = '';
+            matchBox.classList.add('hidden');
+            matchBox.innerHTML = '';
+            explanationBox.classList.add('hidden');
+
+            // Render according to Question Type
+            if (q.type === 'statements') {
+                questionPrompt.textContent = q.prompt;
+                statementBox.classList.remove('hidden');
+                
+                // Statements container card
+                let statementsHTML = `<div class="bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700/80 rounded-xl p-3 sm:p-3.5 space-y-2 font-medium text-xs sm:text-sm text-slate-800 dark:text-slate-200">`;
+                q.statements.forEach(st => {
+                    statementsHTML += `<div class="flex gap-2 items-start"><span class="font-mono text-blue-500 font-bold">•</span><span>${st}</span></div>`;
+                });
+                statementsHTML += `</div>`;
+                if (q.questionText) {
+                    statementsHTML += `<p class="font-semibold text-xs sm:text-sm text-slate-700 dark:text-slate-300 pt-1">${q.questionText}</p>`;
+                }
+                statementBox.innerHTML = statementsHTML;
+
+            } else if (q.type === 'match') {
+                questionPrompt.textContent = q.prompt;
+                matchBox.classList.remove('hidden');
+
+                // 2 Column Table Layout
+                let tableHTML = `
+                    <div class="border border-slate-200 dark:border-slate-700/80 rounded-xl overflow-hidden text-xs sm:text-sm">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="bg-slate-100 dark:bg-slate-800/90 text-slate-700 dark:text-slate-300 font-bold border-b border-slate-200 dark:border-slate-700">
+                                    <th class="p-2.5 sm:p-3 w-1/2">List I (Item)</th>
+                                    <th class="p-2.5 sm:p-3 w-1/2 border-l border-slate-200 dark:border-slate-700">List II (Description)</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-200 dark:divide-slate-800">
+                `;
+                q.matchList.forEach(m => {
+                    tableHTML += `
+                        <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/40">
+                            <td class="p-2.5 sm:p-3 font-medium text-slate-800 dark:text-slate-200">${m.left}</td>
+                            <td class="p-2.5 sm:p-3 text-slate-600 dark:text-slate-300 border-l border-slate-200 dark:border-slate-700">${m.right}</td>
+                        </tr>
+                    `;
+                });
+                tableHTML += `</tbody></table></div>`;
+                matchBox.innerHTML = tableHTML;
+
+            } else {
+                // Standard MCQ
+                questionPrompt.textContent = q.question;
+            }
+
+            // Render Options
+            optionsContainer.innerHTML = '';
+            q.options.forEach((opt, optIdx) => {
+                const btn = document.createElement('button');
+                btn.className = `option-btn w-full text-left p-3 rounded-xl border text-xs sm:text-sm font-medium transition-all duration-150 flex items-center justify-between group btn-active-scale`;
+                
+                // Base styling before answer selection
+                if (!hasAnswered) {
+                    btn.className += ` border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/50 hover:bg-blue-50 dark:hover:bg-blue-950/40 hover:border-blue-300 dark:hover:border-blue-700 text-slate-800 dark:text-slate-200`;
+                    btn.onclick = () => selectOption(optIdx);
+                } else {
+                    btn.disabled = true;
+                    btn.classList.add('cursor-default');
+
+                    if (optIdx === q.answer) {
+                        // Correct option style
+                        btn.className += ` bg-emerald-50 dark:bg-emerald-950/60 border-emerald-500 text-emerald-900 dark:text-emerald-200 font-semibold glow-correct`;
+                    } else if (optIdx === userAnswers[index]) {
+                        // Incorrectly selected style
+                        btn.className += ` bg-rose-50 dark:bg-rose-950/60 border-rose-500 text-rose-900 dark:text-rose-200 font-semibold glow-wrong`;
+                    } else {
+                        // Muted unselected style
+                        btn.className += ` border-slate-200 dark:border-slate-800/60 bg-slate-100/50 dark:bg-slate-900/40 text-slate-400 dark:text-slate-500 opacity-60`;
+                    }
+                }
+
+                // Internal option label and marker icon
+                let iconHTML = '';
+                if (hasAnswered) {
+                    if (optIdx === q.answer) {
+                        iconHTML = `<i class="fa-solid fa-circle-check text-emerald-600 dark:text-emerald-400 text-base"></i>`;
+                    } else if (optIdx === userAnswers[index]) {
+                        iconHTML = `<i class="fa-solid fa-circle-xmark text-rose-600 dark:text-rose-400 text-base"></i>`;
+                    }
+                } else {
+                    iconHTML = `<span class="w-5 h-5 rounded-full border border-slate-300 dark:border-slate-600 group-hover:border-blue-500 flex items-center justify-center text-[10px] text-slate-400 group-hover:text-blue-500 transition-colors">
+                        ${String.fromCharCode(65 + optIdx)}
+                    </span>`;
+                }
+
+                btn.innerHTML = `
+                    <span class="pr-2 leading-tight">${opt}</span>
+                    <span class="flex-none">${iconHTML}</span>
+                `;
+                optionsContainer.appendChild(btn);
+            });
+
+            // Explanation Display if question answered
+            if (hasAnswered) {
+                const isCorrect = userAnswers[index] === q.answer;
+                explanationBox.classList.remove('hidden');
+
+                if (isCorrect) {
+                    explanationBox.className = `p-3.5 rounded-xl border bg-emerald-50/80 dark:bg-emerald-950/40 border-emerald-200 dark:border-emerald-800/60 text-xs sm:text-sm leading-relaxed transition-all`;
+                    explanationTitle.innerHTML = `<i class="fa-solid fa-circle-check text-emerald-600 dark:text-emerald-400"></i><span class="text-emerald-800 dark:text-emerald-300">Correct Answer!</span>`;
+                } else {
+                    explanationBox.className = `p-3.5 rounded-xl border bg-rose-50/80 dark:bg-rose-950/40 border-rose-200 dark:border-rose-800/60 text-xs sm:text-sm leading-relaxed transition-all`;
+                    explanationTitle.innerHTML = `<i class="fa-solid fa-circle-xmark text-rose-600 dark:text-rose-400"></i><span class="text-rose-800 dark:text-rose-300">Incorrect Selection</span>`;
+                }
+
+                explanationText.innerHTML = `<strong>Explanation:</strong> ${q.explanation}`;
+            }
+
+            // Navigation Button States
+            btnPrev.disabled = index === 0;
+            if (index === questionsData.length - 1) {
+                btnNextLabel.textContent = "Finish & See Results";
+            } else {
+                btnNextLabel.textContent = "Next Question";
+            }
+        }
+
+        function selectOption(optionIndex) {
+            if (userAnswers[currentIndex] !== null) return; // Prevent double click
+
+            userAnswers[currentIndex] = optionIndex;
+            
+            // Recalculate Score
+            totalScore = userAnswers.reduce((acc, ans, idx) => {
+                return ans === questionsData[idx].answer ? acc + 1 : acc;
+            }, 0);
+
+            scoreCounter.textContent = `Score: ${totalScore}`;
+
+            // Re-render current question to show instant visual feedback
+            renderQuestion(currentIndex);
+        }
+
+        function nextPage() {
+            if (currentIndex < questionsData.length - 1) {
+                currentIndex++;
+                renderQuestion(currentIndex);
+            } else {
+                showResults();
+            }
+        }
+
+        function prevPage() {
+            if (currentIndex > 0) {
+                currentIndex--;
+                renderQuestion(currentIndex);
+            }
+        }
+
+        btnNext.addEventListener('click', nextPage);
+        btnPrev.addEventListener('click', prevPage);
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            // Only respond if quiz screen is active and modal is hidden
+            if (quizView.classList.contains('hidden') || !gridModal.classList.contains('hidden')) return;
+
+            if (e.key === 'ArrowRight' || e.key === 'Enter') {
+                nextPage();
+            } else if (e.key === 'ArrowLeft') {
+                prevPage();
+            } else if (['1', '2', '3', '4'].includes(e.key)) {
+                const optIdx = parseInt(e.key) - 1;
+                selectOption(optIdx);
+            } else if (['a', 'b', 'c', 'd', 'A', 'B', 'C', 'D'].includes(e.key)) {
+                const charCode = e.key.toUpperCase().charCodeAt(0);
+                const optIdx = charCode - 65;
+                if (optIdx >= 0 && optIdx < 4) {
+                    selectOption(optIdx);
+                }
+            }
+        });
+
+        const btnGridModal = document.getElementById('btn-grid-modal');
+        const btnCloseModal = document.getElementById('btn-close-modal');
+
+        function openPalette() {
+            paletteGrid.innerHTML = '';
+            questionsData.forEach((q, idx) => {
+                const btn = document.createElement('button');
+                const isAnswered = userAnswers[idx] !== null;
+                const isCorrect = isAnswered && userAnswers[idx] === q.answer;
+                const isCurrent = idx === currentIndex;
+
+                let bgClass = "bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300";
+                if (isAnswered) {
+                    bgClass = isCorrect 
+                        ? "bg-emerald-500 text-white font-bold" 
+                        : "bg-rose-500 text-white font-bold";
+                }
+
+                let borderClass = isCurrent ? "ring-2 ring-blue-500 ring-offset-2 dark:ring-offset-slate-900" : "";
+
+                btn.className = `h-10 rounded-lg flex items-center justify-center font-semibold text-xs transition btn-active-scale ${bgClass} ${borderClass}`;
+                btn.textContent = idx + 1;
+                btn.onclick = () => {
+                    currentIndex = idx;
+                    renderQuestion(currentIndex);
+                    closePalette();
+                };
+                paletteGrid.appendChild(btn);
+            });
+            gridModal.classList.remove('hidden');
+        }
+
+        function closePalette() {
+            gridModal.classList.add('hidden');
+        }
+
+        btnGridModal.addEventListener('click', openPalette);
+        btnCloseModal.addEventListener('click', closePalette);
+        gridModal.addEventListener('click', (e) => {
+            if (e.target === gridModal) closePalette();
+        });
+
+        const resScore = document.getElementById('res-score');
+        const resPercentage = document.getElementById('res-percentage');
+        const resCorrect = document.getElementById('res-correct');
+        const resIncorrect = document.getElementById('res-incorrect');
+        const breakdownList = document.getElementById('breakdown-list');
+        const btnRestart = document.getElementById('btn-restart');
+        
+        const filterAllBtn = document.getElementById('filter-all');
+        const filterWrongBtn = document.getElementById('filter-wrong');
+        let currentFilter = 'all';
+
+        function showResults() {
+            quizView.classList.add('hidden');
+            resultsView.classList.remove('hidden');
+
+            const total = questionsData.length;
+            const correct = userAnswers.reduce((acc, ans, idx) => ans === questionsData[idx].answer ? acc + 1 : acc, 0);
+            const incorrect = userAnswers.filter(ans => ans !== null).length - correct;
+            const percentage = Math.round((correct / total) * 100);
+
+            resScore.textContent = `${correct} / ${total}`;
+            resPercentage.textContent = `${percentage}%`;
+            resCorrect.textContent = correct;
+            resIncorrect.textContent = incorrect;
+
+            renderBreakdown();
+        }
+
+        function renderBreakdown() {
+            breakdownList.innerHTML = '';
+
+            questionsData.forEach((q, idx) => {
+                const userAns = userAnswers[idx];
+                const isCorrect = userAns === q.answer;
+
+                if (currentFilter === 'wrong' && (isCorrect || userAns === null)) {
+                    return; // Skip correct/unanswered when filtering wrong
+                }
+
+                const item = document.createElement('div');
+                item.className = `p-3.5 sm:p-4 rounded-xl border text-xs sm:text-sm space-y-2 ${
+                    isCorrect 
+                        ? 'bg-slate-50 dark:bg-slate-800/40 border-slate-200 dark:border-slate-800' 
+                        : 'bg-rose-50/50 dark:bg-rose-950/20 border-rose-200 dark:border-rose-900/40'
+                }`;
+
+                let questionContent = '';
+                if (q.type === 'statements') {
+                    questionContent = `<p class="font-bold text-slate-900 dark:text-slate-100">${q.prompt}</p>
+                    <div class="bg-slate-100 dark:bg-slate-800/80 p-2.5 rounded-lg my-1 space-y-1 font-mono text-xs">
+                        ${q.statements.map(s => `<div>${s}</div>`).join('')}
+                    </div>`;
+                } else if (q.type === 'match') {
+                    questionContent = `<p class="font-bold text-slate-900 dark:text-slate-100">${q.prompt}</p>
+                    <div class="bg-slate-100 dark:bg-slate-800/80 p-2 rounded-lg my-1 text-xs">
+                        ${q.matchList.map(m => `<div class="flex justify-between py-0.5"><span>${m.left}</span> <span>${m.right}</span></div>`).join('')}
+                    </div>`;
+                } else {
+                    questionContent = `<p class="font-bold text-slate-900 dark:text-slate-100">${q.question}</p>`;
+                }
+
+                const userAnsText = userAns !== null ? q.options[userAns] : 'Not Answered';
+                const correctAnsText = q.options[q.answer];
+
+                item.innerHTML = `
+                    <div class="flex items-center justify-between">
+                        <span class="font-bold text-xs px-2 py-0.5 rounded bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300">
+                            Q${idx + 1} • ${q.badge}
+                        </span>
+                        <span class="font-bold text-xs ${isCorrect ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400'}">
+                            ${isCorrect ? '<i class="fa-solid fa-check"></i> Correct' : '<i class="fa-solid fa-xmark"></i> Incorrect'}
+                        </span>
+                    </div>
+
+                    ${questionContent}
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1 font-medium">
+                        <div class="p-2 rounded-lg ${isCorrect ? 'bg-emerald-100/60 dark:bg-emerald-950/60 text-emerald-900 dark:text-emerald-200' : 'bg-rose-100/60 dark:bg-rose-950/60 text-rose-900 dark:text-rose-200'}">
+                            <span class="block text-[10px] uppercase font-bold opacity-75">Your Choice:</span>
+                            <span>${userAnsText}</span>
+                        </div>
+                        <div class="p-2 rounded-lg bg-emerald-100/60 dark:bg-emerald-950/60 text-emerald-900 dark:text-emerald-200">
+                            <span class="block text-[10px] uppercase font-bold opacity-75">Correct Answer:</span>
+                            <span>${correctAnsText}</span>
+                        </div>
+                    </div>
+
+                    <p class="text-xs text-slate-600 dark:text-slate-400 pt-1 border-t border-slate-200 dark:border-slate-800">
+                        <strong>Explanation:</strong> ${q.explanation}
+                    </p>
+                `;
+
+                breakdownList.appendChild(item);
+            });
+
+            if (breakdownList.children.length === 0) {
+                breakdownList.innerHTML = `<div class="text-center py-8 text-slate-400 text-xs">No questions match the selected filter.</div>`;
+            }
+        }
+
+        filterAllBtn.addEventListener('click', () => {
+            currentFilter = 'all';
+            filterAllBtn.className = "px-2.5 py-1 rounded-md bg-white dark:bg-slate-700 text-slate-800 dark:text-slate-100 shadow-sm transition";
+            filterWrongBtn.className = "px-2.5 py-1 rounded-md text-slate-600 dark:text-slate-400 hover:text-slate-900 transition";
+            renderBreakdown();
+        });
+
+        filterWrongBtn.addEventListener('click', () => {
+            currentFilter = 'wrong';
+            filterWrongBtn.className = "px-2.5 py-1 rounded-md bg-white dark:bg-slate-700 text-slate-800 dark:text-slate-100 shadow-sm transition";
+            filterAllBtn.className = "px-2.5 py-1 rounded-md text-slate-600 dark:text-slate-400 hover:text-slate-900 transition";
+            renderBreakdown();
+        });
+
+        btnRestart.addEventListener('click', () => {
+            currentIndex = 0;
+            userAnswers.fill(null);
+            totalScore = 0;
+            scoreCounter.textContent = `Score: 0`;
+            resultsView.classList.add('hidden');
+            quizView.classList.remove('hidden');
+            renderQuestion(currentIndex);
+        });
+
+        window.onload = function() {
+            initTheme();
+            renderQuestion(currentIndex);
+        };
+    </script>
+</body>
+</html>
