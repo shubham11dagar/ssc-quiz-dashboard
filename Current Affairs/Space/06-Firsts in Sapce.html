@@ -1,0 +1,1022 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SSC Space Exploration Master Quiz</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#f0f7ff',
+              100: '#e0effe',
+              500: '#3b82f6',
+              600: '#2563eb',
+              700: '#1d4ed8',
+              900: '#1e3a8a',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+    
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      touch-action: manipulation;
+    }
+
+    /* Custom Scrollbars for inline scrollable areas if needed on very small screens */
+    ::-webkit-scrollbar {
+      width: 5px;
+      height: 5px;
+    }
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 9999px;
+    }
+    .dark ::-webkit-scrollbar-thumb {
+      background: #334155;
+    }
+
+    /* Micro-animations */
+    .option-btn {
+      transition: all 0.18s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .option-btn:hover:not(:disabled) {
+      transform: translateY(-1px);
+    }
+    .option-btn:active:not(:disabled) {
+      transform: translateY(0);
+    }
+
+    .fade-in {
+      animation: fadeIn 0.25s ease-out forwards;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body class="bg-slate-100 text-slate-800 dark:bg-slate-950 dark:text-slate-100 min-h-screen h-screen flex flex-col justify-between overflow-hidden antialiased">
+
+  <!-- HEADER BAR (Fixed Height) -->
+  <header class="h-14 border-b border-slate-200 dark:border-slate-800 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md px-4 flex items-center justify-between shrink-0 z-20">
+    <div class="flex items-center space-x-3">
+      <div class="w-8 h-8 rounded-lg bg-gradient-to-tr from-brand-600 to-indigo-500 flex items-center justify-center text-white shadow-md shadow-brand-500/20">
+        <i class="fa-solid font-bold fa-shuttle-space text-sm"></i>
+      </div>
+      <div>
+        <h1 class="font-extrabold text-sm md:text-base leading-none bg-gradient-to-r from-brand-600 via-indigo-500 to-purple-500 bg-clip-text text-transparent">
+          SSC Space Prep
+        </h1>
+        <p class="text-[10px] text-slate-500 dark:text-slate-400 font-medium">Exam-Ready Practice Series</p>
+      </div>
+    </div>
+
+    <!-- Center Stats/Progress Badge -->
+    <div id="quiz-header-stats" class="hidden md:flex items-center space-x-4 text-xs font-semibold">
+      <div class="px-2.5 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
+        <i class="fa-solid fa-bullseye text-brand-500 mr-1.5"></i>
+        <span>Score: <span id="header-score" class="text-brand-600 dark:text-brand-400 font-bold">0</span></span>
+      </div>
+      <div class="px-2.5 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
+        <i class="fa-solid fa-fire text-amber-500 mr-1.5"></i>
+        <span>Streak: <span id="header-streak" class="text-amber-500 font-bold">0</span></span>
+      </div>
+    </div>
+
+    <!-- Dark/Light Theme Toggle -->
+    <div class="flex items-center space-x-2">
+      <button id="theme-toggle" class="w-9 h-9 rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 transition flex items-center justify-center" title="Toggle Theme">
+        <i id="theme-icon" class="fa-solid fa-moon text-sm"></i>
+      </button>
+    </div>
+  </header>
+
+  <!-- MAIN CONTAINER (Viewport Constrained) -->
+  <main class="flex-1 max-w-4xl w-full mx-auto p-3 md:p-4 flex flex-col justify-between overflow-hidden relative">
+
+    <!-- SCREEN 1: START CARD -->
+    <div id="start-screen" class="my-auto bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-6 md:p-8 shadow-xl text-center fade-in max-w-xl mx-auto">
+      <div class="w-16 h-16 rounded-2xl bg-brand-500/10 text-brand-600 dark:text-brand-400 flex items-center justify-center text-3xl mx-auto mb-4 border border-brand-500/20">
+        <i class="fa-solid fa-user-astronaut"></i>
+      </div>
+      <h2 class="text-2xl font-extrabold text-slate-900 dark:text-white mb-2">Space Exploration Quiz</h2>
+      <p class="text-xs md:text-sm text-slate-600 dark:text-slate-400 mb-6 leading-relaxed">
+        Test your knowledge with 32 SSC CGL/CHSL/CPO high-yield questions covering satellites, space stations, planetary probes, moon missions, and milestones.
+      </p>
+
+      <div class="grid grid-cols-3 gap-3 text-left mb-6">
+        <div class="bg-slate-50 dark:bg-slate-800/60 p-3 rounded-xl border border-slate-100 dark:border-slate-800">
+          <p class="text-[10px] uppercase font-bold text-slate-400 mb-0.5">Questions</p>
+          <p class="text-lg font-bold text-slate-800 dark:text-slate-100">32 MCQs</p>
+        </div>
+        <div class="bg-slate-50 dark:bg-slate-800/60 p-3 rounded-xl border border-slate-100 dark:border-slate-800">
+          <p class="text-[10px] uppercase font-bold text-slate-400 mb-0.5">Format</p>
+          <p class="text-lg font-bold text-slate-800 dark:text-slate-100">SSC Exam</p>
+        </div>
+        <div class="bg-slate-50 dark:bg-slate-800/60 p-3 rounded-xl border border-slate-100 dark:border-slate-800">
+          <p class="text-[10px] uppercase font-bold text-slate-400 mb-0.5">Feedback</p>
+          <p class="text-lg font-bold text-brand-600 dark:text-brand-400">Instant</p>
+        </div>
+      </div>
+
+      <button id="start-btn" class="w-full py-3.5 px-6 rounded-xl bg-brand-600 hover:bg-brand-700 active:scale-[0.99] text-white font-bold text-sm md:text-base shadow-lg shadow-brand-600/30 transition duration-150 flex items-center justify-center space-x-2">
+        <span>Begin Practice Test</span>
+        <i class="fa-solid fa-arrow-right text-xs"></i>
+      </button>
+    </div>
+
+    <!-- SCREEN 2: ACTIVE QUIZ (No-Scroll Viewport Card) -->
+    <div id="quiz-screen" class="hidden flex-1 flex flex-col justify-between overflow-hidden h-full">
+
+      <!-- Top Progress Indicator -->
+      <div class="mb-2 shrink-0">
+        <div class="flex items-center justify-between text-xs font-semibold mb-1 text-slate-500 dark:text-slate-400">
+          <span>Question <span id="q-current" class="text-slate-900 dark:text-white font-bold">1</span> of <span id="q-total">32</span></span>
+          <span id="q-badge" class="px-2 py-0.5 rounded text-[10px] font-bold uppercase bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 border border-indigo-200 dark:border-indigo-800">
+            Standard MCQ
+          </span>
+        </div>
+        <div class="w-full h-1.5 bg-slate-200 dark:bg-slate-800 rounded-full overflow-hidden">
+          <div id="progress-bar" class="h-full bg-gradient-to-r from-brand-600 to-indigo-500 transition-all duration-300 w-0"></div>
+        </div>
+      </div>
+
+      <!-- Main Question Container Card -->
+      <div class="flex-1 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-3.5 md:p-5 shadow-lg flex flex-col justify-between overflow-hidden">
+
+        <!-- Question Body (Dynamic height / scroll inside if tight) -->
+        <div class="overflow-y-auto pr-1 shrink-0 max-h-[48vh] md:max-h-[52vh]">
+          <h3 id="question-text" class="text-sm md:text-base font-bold text-slate-900 dark:text-slate-100 mb-2 leading-relaxed">
+            <!-- Dynamic Question Text -->
+          </h3>
+
+          <!-- Special Container for Statements / Match columns -->
+          <div id="complex-content" class="mb-3">
+            <!-- Rendered dynamically -->
+          </div>
+        </div>
+
+        <!-- Answer Options (Compact 2x2 grid on desktop, single column on mobile) -->
+        <div id="options-container" class="grid grid-cols-1 md:grid-cols-2 gap-2 my-2 shrink-0">
+          <!-- Dynamic 4 Options -->
+        </div>
+
+        <!-- Explanation Callout Box (Fixed/Compact Space) -->
+        <div id="explanation-box" class="hidden shrink-0 mt-2 p-2.5 rounded-xl border text-xs leading-relaxed fade-in">
+          <div class="flex items-center space-x-1.5 font-bold mb-1" id="explanation-title">
+            <!-- Status Icon + Title -->
+          </div>
+          <p id="explanation-text" class="text-slate-600 dark:text-slate-300">
+            <!-- Explanation Body -->
+          </p>
+        </div>
+
+      </div>
+
+      <!-- Action Footer Button -->
+      <div class="pt-2 shrink-0 flex justify-end">
+        <button id="next-btn" disabled class="py-2.5 px-6 rounded-xl bg-slate-200 dark:bg-slate-800 text-slate-400 dark:text-slate-600 font-bold text-xs md:text-sm transition duration-200 flex items-center space-x-2 cursor-not-allowed">
+          <span id="next-btn-text">Next Question</span>
+          <i class="fa-solid fa-chevron-right text-xs"></i>
+        </button>
+      </div>
+
+    </div>
+
+    <!-- SCREEN 3: RESULTS SUMMARY SCREEN -->
+    <div id="results-screen" class="hidden flex-1 flex flex-col justify-between overflow-hidden h-full fade-in">
+      
+      <!-- Top Score Summary Header -->
+      <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-4 md:p-6 shadow-md shrink-0 mb-3 text-center">
+        <div class="inline-flex items-center justify-center w-12 h-12 rounded-full bg-amber-100 dark:bg-amber-950/60 text-amber-500 mb-2 text-xl">
+          <i class="fa-solid fa-trophy"></i>
+        </div>
+        <h2 class="text-xl md:text-2xl font-extrabold text-slate-900 dark:text-white">Quiz Completed!</h2>
+        <p class="text-xs text-slate-500 dark:text-slate-400">Here is your performance overview</p>
+
+        <!-- Stats Grid -->
+        <div class="grid grid-cols-4 gap-2 md:gap-4 mt-4">
+          <div class="bg-slate-50 dark:bg-slate-800/50 p-2.5 rounded-xl border border-slate-100 dark:border-slate-800">
+            <span class="text-[10px] uppercase font-bold text-slate-400 block">Score</span>
+            <span id="res-score" class="text-lg md:text-xl font-black text-brand-600 dark:text-brand-400">0/32</span>
+          </div>
+          <div class="bg-slate-50 dark:bg-slate-800/50 p-2.5 rounded-xl border border-slate-100 dark:border-slate-800">
+            <span class="text-[10px] uppercase font-bold text-slate-400 block">Accuracy</span>
+            <span id="res-accuracy" class="text-lg md:text-xl font-black text-emerald-500">0%</span>
+          </div>
+          <div class="bg-slate-50 dark:bg-slate-800/50 p-2.5 rounded-xl border border-slate-100 dark:border-slate-800">
+            <span class="text-[10px] uppercase font-bold text-slate-400 block">Correct</span>
+            <span id="res-correct" class="text-lg md:text-xl font-black text-emerald-500">0</span>
+          </div>
+          <div class="bg-slate-50 dark:bg-slate-800/50 p-2.5 rounded-xl border border-slate-100 dark:border-slate-800">
+            <span class="text-[10px] uppercase font-bold text-slate-400 block">Incorrect</span>
+            <span id="res-incorrect" class="text-lg md:text-xl font-black text-rose-500">0</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Incorrect / Review Breakdown Panel -->
+      <div class="flex-1 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-3 md:p-4 shadow-md flex flex-col overflow-hidden">
+        <div class="flex items-center justify-between pb-2 mb-2 border-b border-slate-100 dark:border-slate-800 shrink-0">
+          <h3 class="font-bold text-xs md:text-sm text-slate-800 dark:text-slate-200 flex items-center">
+            <i class="fa-solid fa-list-check text-brand-500 mr-2"></i> Review Breakdown
+          </h3>
+          <div class="flex space-x-1 text-[11px]">
+            <button id="filter-all-btn" class="px-2.5 py-1 rounded-lg font-bold bg-brand-600 text-white">All</button>
+            <button id="filter-wrong-btn" class="px-2.5 py-1 rounded-lg font-bold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200">Incorrect Only</button>
+          </div>
+        </div>
+
+        <!-- Scrollable List of Questions -->
+        <div id="review-list" class="flex-1 overflow-y-auto space-y-3 pr-1">
+          <!-- Dynamic Review Cards -->
+        </div>
+      </div>
+
+      <!-- Restart Footer Button -->
+      <div class="pt-3 shrink-0 flex justify-center">
+        <button id="restart-btn" class="py-3 px-8 rounded-xl bg-brand-600 hover:bg-brand-700 active:scale-95 text-white font-bold text-sm shadow-lg shadow-brand-600/30 transition flex items-center space-x-2">
+          <i class="fa-solid fa-rotate-right"></i>
+          <span>Restart Practice Quiz</span>
+        </button>
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- JAVASCRIPT LOGIC -->
+  <script>
+    // --- EXHAUSTIVE QUESTION DATASET (32 SSC MCQs) ---
+    const quizData = [
+      {
+        id: 1,
+        type: 'standard',
+        question: "Which was the first artificial satellite placed into Earth's orbit, and by which country was it launched?",
+        options: [
+          "(A) Explorer 1 (USA)",
+          "(B) Sputnik 1 (Soviet Union)",
+          "(C) Luna 1 (Soviet Union)",
+          "(D) Vanguard 1 (USA)"
+        ],
+        correct: 1,
+        explanation: "Sputnik 1 was launched by the Soviet Union on 4 October 1957, becoming the first object to orbit Earth intentionally."
+      },
+      {
+        id: 2,
+        type: 'standard',
+        question: "What was the name of the first animal to orbit Earth, and on which spacecraft was she sent?",
+        options: [
+          "(A) Belka, aboard Sputnik 5",
+          "(B) Laika, aboard Sputnik 2",
+          "(C) Strelka, aboard Sputnik 3",
+          "(D) Baker, aboard Explorer 1"
+        ],
+        correct: 1,
+        explanation: "Laika (a dog) was launched aboard Sputnik 2 on 3 November 1957, making her the first animal in orbit."
+      },
+      {
+        id: 3,
+        type: 'standard',
+        question: "Which US satellite discovered Earth's radiation belts after its launch on 31 January 1958?",
+        options: [
+          "(A) Vanguard 1",
+          "(B) Mariner 2",
+          "(C) Explorer 1",
+          "(D) Surveyor 1"
+        ],
+        correct: 2,
+        explanation: "Explorer 1 was the first US satellite (launched 31 January 1958) and carried instruments that discovered Earth's radiation belts."
+      },
+      {
+        id: 4,
+        type: 'standard',
+        question: "Which Soviet spacecraft was the first to escape Earth's gravity, achieve Earth escape velocity, and fly past the Moon in January 1959?",
+        options: [
+          "(A) Luna 1",
+          "(B) Luna 9",
+          "(C) Venera 3",
+          "(D) Zond 5"
+        ],
+        correct: 0,
+        explanation: "Launched on 2 January 1959, Luna 1 was the first spacecraft to escape Earth's gravity, reach the Sun, achieve escape velocity, and fly past the Moon."
+      },
+      {
+        id: 5,
+        type: 'standard',
+        question: "Venera 3, launched by the Soviet Union, was the first spacecraft to achieve a hard impact on which planet?",
+        options: [
+          "(A) Mars",
+          "(B) Mercury",
+          "(C) Venus",
+          "(D) Jupiter"
+        ],
+        correct: 2,
+        explanation: "Venera 3 was launched on 16 November 1965 and impacted Venus on 1 March 1966, marking the first hard impact on another planet."
+      },
+      {
+        id: 6,
+        type: 'standard',
+        question: "Which spacecraft made the first successful soft landing on the Moon on 3 February 1966?",
+        options: [
+          "(A) Surveyor 1",
+          "(B) Luna 9",
+          "(C) Luna 10",
+          "(D) Apollo 11"
+        ],
+        correct: 1,
+        explanation: "The Soviet probe Luna 9 achieved the first successful lunar soft landing on 3 February 1966."
+      },
+      {
+        id: 7,
+        type: 'standard',
+        question: "Surveyor 1 was notable in space exploration history for being the:",
+        options: [
+          "(A) First spacecraft to impact Venus",
+          "(B) First US soft landing on the Moon",
+          "(C) First spacecraft to orbit the Moon",
+          "(D) First spacecraft to carry a robotic rover"
+        ],
+        correct: 1,
+        explanation: "Surveyor 1 landed on 2 June 1966, making it the first US soft landing on the Moon, returning televised images of the surface."
+      },
+      {
+        id: 8,
+        type: 'standard',
+        question: "Which spacecraft was the first to be placed in a sustained orbit around the Moon in 1966?",
+        options: [
+          "(A) Luna 9",
+          "(B) Luna 10",
+          "(C) Zond 5",
+          "(D) Apollo 8"
+        ],
+        correct: 1,
+        explanation: "Launched on 31 March 1966, Soviet spacecraft Luna 10 was the first to achieve sustained lunar orbit."
+      },
+      {
+        id: 9,
+        type: 'match',
+        question: "Match the astronaut/cosmonaut with their respective space milestone:",
+        colAHeader: "Column A (Spacefarer)",
+        colBHeader: "Column B (Milestone)",
+        colA: ["1. Yuri Gagarin", "2. Alan Shepard", "3. John Glenn", "4. Valentina Tereshkova"],
+        colB: ["i. First American in space", "ii. First human in space", "iii. First woman in space", "iv. First American in Earth orbit"],
+        options: [
+          "(A) 1-ii, 2-i, 3-iv, 4-iii",
+          "(B) 1-i, 2-ii, 3-iii, 4-iv",
+          "(C) 1-ii, 2-iv, 3-i, 4-iii",
+          "(D) 1-iv, 2-i, 3-ii, 4-iii"
+        ],
+        correct: 0,
+        explanation: "Yuri Gagarin was the first human in space (Vostok 1); Alan Shepard was the first American in space; John Glenn was the first American in Earth orbit; Valentina Tereshkova was the first woman in space."
+      },
+      {
+        id: 10,
+        type: 'standard',
+        question: "Which Soviet spacecraft carried three cosmonauts on 12 October 1964, becoming the first multi-person spacecraft?",
+        options: [
+          "(A) Vostok 1",
+          "(B) Gemini 3",
+          "(C) Voskhod 1",
+          "(D) Voskhod 2"
+        ],
+        correct: 2,
+        explanation: "Voskhod 1 was the first multi-person spacecraft, carrying three cosmonauts into space on 12 October 1964."
+      },
+      {
+        id: 11,
+        type: 'standard',
+        question: "Gemini 3, launched on 23 March 1965, achieved which historical milestone?",
+        options: [
+          "(A) First orbital rendezvous",
+          "(B) First US multi-person spacecraft",
+          "(C) First docking in space",
+          "(D) First American spacewalk"
+        ],
+        correct: 1,
+        explanation: "Gemini 3 was the first US multi-person spacecraft, carrying two astronauts on 23 March 1965."
+      },
+      {
+        id: 12,
+        type: 'standard',
+        question: "Who performed the world's first spacewalk (egress from spacecraft) on 18 March 1965 aboard Voskhod 2?",
+        options: [
+          "(A) Aleksei Leonov",
+          "(B) Ed White",
+          "(C) Yuri Gagarin",
+          "(D) Neil Armstrong"
+        ],
+        correct: 0,
+        explanation: "Aleksei Leonov (Soviet Union) floated outside the Voskhod 2 spacecraft for approximately 12 minutes on 18 March 1965."
+      },
+      {
+        id: 13,
+        type: 'standard',
+        question: "Who was the first American astronaut to perform a spacewalk, and on which mission?",
+        options: [
+          "(A) Alan Shepard, Freedom 7",
+          "(B) Ed White, Gemini 4",
+          "(C) John Glenn, Mercury-Atlas 6",
+          "(D) Neil Armstrong, Gemini 8"
+        ],
+        correct: 1,
+        explanation: "Ed White performed the first American spacewalk during the Gemini 4 mission on 3 June 1965."
+      },
+      {
+        id: 14,
+        type: 'standard',
+        question: "The first orbital rendezvous took place on 15 December 1965 between which two spacecraft?",
+        options: [
+          "(A) Gemini 3 and Gemini 4",
+          "(B) Gemini 6 and Gemini 7",
+          "(C) Apollo and Soyuz",
+          "(D) Gemini 8 and Agena"
+        ],
+        correct: 1,
+        explanation: "Gemini 6 and Gemini 7 performed the first orbital rendezvous on 15 December 1965, marking the first time two spacecraft met in orbit."
+      },
+      {
+        id: 15,
+        type: 'standard',
+        question: "Which mission completed the world's first space docking operation by docking with an Agena target vehicle on 16 March 1966?",
+        options: [
+          "(A) Gemini 4",
+          "(B) Gemini 8",
+          "(C) Apollo 8",
+          "(D) Apollo 11"
+        ],
+        correct: 1,
+        explanation: "Gemini 8 achieved the first spacecraft-to-spacecraft docking on 16 March 1966 by docking with an Agena target vehicle."
+      },
+      {
+        id: 16,
+        type: 'standard',
+        question: "Which uncrewed Soviet probe flew around the Moon and returned to Earth between 14–21 September 1968, marking the first human flight path around the Moon and return?",
+        options: [
+          "(A) Luna 10",
+          "(B) Zond 5",
+          "(C) Venera 3",
+          "(D) Sputnik 2"
+        ],
+        correct: 1,
+        explanation: "Uncrewed Soviet probe Zond 5 flew around the Moon and safely returned to Earth in September 1968."
+      },
+      {
+        id: 17,
+        type: 'standard',
+        question: "Apollo 8 (US) achieved which of the following milestones in December 1968?",
+        options: [
+          "(A) First human landing on the lunar surface",
+          "(B) First crewed flight around the Moon",
+          "(C) First joint international docking",
+          "(D) First robotic rover operation on the Moon"
+        ],
+        correct: 1,
+        explanation: "Apollo 8 (21–27 December 1968) was the first crewed mission to orbit the Moon and witness an Earthrise."
+      },
+      {
+        id: 18,
+        type: 'standard',
+        question: "The Apollo-Soyuz Test Project (ASTP) in July 1975 was historically significant because it was the:",
+        options: [
+          "(A) First multi-person mission",
+          "(B) First long-duration space station mission",
+          "(C) First international docking in space (US-Soviet)",
+          "(D) First private spaceflight"
+        ],
+        correct: 2,
+        explanation: "The Apollo-Soyuz Test Project (July 1975) was the first joint US-Soviet space mission, docking Apollo and Soyuz spacecraft in orbit."
+      },
+      {
+        id: 19,
+        type: 'statements',
+        question: "Consider the following statements regarding the Apollo 11 lunar landing mission (July 1969):",
+        statements: [
+          "1. Neil Armstrong and Buzz Aldrin walked on the lunar surface.",
+          "2. Michael Collins remained in orbit around the Moon.",
+          "3. Neil Armstrong became the first person to step on the Moon on 20 July 1969."
+        ],
+        prompt: "Which of the statements given above is/are correct?",
+        options: [
+          "(A) 1 and 2 only",
+          "(B) 2 and 3 only",
+          "(C) 1 and 3 only",
+          "(D) 1, 2, and 3"
+        ],
+        correct: 3,
+        explanation: "All three statements are correct. Armstrong and Aldrin walked on the Moon while Collins orbited, and Armstrong was the first person to walk on the surface on 20 July 1969."
+      },
+      {
+        id: 20,
+        type: 'standard',
+        question: "What was Lunokhod 1, deployed by the Soviet Union in 1970?",
+        options: [
+          "(A) The first space station",
+          "(B) The first robotic rover on the Moon",
+          "(C) The first Mars lander",
+          "(D) The first deep-space telescope"
+        ],
+        correct: 1,
+        explanation: "Soviet Lunokhod 1 (1970) was the first unmanned/robotic lunar rover."
+      },
+      {
+        id: 21,
+        type: 'standard',
+        question: "Who was the first woman to perform a spacewalk (in 1984)?",
+        options: [
+          "(A) Valentina Tereshkova",
+          "(B) Sally Ride",
+          "(C) Svetlana Savitskaya",
+          "(D) Mike Melvill"
+        ],
+        correct: 2,
+        explanation: "Svetlana Savitskaya (Soviet Union) became the first woman to perform a spacewalk in 1984."
+      },
+      {
+        id: 22,
+        type: 'standard',
+        question: "Sally Ride achieved fame in 1983 as the:",
+        options: [
+          "(A) First woman in space",
+          "(B) First American woman in space",
+          "(C) First woman to walk on the Moon",
+          "(D) First woman to perform a spacewalk"
+        ],
+        correct: 1,
+        explanation: "Sally Ride flew aboard the Space Shuttle in 1983, becoming the first American woman in space."
+      },
+      {
+        id: 23,
+        type: 'standard',
+        question: "Which was the world's first artificial space station, launched by the Soviet Union in 1971?",
+        options: [
+          "(A) Mir",
+          "(B) Salyut 1",
+          "(C) Skylab",
+          "(D) ISS"
+        ],
+        correct: 1,
+        explanation: "Salyut 1 (Soviet Union, launched 1971) was the first space station and first artificial orbital habitat for humans."
+      },
+      {
+        id: 24,
+        type: 'standard',
+        question: "Which space station held the record for continuous human presence (continuously occupied from 1989–2000) prior to the International Space Station (ISS)?",
+        options: [
+          "(A) Salyut 1",
+          "(B) Mir",
+          "(C) Skylab",
+          "(D) Tiangong"
+        ],
+        correct: 1,
+        explanation: "Mir (Soviet/Russia, launched 1986) was continuously occupied from 1989 to 2000, setting the early record for continuous human occupation."
+      },
+      {
+        id: 25,
+        type: 'standard',
+        question: "Continuous human habitation on the International Space Station (ISS) began when the first crew arrived on:",
+        options: [
+          "(A) 20 July 1999",
+          "(B) 22 November 2000",
+          "(C) 15 July 2001",
+          "(D) 3 March 2004"
+        ],
+        correct: 1,
+        explanation: "The first crew arrived at the ISS on 22 November 2000, marking continuous habitation from that date onward."
+      },
+      {
+        id: 26,
+        type: 'standard',
+        question: "Who became the first space tourist by flying to the ISS as a private passenger in 2001?",
+        options: [
+          "(A) Mike Melvill",
+          "(B) Dennis Tito",
+          "(C) Alan Shepard",
+          "(D) John Glenn"
+        ],
+        correct: 1,
+        explanation: "Dennis Tito flew to the ISS in 2001 as the world's first private space tourist."
+      },
+      {
+        id: 27,
+        type: 'standard',
+        question: "Which was the first privately developed manned spacecraft flight (piloted by Mike Melvill in 2004)?",
+        options: [
+          "(A) Dragon 2",
+          "(B) SpaceShipOne",
+          "(C) Falcon 9",
+          "(D) New Shepard"
+        ],
+        correct: 1,
+        explanation: "SpaceShipOne made the first private manned spacecraft flight in 2004 with pilot Mike Melvill."
+      },
+      {
+        id: 28,
+        type: 'standard',
+        question: "Pioneer 10 (launched 3 March 1972) achieved which set of planetary exploration milestones?",
+        options: [
+          "(A) Landed on Mars and discovered water ice",
+          "(B) First to explore the asteroid belt, fly by Jupiter, and eventually leave the solar system",
+          "(C) First to impact Venus and orbit Saturn",
+          "(D) First orbital mission to the Moon and Sun"
+        ],
+        correct: 1,
+        explanation: "Pioneer 10 was the first spacecraft to cross the asteroid belt, perform a flyby of Jupiter, and head out of the solar system."
+      },
+      {
+        id: 29,
+        type: 'standard',
+        question: "Which US spacecraft achieved the first successful Mars landing and surface operation on 20 July 1976?",
+        options: [
+          "(A) Pathfinder",
+          "(B) Curiosity",
+          "(C) Viking 1",
+          "(D) Voyager 1"
+        ],
+        correct: 2,
+        explanation: "Viking 1 landed on Mars on 20 July 1976, marking the first successful landing and operational surface mission on Mars."
+      },
+      {
+        id: 30,
+        type: 'standard',
+        question: "Which spacecraft is the farthest human-made object from Earth and was the first to officially enter interstellar space in 2012?",
+        options: [
+          "(A) Pioneer 10",
+          "(B) Pioneer 11",
+          "(C) Voyager 1",
+          "(D) Voyager 2"
+        ],
+        correct: 2,
+        explanation: "Voyager 1 is the farthest human-made object and became the first to officially cross into interstellar space in 2012."
+      },
+      {
+        id: 31,
+        type: 'standard',
+        question: "The Hubble Space Telescope, launched in 1990, is known as the:",
+        options: [
+          "(A) First space-based X-ray detector",
+          "(B) First major orbiting space telescope",
+          "(C) First infrared space telescope launched in 2021",
+          "(D) First planet-hunting satellite"
+        ],
+        correct: 1,
+        explanation: "Launched in 1990, the Hubble Space Telescope was the first major orbiting space telescope."
+      },
+      {
+        id: 32,
+        type: 'match',
+        question: "Match the space observatory with its primary spectral wavelength or purpose as stated in the text:",
+        colAHeader: "Column A (Observatory)",
+        colBHeader: "Column B (Type / Wavelength / Function)",
+        colA: ["1. Chandra", "2. Spitzer", "3. Kepler", "4. James Webb"],
+        colB: ["i. Planet search", "ii. Infrared (launched 2021)", "iii. X-rays", "iv. Infrared"],
+        options: [
+          "(A) 1-iii, 2-iv, 3-i, 4-ii",
+          "(B) 1-iv, 2-iii, 3-ii, 4-i",
+          "(C) 1-iii, 2-i, 3-iv, 4-ii",
+          "(D) 1-i, 2-iv, 3-iii, 4-ii"
+        ],
+        correct: 0,
+        explanation: "Chandra observes X-rays; Spitzer observes infrared; Kepler is dedicated to planet searching; James Webb is an infrared observatory launched in 2021."
+      }
+    ];
+
+    // --- APPLICATION STATE ---
+    let currentIndex = 0;
+    let score = 0;
+    let streak = 0;
+    let userAnswers = new Array(quizData.length).fill(null);
+    let filterMode = 'all'; // 'all' or 'wrong'
+
+    // --- DOM ELEMENTS ---
+    const startScreen = document.getElementById('start-screen');
+    const quizScreen = document.getElementById('quiz-screen');
+    const resultsScreen = document.getElementById('results-screen');
+    const startBtn = document.getElementById('start-btn');
+    const themeToggleBtn = document.getElementById('theme-toggle');
+    const themeIcon = document.getElementById('theme-icon');
+
+    const qCurrent = document.getElementById('q-current');
+    const qTotal = document.getElementById('q-total');
+    const qBadge = document.getElementById('q-badge');
+    const progressBar = document.getElementById('progress-bar');
+
+    const questionText = document.getElementById('question-text');
+    const complexContent = document.getElementById('complex-content');
+    const optionsContainer = document.getElementById('options-container');
+
+    const explanationBox = document.getElementById('explanation-box');
+    const explanationTitle = document.getElementById('explanation-title');
+    const explanationText = document.getElementById('explanation-text');
+
+    const nextBtn = document.getElementById('next-btn');
+    const nextBtnText = document.getElementById('next-btn-text');
+
+    const headerScore = document.getElementById('header-score');
+    const headerStreak = document.getElementById('header-streak');
+
+    const resScore = document.getElementById('res-score');
+    const resAccuracy = document.getElementById('res-accuracy');
+    const resCorrect = document.getElementById('res-correct');
+    const resIncorrect = document.getElementById('res-incorrect');
+    const reviewList = document.getElementById('review-list');
+    const filterAllBtn = document.getElementById('filter-all-btn');
+    const filterWrongBtn = document.getElementById('filter-wrong-btn');
+    const restartBtn = document.getElementById('restart-btn');
+
+    // --- THEME MANAGEMENT ---
+    themeToggleBtn.addEventListener('click', () => {
+      document.documentElement.classList.toggle('dark');
+      const isDark = document.documentElement.classList.contains('dark');
+      themeIcon.className = isDark ? 'fa-solid fa-sun text-amber-400' : 'fa-solid fa-moon text-slate-600';
+      localStorage.setItem('ssc_quiz_theme', isDark ? 'dark' : 'light');
+    });
+
+    // Load stored theme
+    if (localStorage.getItem('ssc_quiz_theme') === 'light') {
+      document.documentElement.classList.remove('dark');
+      themeIcon.className = 'fa-solid fa-moon text-slate-600';
+    } else {
+      document.documentElement.classList.add('dark');
+      themeIcon.className = 'fa-solid fa-sun text-amber-400';
+    }
+
+    // --- INITIALIZATION ---
+    startBtn.addEventListener('click', startQuiz);
+    nextBtn.addEventListener('click', handleNextQuestion);
+    restartBtn.addEventListener('click', restartQuiz);
+    filterAllBtn.addEventListener('click', () => setFilter('all'));
+    filterWrongBtn.addEventListener('click', () => setFilter('wrong'));
+
+    function startQuiz() {
+      startScreen.classList.add('hidden');
+      quizScreen.classList.remove('hidden');
+      qTotal.textContent = quizData.length;
+      currentIndex = 0;
+      score = 0;
+      streak = 0;
+      userAnswers.fill(null);
+      updateHeaderStats();
+      loadQuestion();
+    }
+
+    function updateHeaderStats() {
+      headerScore.textContent = score;
+      headerStreak.textContent = streak;
+    }
+
+    // --- LOAD QUESTION & RENDER LAYOUT ---
+    function loadQuestion() {
+      const q = quizData[currentIndex];
+      
+      // Update Progress Counter
+      qCurrent.textContent = currentIndex + 1;
+      progressBar.style.width = `${((currentIndex + 1) / quizData.length) * 100}%`;
+
+      // Set Badge
+      if (q.type === 'statements') {
+        qBadge.textContent = 'Statement-Based';
+        qBadge.className = 'px-2 py-0.5 rounded text-[10px] font-bold uppercase bg-amber-50 dark:bg-amber-950/60 text-amber-600 dark:text-amber-400 border border-amber-200 dark:border-amber-800';
+      } else if (q.type === 'match') {
+        qBadge.textContent = 'Match Columns';
+        qBadge.className = 'px-2 py-0.5 rounded text-[10px] font-bold uppercase bg-purple-50 dark:bg-purple-950/60 text-purple-600 dark:text-purple-400 border border-purple-200 dark:border-purple-800';
+      } else {
+        qBadge.textContent = 'Standard MCQ';
+        qBadge.className = 'px-2 py-0.5 rounded text-[10px] font-bold uppercase bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 border border-indigo-200 dark:border-indigo-800';
+      }
+
+      // Render Question Prompt
+      questionText.textContent = q.question;
+
+      // Render Complex Content (Statements or Matching Tables)
+      complexContent.innerHTML = '';
+      if (q.type === 'statements') {
+        let statementsHTML = `<div class="p-3 bg-amber-50/50 dark:bg-amber-950/20 rounded-xl border border-amber-200/60 dark:border-amber-800/40 space-y-1.5 my-2">`;
+        q.statements.forEach(st => {
+          statementsHTML += `<p class="font-mono text-xs md:text-sm text-slate-800 dark:text-slate-200 pl-1">${st}</p>`;
+        });
+        if (q.prompt) {
+          statementsHTML += `<p class="text-xs font-bold text-slate-700 dark:text-slate-300 mt-2 pt-1 border-t border-amber-200/40 dark:border-amber-800/30">${q.prompt}</p>`;
+        }
+        statementsHTML += `</div>`;
+        complexContent.innerHTML = statementsHTML;
+      } else if (q.type === 'match') {
+        let matchHTML = `
+          <div class="my-2 rounded-xl border border-purple-200/60 dark:border-purple-900/40 overflow-hidden bg-purple-50/30 dark:bg-purple-950/20 text-xs">
+            <div class="grid grid-cols-2 bg-purple-100/60 dark:bg-purple-900/40 font-bold p-2 text-slate-800 dark:text-slate-200 border-b border-purple-200/60 dark:border-purple-800/40">
+              <div>${q.colAHeader}</div>
+              <div>${q.colBHeader}</div>
+            </div>
+            <div class="divide-y divide-purple-100 dark:divide-purple-950">
+        `;
+        const maxRows = Math.max(q.colA.length, q.colB.length);
+        for (let i = 0; i < maxRows; i++) {
+          matchHTML += `
+            <div class="grid grid-cols-2 p-2 text-slate-700 dark:text-slate-300">
+              <div>${q.colA[i] || ''}</div>
+              <div>${q.colB[i] || ''}</div>
+            </div>
+          `;
+        }
+        matchHTML += `</div></div>`;
+        complexContent.innerHTML = matchHTML;
+      }
+
+      // Render Options
+      optionsContainer.innerHTML = '';
+      q.options.forEach((optText, idx) => {
+        const btn = document.createElement('button');
+        btn.className = `option-btn w-full p-2.5 md:p-3 rounded-xl border text-left font-medium text-xs md:text-sm transition flex items-start justify-between space-x-2 bg-slate-50 dark:bg-slate-800/50 border-slate-200 dark:border-slate-700/80 text-slate-800 dark:text-slate-200 hover:border-brand-500 hover:bg-brand-50/40 dark:hover:bg-brand-950/20`;
+        btn.innerHTML = `
+          <span class="flex-1 leading-snug">${optText}</span>
+          <span class="opt-icon text-sm shrink-0"></span>
+        `;
+        btn.addEventListener('click', () => selectAnswer(idx));
+        optionsContainer.appendChild(btn);
+      });
+
+      // Reset Explanation & Next Button
+      explanationBox.className = 'hidden shrink-0 mt-2 p-2.5 rounded-xl border text-xs leading-relaxed fade-in';
+      nextBtn.disabled = true;
+      nextBtn.className = 'py-2.5 px-6 rounded-xl bg-slate-200 dark:bg-slate-800 text-slate-400 dark:text-slate-600 font-bold text-xs md:text-sm transition duration-200 flex items-center space-x-2 cursor-not-allowed';
+      nextBtnText.textContent = (currentIndex === quizData.length - 1) ? 'View Results' : 'Next Question';
+    }
+
+    // --- HANDLE ANSWER SELECTION ---
+    function selectAnswer(selectedIndex) {
+      const q = quizData[currentIndex];
+      if (userAnswers[currentIndex] !== null) return; // Prevent re-selection
+
+      userAnswers[currentIndex] = selectedIndex;
+      const isCorrect = (selectedIndex === q.correct);
+
+      if (isCorrect) {
+        score++;
+        streak++;
+      } else {
+        streak = 0;
+      }
+      updateHeaderStats();
+
+      // Disable option buttons and apply colors
+      const optionBtns = optionsContainer.querySelectorAll('.option-btn');
+      optionBtns.forEach((btn, idx) => {
+        btn.disabled = true;
+        btn.classList.remove('hover:border-brand-500', 'hover:bg-brand-50/40', 'dark:hover:bg-brand-950/20');
+
+        const iconSpan = btn.querySelector('.opt-icon');
+
+        if (idx === q.correct) {
+          btn.className += ' bg-emerald-50 dark:bg-emerald-950/40 border-emerald-500 text-emerald-900 dark:text-emerald-200 font-bold';
+          iconSpan.innerHTML = '<i class="fa-solid fa-circle-check text-emerald-500"></i>';
+        } else if (idx === selectedIndex) {
+          btn.className += ' bg-rose-50 dark:bg-rose-950/40 border-rose-500 text-rose-900 dark:text-rose-200 font-bold';
+          iconSpan.innerHTML = '<i class="fa-solid fa-circle-xmark text-rose-500"></i>';
+        } else {
+          btn.className += ' opacity-50';
+        }
+      });
+
+      // Show Explanation Box
+      explanationBox.classList.remove('hidden');
+      if (isCorrect) {
+        explanationBox.classList.add('bg-emerald-50/80', 'dark:bg-emerald-950/30', 'border-emerald-200', 'dark:border-emerald-800/60');
+        explanationTitle.className = 'flex items-center space-x-1.5 font-bold mb-1 text-emerald-700 dark:text-emerald-400';
+        explanationTitle.innerHTML = '<i class="fa-solid fa-circle-check"></i><span>Correct Answer!</span>';
+      } else {
+        explanationBox.classList.add('bg-rose-50/80', 'dark:bg-rose-950/30', 'border-rose-200', 'dark:border-rose-800/60');
+        explanationTitle.className = 'flex items-center space-x-1.5 font-bold mb-1 text-rose-700 dark:text-rose-400';
+        explanationTitle.innerHTML = '<i class="fa-solid fa-circle-xmark"></i><span>Incorrect Answer</span>';
+      }
+      explanationText.textContent = q.explanation;
+
+      // Enable Next Button
+      nextBtn.disabled = false;
+      nextBtn.className = 'py-2.5 px-6 rounded-xl bg-brand-600 hover:bg-brand-700 active:scale-95 text-white font-bold text-xs md:text-sm shadow-md shadow-brand-600/30 transition duration-150 flex items-center space-x-2 cursor-pointer';
+    }
+
+    // --- NEXT QUESTION HANDLER ---
+    function handleNextQuestion() {
+      if (currentIndex < quizData.length - 1) {
+        currentIndex++;
+        loadQuestion();
+      } else {
+        showResults();
+      }
+    }
+
+    // --- RESULTS SCREEN ---
+    function showResults() {
+      quizScreen.classList.add('hidden');
+      resultsScreen.classList.remove('hidden');
+
+      const total = quizData.length;
+      const incorrectCount = total - score;
+      const pct = Math.round((score / total) * 100);
+
+      resScore.textContent = `${score}/${total}`;
+      resAccuracy.textContent = `${pct}%`;
+      resCorrect.textContent = score;
+      resIncorrect.textContent = incorrectCount;
+
+      renderReviewList();
+    }
+
+    function setFilter(mode) {
+      filterMode = mode;
+      if (mode === 'all') {
+        filterAllBtn.className = 'px-2.5 py-1 rounded-lg font-bold bg-brand-600 text-white';
+        filterWrongBtn.className = 'px-2.5 py-1 rounded-lg font-bold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200';
+      } else {
+        filterWrongBtn.className = 'px-2.5 py-1 rounded-lg font-bold bg-brand-600 text-white';
+        filterAllBtn.className = 'px-2.5 py-1 rounded-lg font-bold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200';
+      }
+      renderReviewList();
+    }
+
+    function renderReviewList() {
+      reviewList.innerHTML = '';
+
+      quizData.forEach((q, idx) => {
+        const uAns = userAnswers[idx];
+        const isCorrect = (uAns === q.correct);
+
+        if (filterMode === 'wrong' && isCorrect) return;
+
+        const card = document.createElement('div');
+        card.className = `p-3 rounded-xl border text-xs leading-relaxed space-y-1.5 ${
+          isCorrect 
+            ? 'bg-emerald-50/40 dark:bg-emerald-950/10 border-emerald-200/80 dark:border-emerald-900/40' 
+            : 'bg-rose-50/40 dark:bg-rose-950/10 border-rose-200/80 dark:border-rose-900/40'
+        }`;
+
+        let cardContent = `
+          <div class="flex items-start justify-between space-x-2">
+            <span class="font-bold text-slate-900 dark:text-slate-100">Q${idx + 1}. ${q.question}</span>
+            <span class="shrink-0 font-bold ${isCorrect ? 'text-emerald-500' : 'text-rose-500'}">
+              ${isCorrect ? '<i class="fa-solid fa-check"></i> Correct' : '<i class="fa-solid fa-xmark"></i> Incorrect'}
+            </span>
+          </div>
+        `;
+
+        if (q.type === 'statements') {
+          cardContent += `<div class="p-2 bg-amber-50/60 dark:bg-amber-950/30 rounded border border-amber-200/50 dark:border-amber-900/30 font-mono text-[11px] space-y-0.5">`;
+          q.statements.forEach(st => cardContent += `<div>${st}</div>`);
+          cardContent += `</div>`;
+        } else if (q.type === 'match') {
+          cardContent += `<div class="p-2 bg-purple-50/60 dark:bg-purple-950/30 rounded border border-purple-200/50 dark:border-purple-900/30 text-[11px] grid grid-cols-2 gap-2">`;
+          cardContent += `<div><strong>${q.colAHeader}:</strong> ${q.colA.join(', ')}</div>`;
+          cardContent += `<div><strong>${q.colBHeader}:</strong> ${q.colB.join(', ')}</div>`;
+          cardContent += `</div>`;
+        }
+
+        cardContent += `
+          <div class="pt-1 border-t border-slate-200/50 dark:border-slate-800/50 space-y-0.5">
+            <div class="${isCorrect ? 'text-emerald-700 dark:text-emerald-400' : 'text-rose-700 dark:text-rose-400'} font-medium">
+              <strong>Your Answer:</strong> ${uAns !== null ? q.options[uAns] : 'Not Answered'}
+            </div>
+            ${!isCorrect ? `<div class="text-emerald-700 dark:text-emerald-400 font-medium"><strong>Correct Answer:</strong> ${q.options[q.correct]}</div>` : ''}
+            <div class="text-slate-500 dark:text-slate-400 text-[11px] mt-1">
+              <strong>Explanation:</strong> ${q.explanation}
+            </div>
+          </div>
+        `;
+
+        card.innerHTML = cardContent;
+        reviewList.appendChild(card);
+      });
+
+      if (reviewList.children.length === 0) {
+        reviewList.innerHTML = `
+          <div class="p-6 text-center text-slate-400 text-xs">
+            <i class="fa-solid fa-circle-check text-2xl text-emerald-500 mb-2"></i>
+            <p>No incorrect answers! Fantastic job!</p>
+          </div>
+        `;
+      }
+    }
+
+    function restartQuiz() {
+      resultsScreen.classList.add('hidden');
+      startQuiz();
+    }
+  </script>
+</body>
+</html>
