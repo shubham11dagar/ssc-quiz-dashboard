@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>National Sports Awards & Sports Quiz</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#f0f9ff',
+              100: '#e0f2fe',
+              500: '#0284c7',
+              600: '#0284c7',
+              700: '#0369a1',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    /* Custom Scrollbar for inner components */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #94a3b8;
+      border-radius: 9999px;
+    }
+    .dark ::-webkit-scrollbar-thumb {
+      background: #475569;
+    }
+  </style>
+</head>
+<body class="bg-slate-100 text-slate-800 dark:bg-slate-950 dark:text-slate-100 font-sans antialiased h-screen w-screen overflow-hidden flex flex-col justify-between transition-colors duration-300">
+
+  <!-- HEADER -->
+  <header class="h-14 border-b border-slate-200 dark:border-slate-800 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md px-4 flex items-center justify-between shrink-0 z-20">
+    <div class="flex items-center gap-3">
+      <div class="p-1.5 rounded-lg bg-sky-500/10 text-sky-600 dark:text-sky-400 font-bold text-lg">
+        🏆
+      </div>
+      <h1 class="font-bold text-slate-900 dark:text-white text-base sm:text-lg truncate">
+        Sports Awards Quiz
+      </h1>
+    </div>
+
+    <!-- Right Controls -->
+    <div class="flex items-center gap-3">
+      <!-- Progress Pill -->
+      <div id="progress-badge" class="hidden sm:flex items-center gap-2 px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-xs font-semibold text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
+        <span>Question</span>
+        <span id="current-q-num" class="text-sky-600 dark:text-sky-400">1</span>
+        <span>/</span>
+        <span id="total-q-num">20</span>
+      </div>
+
+      <!-- Theme Toggle Button -->
+      <button id="theme-toggle" onclick="toggleTheme()" class="p-2 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors focus:outline-none focus:ring-2 focus:ring-sky-500" aria-label="Toggle Theme">
+        <!-- Sun Icon -->
+        <svg id="sun-icon" class="w-5 h-5 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m8.66-8.66h-1M4.34 12h-1m15.36 6.36l-.7-.7M6.34 6.34l-.7-.7m12.02 0l-.7.7M6.34 17.66l-.7.7M12 8a4 4 0 100 8 4 4 0 000-8z"></path></svg>
+        <!-- Moon Icon -->
+        <svg id="moon-icon" class="w-5 h-5 block dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
+      </button>
+    </div>
+  </header>
+
+  <!-- MAIN CONTAINER (Strict compact layout) -->
+  <main class="flex-1 max-w-4xl w-full mx-auto p-2 sm:p-4 flex flex-col justify-between overflow-hidden relative">
+
+    <!-- PROGRESS BAR -->
+    <div id="progress-bar-container" class="w-full bg-slate-200 dark:bg-slate-800 h-1.5 rounded-full overflow-hidden mb-2 sm:mb-3 shrink-0">
+      <div id="progress-bar" class="bg-sky-500 h-full w-0 transition-all duration-300 ease-out"></div>
+    </div>
+
+    <!-- QUIZ SCREEN -->
+    <div id="quiz-screen" class="flex-1 flex flex-col justify-between overflow-hidden min-h-0">
+      
+      <!-- Question Card Frame -->
+      <div class="flex-1 bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm p-3 sm:p-5 flex flex-col overflow-hidden min-h-0">
+        
+        <!-- Question Scrollable Content Area -->
+        <div class="flex-1 overflow-y-auto pr-1 space-y-3 min-h-0">
+          
+          <!-- Question Header & Counter -->
+          <div class="flex items-start justify-between gap-2">
+            <h2 id="question-text" class="text-sm sm:text-base md:text-lg font-semibold text-slate-900 dark:text-white leading-snug">
+              <!-- Question string injected here -->
+            </h2>
+          </div>
+
+          <!-- Formatted Content insert (For Statement / Match The Following Type Questions) -->
+          <div id="formatted-content" class="hidden"></div>
+
+          <!-- Options Container -->
+          <div id="options-container" class="grid grid-cols-1 gap-2 pt-1">
+            <!-- Options dynamically generated here -->
+          </div>
+
+          <!-- Explanation Box (Shows dynamically upon answer) -->
+          <div id="explanation-box" class="hidden rounded-lg p-3 text-xs sm:text-sm border transition-all duration-200">
+            <div class="font-bold mb-1 flex items-center gap-1.5" id="explanation-status"></div>
+            <p id="explanation-text" class="text-slate-700 dark:text-slate-300 leading-relaxed"></p>
+          </div>
+
+        </div>
+
+        <!-- Sticky Card Footer -->
+        <div class="pt-3 mt-2 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between shrink-0">
+          <div class="text-xs text-slate-500 dark:text-slate-400 font-medium">
+            Question <span id="footer-q-num">1</span> of 20
+          </div>
+          <button id="next-btn" onclick="nextQuestion()" disabled class="px-5 py-2 rounded-lg bg-sky-600 hover:bg-sky-500 disabled:bg-slate-300 disabled:dark:bg-slate-800 disabled:text-slate-400 disabled:dark:text-slate-600 disabled:cursor-not-allowed text-white font-medium text-xs sm:text-sm shadow-sm transition-all flex items-center gap-2">
+            <span>Next Question</span>
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+          </button>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- END RESULTS SCREEN (Hidden by default) -->
+    <div id="results-screen" class="hidden flex-1 bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm p-4 sm:p-6 flex-col overflow-hidden min-h-0">
+      
+      <!-- Score Banner -->
+      <div class="text-center pb-4 border-b border-slate-200 dark:border-slate-800 shrink-0">
+        <div class="inline-flex p-3 rounded-full bg-sky-500/10 text-sky-600 dark:text-sky-400 mb-2">
+          <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+        </div>
+        <h2 class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white">Quiz Completed!</h2>
+        <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-0.5">Here is a summary of your performance</p>
+
+        <!-- Stats Chips -->
+        <div class="flex items-center justify-center gap-3 sm:gap-6 mt-4">
+          <div class="bg-slate-50 dark:bg-slate-800/60 p-2.5 sm:p-3 rounded-lg border border-slate-200 dark:border-slate-700/60 w-24 sm:w-28">
+            <div class="text-xs text-slate-500 dark:text-slate-400 font-medium">Score</div>
+            <div id="final-score" class="text-lg sm:text-xl font-extrabold text-sky-600 dark:text-sky-400">0/20</div>
+          </div>
+          <div class="bg-slate-50 dark:bg-slate-800/60 p-2.5 sm:p-3 rounded-lg border border-slate-200 dark:border-slate-700/60 w-24 sm:w-28">
+            <div class="text-xs text-slate-500 dark:text-slate-400 font-medium">Accuracy</div>
+            <div id="final-percentage" class="text-lg sm:text-xl font-extrabold text-slate-900 dark:text-white">0%</div>
+          </div>
+          <div class="bg-slate-50 dark:bg-slate-800/60 p-2.5 sm:p-3 rounded-lg border border-slate-200 dark:border-slate-700/60 w-24 sm:w-28">
+            <div class="text-xs text-slate-500 dark:text-slate-400 font-medium">Incorrect</div>
+            <div id="final-incorrect" class="text-lg sm:text-xl font-extrabold text-rose-500">0</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Incorrect Questions Breakdown Header -->
+      <div class="py-2 flex items-center justify-between shrink-0">
+        <h3 class="text-xs sm:text-sm font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+          Review Mistakes (<span id="incorrect-count-badge">0</span>)
+        </h3>
+        <button onclick="restartQuiz()" class="px-4 py-1.5 rounded-lg bg-sky-600 hover:bg-sky-500 text-white font-medium text-xs sm:text-sm transition-all shadow-sm">
+          Restart Quiz
+        </button>
+      </div>
+
+      <!-- Scrollable List of Mistakes -->
+      <div id="breakdown-container" class="flex-1 overflow-y-auto pr-1 space-y-3 min-h-0">
+        <!-- Injected dynamically -->
+      </div>
+
+    </div>
+
+  </main>
+
+  <script>
+    // QUIZ DATA DATASET
+    const questionsData = [
+      {
+        id: 1,
+        question: "In which event did India's first Paralympic gold medallist, Murlikant Rajaram Petkar, win the gold medal at the 1972 Summer Paralympics in Heidelberg?",
+        options: [
+          "(A) Men's 100m Freestyle",
+          "(B) Men's 50m Freestyle",
+          "(C) Men's High Jump T64",
+          "(D) Men's Javelin Throw"
+        ],
+        answer: 1, // Index 1 -> (B)
+        explanation: "Murlikant Rajaram Petkar won gold in the men's 50m freestyle at the 1972 Summer Paralympics in Heidelberg. He was later awarded the Padma Shri in 2018."
+      },
+      {
+        id: 2,
+        question: "Who among the following chess players became the youngest-ever World Chess Champion by defeating Ding Liren in Singapore and was awarded the Major Dhyan Chand Khel Ratna Award 2024?",
+        options: [
+          "(A) Divya Deshmukh",
+          "(B) Vantika Agrawal",
+          "(C) Gukesh D",
+          "(D) R Praggnanandhaa"
+        ],
+        answer: 2,
+        explanation: "Gukesh D won the Major Dhyan Chand Khel Ratna Award 2024 for becoming the youngest-ever World Chess Champion by defeating Ding Liren and leading India to a historic gold medal at the Chess Olympiad."
+      },
+      {
+        id: 3,
+        question: "Manu Bhaker, recipient of the Major Dhyan Chand Khel Ratna Award 2024, achieved a historic feat at the Paris 2024 Games. Which of the following statements correctly describes her accomplishment?",
+        options: [
+          "(A) She won India's first-ever gold medal in Para-Shooting.",
+          "(B) She became the first athlete of independent India to win two medals at a single edition of the Olympics.",
+          "(C) She won a gold medal in the Women's 10m Air Pistol event.",
+          "(D) She set an Asian record in the 10m Air Pistol Mixed Team event."
+        ],
+        answer: 1,
+        explanation: "Manu Bhaker claimed bronze medals in both the Women's 10m Air Pistol and the 10m Air Pistol Mixed Team events at the Paris 2024 Games."
+      },
+      {
+        id: 4,
+        question: "Praveen Kumar won the Major Dhyan Chand Khel Ratna Award 2024 for setting an Asian record and winning a gold medal at the Paris 2024 Paralympic Games in which event?",
+        options: [
+          "(A) Men's High Jump T64",
+          "(B) Men's Javelin Throw",
+          "(C) Men's 50m Freestyle",
+          "(D) Men's Club Throw"
+        ],
+        answer: 0,
+        explanation: "Praveen Kumar won the gold medal in the men's High Jump T64 event at the Paris 2024 Paralympic Games, setting an Asian record."
+      },
+      {
+        id: 5,
+        type: "match",
+        question: "Match the Arjuna Award winners with their respective sports disciplines as per the National Sports Awards 2024:",
+        matchData: [
+          { left: "1. Jyothi Yarraji", right: "i. Boxing" },
+          { left: "2. Nitu Ghanghas", right: "ii. Athletics" },
+          { left: "3. Vantika Agrawal", right: "iii. Hockey" },
+          { left: "4. Salima Tete", right: "iv. Chess" }
+        ],
+        options: [
+          "(A) 1-ii, 2-i, 3-iv, 4-iii",
+          "(B) 1-i, 2-ii, 3-iii, 4-iv",
+          "(C) 1-ii, 2-iv, 3-i, 4-iii",
+          "(D) 1-iii, 2-i, 3-iv, 4-ii"
+        ],
+        answer: 0,
+        explanation: "As per the official awards list, Jyothi Yarraji is associated with Athletics (1-ii), Nitu Ghanghas with Boxing (2-i), Vantika Agrawal with Chess (3-iv), and Salima Tete with Hockey (4-iii)."
+      },
+      {
+        id: 6,
+        question: "Which of the following Para-Athletes were awarded the Arjuna Award 2024?",
+        options: [
+          "(A) Preeti Pal, Jeevanji Deepthi, Ajeet Singh, Navdeep Singh",
+          "(B) Nitesh Kumar, Thulasimathi Murugesan, Kapil Parmar",
+          "(C) Subhash Rana, Deepali Deshpande, Sandeep Sangwan",
+          "(D) Hardik Singh, Navneet Kaur, Sakshi Rana"
+        ],
+        answer: 0,
+        explanation: "Preeti Pal, Jeevanji Deepthi, Ajeet Singh, Hokato Hotozhe Sema, Simran Sharma, Navdeep Singh, Sachin Sarjerao Khilari, Dharambir, and Pranav Soorma are all listed under Para-Athletics for the Arjuna Award 2024."
+      },
+      {
+        id: 7,
+        question: "Kapil Parmar and Rakesh Kumar were awarded the Arjuna Award 2024 for their outstanding performances in which sports disciplines respectively?",
+        options: [
+          "(A) Para-Shooting and Para-Badminton",
+          "(B) Para-Judo and Para-Archery",
+          "(C) Para-Swimming and Para-Athletics",
+          "(D) Wrestling and Squash"
+        ],
+        answer: 1,
+        explanation: "Kapil Parmar received the Arjuna Award for Para-Judo, and Rakesh Kumar received it for Para-Archery."
+      },
+      {
+        id: 8,
+        question: "Which of the following coaches was conferred the Dronacharya Award (Lifetime) in Badminton?",
+        options: [
+          "(A) Subhash Rana",
+          "(B) Sandeep Sangwan",
+          "(C) S Muralidharan",
+          "(D) Armando Agnelo Colaco"
+        ],
+        answer: 2,
+        explanation: "S Muralidharan was awarded the Dronacharya Award (Lifetime) in Badminton, while Armando Agnelo Colaco received it for Football."
+      },
+      {
+        id: 9,
+        question: "Subhash Rana and Deepali Deshpande were awarded the Dronacharya Award (Regular) in which respective disciplines?",
+        options: [
+          "(A) Hockey and Shooting",
+          "(B) Para-Shooting and Shooting",
+          "(C) Athletics and Swimming",
+          "(D) Shooting and Para-Shooting"
+        ],
+        answer: 1,
+        explanation: "Subhash Rana received the Dronacharya Award (Regular) for Para-Shooting, while Deepali Deshpande received it for Shooting."
+      },
+      {
+        id: 10,
+        question: "Which university was awarded the prestigious Maulana Abul Kalam Azad (MAKA) Trophy?",
+        options: [
+          "(A) Delhi University",
+          "(B) Panjab University",
+          "(C) Chandigarh University",
+          "(D) Mumbai University"
+        ],
+        answer: 2,
+        explanation: "According to the National Sports Awards 2024 list, the Maulana Abul Kalam Azad (MAKA) Trophy was awarded to Chandigarh University."
+      },
+      {
+        id: 11,
+        question: "Which organization received the Rashtriya Khel Protsahan Puraskar 2024?",
+        options: [
+          "(A) Sports Authority of India",
+          "(B) Physical Education Foundation of India",
+          "(C) Olympic Association of India",
+          "(D) Sports Promotion Board"
+        ],
+        answer: 1,
+        explanation: "The Rashtriya Khel Protsahan Puraskar 2024 was awarded to the Physical Education Foundation of India."
+      },
+      {
+        id: 12,
+        question: "At the BCCI Naman Awards 2026, who won the Polly Umrigar Award (Best International Cricketer of the Year - Men)?",
+        options: [
+          "(A) Rohit Sharma",
+          "(B) Virat Kohli",
+          "(C) Shubman Gill",
+          "(D) Jasprit Bumrah"
+        ],
+        answer: 2,
+        explanation: "Shubman Gill won the Best International Cricketer of the Year (men) / Polly Umrigar Award at the BCCI Naman Awards 2026."
+      },
+      {
+        id: 13,
+        question: "Who were jointly awarded the Col. C. K. Nayudu Lifetime Achievement Award at the BCCI Naman Awards 2026?",
+        options: [
+          "(A) Sachin Tendulkar and VVS Laxman",
+          "(B) Roger Binny and Rahul Dravid",
+          "(C) Sunil Gavaskar and Kapil Dev",
+          "(D) Anil Kumble and Javagal Srinath"
+        ],
+        answer: 1,
+        explanation: "The Col. C. K. Nayudu Lifetime Achievement Award was presented jointly to Roger Binny and Rahul Dravid."
+      },
+      {
+        id: 14,
+        question: "Who won the Major Dhyan Chand Lifetime Achievement Award at the 8th Hockey India Annual Awards 2025?",
+        options: [
+          "(A) Hardik Singh",
+          "(B) Zafar Iqbal",
+          "(C) Prince Deep Singh",
+          "(D) Harmanpreet Singh"
+        ],
+        answer: 1,
+        explanation: "Zafar Iqbal was awarded the Major Dhyan Chand Lifetime Achievement Award at the 8th Hockey India Annual Awards 2025."
+      },
+      {
+        id: 15,
+        question: "Who were named the Men's and Women's Players of the Year respectively at the 8th Hockey India Annual Awards 2025?",
+        options: [
+          "(A) Harmanpreet Singh and Salima Tete",
+          "(B) Hardik Singh and Navneet Kaur",
+          "(C) Prince Deep Singh and Sakshi Rana",
+          "(D) Jarmanpreet Singh and Vandana Katariya"
+        ],
+        answer: 1,
+        explanation: "At the 8th Hockey India Annual Awards 2025, Hardik Singh won Men's Player of the Year and Navneet Kaur won Women's Player of the Year."
+      },
+      {
+        id: 16,
+        question: "At the Indian Athletics Awards (2026), who was awarded the Best Female Athlete of the Year?",
+        options: [
+          "(A) Annu Rani",
+          "(B) Jyothi Yarraji",
+          "(C) Parul Chaudhary",
+          "(D) Pooja Singh"
+        ],
+        answer: 2,
+        explanation: "Parul Chaudhary (Steeplechase / Distance Running) was named the Best Female Athlete of the Year at the Indian Athletics Awards (2026), while Neeraj Chopra won Best Male Athlete of the Year."
+      },
+      {
+        id: 17,
+        question: "Who were named the Best Emerging Male and Best Emerging Female Athletes respectively at the Indian Athletics Awards (2026)?",
+        options: [
+          "(A) Shahnavaz Khan and Pooja Singh",
+          "(B) Aman Sehrawat and Divya Deshmukh",
+          "(C) Sajan Prakash and Preeti Pal",
+          "(D) Abhay Singh and Simran Sharma"
+        ],
+        answer: 0,
+        explanation: "Shahnavaz Khan won Best Emerging Male Athlete and Pooja Singh won Best Emerging Female Athlete at the Indian Athletics Awards (2026)."
+      },
+      {
+        id: 18,
+        question: "Who was conferred the Lifetime Achievement Award at the BBC Indian Sportswoman of the Year awards?",
+        options: [
+          "(A) Anjali Bhagwat",
+          "(B) Mithali Raj",
+          "(C) Smriti Mandhana",
+          "(D) Preeti Pal"
+        ],
+        answer: 0,
+        explanation: "Anjali Bhagwat received the Lifetime Achievement Award at the BBC Indian Sportswoman of the Year awards."
+      },
+      {
+        id: 19,
+        question: "Who won the 'Emerging Player of the Year' category at the BBC Indian Sportswoman of the Year awards?",
+        options: [
+          "(A) Sakshi Rana",
+          "(B) Divya Deshmukh",
+          "(C) Pooja Singh",
+          "(D) Rubina Francis"
+        ],
+        answer: 1,
+        explanation: "Divya Deshmukh won the Emerging Player of the Year title at the BBC Indian Sportswoman of the Year awards."
+      },
+      {
+        id: 20,
+        question: "Preeti Pal was named the Para-Sportswoman of the Year at the BBC Indian Sportswoman of the Year awards. Which discipline does she represent in sports?",
+        options: [
+          "(A) Para-Shooting",
+          "(B) Para-Badminton",
+          "(C) Para-Athletics",
+          "(D) Para-Swimming"
+        ],
+        answer: 2,
+        explanation: "As indicated in both the Arjuna Awards list and the BBC awards list, Preeti Pal is associated with Para-Athletics."
+      }
+    ];
+
+    // STATE VARIABLES
+    let currentIndex = 0;
+    let userAnswers = new Array(questionsData.length).fill(null);
+    let isAnswered = false;
+
+    // DOM ELEMENTS
+    const qTextEl = document.getElementById('question-text');
+    const formattedContentEl = document.getElementById('formatted-content');
+    const optionsContainerEl = document.getElementById('options-container');
+    const explanationBoxEl = document.getElementById('explanation-box');
+    const explanationStatusEl = document.getElementById('explanation-status');
+    const explanationTextEl = document.getElementById('explanation-text');
+    const nextBtnEl = document.getElementById('next-btn');
+
+    const currentQNumEl = document.getElementById('current-q-num');
+    const totalQNumEl = document.getElementById('total-q-num');
+    const footerQNumEl = document.getElementById('footer-q-num');
+    const progressBarEl = document.getElementById('progress-bar');
+
+    const quizScreenEl = document.getElementById('quiz-screen');
+    const resultsScreenEl = document.getElementById('results-screen');
+    const progressBadgeEl = document.getElementById('progress-badge');
+
+    // INITIALIZATION
+    totalQNumEl.textContent = questionsData.length;
+
+    function renderQuestion() {
+      const q = questionsData[currentIndex];
+      isAnswered = userAnswers[currentIndex] !== null;
+
+      // Update Header & Progress Bar
+      currentQNumEl.textContent = currentIndex + 1;
+      footerQNumEl.textContent = currentIndex + 1;
+      const progressPercent = ((currentIndex + 1) / questionsData.length) * 100;
+      progressBarEl.style.width = `${progressPercent}%`;
+
+      // Question Text
+      qTextEl.textContent = q.question;
+
+      // Formatted Insert (Match the following / Statement layout)
+      if (q.type === 'match' && q.matchData) {
+        formattedContentEl.classList.remove('hidden');
+        formattedContentEl.innerHTML = `
+          <div class="p-2.5 rounded-lg bg-slate-50 dark:bg-slate-800/70 border border-slate-200 dark:border-slate-700 text-xs sm:text-sm">
+            <div class="grid grid-cols-2 gap-2 font-semibold text-slate-700 dark:text-slate-300 pb-1 mb-1 border-b border-slate-200 dark:border-slate-700">
+              <div>List I (Athlete / Awardee)</div>
+              <div>List II (Discipline)</div>
+            </div>
+            ${q.matchData.map(item => `
+              <div class="grid grid-cols-2 gap-2 py-0.5 text-slate-600 dark:text-slate-400">
+                <div class="font-medium">${item.left}</div>
+                <div>${item.right}</div>
+              </div>
+            `).join('')}
+          </div>
+        `;
+      } else {
+        formattedContentEl.classList.add('hidden');
+        formattedContentEl.innerHTML = '';
+      }
+
+      // Render Option Buttons
+      optionsContainerEl.innerHTML = '';
+      q.options.forEach((optText, optIdx) => {
+        const btn = document.createElement('button');
+        btn.className = getOptionStyle(optIdx);
+        btn.innerHTML = `<span class="text-left leading-tight">${optText}</span>`;
+        btn.onclick = () => selectOption(optIdx);
+        if (isAnswered) btn.disabled = true;
+        optionsContainerEl.appendChild(btn);
+      });
+
+      // Explanation Box
+      if (isAnswered) {
+        const selectedOpt = userAnswers[currentIndex];
+        const isCorrect = selectedOpt === q.answer;
+        
+        explanationBoxEl.classList.remove('hidden');
+        explanationBoxEl.className = `rounded-lg p-3 text-xs sm:text-sm border transition-all duration-200 ${
+          isCorrect 
+            ? 'bg-emerald-50 dark:bg-emerald-950/40 border-emerald-300 dark:border-emerald-800 text-emerald-900 dark:text-emerald-200' 
+            : 'bg-rose-50 dark:bg-rose-950/40 border-rose-300 dark:border-rose-800 text-rose-900 dark:text-rose-200'
+        }`;
+
+        explanationStatusEl.innerHTML = isCorrect 
+          ? `<svg class="w-4 h-4 text-emerald-600 dark:text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg><span class="text-emerald-700 dark:text-emerald-300">Correct Answer</span>`
+          : `<svg class="w-4 h-4 text-rose-600 dark:text-rose-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg><span class="text-rose-700 dark:text-rose-300">Incorrect</span>`;
+
+        explanationTextEl.textContent = q.explanation;
+        nextBtnEl.disabled = false;
+      } else {
+        explanationBoxEl.classList.add('hidden');
+        nextBtnEl.disabled = true;
+      }
+    }
+
+    function getOptionStyle(optIdx) {
+      const q = questionsData[currentIndex];
+      const baseStyle = "w-full text-left p-2.5 sm:p-3 rounded-lg border text-xs sm:text-sm font-medium transition-all duration-150 flex items-center justify-between ";
+
+      if (!isAnswered) {
+        return baseStyle + "bg-white dark:bg-slate-800/80 border-slate-200 dark:border-slate-700/80 text-slate-800 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700/80 hover:border-sky-400 dark:hover:border-sky-500 cursor-pointer shadow-sm";
+      }
+
+      const selectedOpt = userAnswers[currentIndex];
+      if (optIdx === q.answer) {
+        return baseStyle + "bg-emerald-50 dark:bg-emerald-950/60 border-emerald-500 dark:border-emerald-500 text-emerald-900 dark:text-emerald-200 font-semibold shadow-sm";
+      }
+      if (optIdx === selectedOpt && selectedOpt !== q.answer) {
+        return baseStyle + "bg-rose-50 dark:bg-rose-950/60 border-rose-500 dark:border-rose-500 text-rose-900 dark:text-rose-200 font-semibold shadow-sm";
+      }
+
+      return baseStyle + "bg-slate-50/50 dark:bg-slate-900/40 border-slate-200 dark:border-slate-800 text-slate-400 dark:text-slate-600 opacity-70";
+    }
+
+    function selectOption(optIdx) {
+      if (isAnswered) return;
+      userAnswers[currentIndex] = optIdx;
+      renderQuestion();
+    }
+
+    function nextQuestion() {
+      if (currentIndex < questionsData.length - 1) {
+        currentIndex++;
+        renderQuestion();
+      } else {
+        showResults();
+      }
+    }
+
+    function showResults() {
+      quizScreenEl.classList.add('hidden');
+      resultsScreenEl.classList.remove('hidden');
+      resultsScreenEl.classList.add('flex');
+
+      let correctCount = 0;
+      let incorrectItems = [];
+
+      userAnswers.forEach((ans, idx) => {
+        const q = questionsData[idx];
+        if (ans === q.answer) {
+          correctCount++;
+        } else {
+          incorrectItems.push({
+            questionNum: idx + 1,
+            qObj: q,
+            userAns: ans
+          });
+        }
+      });
+
+      const total = questionsData.length;
+      const percentage = Math.round((correctCount / total) * 100);
+
+      document.getElementById('final-score').textContent = `${correctCount}/${total}`;
+      document.getElementById('final-percentage').textContent = `${percentage}%`;
+      document.getElementById('final-incorrect').textContent = total - correctCount;
+      document.getElementById('incorrect-count-badge').textContent = incorrectItems.length;
+
+      const breakdownEl = document.getElementById('breakdown-container');
+      breakdownEl.innerHTML = '';
+
+      if (incorrectItems.length === 0) {
+        breakdownEl.innerHTML = `
+          <div class="p-6 text-center text-emerald-600 dark:text-emerald-400 font-semibold">
+            🎉 Outstanding! You scored 100% with no incorrect answers!
+          </div>
+        `;
+        return;
+      }
+
+      incorrectItems.forEach(item => {
+        const q = item.qObj;
+        const card = document.createElement('div');
+        card.className = "p-3 sm:p-4 rounded-lg bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/70 text-xs sm:text-sm space-y-2";
+        
+        let matchBoxHtml = '';
+        if (q.type === 'match' && q.matchData) {
+          matchBoxHtml = `
+            <div class="my-2 p-2 rounded bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-xs">
+              <div class="grid grid-cols-2 gap-2 font-semibold text-slate-600 dark:text-slate-400 pb-1 mb-1 border-b border-slate-200 dark:border-slate-800">
+                <div>List I</div><div>List II</div>
+              </div>
+              ${q.matchData.map(m => `
+                <div class="grid grid-cols-2 gap-2 text-slate-500 dark:text-slate-400">
+                  <div>${m.left}</div><div>${m.right}</div>
+                </div>
+              `).join('')}
+            </div>
+          `;
+        }
+
+        const userAnsText = item.userAns !== null ? q.options[item.userAns] : 'Skipped';
+        const correctAnsText = q.options[q.answer];
+
+        card.innerHTML = `
+          <div class="font-semibold text-slate-900 dark:text-white leading-snug">
+            <span class="text-sky-600 dark:text-sky-400 font-bold">Q${item.questionNum}.</span> ${q.question}
+          </div>
+          ${matchBoxHtml}
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-1.5 pt-1">
+            <div class="p-2 rounded bg-rose-50 dark:bg-rose-950/30 border border-rose-200 dark:border-rose-900/50 text-rose-800 dark:text-rose-300">
+              <span class="font-bold">Your Answer:</span> ${userAnsText}
+            </div>
+            <div class="p-2 rounded bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-900/50 text-emerald-800 dark:text-emerald-300">
+              <span class="font-bold">Correct Answer:</span> ${correctAnsText}
+            </div>
+          </div>
+          <div class="text-slate-600 dark:text-slate-400 pt-1 text-xs leading-relaxed border-t border-slate-200 dark:border-slate-700/50 mt-1">
+            <span class="font-semibold text-slate-700 dark:text-slate-300">Explanation:</span> ${q.explanation}
+          </div>
+        `;
+
+        breakdownEl.appendChild(card);
+      });
+    }
+
+    function restartQuiz() {
+      currentIndex = 0;
+      userAnswers = new Array(questionsData.length).fill(null);
+      resultsScreenEl.classList.add('hidden');
+      resultsScreenEl.classList.remove('flex');
+      quizScreenEl.classList.remove('hidden');
+      renderQuestion();
+    }
+
+    // THEME TOGGLE FUNCTIONALITY
+    function toggleTheme() {
+      const html = document.documentElement;
+      if (html.classList.contains('dark')) {
+        html.classList.remove('dark');
+        localStorage.setItem('theme', 'light');
+      } else {
+        html.classList.add('dark');
+        localStorage.setItem('theme', 'dark');
+      }
+    }
+
+    // Initialize Theme State
+    if (localStorage.getItem('theme') === 'light') {
+      document.documentElement.classList.remove('dark');
+    } else {
+      document.documentElement.classList.add('dark');
+    }
+
+    // Initial render
+    renderQuestion();
+  </script>
+</body>
+</html>
