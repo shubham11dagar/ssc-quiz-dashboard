@@ -1,0 +1,1028 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Padma Awards & Honours - Interactive Exam Portal</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#f0f7ff',
+              100: '#e0effe',
+              500: '#2563eb',
+              600: '#1d4ed8',
+              700: '#1e40af',
+              900: '#0f172a'
+            }
+          },
+          fontFamily: {
+            sans: ['Inter', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
+            mono: ['JetBrains Mono', 'Fira Code', 'monospace']
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&display=swap');
+
+    /* Custom Scrollbar for review modal and palette */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: rgba(0, 0, 0, 0.05);
+    }
+    .dark ::-webkit-scrollbar-track {
+      background: rgba(255, 255, 255, 0.05);
+    }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(156, 163, 175, 0.5);
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(107, 114, 128, 0.8);
+    }
+
+    /* Pulse animation for timer or active elements */
+    @keyframes subtlePulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.85; transform: scale(0.98); }
+    }
+    .animate-subtle-pulse {
+      animation: subtlePulse 2s infinite ease-in-out;
+    }
+
+    /* Viewport lock to guarantee no-scroll on quiz view */
+    .viewport-fixed {
+      height: 100vh;
+      height: 100dvh;
+      overflow: hidden;
+    }
+  </style>
+</head>
+<body class="bg-slate-100 dark:bg-slate-950 text-slate-800 dark:text-slate-100 font-sans transition-colors duration-200 antialiased selection:bg-brand-500 selection:text-white viewport-fixed flex flex-col">
+
+  <!-- HEADER BAR -->
+  <header class="h-14 bg-white/90 dark:bg-slate-900/90 backdrop-blur border-b border-slate-200 dark:border-slate-800 px-4 flex items-center justify-between shrink-0 z-20">
+    <div class="flex items-center space-x-3">
+      <div class="p-1.5 bg-brand-500 text-white rounded-lg shadow-sm">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+        </svg>
+      </div>
+      <div>
+        <h1 class="text-sm font-bold tracking-tight text-slate-900 dark:text-white leading-tight">Padma Awards & Honours 2024-2026</h1>
+        <p class="text-[10px] text-slate-500 dark:text-slate-400 font-medium">UPSC / Civil Services Exam Portal</p>
+      </div>
+    </div>
+
+    <!-- Header Right Controls -->
+    <div class="flex items-center space-x-2 sm:space-x-4">
+      <!-- Timer Display -->
+      <div class="flex items-center space-x-1.5 px-2.5 py-1 bg-slate-100 dark:bg-slate-800/80 rounded-md border border-slate-200 dark:border-slate-700/60 text-xs font-mono font-medium text-slate-700 dark:text-slate-300">
+        <svg class="w-3.5 h-3.5 text-slate-400 dark:text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+        <span id="quiz-timer">00:00</span>
+      </div>
+
+      <!-- Question Grid Palette Toggle Button -->
+      <button id="btn-palette" onclick="togglePaletteModal()" class="p-1.5 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors border border-slate-200 dark:border-slate-800 flex items-center gap-1.5 px-2 text-xs font-semibold" title="Question Palette">
+        <svg class="w-4 h-4 text-brand-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 14a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 14a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
+        </svg>
+        <span class="hidden sm:inline">Palette</span>
+      </button>
+
+      <!-- Theme Switcher Toggle -->
+      <button id="theme-toggle" onclick="toggleTheme()" class="p-1.5 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors border border-slate-200 dark:border-slate-800" title="Toggle Light/Dark Theme">
+        <!-- Sun Icon -->
+        <svg id="theme-sun" class="w-4 h-4 hidden dark:block text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+        </svg>
+        <!-- Moon Icon -->
+        <svg id="theme-moon" class="w-4 h-4 block dark:hidden text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+        </svg>
+      </button>
+    </div>
+  </header>
+
+  <!-- TOP PROGRESS BAR -->
+  <div class="w-full bg-slate-200 dark:bg-slate-800 h-1 shrink-0">
+    <div id="progress-bar-fill" class="bg-brand-500 h-full transition-all duration-300" style="width: 6.66%;"></div>
+  </div>
+
+  <!-- MAIN ACTIVE QUIZ CONTAINER (Strictly viewport optimized) -->
+  <main id="quiz-container" class="flex-1 max-w-4xl w-full mx-auto p-2 sm:p-4 flex flex-col justify-between overflow-hidden min-h-0">
+    
+    <!-- TOP META INFO BAR -->
+    <div class="flex items-center justify-between mb-2 shrink-0">
+      <div class="flex items-center space-x-2">
+        <span id="question-badge" class="px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-brand-50 dark:bg-brand-900/40 text-brand-600 dark:text-brand-300 border border-brand-200 dark:border-brand-800/60 uppercase tracking-wide">
+          Multiple Choice
+        </span>
+        <span class="text-xs text-slate-500 dark:text-slate-400 font-medium">
+          Question <span id="current-q-num" class="text-slate-900 dark:text-slate-100 font-bold">1</span> of <span id="total-q-num">15</span>
+        </span>
+      </div>
+
+      <div class="flex items-center space-x-2 text-xs">
+        <span id="score-counter-pill" class="hidden sm:inline-block px-2 py-0.5 rounded bg-slate-200 dark:bg-slate-800 text-slate-600 dark:text-slate-300 font-medium">
+          Score: <span id="current-score-val" class="font-bold text-slate-800 dark:text-slate-100">0</span>
+        </span>
+        <button id="btn-bookmark" onclick="toggleBookmark()" class="text-slate-400 hover:text-amber-500 dark:hover:text-amber-400 transition-colors p-1" title="Bookmark Question">
+          <svg id="bookmark-icon" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z" />
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- QUESTION CONTENT CARD -->
+    <div class="flex-1 bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 p-3 sm:p-5 flex flex-col justify-between overflow-y-auto max-h-full">
+      
+      <!-- QUESTION STATEMENT & COMPLEX DISPLAY AREA -->
+      <div class="space-y-3 mb-3">
+        <!-- Main Question Prompt -->
+        <h2 id="question-text" class="text-sm sm:text-base font-semibold text-slate-900 dark:text-slate-50 leading-relaxed">
+          Loading question text...
+        </h2>
+
+        <!-- Complex Element Container (Statements Callout or Match Grid) -->
+        <div id="complex-content-container" class="hidden"></div>
+      </div>
+
+      <!-- OPTIONS LIST GRID -->
+      <div id="options-container" class="grid grid-cols-1 sm:grid-cols-2 gap-2 my-2 shrink-0">
+        <!-- Option buttons dynamically generated -->
+      </div>
+
+      <!-- EXPLANATION FEEDBACK BOX (Appears immediately after selection) -->
+      <div id="explanation-box" class="hidden mt-2 p-3 rounded-lg border text-xs sm:text-sm transition-all duration-300 shrink-0">
+        <div class="flex items-center space-x-2 font-bold mb-1" id="explanation-title-wrap">
+          <span id="explanation-status-icon"></span>
+          <span id="explanation-status-text">Correct Answer!</span>
+        </div>
+        <p id="explanation-text" class="text-slate-700 dark:text-slate-300 leading-normal">
+          Explanation details will appear here.
+        </p>
+      </div>
+
+    </div>
+
+    <!-- BOTTOM FOOTER ACTION BAR (Always visible and sticky) -->
+    <div class="mt-3 flex items-center justify-between shrink-0 pt-1">
+      <button id="btn-prev" onclick="prevQuestion()" class="px-3 sm:px-4 py-2 text-xs font-semibold rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-800 border border-slate-300 dark:border-slate-700 transition-colors flex items-center space-x-1.5 disabled:opacity-40 disabled:cursor-not-allowed">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+        </svg>
+        <span class="hidden sm:inline">Previous</span>
+      </button>
+
+      <div class="text-[11px] text-slate-400 dark:text-slate-500 font-mono hidden md:block">
+        Use Keyboard [1-4] or [A-D] &amp; [Enter]
+      </div>
+
+      <button id="btn-next" onclick="nextQuestion()" class="px-5 sm:px-6 py-2 text-xs font-bold rounded-lg text-white bg-brand-600 hover:bg-brand-700 dark:bg-brand-500 dark:hover:bg-brand-600 transition-all duration-150 shadow-md shadow-brand-500/20 flex items-center space-x-1.5 disabled:opacity-50 disabled:cursor-not-allowed">
+        <span id="btn-next-label">Next Question</span>
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+        </svg>
+      </button>
+    </div>
+
+  </main>
+
+  <!-- QUESTION PALETTE MODAL -->
+  <div id="palette-modal" class="fixed inset-0 bg-slate-950/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl max-w-md w-full p-5 shadow-2xl space-y-4">
+      <div class="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3">
+        <h3 class="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-2">
+          <svg class="w-4 h-4 text-brand-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 14a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 14a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
+          </svg>
+          Question Navigation Palette
+        </h3>
+        <button onclick="togglePaletteModal()" class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 p-1">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+
+      <!-- Status Legend -->
+      <div class="grid grid-cols-3 gap-2 text-[11px] font-medium text-slate-600 dark:text-slate-400 text-center py-1 bg-slate-50 dark:bg-slate-800/50 rounded-lg">
+        <div class="flex items-center justify-center gap-1.5">
+          <span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span> Correct
+        </div>
+        <div class="flex items-center justify-center gap-1.5">
+          <span class="w-2.5 h-2.5 rounded-full bg-rose-500"></span> Incorrect
+        </div>
+        <div class="flex items-center justify-center gap-1.5">
+          <span class="w-2.5 h-2.5 rounded-full bg-slate-300 dark:bg-slate-700"></span> Pending
+        </div>
+      </div>
+
+      <!-- Question Buttons Grid -->
+      <div id="palette-grid" class="grid grid-cols-5 gap-2.5 max-h-60 overflow-y-auto p-1">
+        <!-- Buttons rendered dynamically -->
+      </div>
+
+      <div class="pt-2">
+        <button onclick="togglePaletteModal()" class="w-full py-2 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 font-semibold rounded-lg text-xs transition-colors">
+          Close Palette
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- END-SCREEN RESULTS SUMMARY CONTAINER (Initially Hidden) -->
+  <div id="results-screen" class="fixed inset-0 bg-slate-100 dark:bg-slate-950 z-40 hidden flex flex-col overflow-y-auto">
+    <div class="max-w-4xl w-full mx-auto p-4 sm:p-6 my-auto space-y-6">
+      
+      <!-- Top Summary Header Card -->
+      <div class="bg-white dark:bg-slate-900 rounded-2xl shadow-xl border border-slate-200 dark:border-slate-800 p-6 sm:p-8 text-center relative overflow-hidden">
+        <div class="absolute -right-12 -top-12 w-40 h-40 bg-brand-500/10 rounded-full blur-2xl pointer-events-none"></div>
+        <div class="absolute -left-12 -bottom-12 w-40 h-40 bg-emerald-500/10 rounded-full blur-2xl pointer-events-none"></div>
+
+        <span class="inline-block px-3 py-1 bg-brand-50 dark:bg-brand-900/40 text-brand-600 dark:text-brand-300 rounded-full text-xs font-bold tracking-wider uppercase mb-3">
+          Exam Completed
+        </span>
+
+        <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white mb-2">Performance Summary</h1>
+        <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400">Padma Awards &amp; Bharat Ratna Current Affairs Quiz</p>
+
+        <!-- Dynamic Score Circular/Grid Display -->
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 my-6">
+          <!-- Total Score Card -->
+          <div class="bg-slate-50 dark:bg-slate-800/50 p-4 rounded-xl border border-slate-100 dark:border-slate-800">
+            <p class="text-[11px] font-semibold text-slate-500 uppercase tracking-wider">Final Score</p>
+            <p class="text-2xl sm:text-3xl font-black text-brand-600 dark:text-brand-400 mt-1" id="res-score-text">0 / 15</p>
+          </div>
+
+          <!-- Percentage Card -->
+          <div class="bg-slate-50 dark:bg-slate-800/50 p-4 rounded-xl border border-slate-100 dark:border-slate-800">
+            <p class="text-[11px] font-semibold text-slate-500 uppercase tracking-wider">Percentage</p>
+            <p class="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white mt-1" id="res-percentage-text">0%</p>
+          </div>
+
+          <!-- Correct Count -->
+          <div class="bg-emerald-50 dark:bg-emerald-950/30 p-4 rounded-xl border border-emerald-100 dark:border-emerald-900/40">
+            <p class="text-[11px] font-semibold text-emerald-600 dark:text-emerald-400 uppercase tracking-wider">Correct</p>
+            <p class="text-2xl sm:text-3xl font-black text-emerald-600 dark:text-emerald-400 mt-1" id="res-correct-text">0</p>
+          </div>
+
+          <!-- Incorrect Count -->
+          <div class="bg-rose-50 dark:bg-rose-950/30 p-4 rounded-xl border border-rose-100 dark:border-rose-900/40">
+            <p class="text-[11px] font-semibold text-rose-600 dark:text-rose-400 uppercase tracking-wider">Incorrect</p>
+            <p class="text-2xl sm:text-3xl font-black text-rose-600 dark:text-rose-400 mt-1" id="res-incorrect-text">0</p>
+          </div>
+        </div>
+
+        <div class="flex flex-wrap items-center justify-center gap-3">
+          <button onclick="restartQuiz()" class="px-6 py-2.5 bg-brand-600 hover:bg-brand-700 text-white font-bold text-xs sm:text-sm rounded-xl transition-all shadow-lg shadow-brand-500/20 flex items-center gap-2">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+            </svg>
+            Restart Quiz
+          </button>
+        </div>
+      </div>
+
+      <!-- Detailed Incorrect / Review Questions Breakdown section -->
+      <div class="bg-white dark:bg-slate-900 rounded-2xl shadow-xl border border-slate-200 dark:border-slate-800 p-6 space-y-4">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 dark:border-slate-800 pb-4">
+          <div>
+            <h2 class="text-lg font-bold text-slate-900 dark:text-white">Question Review &amp; Analysis</h2>
+            <p class="text-xs text-slate-500 dark:text-slate-400">Detailed breakdown of incorrect and answered questions</p>
+          </div>
+
+          <!-- Filter Tabs -->
+          <div class="flex items-center space-x-1 bg-slate-100 dark:bg-slate-800 p-1 rounded-lg text-xs font-semibold">
+            <button onclick="filterReview('incorrect')" id="tab-review-incorrect" class="px-3 py-1 rounded-md transition-colors bg-white dark:bg-slate-700 text-slate-900 dark:text-white shadow-sm">
+              Incorrect Only (<span id="count-review-incorrect">0</span>)
+            </button>
+            <button onclick="filterReview('all')" id="tab-review-all" class="px-3 py-1 rounded-md transition-colors text-slate-500 hover:text-slate-800 dark:hover:text-slate-200">
+              All Questions (15)
+            </button>
+          </div>
+        </div>
+
+        <!-- Review Question List Container -->
+        <div id="review-questions-list" class="space-y-4 max-h-[500px] overflow-y-auto pr-1">
+          <!-- Dynamic review cards inserted here -->
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    /*
+     * COMPLETE EXAM DATASET
+     * Contains 15 Questions with specialized types: 'mcq', 'statement', and 'match'.
+     */
+    const quizQuestions = [
+      {
+        id: 1,
+        type: "mcq",
+        badge: "Multiple Choice",
+        question: "Which of the following personalities was NOT among the Bharat Ratna 2024 awardees listed in the document?",
+        options: [
+          "(A) Chaudhary Charan Singh",
+          "(B) Shri Karpoori Thakur",
+          "(C) Shri L. K. Advani",
+          "(D) Dharmendra Singh Deol"
+        ],
+        correct: 3, // Index 3 is (D)
+        explanation: "Dharmendra Singh Deol is listed under the Padma Vibhushan 2026 awardees, whereas Chaudhary Charan Singh, Shri Karpoori Thakur, and Shri L. K. Advani are listed under Bharat Ratna (2024)."
+      },
+      {
+        id: 2,
+        type: "mcq",
+        badge: "Multiple Choice",
+        question: "How many total Padma Awards (including duo cases) were announced according to the provided text?",
+        options: [
+          "(A) 106",
+          "(B) 113",
+          "(C) 128",
+          "(D) 131"
+        ],
+        correct: 3, // Index 3 is (D)
+        explanation: "The document states there are 131 Padma Awards, which includes 2 duo cases (where a duo award is counted as one)."
+      },
+      {
+        id: 3,
+        type: "mcq",
+        badge: "Multiple Choice",
+        question: "What is the breakdown of the total Padma Awards for 2026 in terms of Padma Vibhushan, Padma Bhushan, and Padma Shri, respectively?",
+        options: [
+          "(A) 5 Padma Vibhushan, 13 Padma Bhushan, 113 Padma Shri",
+          "(B) 6 Padma Vibhushan, 13 Padma Bhushan, 112 Padma Shri",
+          "(C) 5 Padma Vibhushan, 14 Padma Bhushan, 112 Padma Shri",
+          "(D) 4 Padma Vibhushan, 13 Padma Bhushan, 114 Padma Shri"
+        ],
+        correct: 0, // Index 0 is (A)
+        explanation: "As per the document: 5 Padma Vibhushan, 13 Padma Bhushan, and 113 Padma Shri Awards make up the total."
+      },
+      {
+        id: 4,
+        type: "mcq",
+        badge: "Multiple Choice",
+        question: "Dharmendra Singh Deol was awarded the Padma Vibhushan (Posthumously) for his contribution to which field?",
+        options: [
+          "(A) Literature and Education",
+          "(B) Art",
+          "(C) Public Affairs",
+          "(D) Social Work"
+        ],
+        correct: 1, // Index 1 is (B)
+        explanation: "Dharmendra Singh Deol is recognized under the field of 'Art' as a legendary Hindi cinema actor from Maharashtra."
+      },
+      {
+        id: 5,
+        type: "mcq",
+        badge: "Multiple Choice",
+        question: "Former Supreme Court judge Shri K. T. Thomas, who was awarded the Padma Vibhushan, belongs to which state?",
+        options: [
+          "(A) Tamil Nadu",
+          "(B) Uttar Pradesh",
+          "(C) Kerala",
+          "(D) Maharashtra"
+        ],
+        correct: 2, // Index 2 is (C)
+        explanation: "Shri K. T. Thomas is a former Supreme Court judge from the state of Kerala who received the Padma Vibhushan for Public Affairs."
+      },
+      {
+        id: 6,
+        type: "mcq",
+        badge: "Multiple Choice",
+        question: "Ms. N. Rajam, a Padma Vibhushan awardee, is known for introducing which specific style to the violin?",
+        options: [
+          "(A) Dhrupad Ang",
+          "(B) Gayaki Ang",
+          "(C) Thumri Ang",
+          "(D) Khayal Ang"
+        ],
+        correct: 1, // Index 1 is (B)
+        explanation: "Ms. N. Rajam is a virtuoso Hindustani classical violinist from Uttar Pradesh who introduced the Gayaki Ang (singing style) to the violin."
+      },
+      {
+        id: 7,
+        type: "mcq",
+        badge: "Multiple Choice",
+        question: "Shri V. S. Achuthanandan, who was awarded the Padma Vibhushan (Posthumously) in the field of Public Affairs, was the former Chief Minister of which state?",
+        options: [
+          "(A) Tamil Nadu",
+          "(B) Jharkhand",
+          "(C) Kerala",
+          "(D) Maharashtra"
+        ],
+        correct: 2, // Index 2 is (C)
+        explanation: "Shri V. S. Achuthanandan was a veteran CPI(M) political leader and former Chief Minister of Kerala."
+      },
+      {
+        id: 8,
+        type: "match",
+        badge: "Match List Type",
+        question: "Match the following Padma Vibhushan awardees with their respective fields:",
+        matchData: {
+          colAHeader: "List I (Awardee)",
+          colBHeader: "List II (Field)",
+          items: [
+            { a: "1. Shri P. Narayanan", b: "(i) Public Affairs" },
+            { a: "2. Ms. N. Rajam", b: "(ii) Literature and Education" },
+            { a: "3. Shri K. T. Thomas", b: "(iii) Art" }
+          ]
+        },
+        options: [
+          "(A) 1-(ii), 2-(iii), 3-(i)",
+          "(B) 1-(i), 2-(ii), 3-(iii)",
+          "(C) 1-(iii), 2-(i), 3-(ii)",
+          "(D) 1-(ii), 2-(i), 3-(iii)"
+        ],
+        correct: 0, // Index 0 is (A)
+        explanation: "Shri P. Narayanan is recognized in Literature and Education [1-(ii)], Ms. N. Rajam in Art [2-(iii)], and Shri K. T. Thomas in Public Affairs [3-(i)]."
+      },
+      {
+        id: 9,
+        type: "mcq",
+        badge: "Multiple Choice",
+        question: "Who among the following Padma Bhushan recipients belongs to the country 'USA'?",
+        options: [
+          "(A) Alka Yagnik and Vijay Amritraj",
+          "(B) Dr. Nori Dattatreyudu and Vijay Amritraj",
+          "(C) SKM Maeilanandhan and Dr. Nori Dattatreyudu",
+          "(D) Uday Kotak and Vijay Amritraj"
+        ],
+        correct: 1, // Index 1 is (B)
+        explanation: "The document lists both Dr. Nori Dattatreyudu (Medicine) and Vijay Amritraj (Sports) with their State/Country as 'USA'."
+      },
+      {
+        id: 10,
+        type: "mcq",
+        badge: "Multiple Choice",
+        question: "For which field was Shri SKM Maeilanandhan awarded the Padma Bhushan?",
+        options: [
+          "(A) Medicine",
+          "(B) Art",
+          "(C) Social Work",
+          "(D) Trade and Industry"
+        ],
+        correct: 2, // Index 2 is (C)
+        explanation: "SKM Maeilanandhan from Tamil Nadu received the Padma Bhushan in the field of 'Social Work'."
+      },
+      {
+        id: 11,
+        type: "statement",
+        badge: "Statement Analysis",
+        question: "Which of the following statements is/are CORRECT based on the Padma Bhushan list in the document?",
+        statements: [
+          "1. Shibu Soren was posthumously awarded the Padma Bhushan in Public Affairs.",
+          "2. Uday Kotak received the Padma Bhushan in the field of Trade and Industry.",
+          "3. Piyush Pandey received the Padma Bhushan (Posthumously) in the field of Art."
+        ],
+        options: [
+          "(A) Only 1 and 2",
+          "(B) Only 2 and 3",
+          "(C) Only 1 and 3",
+          "(D) 1, 2, and 3"
+        ],
+        correct: 3, // Index 3 is (D)
+        explanation: "All three statements are accurate as per the table: Shibu Soren (Public Affairs - Posthumous), Uday Kotak (Trade and Industry), and Piyush Pandey (Art - Posthumous)."
+      },
+      {
+        id: 12,
+        type: "mcq",
+        badge: "Multiple Choice",
+        question: "Shri Kallipatti Ramasamy Palaniswamy was awarded the Padma Bhushan in which field?",
+        options: [
+          "(A) Public Affairs",
+          "(B) Medicine",
+          "(C) Social Work",
+          "(D) Literature and Education"
+        ],
+        correct: 1, // Index 1 is (B)
+        explanation: "Kallipatti Ramasamy Palaniswamy from Tamil Nadu was awarded the Padma Bhushan in the field of Medicine."
+      },
+      {
+        id: 13,
+        type: "mcq",
+        badge: "Multiple Choice",
+        question: "Which of the following Padma Bhushan awardees is associated with the field of Sports?",
+        options: [
+          "(A) Shatavadhani R Ganesh",
+          "(B) Vellappally Natesan",
+          "(C) Vijay Amritraj",
+          "(D) VK Malhotra"
+        ],
+        correct: 2, // Index 2 is (C)
+        explanation: "Vijay Amritraj (USA) is listed under the 'Sports' field for the Padma Bhushan award."
+      },
+      {
+        id: 14,
+        type: "mcq",
+        badge: "Multiple Choice",
+        question: "Bhagat Singh Koshyari, a Padma Bhushan recipient in Public Affairs, represents which state?",
+        options: [
+          "(A) Delhi",
+          "(B) Jharkhand",
+          "(C) Maharashtra",
+          "(D) Uttarakhand"
+        ],
+        correct: 3, // Index 3 is (D)
+        explanation: "Bhagat Singh Koshyari is listed under the state of Uttarakhand in the Padma Bhushan category for Public Affairs."
+      },
+      {
+        id: 15,
+        type: "mcq",
+        badge: "Multiple Choice",
+        question: "Which of the following pairs of Padma Bhushan awardees and their respective fields is INCORRECT?",
+        options: [
+          "(A) Alka Yagnik – Art",
+          "(B) Mammootty – Art",
+          "(C) Shatavadhani R Ganesh – Literature and Education",
+          "(D) VK Malhotra – Public Affairs"
+        ],
+        correct: 2, // Index 2 is (C)
+        explanation: "According to the provided document, Shatavadhani R Ganesh (Karnataka) is listed under the field of 'Art', not Literature and Education."
+      }
+    ];
+
+    // App State
+    let currentIndex = 0;
+    let userAnswers = new Array(quizQuestions.length).fill(null); // stores selected option index
+    let bookmarkedQuestions = new Set();
+    let startTime = Date.now();
+    let timerInterval = null;
+    let currentFilterMode = 'incorrect';
+
+    // DOM Elements
+    const elQuestionBadge = document.getElementById('question-badge');
+    const elCurrentQNum = document.getElementById('current-q-num');
+    const elTotalQNum = document.getElementById('total-q-num');
+    const elCurrentScoreVal = document.getElementById('current-score-val');
+    const elProgressBarFill = document.getElementById('progress-bar-fill');
+    const elQuestionText = document.getElementById('question-text');
+    const elComplexContainer = document.getElementById('complex-content-container');
+    const elOptionsContainer = document.getElementById('options-container');
+    const elExplanationBox = document.getElementById('explanation-box');
+    const elExplanationTitleWrap = document.getElementById('explanation-title-wrap');
+    const elExplanationStatusIcon = document.getElementById('explanation-status-icon');
+    const elExplanationStatusText = document.getElementById('explanation-status-text');
+    const elExplanationText = document.getElementById('explanation-text');
+    const elBtnPrev = document.getElementById('btn-prev');
+    const elBtnNext = document.getElementById('btn-next');
+    const elBtnNextLabel = document.getElementById('btn-next-label');
+    const elBookmarkIcon = document.getElementById('bookmark-icon');
+
+    // Theme toggle
+    function toggleTheme() {
+      const htmlEl = document.documentElement;
+      if (htmlEl.classList.contains('dark')) {
+        htmlEl.classList.remove('dark');
+        localStorage.setItem('quiz-theme', 'light');
+      } else {
+        htmlEl.classList.add('dark');
+        localStorage.setItem('quiz-theme', 'dark');
+      }
+    }
+
+    // Initialize Theme
+    (function initTheme() {
+      const savedTheme = localStorage.getItem('quiz-theme');
+      if (savedTheme === 'light') {
+        document.documentElement.classList.remove('dark');
+      } else {
+        document.documentElement.classList.add('dark');
+      }
+    })();
+
+    // Timer Functionality
+    function startTimer() {
+      timerInterval = setInterval(() => {
+        const elapsedSeconds = Math.floor((Date.now() - startTime) / 1000);
+        const mins = String(Math.floor(elapsedSeconds / 60)).padStart(2, '0');
+        const secs = String(elapsedSeconds % 60).padStart(2, '0');
+        document.getElementById('quiz-timer').textContent = `${mins}:${secs}`;
+      }, 1000);
+    }
+
+    // Render current question
+    function renderQuestion() {
+      const q = quizQuestions[currentIndex];
+
+      // Update badge & question counter
+      elQuestionBadge.textContent = q.badge;
+      elCurrentQNum.textContent = currentIndex + 1;
+      elTotalQNum.textContent = quizQuestions.length;
+
+      // Update Progress Bar
+      const progressPercent = ((currentIndex + 1) / quizQuestions.length) * 100;
+      elProgressBarFill.style.width = `${progressPercent}%`;
+
+      // Update Score pill
+      const correctCount = userAnswers.reduce((acc, ans, idx) => {
+        return ans === quizQuestions[idx].correct ? acc + 1 : acc;
+      }, 0);
+      elCurrentScoreVal.textContent = correctCount;
+
+      // Set Main Question Text
+      elQuestionText.textContent = q.question;
+
+      // Render Bookmark State
+      if (bookmarkedQuestions.has(q.id)) {
+        elBookmarkIcon.setAttribute('fill', 'currentColor');
+        elBookmarkIcon.classList.add('text-amber-500');
+      } else {
+        elBookmarkIcon.setAttribute('fill', 'none');
+        elBookmarkIcon.classList.remove('text-amber-500');
+      }
+
+      // Render Complex Content (Statements or Match List)
+      elComplexContainer.innerHTML = '';
+      if (q.type === 'statement' && q.statements) {
+        elComplexContainer.classList.remove('hidden');
+        
+        let statementsHTML = `<div class="bg-slate-50 dark:bg-slate-800/60 rounded-xl p-3 border border-slate-200/80 dark:border-slate-700/60 space-y-2">`;
+        q.statements.forEach(stmt => {
+          statementsHTML += `
+            <div class="flex items-start space-x-2 text-xs sm:text-sm font-medium text-slate-800 dark:text-slate-200">
+              <span class="inline-block p-1 bg-white dark:bg-slate-900 rounded border border-slate-200 dark:border-slate-700 font-mono text-[11px] text-brand-600 dark:text-brand-400 shrink-0 leading-none">
+                STMT
+              </span>
+              <p class="leading-relaxed">${stmt}</p>
+            </div>
+          `;
+        });
+        statementsHTML += `</div>`;
+        elComplexContainer.innerHTML = statementsHTML;
+
+      } else if (q.type === 'match' && q.matchData) {
+        elComplexContainer.classList.remove('hidden');
+        
+        const m = q.matchData;
+        let matchHTML = `
+          <div class="bg-slate-50 dark:bg-slate-800/60 rounded-xl p-2.5 border border-slate-200/80 dark:border-slate-700/60 overflow-x-auto">
+            <table class="w-full text-xs sm:text-sm text-left">
+              <thead>
+                <tr class="border-b border-slate-200 dark:border-slate-700 text-[11px] font-bold text-brand-600 dark:text-brand-400 uppercase tracking-wider">
+                  <th class="pb-1.5 pl-2 w-1/2">${m.colAHeader}</th>
+                  <th class="pb-1.5 pl-2 w-1/2">${m.colBHeader}</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-200/50 dark:divide-slate-700/50 font-medium text-slate-800 dark:text-slate-200">
+        `;
+        m.items.forEach(row => {
+          matchHTML += `
+            <tr>
+              <td class="py-1.5 pl-2 font-mono text-xs">${row.a}</td>
+              <td class="py-1.5 pl-2 font-mono text-xs">${row.b}</td>
+            </tr>
+          `;
+        });
+        matchHTML += `
+              </tbody>
+            </table>
+          </div>
+        `;
+        elComplexContainer.innerHTML = matchHTML;
+      } else {
+        elComplexContainer.classList.add('hidden');
+      }
+
+      // Render Options
+      const answered = userAnswers[currentIndex] !== null;
+      const selectedOptionIndex = userAnswers[currentIndex];
+
+      elOptionsContainer.innerHTML = '';
+      q.options.forEach((optText, optIdx) => {
+        const isCorrectOption = optIdx === q.correct;
+        const isUserSelected = optIdx === selectedOptionIndex;
+
+        let btnStyle = `bg-slate-50 dark:bg-slate-800/80 text-slate-800 dark:text-slate-200 border-slate-200 dark:border-slate-700/80 hover:bg-slate-100 dark:hover:bg-slate-700`;
+        let badgeIcon = '';
+
+        if (answered) {
+          if (isCorrectOption) {
+            btnStyle = `bg-emerald-50 dark:bg-emerald-950/50 text-emerald-900 dark:text-emerald-100 border-emerald-500 font-semibold ring-1 ring-emerald-500`;
+            badgeIcon = `
+              <svg class="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0 ml-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7" />
+              </svg>`;
+          } else if (isUserSelected && !isCorrectOption) {
+            btnStyle = `bg-rose-50 dark:bg-rose-950/50 text-rose-900 dark:text-rose-100 border-rose-500 font-semibold ring-1 ring-rose-500`;
+            badgeIcon = `
+              <svg class="w-4 h-4 text-rose-600 dark:text-rose-400 shrink-0 ml-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12" />
+              </svg>`;
+          } else {
+            btnStyle = `bg-slate-50/50 dark:bg-slate-800/30 text-slate-400 dark:text-slate-600 border-slate-200/50 dark:border-slate-800 opacity-60`;
+          }
+        }
+
+        const optBtn = document.createElement('button');
+        optBtn.className = `w-full p-2.5 sm:p-3 text-left rounded-xl border text-xs sm:text-sm transition-all duration-150 flex items-center justify-between ${btnStyle} ${answered ? 'cursor-default' : 'cursor-pointer'}`;
+        optBtn.disabled = answered;
+        optBtn.onclick = () => selectOption(optIdx);
+
+        optBtn.innerHTML = `
+          <span class="leading-tight">${optText}</span>
+          ${badgeIcon}
+        `;
+        elOptionsContainer.appendChild(optBtn);
+      });
+
+      // Explanation Box Handling
+      if (answered) {
+        const isUserCorrect = selectedOptionIndex === q.correct;
+        elExplanationBox.classList.remove('hidden');
+
+        if (isUserCorrect) {
+          elExplanationBox.className = "mt-2 p-3 rounded-xl border text-xs sm:text-sm bg-emerald-50/80 dark:bg-emerald-950/40 border-emerald-200 dark:border-emerald-800/60 text-emerald-900 dark:text-emerald-200";
+          elExplanationStatusIcon.innerHTML = `<svg class="w-4 h-4 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>`;
+          elExplanationStatusText.textContent = "Correct Answer";
+          elExplanationStatusText.className = "text-emerald-700 dark:text-emerald-300 font-bold";
+        } else {
+          elExplanationBox.className = "mt-2 p-3 rounded-xl border text-xs sm:text-sm bg-rose-50/80 dark:bg-rose-950/40 border-rose-200 dark:border-rose-800/60 text-rose-900 dark:text-rose-200";
+          elExplanationStatusIcon.innerHTML = `<svg class="w-4 h-4 text-rose-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>`;
+          elExplanationStatusText.textContent = "Incorrect Answer";
+          elExplanationStatusText.className = "text-rose-700 dark:text-rose-300 font-bold";
+        }
+
+        elExplanationText.textContent = q.explanation;
+      } else {
+        elExplanationBox.classList.add('hidden');
+      }
+
+      // Prev/Next Button states
+      elBtnPrev.disabled = currentIndex === 0;
+      
+      if (currentIndex === quizQuestions.length - 1) {
+        elBtnNextLabel.textContent = "Finish Exam";
+      } else {
+        elBtnNextLabel.textContent = "Next Question";
+      }
+    }
+
+    // Option Clicked Event
+    function selectOption(optionIndex) {
+      if (userAnswers[currentIndex] !== null) return; // Prevent re-selection
+      userAnswers[currentIndex] = optionIndex;
+      renderQuestion();
+      updatePaletteGrid();
+    }
+
+    // Navigation Controls
+    function prevQuestion() {
+      if (currentIndex > 0) {
+        currentIndex--;
+        renderQuestion();
+      }
+    }
+
+    function nextQuestion() {
+      if (currentIndex < quizQuestions.length - 1) {
+        currentIndex++;
+        renderQuestion();
+      } else {
+        finishQuiz();
+      }
+    }
+
+    function toggleBookmark() {
+      const qId = quizQuestions[currentIndex].id;
+      if (bookmarkedQuestions.has(qId)) {
+        bookmarkedQuestions.delete(qId);
+      } else {
+        bookmarkedQuestions.add(qId);
+      }
+      renderQuestion();
+      updatePaletteGrid();
+    }
+
+    // Palette Modal logic
+    function togglePaletteModal() {
+      const modal = document.getElementById('palette-modal');
+      if (modal.classList.contains('hidden')) {
+        updatePaletteGrid();
+        modal.classList.remove('hidden');
+      } else {
+        modal.classList.add('hidden');
+      }
+    }
+
+    function updatePaletteGrid() {
+      const grid = document.getElementById('palette-grid');
+      grid.innerHTML = '';
+
+      quizQuestions.forEach((q, idx) => {
+        const ans = userAnswers[idx];
+        let btnClass = 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-700';
+
+        if (ans !== null) {
+          if (ans === q.correct) {
+            btnClass = 'bg-emerald-500 text-white border-emerald-600 font-bold';
+          } else {
+            btnClass = 'bg-rose-500 text-white border-rose-600 font-bold';
+          }
+        }
+
+        if (idx === currentIndex) {
+          btnClass += ' ring-2 ring-brand-500 ring-offset-2 dark:ring-offset-slate-900';
+        }
+
+        const btn = document.createElement('button');
+        btn.className = `h-9 rounded-lg border text-xs font-semibold flex items-center justify-center transition-all ${btnClass}`;
+        btn.textContent = idx + 1;
+        btn.onclick = () => {
+          currentIndex = idx;
+          renderQuestion();
+          togglePaletteModal();
+        };
+        grid.appendChild(btn);
+      });
+    }
+
+    // Keyboard Shortcuts
+    document.addEventListener('keydown', (e) => {
+      // Ignore if modal open
+      if (!document.getElementById('palette-modal').classList.contains('hidden')) return;
+
+      if (e.key === 'ArrowRight' || e.key === 'Enter') {
+        nextQuestion();
+      } else if (e.key === 'ArrowLeft') {
+        prevQuestion();
+      } else if (['1', '2', '3', '4'].includes(e.key)) {
+        selectOption(parseInt(e.key) - 1);
+      } else if (['a', 'b', 'c', 'd'].includes(e.key.toLowerCase())) {
+        const charMap = { 'a': 0, 'b': 1, 'c': 2, 'd': 3 };
+        selectOption(charMap[e.key.toLowerCase()]);
+      }
+    });
+
+    // Finish Quiz and Render End-Screen
+    function finishQuiz() {
+      clearInterval(timerInterval);
+
+      // Hide active quiz, show results screen
+      document.getElementById('quiz-container').classList.add('hidden');
+      document.getElementById('results-screen').classList.remove('hidden');
+
+      // Calculate Metrics
+      let correctCount = 0;
+      let incorrectCount = 0;
+      let unattemptedCount = 0;
+
+      userAnswers.forEach((ans, idx) => {
+        if (ans === null) unattemptedCount++;
+        else if (ans === quizQuestions[idx].correct) correctCount++;
+        else incorrectCount++;
+      });
+
+      const total = quizQuestions.length;
+      const percentage = Math.round((correctCount / total) * 100);
+
+      // Populate Top Metrics
+      document.getElementById('res-score-text').textContent = `${correctCount} / ${total}`;
+      document.getElementById('res-percentage-text').textContent = `${percentage}%`;
+      document.getElementById('res-correct-text').textContent = correctCount;
+      document.getElementById('res-incorrect-text').textContent = incorrectCount;
+      document.getElementById('count-review-incorrect').textContent = incorrectCount;
+
+      // Render Review List
+      renderReviewList();
+    }
+
+    // Render Review Questions
+    function filterReview(mode) {
+      currentFilterMode = mode;
+      
+      const tabIncorrect = document.getElementById('tab-review-incorrect');
+      const tabAll = document.getElementById('tab-review-all');
+
+      if (mode === 'incorrect') {
+        tabIncorrect.className = "px-3 py-1 rounded-md transition-colors bg-white dark:bg-slate-700 text-slate-900 dark:text-white shadow-sm font-bold";
+        tabAll.className = "px-3 py-1 rounded-md transition-colors text-slate-500 hover:text-slate-800 dark:hover:text-slate-200 font-semibold";
+      } else {
+        tabAll.className = "px-3 py-1 rounded-md transition-colors bg-white dark:bg-slate-700 text-slate-900 dark:text-white shadow-sm font-bold";
+        tabIncorrect.className = "px-3 py-1 rounded-md transition-colors text-slate-500 hover:text-slate-800 dark:hover:text-slate-200 font-semibold";
+      }
+
+      renderReviewList();
+    }
+
+    function renderReviewList() {
+      const container = document.getElementById('review-questions-list');
+      container.innerHTML = '';
+
+      quizQuestions.forEach((q, idx) => {
+        const userAnsIndex = userAnswers[idx];
+        const isCorrect = userAnsIndex === q.correct;
+
+        // Filter out if 'incorrect' tab is active
+        if (currentFilterMode === 'incorrect' && isCorrect) {
+          return;
+        }
+
+        const userAnsText = userAnsIndex !== null ? q.options[userAnsIndex] : "Unattempted";
+        const correctAnsText = q.options[q.correct];
+
+        let statusBadge = isCorrect 
+          ? `<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-100 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-800 uppercase">Correct</span>`
+          : `<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-rose-100 dark:bg-rose-950/60 text-rose-700 dark:text-rose-300 border border-rose-300 dark:border-rose-800 uppercase">Incorrect</span>`;
+
+        let itemHTML = `
+          <div class="p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/30 space-y-3">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-bold text-slate-500 dark:text-slate-400">Q${idx + 1} (${q.badge})</span>
+              ${statusBadge}
+            </div>
+
+            <p class="text-xs sm:text-sm font-semibold text-slate-900 dark:text-white leading-relaxed">
+              ${q.question}
+            </p>
+        `;
+
+        // Render statement/match content if applicable in review card
+        if (q.type === 'statement' && q.statements) {
+          itemHTML += `<div class="p-2.5 bg-white dark:bg-slate-900 rounded-lg border border-slate-200 dark:border-slate-800 space-y-1 my-2">`;
+          q.statements.forEach(stmt => {
+            itemHTML += `<p class="text-xs text-slate-700 dark:text-slate-300 font-mono">• ${stmt}</p>`;
+          });
+          itemHTML += `</div>`;
+        } else if (q.type === 'match' && q.matchData) {
+          itemHTML += `<div class="p-2.5 bg-white dark:bg-slate-900 rounded-lg border border-slate-200 dark:border-slate-800 my-2 text-xs font-mono">`;
+          q.matchData.items.forEach(row => {
+            itemHTML += `<div class="flex justify-between py-0.5"><span>${row.a}</span><span>${row.b}</span></div>`;
+          });
+          itemHTML += `</div>`;
+        }
+
+        // Answers Summary Box
+        itemHTML += `
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs pt-1">
+              <div class="p-2 rounded-lg bg-white dark:bg-slate-900 border ${isCorrect ? 'border-emerald-300 dark:border-emerald-800' : 'border-rose-300 dark:border-rose-800'}">
+                <span class="text-[10px] font-bold uppercase text-slate-400 block mb-0.5">Your Choice</span>
+                <span class="font-medium ${isCorrect ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400'}">${userAnsText}</span>
+              </div>
+
+              <div class="p-2 rounded-lg bg-white dark:bg-slate-900 border border-emerald-300 dark:border-emerald-800">
+                <span class="text-[10px] font-bold uppercase text-slate-400 block mb-0.5">Correct Answer</span>
+                <span class="font-medium text-emerald-600 dark:text-emerald-400">${correctAnsText}</span>
+              </div>
+            </div>
+
+            <!-- Explanation -->
+            <div class="p-2.5 rounded-lg bg-brand-50/50 dark:bg-brand-950/20 border border-brand-200/60 dark:border-brand-900/40 text-xs text-slate-700 dark:text-slate-300">
+              <span class="font-bold text-brand-700 dark:text-brand-300 block mb-0.5">Explanation:</span>
+              ${q.explanation}
+            </div>
+          </div>
+        `;
+
+        container.innerHTML += itemHTML;
+      });
+
+      if (container.children.length === 0) {
+        container.innerHTML = `
+          <div class="text-center py-8 text-slate-400 text-xs font-semibold">
+            No questions match the current filter! Great job!
+          </div>
+        `;
+      }
+    }
+
+    function restartQuiz() {
+      currentIndex = 0;
+      userAnswers = new Array(quizQuestions.length).fill(null);
+      bookmarkedQuestions.clear();
+      startTime = Date.now();
+
+      document.getElementById('results-screen').classList.add('hidden');
+      document.getElementById('quiz-container').classList.remove('hidden');
+
+      clearInterval(timerInterval);
+      startTimer();
+      renderQuestion();
+    }
+
+    // Initialize Application
+    window.onload = function () {
+      startTimer();
+      renderQuestion();
+    };
+  </script>
+</body>
+</html>
