@@ -1,0 +1,1125 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Indian Literary & Cinema Awards Quiz 2024-2026</title>
+  <style>
+    :root {
+      --bg-primary: #0f172a;
+      --bg-card: #1e293b;
+      --bg-card-hover: #334155;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --accent: #6366f1;
+      --accent-hover: #4f46e5;
+      --correct: #10b981;
+      --correct-bg: rgba(16, 185, 129, 0.15);
+      --incorrect: #ef4444;
+      --incorrect-bg: rgba(239, 68, 68, 0.15);
+      --border: #334155;
+      --table-header: #1e293b;
+      --callout-bg: #0f172a;
+      --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
+    }
+
+    [data-theme="light"] {
+      --bg-primary: #f1f5f9;
+      --bg-card: #ffffff;
+      --bg-card-hover: #f8fafc;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --accent: #4f46e5;
+      --accent-hover: #4338ca;
+      --correct: #059669;
+      --correct-bg: rgba(16, 185, 129, 0.12);
+      --incorrect: #dc2626;
+      --incorrect-bg: rgba(239, 68, 68, 0.12);
+      --border: #e2e8f0;
+      --table-header: #f8fafc;
+      --callout-bg: #f8fafc;
+      --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.08);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', system-ui, -apple-system, Roboto, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-primary);
+      color: var(--text-main);
+      height: 100vh;
+      height: 100dvh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    /* HEADER */
+    header {
+      height: 56px;
+      padding: 0 1.25rem;
+      background-color: var(--bg-card);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-shrink: 0;
+    }
+
+    .brand-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, #818cf8, #c084fc);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .theme-toggle-btn {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text-main);
+      padding: 0.4rem 0.75rem;
+      border-radius: 20px;
+      cursor: pointer;
+      font-size: 0.85rem;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      transition: all 0.2s ease;
+    }
+
+    .theme-toggle-btn:hover {
+      background-color: var(--bg-card-hover);
+    }
+
+    /* MAIN CONTAINER - FLEX FIT TO VIEWPORT */
+    main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      max-width: 900px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 0.75rem 1rem;
+      height: calc(100vh - 56px);
+      height: calc(100dvh - 56px);
+      overflow: hidden;
+    }
+
+    /* PROGRESS BAR */
+    .progress-container {
+      margin-bottom: 0.6rem;
+      flex-shrink: 0;
+    }
+
+    .progress-meta {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      margin-bottom: 0.35rem;
+      font-weight: 600;
+    }
+
+    .progress-bar-bg {
+      width: 100%;
+      height: 6px;
+      background-color: var(--border);
+      border-radius: 3px;
+      overflow: hidden;
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #6366f1, #a855f7);
+      width: 0%;
+      transition: width 0.3s ease;
+      border-radius: 3px;
+    }
+
+    /* QUESTION CARD */
+    .quiz-card {
+      background-color: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.1rem 1.25rem;
+      box-shadow: var(--shadow);
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      min-height: 0; /* Critical for vertical overflow handling inside flex child */
+      justify-content: space-between;
+    }
+
+    .question-scroll-wrapper {
+      overflow-y: auto;
+      padding-right: 4px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 0.85rem;
+    }
+
+    /* Custom Scrollbar */
+    .question-scroll-wrapper::-webkit-scrollbar {
+      width: 5px;
+    }
+    .question-scroll-wrapper::-webkit-scrollbar-thumb {
+      background: var(--border);
+      border-radius: 4px;
+    }
+
+    .question-text {
+      font-size: 1.05rem;
+      font-weight: 600;
+      line-height: 1.45;
+      color: var(--text-main);
+    }
+
+    /* MATCH THE FOLLOWING TABLE LAYOUT */
+    .match-table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
+      margin: 0.4rem 0;
+      background-color: var(--callout-bg);
+      font-size: 0.88rem;
+    }
+
+    .match-table th, .match-table td {
+      padding: 0.5rem 0.75rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .match-table th {
+      background-color: var(--table-header);
+      color: var(--text-muted);
+      font-weight: 600;
+      text-transform: uppercase;
+      font-size: 0.75rem;
+      letter-spacing: 0.05em;
+    }
+
+    .match-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    /* OPTIONS CONTAINER */
+    .options-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 0.55rem;
+    }
+
+    .option-btn {
+      width: 100%;
+      padding: 0.65rem 0.9rem;
+      background-color: var(--bg-card-hover);
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      color: var(--text-main);
+      font-size: 0.92rem;
+      text-align: left;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      line-height: 1.35;
+    }
+
+    .option-btn:hover:not(:disabled) {
+      border-color: var(--accent);
+      background-color: rgba(99, 102, 241, 0.08);
+    }
+
+    .option-badge {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background-color: var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.8rem;
+      font-weight: 700;
+      flex-shrink: 0;
+      color: var(--text-main);
+    }
+
+    .option-btn.correct {
+      background-color: var(--correct-bg) !important;
+      border-color: var(--correct) !important;
+      color: var(--text-main);
+    }
+
+    .option-btn.correct .option-badge {
+      background-color: var(--correct);
+      color: #ffffff;
+    }
+
+    .option-btn.incorrect {
+      background-color: var(--incorrect-bg) !important;
+      border-color: var(--incorrect) !important;
+      color: var(--text-main);
+    }
+
+    .option-btn.incorrect .option-badge {
+      background-color: var(--incorrect);
+      color: #ffffff;
+    }
+
+    .option-btn:disabled {
+      cursor: default;
+      opacity: 0.9;
+    }
+
+    /* EXPLANATION BOX */
+    .explanation-box {
+      background-color: var(--callout-bg);
+      border-left: 4px solid var(--accent);
+      border-radius: 0 8px 8px 0;
+      padding: 0.65rem 0.85rem;
+      font-size: 0.85rem;
+      line-height: 1.4;
+      display: none;
+      animation: fadeIn 0.2s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .explanation-title {
+      font-weight: 700;
+      color: var(--accent);
+      margin-bottom: 0.2rem;
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
+
+    /* BOTTOM CONTROLS */
+    .card-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 0.75rem;
+      border-top: 1px solid var(--border);
+      flex-shrink: 0;
+      margin-top: 0.5rem;
+    }
+
+    .feedback-status {
+      font-size: 0.9rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .feedback-status.correct { color: var(--correct); }
+    .feedback-status.incorrect { color: var(--incorrect); }
+
+    .btn-next {
+      padding: 0.55rem 1.25rem;
+      background-color: var(--accent);
+      color: #ffffff;
+      border: none;
+      border-radius: 6px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      margin-left: auto;
+    }
+
+    .btn-next:hover {
+      background-color: var(--accent-hover);
+    }
+
+    /* RESULTS SCREEN */
+    .results-screen {
+      display: none;
+      flex: 1;
+      flex-direction: column;
+      overflow-y: auto;
+      padding: 0.5rem 0;
+    }
+
+    .results-summary-card {
+      background-color: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.25rem;
+      text-align: center;
+      margin-bottom: 1rem;
+      box-shadow: var(--shadow);
+    }
+
+    .score-circle {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      background: conic-gradient(var(--accent) calc(var(--percent) * 1%), var(--border) 0);
+      margin: 0.75rem auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    .score-circle-inner {
+      width: 82px;
+      height: 82px;
+      border-radius: 50%;
+      background-color: var(--bg-card);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .score-number {
+      font-size: 1.5rem;
+      font-weight: 800;
+    }
+
+    .score-label {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+    }
+
+    .stats-row {
+      display: flex;
+      justify-content: center;
+      gap: 1.5rem;
+      margin-top: 0.75rem;
+    }
+
+    .stat-badge {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.9rem;
+      font-weight: 600;
+    }
+
+    .review-header {
+      font-size: 1.05rem;
+      font-weight: 700;
+      margin: 0.5rem 0 0.75rem 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .review-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .review-item {
+      background-color: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 0.85rem;
+      font-size: 0.88rem;
+    }
+
+    .review-q-title {
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      line-height: 1.35;
+    }
+
+    .review-ans-box {
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+      background-color: var(--callout-bg);
+      padding: 0.5rem 0.75rem;
+      border-radius: 6px;
+      font-size: 0.82rem;
+    }
+
+    .user-ans { color: var(--incorrect); font-weight: 600; }
+    .correct-ans { color: var(--correct); font-weight: 600; }
+
+    .btn-restart {
+      padding: 0.65rem 1.5rem;
+      background-color: var(--accent);
+      color: #ffffff;
+      border: none;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 1rem;
+      align-self: center;
+      transition: background-color 0.2s ease;
+    }
+
+    .btn-restart:hover {
+      background-color: var(--accent-hover);
+    }
+
+    @media (max-width: 600px) {
+      main {
+        padding: 0.5rem 0.6rem;
+      }
+      .quiz-card {
+        padding: 0.85rem 0.9rem;
+      }
+      .question-text {
+        font-size: 0.95rem;
+      }
+      .option-btn {
+        padding: 0.55rem 0.75rem;
+        font-size: 0.85rem;
+      }
+      .match-table {
+        font-size: 0.8rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="brand-title">
+      <span>📚</span> Award Prep Quiz 2024–2026
+    </div>
+    <div class="header-actions">
+      <button class="theme-toggle-btn" id="themeToggleBtn" onclick="toggleTheme()">
+        <span id="themeIcon">☀️</span> <span id="themeText">Light</span>
+      </button>
+    </div>
+  </header>
+
+  <main>
+    <!-- QUIZ VIEW -->
+    <div id="quizView" style="display: flex; flex-direction: column; height: 100%;">
+      <div class="progress-container">
+        <div class="progress-meta">
+          <span id="questionProgressText">Question 1 of 23</span>
+          <span id="scoreCounter">Score: 0</span>
+        </div>
+        <div class="progress-bar-bg">
+          <div class="progress-bar-fill" id="progressBarFill"></div>
+        </div>
+      </div>
+
+      <div class="quiz-card">
+        <div class="question-scroll-wrapper" id="scrollWrapper">
+          <div class="question-text" id="questionText">Loading question...</div>
+          <div id="complexInsertArea"></div>
+          <div class="options-grid" id="optionsGrid"></div>
+          <div class="explanation-box" id="explanationBox">
+            <div class="explanation-title">💡 Explanation</div>
+            <div id="explanationText"></div>
+          </div>
+        </div>
+
+        <div class="card-footer">
+          <div class="feedback-status" id="feedbackStatus"></div>
+          <button class="btn-next" id="nextBtn" onclick="handleNextQuestion()" disabled>
+            Next Question ➔
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- RESULTS VIEW -->
+    <div id="resultsView" class="results-screen">
+      <div class="results-summary-card">
+        <h2>Quiz Completed!</h2>
+        <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 0.25rem;">Indian Literary & Cinema Awards 2024–2026</p>
+        
+        <div class="score-circle" id="scoreCircle" style="--percent: 0;">
+          <div class="score-circle-inner">
+            <span class="score-number" id="finalPercentage">0%</span>
+            <span class="score-label">Accuracy</span>
+          </div>
+        </div>
+
+        <div class="stats-row">
+          <div class="stat-badge" style="color: var(--correct);">
+            <span>✓</span> <span id="correctCount">0</span> Correct
+          </div>
+          <div class="stat-badge" style="color: var(--incorrect);">
+            <span>✗</span> <span id="incorrectCount">0</span> Incorrect
+          </div>
+        </div>
+      </div>
+
+      <div class="review-header">
+        <span>Incorrect Questions Review</span>
+        <span id="reviewCountText" style="font-size: 0.85rem; color: var(--text-muted);"></span>
+      </div>
+
+      <div class="review-list" id="reviewList"></div>
+
+      <button class="btn-restart" onclick="restartQuiz()">🔄 Restart Quiz</button>
+    </div>
+  </main>
+
+  <script>
+    // QUESTION BANK
+    const quizData = [
+      {
+        id: 1,
+        type: "standard",
+        question: "Which of the following awards is India's highest and most prestigious literary honor, instituted in 1961 by Bharatiya Jnanpith?",
+        options: [
+          "Sahitya Akademi Award",
+          "Jnanpith Award",
+          "Saraswati Samman",
+          "Vyas Samman"
+        ],
+        correct: 1,
+        explanation: "The Jnanpith Award is India's highest and most prestigious literary honor, instituted in 1961 by Bharatiya Jnanpith. It is presented annually to an Indian author for outstanding contributions toward Indian literature."
+      },
+      {
+        id: 2,
+        type: "standard",
+        question: "What are the prize components included in the Jnanpith Award?",
+        options: [
+          "₹1,00,000 cash prize, a shawl, and a gold medal",
+          "₹5 lakh cash prize, a citation plaque, and a silver coin",
+          "₹11 lakh cash prize, a citation plaque, and a bronze replica of Vagdevi (Saraswati)",
+          "₹21 lakh cash prize, a bronze plaque, and a citation"
+        ],
+        correct: 2,
+        explanation: "The Jnanpith Award includes a cash prize of ₹11 lakh, a citation plaque, and a bronze replica of \"Vagdevi\" / Saraswati (goddess of learning)."
+      },
+      {
+        id: 3,
+        type: "standard",
+        question: "Who was the recipient of the 1st Jnanpith Award in 1965, and in which language did he write?",
+        options: [
+          "Vinod Kumar Shukla (Hindi)",
+          "G.S. Kurup (Malayalam)",
+          "R. Vairamuthu (Tamil)",
+          "Gulzar (Urdu)"
+        ],
+        correct: 1,
+        explanation: "The 1st Jnanpith Award was presented in 1965 to G.S. Kurup for his literary works in Malayalam."
+      },
+      {
+        id: 4,
+        type: "match",
+        question: "Match the Jnanpith Award edition with its respective recipient(s) as per the source text:",
+        matchPairs: [
+          { item1: "58th Edition (2023)", item2: "(i) Jagadguru Rambhadracharya + Gulzar" },
+          { item1: "59th Edition (2024)", item2: "(ii) Vinod Kumar Shukla" },
+          { item1: "60th Edition (2025)", item2: "(iii) R. Vairamuthu" }
+        ],
+        options: [
+          "1-(i), 2-(ii), 3-(iii)",
+          "1-(iii), 2-(i), 3-(ii)",
+          "1-(ii), 2-(iii), 3-(i)",
+          "1-(iii), 2-(ii), 3-(i)"
+        ],
+        correct: 0, // 1-(i), 2-(ii), 3-(iii) matches 58th -> Jagadguru/Gulzar, 59th -> Vinod Kumar Shukla, 60th -> R. Vairamuthu
+        explanation: "As per the document:\n58th (2023): Jagadguru Rambhadracharya (Sanskrit) + Gulzar (Urdu)\n59th (2024): Vinod Kumar Shukla (Hindi)\n60th (2025): R. Vairamuthu (Tamil)"
+      },
+      {
+        id: 5,
+        type: "standard",
+        question: "In the National Film Awards (2024), which film won the title for 'Best Feature Film'?",
+        options: [
+          "Swatantrya Veer Savarkar",
+          "Kalki 2898 AD",
+          "Article 370",
+          "Amaran"
+        ],
+        correct: 2,
+        explanation: "The Hindi movie Article 370, directed by Aditya Suhas Jambhale, won the award for Best Feature Film at the National Film Awards (2024)."
+      },
+      {
+        id: 6,
+        type: "standard",
+        question: "Who was awarded the 'Best Actor in a Leading Role' at the National Film Awards (2024), and for which film?",
+        options: [
+          "Kartik Aaryan for Chandu Champion",
+          "Mammootty for Bramayugam",
+          "Randeep Hooda for Swatantrya Veer Savarkar",
+          "Rajinikanth for Amaran"
+        ],
+        correct: 1,
+        explanation: "Mammootty won the Best Actor in a Leading Role award for his performance in the Malayalam film Bramayugam."
+      },
+      {
+        id: 7,
+        type: "standard",
+        question: "Which pair correctly represents the category and winner at the National Film Awards (2024)?",
+        options: [
+          "Best Debut Film of a Director – Kalki 2898 AD",
+          "Best Direction – Rajkumar Periasamy (Amaran)",
+          "Best Children's Film – Captain Miller",
+          "Best Actress in a Leading Role – Kriti Sanon"
+        ],
+        correct: 1,
+        explanation: "Rajkumar Periasamy won the Best Direction award for the Tamil film Amaran at the National Film Awards (2024)."
+      },
+      {
+        id: 8,
+        type: "standard",
+        question: "In the Non-Feature Film category at the National Film Awards (2024), which documentary directed by Bharatbala Ganapathy won the 'Best Documentary' award?",
+        options: [
+          "Bhangaar",
+          "Angen",
+          "Ram-Nami",
+          "Statue of Unity - Ekta ka Prateek"
+        ],
+        correct: 2,
+        explanation: "Ram-Nami (Hindi), directed by Bharatbala Ganapathy, won the award for Best Documentary in the Non-Feature Film category."
+      },
+      {
+        id: 9,
+        type: "standard",
+        question: "Who authored the book Naaniruvude Nimagaagi Naadiruvude Nanagaagi: Kannada Cinemada Thathva matthu Rajakeeya, which won the Award for Best Book on Cinema at the National Film Awards (2024)?",
+        options: [
+          "Kenchanuru Pradeep Kumar Shetty",
+          "Sumira Roy",
+          "Anisur Rahman",
+          "Nitin Kushalappa MP"
+        ],
+        correct: 0,
+        explanation: "The Award for Best Book on Cinema was won by Kenchanuru Pradeep Kumar Shetty for his Kannada book titled Naaniruvude Nimagaagi Naadiruvude Nanagaagi: Kannada Cinemada Thathva matthu Rajakeeya."
+      },
+      {
+        id: 10,
+        type: "standard",
+        question: "Which film won the 'Film of the Year' award at the Dadasaheb Phalke International Film Festival 2025?",
+        options: [
+          "Stree 2",
+          "Chandu Champion",
+          "Emilia Perez",
+          "Kalki 2898 AD"
+        ],
+        correct: 3,
+        explanation: "At the Dadasaheb Phalke International Film Festival 2025, Kalki 2898 AD won 'Film of the Year', while Stree 2 won 'Best Film'."
+      },
+      {
+        id: 11,
+        type: "standard",
+        question: "Who won the 'Best Actor' award at the Dadasaheb Phalke International Film Festival 2025?",
+        options: [
+          "Mammootty",
+          "Kartik Aaryan",
+          "Randeep Hooda",
+          "Rajinikanth"
+        ],
+        correct: 1,
+        explanation: "Kartik Aaryan won the Best Actor award for his role in Chandu Champion at the Dadasaheb Phalke International Film Festival 2025."
+      },
+      {
+        id: 12,
+        type: "standard",
+        question: "How many total languages are covered by the Sahitya Akademi Award, including the Eighth Schedule languages and non-Eighth Schedule languages?",
+        options: [
+          "22 languages",
+          "23 languages",
+          "24 languages",
+          "25 languages"
+        ],
+        correct: 2,
+        explanation: "The Sahitya Akademi Award covers a total of 24 languages: the 22 languages listed in the Eighth Schedule of the Indian Constitution plus 2 additional languages (English and Rajasthani)."
+      },
+      {
+        id: 13,
+        type: "standard",
+        question: "Who designed the engraved copper plaque presented as part of the Sahitya Akademi Award prize details?",
+        options: [
+          "Satyajit Ray",
+          "Bharatbala Ganapathy",
+          "Aanand L Rai",
+          "Rabindranath Tagore"
+        ],
+        correct: 0,
+        explanation: "The prize details of the Sahitya Akademi Award include a cash prize of ₹1,00,000, a citation, a shawl, and an engraved copper plaque designed by renowned filmmaker Satyajit Ray."
+      },
+      {
+        id: 14,
+        type: "match",
+        question: "Match the Sahitya Akademi Award 2025 winners with their respective work and language:",
+        matchPairs: [
+          { item1: "1. Mamta Kalia", item2: "(i) Jeete Jee Allahabad (Hindi)" },
+          { item1: "2. Navtej Sarna", item2: "(ii) Crimson Spring (English)" },
+          { item1: "3. Prasun Bandyopadhyay", item2: "(iii) Shrestha Kabita (Bengali)" }
+        ],
+        options: [
+          "1-(i), 2-(ii), 3-(iii)",
+          "1-(iii), 2-(i), 3-(ii)",
+          "1-(ii), 2-(iii), 3-(i)",
+          "1-(iii), 2-(ii), 3-(i)"
+        ],
+        correct: 0, // 1-(i) Mamta Kalia -> Jeete Jee Allahabad, 2-(ii) Navtej Sarna -> Crimson Spring, 3-(iii) Prasun Bandyopadhyay -> Shrestha Kabita
+        explanation: "For the Sahitya Akademi Award 2025:\nMamta Kalia won in Hindi for Jeete Jee Allahabad (Memoir).\nNavtej Sarna won in English for Crimson Spring (Novel).\nPrasun Bandyopadhyay won in Bengali for Shrestha Kabita (Poetry)."
+      },
+      {
+        id: 15,
+        type: "standard",
+        question: "Who was awarded the Bal Sahitya Puraskar 2025 in the English language category?",
+        options: [
+          "Advait Kottary",
+          "Nitin Kushalappa MP",
+          "Sushil Shukla",
+          "Parvati Tirkey"
+        ],
+        correct: 1,
+        explanation: "Nitin Kushalappa MP won the Bal Sahitya Puraskar 2025 in English for his collection of stories titled Dakshin South Indian Myths and Fables Retold."
+      },
+      {
+        id: 16,
+        type: "standard",
+        question: "Siddhartha: The Boy Who Became the Buddha won the Sahitya Academy Yuva Puraskar 2025 in English. Who is the author of this novel?",
+        options: [
+          "Parvati Tirkey",
+          "Sushil Shukla",
+          "Advait Kottary",
+          "Madan Soni"
+        ],
+        correct: 2,
+        explanation: "Advait Kottary won the Sahitya Academy Yuva Puraskar 2025 in English for his novel Siddhartha: The Boy Who Became the Buddha."
+      },
+      {
+        id: 17,
+        type: "standard",
+        question: "Which film won the prestigious 'Golden Peacock' for Best Feature Film at the 56th International Film Festival of India (IFFI, 2025)?",
+        options: [
+          "Skin of Youth by Ash Mayfair",
+          "Gondhal by Santosh Davakhar",
+          "Safe House by Eirik Svensson",
+          "A Poet by Ubeimar Rios"
+        ],
+        correct: 0,
+        explanation: "At the 56th IFFI (2025) held in Goa, the 'Golden Peacock' for Best Feature Film was awarded to Skin of Youth, directed by Ash Mayfair."
+      },
+      {
+        id: 18,
+        type: "standard",
+        question: "Who was honored with the Satyajit Ray Lifetime Achievement Award at the 56th International Film Festival of India (2025)?",
+        options: [
+          "Nandamuri Balakrishna",
+          "Rajinikanth",
+          "Mammootty",
+          "Bharatbala Ganapathy"
+        ],
+        correct: 1,
+        explanation: "Rajinikanth was conferred with the Satyajit Ray Lifetime Achievement Award at the 56th International Film Festival of India (2025)."
+      },
+      {
+        id: 19,
+        type: "standard",
+        question: "At the 56th International Film Festival of India (2025), which web series received the award for Best Web Series (OTT)?",
+        options: [
+          "Heeramandi",
+          "Bandish Bandits Season 2",
+          "Article 370",
+          "Turtle Walker"
+        ],
+        correct: 1,
+        explanation: "Bandish Bandits Season 2 won the Best Web Series (OTT) award at the 56th IFFI (2025)."
+      },
+      {
+        id: 20,
+        type: "standard",
+        question: "Dr. Ramkumar Mukhopadhyay was selected for the Saraswati Samman 2025 for his Bengali novel titled:",
+        options: [
+          "Swaminarayana Siddhanta Sudha",
+          "Kaun Des Vasi: Venu Ki Diary",
+          "Hara Parbati Katha",
+          "Shrestha Kabita"
+        ],
+        correct: 2,
+        explanation: "Dr. Ramkumar Mukhopadhyay won the Saraswati Samman 2025 in Bengali for his novel Hara Parbati Katha."
+      },
+      {
+        id: 21,
+        type: "standard",
+        question: "Who was awarded the Vyas Samman in 2024 for the novel Kaun Des Vasi: Venu Ki Diary?",
+        options: [
+          "Pushpa Bharati",
+          "Suryabala",
+          "Mamta Kalia",
+          "Yashodhara Dalmia"
+        ],
+        correct: 1,
+        explanation: "The Vyas Samman 2024 was awarded to Suryabala for her novel Kaun Des Vasi: Venu Ki Diary. (Note: Both Saraswati Samman and Vyas Samman are conferred by the KK Birla Foundation)."
+      },
+      {
+        id: 22,
+        type: "standard",
+        question: "At the 19th Mumbai International Film Festival (MIFF 2026), which film won the 'Golden Conch for Best International Documentary Film'?",
+        options: [
+          "'Under The Snow'",
+          "'Maya's Song'",
+          "'Silver'",
+          "'Turtle Walker'"
+        ],
+        correct: 2,
+        explanation: "At MIFF 2026, the Polish documentary film 'Silver' won the Golden Conch for Best International Documentary Film."
+      },
+      {
+        id: 23,
+        type: "standard",
+        question: "Who won the Best Cinematographer (International) award at the 19th Mumbai International Film Festival (MIFF 2026) for the Indian documentary Turtle Walker?",
+        options: [
+          "Shehnad Jalal",
+          "Shri Krish Makhija",
+          "Santosh Davakhar",
+          "Karan Singh Tyagi"
+        ],
+        correct: 1,
+        explanation: "Shri Krish Makhija won the Best Cinematographer (International) award at MIFF 2026 for his cinematography in the Indian documentary Turtle Walker."
+      }
+    ];
+
+    // APPLICATION STATE
+    let currentQuestionIndex = 0;
+    let score = 0;
+    let userAnswers = [];
+
+    // DOM ELEMENTS
+    const quizView = document.getElementById('quizView');
+    const resultsView = document.getElementById('resultsView');
+    const questionProgressText = document.getElementById('questionProgressText');
+    const scoreCounter = document.getElementById('scoreCounter');
+    const progressBarFill = document.getElementById('progressBarFill');
+    const questionText = document.getElementById('questionText');
+    const complexInsertArea = document.getElementById('complexInsertArea');
+    const optionsGrid = document.getElementById('optionsGrid');
+    const explanationBox = document.getElementById('explanationBox');
+    const explanationText = document.getElementById('explanationText');
+    const feedbackStatus = document.getElementById('feedbackStatus');
+    const nextBtn = document.getElementById('nextBtn');
+    const scrollWrapper = document.getElementById('scrollWrapper');
+
+    // INITIALIZATION
+    window.addEventListener('DOMContentLoaded', () => {
+      loadQuestion(currentQuestionIndex);
+    });
+
+    // THEME TOGGLE
+    function toggleTheme() {
+      const currentTheme = document.documentElement.getAttribute('data-theme');
+      const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', newTheme);
+      
+      document.getElementById('themeIcon').textContent = newTheme === 'dark' ? '☀️' : '🌙';
+      document.getElementById('themeText').textContent = newTheme === 'dark' ? 'Light' : 'Dark';
+    }
+
+    // RENDER QUESTION
+    function loadQuestion(index) {
+      const q = quizData[index];
+      
+      // Update Progress
+      questionProgressText.textContent = `Question ${index + 1} of ${quizData.length}`;
+      scoreCounter.textContent = `Score: ${score}`;
+      progressBarFill.style.width = `${((index + 1) / quizData.length) * 100}%`;
+
+      // Reset State
+      feedbackStatus.className = 'feedback-status';
+      feedbackStatus.textContent = '';
+      explanationBox.style.display = 'none';
+      nextBtn.disabled = true;
+      scrollWrapper.scrollTop = 0;
+
+      // Set Main Question Text
+      questionText.textContent = `${index + 1}. ${q.question}`;
+
+      // Render Complex Types (e.g. Match the Following)
+      complexInsertArea.innerHTML = '';
+      if (q.type === 'match' && q.matchPairs) {
+        let tableHTML = `
+          <table class="match-table">
+            <thead>
+              <tr>
+                <th>Edition / Winner</th>
+                <th>Recipient / Work</th>
+              </tr>
+            </thead>
+            <tbody>
+        `;
+        q.matchPairs.forEach(pair => {
+          tableHTML += `
+            <tr>
+              <td><strong>${pair.item1}</strong></td>
+              <td>${pair.item2}</td>
+            </tr>
+          `;
+        });
+        tableHTML += `</tbody></table>`;
+        complexInsertArea.innerHTML = tableHTML;
+      }
+
+      // Render Options
+      optionsGrid.innerHTML = '';
+      const optionLabels = ['A', 'B', 'C', 'D'];
+      
+      q.options.forEach((optText, optIdx) => {
+        const btn = document.createElement('button');
+        btn.className = 'option-btn';
+        btn.onclick = () => selectOption(optIdx);
+        btn.innerHTML = `
+          <span class="option-badge">${optionLabels[optIdx]}</span>
+          <span>${escapeHTML(optText)}</span>
+        `;
+        optionsGrid.appendChild(btn);
+      });
+    }
+
+    // OPTION SELECTION & INSTANT FEEDBACK
+    function selectOption(selectedIndex) {
+      const q = quizData[currentQuestionIndex];
+      const optionButtons = optionsGrid.querySelectorAll('.option-btn');
+      
+      // Disable all options to prevent multiple attempts
+      optionButtons.forEach(btn => btn.disabled = true);
+
+      const isCorrect = selectedIndex === q.correct;
+      userAnswers[currentQuestionIndex] = {
+        questionId: q.id,
+        selectedIndex: selectedIndex,
+        isCorrect: isCorrect
+      };
+
+      if (isCorrect) {
+        score++;
+        scoreCounter.textContent = `Score: ${score}`;
+        optionButtons[selectedIndex].classList.add('correct');
+        feedbackStatus.className = 'feedback-status correct';
+        feedbackStatus.innerHTML = '<span>✓ Correct!</span>';
+      } else {
+        optionButtons[selectedIndex].classList.add('incorrect');
+        optionButtons[q.correct].classList.add('correct');
+        feedbackStatus.className = 'feedback-status incorrect';
+        feedbackStatus.innerHTML = '<span>✗ Incorrect</span>';
+      }
+
+      // Display Explanation
+      explanationText.textContent = q.explanation;
+      explanationBox.style.display = 'block';
+
+      // Scroll explanation into view gently if needed
+      setTimeout(() => {
+        explanationBox.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }, 100);
+
+      // Enable Next Button
+      nextBtn.disabled = false;
+    }
+
+    // NEXT QUESTION / FINISH
+    function handleNextQuestion() {
+      if (currentQuestionIndex < quizData.length - 1) {
+        currentQuestionIndex++;
+        loadQuestion(currentQuestionIndex);
+      } else {
+        showResults();
+      }
+    }
+
+    // SHOW RESULTS SCREEN
+    function showResults() {
+      quizView.style.display = 'none';
+      resultsView.style.display = 'flex';
+
+      const total = quizData.length;
+      const percentage = Math.round((score / total) * 100);
+      const incorrectTotal = total - score;
+
+      document.getElementById('finalPercentage').textContent = `${percentage}%`;
+      document.getElementById('scoreCircle').style.setProperty('--percent', percentage);
+      document.getElementById('correctCount').textContent = score;
+      document.getElementById('incorrectCount').textContent = incorrectTotal;
+
+      const reviewList = document.getElementById('reviewList');
+      reviewList.innerHTML = '';
+
+      if (incorrectTotal === 0) {
+        document.getElementById('reviewCountText').textContent = 'Perfect score! No mistakes to review.';
+      } else {
+        document.getElementById('reviewCountText').textContent = `Showing ${incorrectTotal} incorrect answer(s)`;
+
+        userAnswers.forEach((ans, idx) => {
+          if (!ans || !ans.isCorrect) {
+            const q = quizData[idx];
+            const userChoiceText = ans ? q.options[ans.selectedIndex] : 'Not Answered';
+            const correctChoiceText = q.options[q.correct];
+
+            const reviewItem = document.createElement('div');
+            reviewItem.className = 'review-item';
+            
+            let extraMatchInfo = '';
+            if (q.type === 'match' && q.matchPairs) {
+              extraMatchInfo = `<div style="margin: 0.4rem 0; font-size: 0.8rem; color: var(--text-muted);">Matches requested in question.</div>`;
+            }
+
+            reviewItem.innerHTML = `
+              <div class="review-q-title">Q${idx + 1}: ${q.question}</div>
+              ${extraMatchInfo}
+              <div class="review-ans-box">
+                <div>Your Answer: <span class="user-ans">${escapeHTML(userChoiceText)}</span></div>
+                <div>Correct Answer: <span class="correct-ans">${escapeHTML(correctChoiceText)}</span></div>
+                <div style="margin-top: 0.3rem; color: var(--text-muted); font-size: 0.8rem;">
+                  <strong>Note:</strong> ${escapeHTML(q.explanation)}
+                </div>
+              </div>
+            `;
+            reviewList.appendChild(reviewItem);
+          }
+        });
+      }
+    }
+
+    // RESTART QUIZ
+    function restartQuiz() {
+      currentQuestionIndex = 0;
+      score = 0;
+      userAnswers = [];
+      resultsView.style.display = 'none';
+      quizView.style.display = 'flex';
+      loadQuestion(0);
+    }
+
+    // UTILITY: ESCAPE HTML
+    function escapeHTML(str) {
+      return str
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+  </script>
+</body>
+</html>
