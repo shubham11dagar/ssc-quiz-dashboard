@@ -1,0 +1,1000 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SSC Vocabulary Quiz App</title>
+  <style>
+    /* ==========================================
+       CSS VARIABLES & THEMES
+       ========================================== */
+    :root {
+      --bg-gradient: linear-gradient(135deg, #f0f4f8 0%, #d9e2ec 100%);
+      --card-bg: #ffffff;
+      --text-main: #102a43;
+      --text-muted: #627d98;
+      --border-color: #bcccdc;
+      
+      --primary: #2b6cb0;
+      --primary-hover: #1e4e8c;
+      
+      --correct-bg: #e6fffa;
+      --correct-border: #319795;
+      --correct-text: #234e52;
+      
+      --incorrect-bg: #fff5f5;
+      --incorrect-border: #e53e3e;
+      --incorrect-text: #742a2a;
+      
+      --box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+      --callout-bg: #f8fafc;
+      --option-bg: #f7fafc;
+      --option-hover: #edf2f7;
+    }
+
+    [data-theme="dark"] {
+      --bg-gradient: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+      --card-bg: #1e293b;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --border-color: #334155;
+      
+      --primary: #38bdf8;
+      --primary-hover: #0284c7;
+      
+      --correct-bg: #064e3b;
+      --correct-border: #10b981;
+      --correct-text: #ecfdf5;
+      
+      --incorrect-bg: #7f1d1d;
+      --incorrect-border: #ef4444;
+      --incorrect-text: #fef2f2;
+      
+      --box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.4);
+      --callout-bg: #0f172a;
+      --option-bg: #334155;
+      --option-hover: #475569;
+    }
+
+    /* ==========================================
+       RESET & BASE STYLES
+       ========================================== */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+    }
+
+    body {
+      background: var(--bg-gradient);
+      color: var(--text-main);
+      min-height: 100vh;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 12px;
+      overflow: hidden; /* Prevents outer page scrolling */
+    }
+
+    .app-container {
+      width: 100%;
+      max-width: 800px;
+      height: 100%;
+      max-height: 680px;
+      background: var(--card-bg);
+      border-radius: 16px;
+      box-shadow: var(--box-shadow);
+      display: flex;
+      flex-direction: column;
+      border: 1px solid var(--border-color);
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* ==========================================
+       HEADER SECTION
+       ========================================== */
+    header {
+      padding: 12px 20px;
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(0, 0, 0, 0.02);
+      flex-shrink: 0;
+    }
+
+    .header-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .header-controls {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .theme-toggle {
+      background: none;
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      padding: 6px 12px;
+      border-radius: 20px;
+      cursor: pointer;
+      font-size: 0.85rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .theme-toggle:hover {
+      border-color: var(--primary);
+    }
+
+    .progress-badge {
+      font-size: 0.85rem;
+      font-weight: 600;
+      background: var(--callout-bg);
+      padding: 4px 10px;
+      border-radius: 12px;
+      border: 1px solid var(--border-color);
+    }
+
+    /* ==========================================
+       QUIZ CONTAINER (Viewport-Optimized)
+       ========================================== */
+    .quiz-body {
+      flex: 1;
+      padding: 16px 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      overflow-y: auto; /* Fallback for small screens */
+    }
+
+    /* Question Container */
+    .question-box {
+      margin-bottom: 12px;
+    }
+
+    .question-text {
+      font-size: 1.05rem;
+      font-weight: 600;
+      line-height: 1.4;
+      margin-bottom: 8px;
+    }
+
+    /* Complex Question Types (Statements & Match) */
+    .statement-box {
+      background: var(--callout-bg);
+      border-left: 4px solid var(--primary);
+      border-radius: 6px;
+      padding: 10px 14px;
+      margin: 8px 0;
+      font-family: monospace, monospace;
+      font-size: 0.95rem;
+      border-top: 1px solid var(--border-color);
+      border-right: 1px solid var(--border-color);
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .match-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 8px 0;
+      font-size: 0.9rem;
+    }
+
+    .match-table th, .match-table td {
+      border: 1px solid var(--border-color);
+      padding: 6px 10px;
+      text-align: left;
+    }
+
+    .match-table th {
+      background: var(--callout-bg);
+      color: var(--primary);
+    }
+
+    /* Options Grid */
+    .options-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    @media (max-width: 600px) {
+      .options-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .option-btn {
+      background: var(--option-bg);
+      border: 1.5px solid var(--border-color);
+      color: var(--text-main);
+      padding: 10px 14px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 0.95rem;
+      text-align: left;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.15s ease;
+    }
+
+    .option-btn:hover:not(:disabled) {
+      background: var(--option-hover);
+      border-color: var(--primary);
+    }
+
+    .option-btn:disabled {
+      cursor: not-allowed;
+      opacity: 0.8;
+    }
+
+    .option-btn.correct {
+      background: var(--correct-bg) !important;
+      border-color: var(--correct-border) !important;
+      color: var(--correct-text) !important;
+      font-weight: 700;
+    }
+
+    .option-btn.incorrect {
+      background: var(--incorrect-bg) !important;
+      border-color: var(--incorrect-border) !important;
+      color: var(--incorrect-text) !important;
+    }
+
+    /* Explanation Box */
+    .explanation-box {
+      background: var(--callout-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 10px 14px;
+      font-size: 0.88rem;
+      line-height: 1.35;
+      display: none;
+      margin-bottom: 8px;
+      max-height: 110px;
+      overflow-y: auto;
+    }
+
+    .explanation-box.visible {
+      display: block;
+      animation: fadeIn 0.2s ease-in;
+    }
+
+    .explanation-title {
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 4px;
+    }
+
+    /* Footer & Sticky Next Button */
+    .quiz-footer {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      padding-top: 8px;
+      border-top: 1px solid var(--border-color);
+      flex-shrink: 0;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: #ffffff;
+      border: none;
+      padding: 10px 22px;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: background 0.2s;
+    }
+
+    .btn-primary:hover {
+      opacity: 0.9;
+    }
+
+    /* ==========================================
+       RESULTS SCREEN
+       ========================================== */
+    .results-container {
+      display: none;
+      flex-direction: column;
+      height: 100%;
+      padding: 20px;
+      overflow-y: auto;
+    }
+
+    .results-container.visible {
+      display: flex;
+    }
+
+    .score-card {
+      background: var(--callout-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 16px;
+      text-align: center;
+      margin-bottom: 16px;
+      flex-shrink: 0;
+    }
+
+    .score-big {
+      font-size: 2.2rem;
+      font-weight: 800;
+      color: var(--primary);
+      margin: 4px 0;
+    }
+
+    .score-stats {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      font-size: 0.95rem;
+      margin-top: 8px;
+    }
+
+    .stat-correct { color: var(--correct-border); font-weight: 700; }
+    .stat-incorrect { color: var(--incorrect-border); font-weight: 700; }
+
+    .breakdown-title {
+      font-size: 1rem;
+      font-weight: 700;
+      margin-bottom: 10px;
+      color: var(--text-main);
+    }
+
+    .breakdown-list {
+      flex: 1;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      padding-right: 4px;
+      margin-bottom: 16px;
+    }
+
+    .breakdown-item {
+      border: 1px solid var(--border-color);
+      background: var(--card-bg);
+      border-radius: 8px;
+      padding: 10px 12px;
+      font-size: 0.88rem;
+    }
+
+    .breakdown-q {
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+
+    .breakdown-ans {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      font-size: 0.82rem;
+    }
+
+    .your-ans { color: var(--incorrect-border); }
+    .correct-ans { color: var(--correct-border); font-weight: 600; }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body data-theme="light">
+
+  <div class="app-container">
+    <!-- Header -->
+    <header>
+      <div class="header-title">
+        <span>⚡ SSC English Quiz</span>
+      </div>
+      <div class="header-controls">
+        <div class="progress-badge" id="progress-badge">Q 1 / 24</div>
+        <button class="theme-toggle" id="theme-toggle-btn" aria-label="Toggle Theme">
+          <span id="theme-icon">🌙</span> Dark
+        </button>
+      </div>
+    </header>
+
+    <!-- Quiz Main Body -->
+    <main class="quiz-body" id="quiz-screen">
+      <div>
+        <div class="question-box">
+          <div class="question-text" id="question-text">Loading question...</div>
+          <div id="complex-content"></div>
+        </div>
+
+        <div class="options-grid" id="options-grid">
+          <!-- Options rendered dynamically -->
+        </div>
+      </div>
+
+      <div>
+        <!-- Instant Feedback Explanation Box -->
+        <div class="explanation-box" id="explanation-box">
+          <div class="explanation-title" id="exp-title">Explanation</div>
+          <div id="exp-text">--</div>
+        </div>
+
+        <!-- Sticky Footer Action -->
+        <div class="quiz-footer">
+          <button class="btn-primary" id="next-btn" disabled>
+            Next Question ➔
+          </button>
+        </div>
+      </div>
+    </main>
+
+    <!-- Results Screen -->
+    <div class="results-container" id="results-screen">
+      <div class="score-card">
+        <h2>Quiz Completed! 🎉</h2>
+        <div class="score-big" id="score-percentage">0%</div>
+        <div class="score-stats">
+          <span>Score: <strong id="score-text">0/24</strong></span>
+          <span class="stat-correct">Correct: <span id="stat-correct-count">0</span></span>
+          <span class="stat-incorrect">Incorrect: <span id="stat-incorrect-count">0</span></span>
+        </div>
+      </div>
+
+      <div class="breakdown-title" id="breakdown-header">Incorrect Answers Review</div>
+      <div class="breakdown-list" id="breakdown-list">
+        <!-- Incorrect items injected here -->
+      </div>
+
+      <div style="text-align: center; flex-shrink: 0; padding-top: 8px;">
+        <button class="btn-primary" id="restart-btn">
+          🔄 Restart Quiz
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    /* ==========================================
+       QUIZ DATASET
+       ========================================== */
+    const quizData = [
+      {
+        id: 1,
+        question: "Select the most appropriate option to fill in the blank:\nThe intruder _______ a long dagger at the guard, threatening to strike if anyone stepped closer.",
+        options: ["(a) Brandished", "(b) Concealed", "(c) Abandoned", "(d) Sheathed"],
+        answer: 0,
+        word: "Brandished",
+        meaning: "Wave or flourish something (especially a weapon) as a threat or in anger or excitement (लहराया / Displayed threateningly).",
+        why: "The mention of 'a long dagger' and 'threatening to strike' requires a verb that means aggressively waving or displaying a weapon.",
+        otherOptions: [
+          "Concealed: Hidden or kept out of sight.",
+          "Abandoned: Left behind permanently.",
+          "Sheathed: Put a sword or blade into its cover."
+        ]
+      },
+      {
+        id: 2,
+        question: "Select the most appropriate option to fill in the blank:\nThe speaker’s aggressive stance was _______ by a calm and composed demeanor as the negotiation progressed.",
+        options: ["(a) Aggravated", "(b) Tempered", "(c) Ignited", "(d) Heightened"],
+        answer: 1,
+        word: "Tempered",
+        meaning: "Moderated, softened, or balanced by something (शांत या संतुलित करना / Moderated).",
+        why: "The context describes a contrast where an 'aggressive stance' is softened by a 'calm and composed demeanor.'",
+        otherOptions: [
+          "Aggravated: Made worse or more serious.",
+          "Ignited: Set on fire or provoked intensely.",
+          "Heightened: Increased or intensified."
+        ]
+      },
+      {
+        id: 3,
+        question: "Select the most appropriate option to fill in the blank:\nThe newly discovered documents served to _______ the whistleblower’s claims and prove his complete innocence.",
+        options: ["(a) Vindicate", "(b) Implicate", "(c) Denounce", "(d) Subvert"],
+        answer: 0,
+        word: "Vindicate",
+        meaning: "Clear someone of blame or suspicion; prove to be right or justified (साबित करना / Clear of blame).",
+        why: "The sentence highlights proving 'complete innocence' using evidence, which calls for 'vindicate.'",
+        otherOptions: [
+          "Implicate: Show to be involved in a crime.",
+          "Denounce: Publicly declare to be wrong or evil.",
+          "Subvert: Undermine the power and authority of an established system."
+        ]
+      },
+      {
+        id: 4,
+        question: "Select the most appropriate option to fill in the blank:\nDespite repeated rejections, her unrelenting _______ helped her eventually secure the prestigious research grant.",
+        options: ["(a) Lethargy", "(b) Tenacity", "(c) Indifference", "(d) Hesitation"],
+        answer: 1,
+        word: "Tenacity",
+        meaning: "The quality or fact of being persistent and determined (दृढ़ता / Persistence).",
+        why: "The context refers to overcoming 'repeated rejections' through continuous, firm determination.",
+        otherOptions: [
+          "Lethargy: A state of sluggishness and lack of energy.",
+          "Indifference: Lack of interest, concern, or sympathy.",
+          "Hesitation: The action of pausing or delaying before saying or doing something."
+        ]
+      },
+      {
+        id: 5,
+        question: "Select the most appropriate option to fill in the blank:\nWithout concrete scientific evidence, the detective's theory remained a mere _______ based on circumstantial clues.",
+        options: ["(a) Proof", "(b) Certainty", "(c) Conjecture", "(d) Fact"],
+        answer: 2,
+        word: "Conjecture",
+        meaning: "An opinion or conclusion formed on the basis of incomplete information; a guess (अनुमान / Speculation).",
+        why: "The absence of 'concrete scientific evidence' indicates that the theory is an educated guess rather than a proven fact.",
+        otherOptions: [
+          "Proof: Evidence establishing a fact or truth.",
+          "Certainty: Firm conviction that something is true.",
+          "Fact: A thing that is known or proved to be true."
+        ]
+      },
+      {
+        id: 6,
+        question: "Select the most appropriate option to fill in the blank:\nInvestigators had to _______ through hundreds of financial records to locate the fraudulent transactions.",
+        options: ["(a) Discard", "(b) Sift", "(c) Overlook", "(d) Scramble"],
+        answer: 1,
+        word: "Sift",
+        meaning: "Examine thoroughly to isolate what is useful or relevant (छांटना / Filter).",
+        why: "The task of carefully searching 'through hundreds of financial records' matches the exact usage of 'sift.'",
+        otherOptions: [
+          "Discard: Get rid of as useless or unwanted.",
+          "Overlook: Fail to notice or consider.",
+          "Scramble: Move or climb hurriedly."
+        ]
+      },
+      {
+        id: 7,
+        question: "Select the most appropriate option to fill in the blank:\nHer _______ talent for music was apparent from early childhood, long before she received formal training.",
+        options: ["(a) Innate", "(b) Acquired", "(c) Superficial", "(d) Artificial"],
+        answer: 0,
+        word: "Innate",
+        meaning: "Inborn; natural and present from birth (जन्मजात / Inborn).",
+        why: "Possessing a talent 'from early childhood, long before formal training' points directly to an inborn quality.",
+        otherOptions: [
+          "Acquired: Learned or developed over time.",
+          "Superficial: Existing or occurring on the surface; shallow.",
+          "Artificial: Made by human skill; not natural."
+        ]
+      },
+      {
+        id: 8,
+        question: "Select the most appropriate option to fill in the blank:\nThe board members were inclined to accept the proposal, but the CFO began to _______ over the financial risks involved.",
+        options: ["(a) Demur", "(b) Concur", "(c) Consent", "(d) Endorse"],
+        answer: 0,
+        word: "Demur",
+        meaning: "Raise objections or show reluctance (आपत्ति करना / Object).",
+        why: "The word 'but' sets up a contrast to the board's inclination to accept, indicating that the CFO objected.",
+        otherOptions: [
+          "Concur: Be of the same opinion; agree.",
+          "Consent: Give permission or agreement.",
+          "Endorse: Declare one's public approval of."
+        ]
+      },
+      {
+        id: 9,
+        question: "Select the most appropriate option to fill in the blank:\nThe fallen hero sought one final opportunity to _______ his reputation after his earlier disgraced defeat.",
+        options: ["(a) Forfeit", "(b) Redeem", "(c) Tarnishing", "(d) Relinquish"],
+        answer: 1,
+        word: "Redeem",
+        meaning: "Compensate for the faults or bad aspects of; restore honor (पुनर्प्राप्त करना / Restore).",
+        why: "Restoring one's reputation after a 'disgraced defeat' is precisely what 'redeem' conveys.",
+        otherOptions: [
+          "Forfeit: Lose or be deprived of as a penalty.",
+          "Tarnishing: Dull or destroy the luster/reputation of.",
+          "Relinquish: Voluntarily cease to keep or claim; give up."
+        ]
+      },
+      {
+        id: 10,
+        question: "Select the most appropriate option to fill in the blank:\nEthical debates surrounding artificial intelligence often question whether machines can ever become truly _______.",
+        options: ["(a) Inert", "(b) Sentient", "(c) Mechanical", "(d) Insentient"],
+        answer: 1,
+        word: "Sentient",
+        meaning: "Able to perceive or feel things; conscious (चेतन / Conscious).",
+        why: "Discussions on advanced AI often revolve around whether machines can gain consciousness or feeling.",
+        otherOptions: [
+          "Inert: Lacking the ability or strength to move.",
+          "Mechanical: Operated by or relating to machinery.",
+          "Insentient: Devoid of feeling and consciousness."
+        ]
+      },
+      {
+        id: 11,
+        question: "Select the most appropriate option to fill in the blank:\nThe hypocritical politician tried to _______ his true motives behind a facade of charitable promises.",
+        options: ["(a) Dissemble", "(b) Disclose", "(c) Manifest", "(d) Broadcast"],
+        answer: 0,
+        word: "Dissemble",
+        meaning: "Conceal one's real motives, feelings, or beliefs (ढोंग करना / Conceal).",
+        why: "Using a 'facade' to mask true motives requires a verb meaning to hide or disguise intentions.",
+        otherOptions: [
+          "Disclose: Make secret information known.",
+          "Manifest: Display or show a quality by one's acts.",
+          "Broadcast: Transmit a program or information widely."
+        ]
+      },
+      {
+        id: 12,
+        question: "Select the most appropriate option to fill in the blank:\nMolten iron was poured directly into specialized molds at the industrial _______ to produce engine blocks.",
+        options: ["(a) Bakery", "(b) Foundry", "(c) Laboratory", "(d) Sanctuary"],
+        answer: 1,
+        word: "Foundry",
+        meaning: "A workshop or factory for casting metal (ढलाईघर / Metal factory).",
+        why: "Casting 'molten iron' into metal molds takes place specifically in a foundry.",
+        otherOptions: [
+          "Bakery: A place where bread and cakes are baked.",
+          "Laboratory: A room equipped for scientific experimentation.",
+          "Sanctuary: A place of refuge or safety."
+        ]
+      },
+      {
+        id: 13,
+        question: "Select the most appropriate option to fill in the blank:\nMedical students must master a vast technical _______ before they can accurately understand clinical diagnoses.",
+        options: ["(a) Lexicon", "(b) Dialect", "(c) Soliloquy", "(d) Anecdote"],
+        answer: 0,
+        word: "Lexicon",
+        meaning: "The vocabulary of a person, language, or branch of knowledge (शब्दावली / Vocabulary).",
+        why: "'Technical' terminology or vocabulary specific to medicine is termed a 'lexicon.'",
+        otherOptions: [
+          "Dialect: A particular form of a language specific to a region.",
+          "Soliloquy: An act of speaking one's thoughts aloud when alone.",
+          "Anecdote: A short amusing or interesting story about a real incident."
+        ]
+      },
+      {
+        id: 14,
+        question: "Select the most appropriate option to fill in the blank:\nThe symposium provided a valuable platform for scholarly _______ on sustainable economic policies.",
+        options: ["(a) Silence", "(b) Discourse", "(c) Monologue", "(d) Isolation"],
+        answer: 1,
+        word: "Discourse",
+        meaning: "Written or spoken communication or debate (बातचीत / Communication).",
+        why: "An academic 'symposium' is organized for scholarly debate and formal communication.",
+        otherOptions: [
+          "Silence: Complete absence of sound or speech.",
+          "Monologue: A long speech by one actor in a play or movie.",
+          "Isolation: The state of being in a place or situation separate from others."
+        ]
+      },
+      {
+        id: 15,
+        question: "Select the most appropriate option to fill in the blank:\nBehind all the fiery political _______ lay very few actual, actionable policy proposals.",
+        options: ["(a) Substance", "(b) Rhetoric", "(c) Facts", "(d) Pragmatism"],
+        answer: 1,
+        word: "Rhetoric",
+        meaning: "High-sounding but persuasive language that often lacks sincerity or meaningful content (वाक्पटुता / Persuasive speech).",
+        why: "The sentence contrasts grand, 'fiery political' talk with a lack of real substance.",
+        otherOptions: [
+          "Substance: Essential meaning or solid basis.",
+          "Facts: Things that are known or proved to be true.",
+          "Pragmatism: An approach that evaluates theories in terms of practical applications."
+        ]
+      },
+      {
+        id: 16,
+        question: "Select the most appropriate option to fill in the blank:\nThe Supreme Court _______ the constitutional validity of the new legislation despite heavy public opposition.",
+        options: ["(a) Quashed", "(b) Upheld", "(c) Nullified", "(d) Repealed"],
+        answer: 1,
+        word: "Upheld",
+        meaning: "Confirmed or supported a legal decision or principle (कायम रखा / Maintained).",
+        why: "The context notes that despite public opposition, the Court affirmed/maintained the law's validity.",
+        otherOptions: [
+          "Quashed: Rejected or voided, especially by legal procedure.",
+          "Nullified: Made legally null and void; invalidated.",
+          "Repealed: Revoked or annulled a law."
+        ]
+      },
+      {
+        id: 17,
+        question: "Select the most appropriate option to fill in the blank:\nStrict administrative regulations _______ the contractors to adhere strictly to all safety protocols on site.",
+        options: ["(a) Dissuade", "(b) Compel", "(c) Deter", "(d) Forbid"],
+        answer: 1,
+        word: "Compel",
+        meaning: "Force or oblige someone to do something (मजबूर करना / Force).",
+        why: "Mandatory 'administrative regulations' enforce or obligate compliance from contractors.",
+        otherOptions: [
+          "Dissuade: Persuade someone not to take a particular course of action.",
+          "Deter: Discourage someone from doing something by instilling doubt or fear.",
+          "Forbid: Refuse to allow something."
+        ]
+      },
+      {
+        id: 18,
+        question: "Select the most appropriate option to fill in the blank:\nThe judge was widely respected for his unwavering _______ and impeccable moral integrity throughout his career.",
+        options: ["(a) Deceit", "(b) Probity", "(c) Duplicity", "(d) Fraudulence"],
+        answer: 1,
+        word: "Probity",
+        meaning: "The quality of having strong moral principles; honesty and decency (ईमानदारी / Integrity).",
+        why: "'Impeccable moral integrity' is synonymous with 'probity.'",
+        otherOptions: [
+          "Deceit: The action or practice of deceiving someone.",
+          "Duplicity: Deceitfulness; double-dealing.",
+          "Fraudulence: The quality of being fraudulent or dishonest."
+        ]
+      },
+      {
+        id: 19,
+        question: "Select the most appropriate option to fill in the blank:\nThe activists launched a relentless nationwide _______ to eradicate child labor from hazardous industries.",
+        options: ["(a) Crusade", "(b) Retreat", "(c) Truce", "(d) Stagnation"],
+        answer: 0,
+        word: "Crusade",
+        meaning: "An organized campaign for social, political, or religious change (अभियान / Campaign).",
+        why: "An organized, vigorous 'nationwide campaign' to abolish a social evil is a crusade.",
+        otherOptions: [
+          "Retreat: An act of moving back or withdrawing.",
+          "Truce: An agreement between enemies to stop fighting for a certain time.",
+          "Stagnation: State of not flowing, changing, or developing."
+        ]
+      },
+      {
+        id: 20,
+        question: "Select the most appropriate option to fill in the blank:\nConfessing under threat of physical _______ renders a suspect’s statement inadmissible in a court of law.",
+        options: ["(a) Freedom", "(b) Coercion", "(c) Autonomy", "(d) Persuasion"],
+        answer: 1,
+        word: "Coercion",
+        meaning: "The practice of persuading someone to do something by using force or threats (जबरदस्ती / Forceful pressure).",
+        why: "Extorting a confession 'under threat' fits the precise legal definition of 'coercion.'",
+        otherOptions: [
+          "Freedom: The power or right to act, speak, or think without restraint.",
+          "Autonomy: The right or condition of self-government; independence.",
+          "Persuasion: The action or process of persuading someone to do something."
+        ]
+      },
+      {
+        id: 21,
+        question: "Select the most appropriate option to fill in the blank:\nThe politician faced severe backlash after making a series of _______ remarks about his opponent's personal background.",
+        options: ["(a) Complimentary", "(b) Snide", "(c) Laudatory", "(d) Respectful"],
+        answer: 1,
+        word: "Snide",
+        meaning: "Derogatory or mocking in an indirect or malicious way (उपहासपूर्ण / Mocking).",
+        why: "Making disparaging or mocking comments that trigger 'backlash' describes 'snide' remarks.",
+        otherOptions: [
+          "Complimentary: Expressing a compliment or praise.",
+          "Laudatory: Expressing praise and commendation.",
+          "Respectful: Feeling or showing deference and respect."
+        ]
+      },
+      {
+        id: 22,
+        question: "Select the most appropriate option to fill in the blank:\nDark gray clouds gather across the horizon, often acting as a reliable _______ of an impending monsoon storm.",
+        options: ["(a) Remnant", "(b) Herald", "(c) Obstacle", "(d) Conclusion"],
+        answer: 1,
+        word: "Herald",
+        meaning: "A sign or indicator that something is about to happen (अग्रदूत / Indicator).",
+        why: "Dark clouds indicate or announce the coming of an impending storm, serving as its 'herald.'",
+        otherOptions: [
+          "Remnant: A small remaining quantity of something.",
+          "Obstacle: A thing that blocks one's way or prevents progress.",
+          "Conclusion: The end or finish of an event or process."
+        ]
+      },
+      {
+        id: 23,
+        question: "Select the most appropriate option to fill in the blank:\nThe philosophical text offered a _______ analysis of human consciousness that profoundly impacted modern thought.",
+        options: ["(a) Shallow", "(b) Profound", "(c) Trivial", "(d) Superficial"],
+        answer: 1,
+        word: "Profound",
+        meaning: "Very great, deep, or intense in knowledge and insight (गंभीर या गहरा / Deep).",
+        why: "Producing a 'profoundly impacted' intellectual result stems from a deep, insightful analysis.",
+        otherOptions: [
+          "Shallow: Of little depth; lacking intellectual depth.",
+          "Trivial: Of little value or importance.",
+          "Superficial: Appearing to be true or real only until examined more closely."
+        ]
+      },
+      {
+        id: 24,
+        question: "Select the most appropriate option to fill in the blank:\nThere was no _______ change in the patient's condition after the initial administration of the medication.",
+        options: ["(a) Imperceptible", "(b) Discernible", "(c) Hidden", "(d) Invisible"],
+        answer: 1,
+        word: "Discernible",
+        meaning: "Able to be perceived, recognized, or noticed (प्रत्यक्ष / Perceptible).",
+        why: "The sentence tests whether a change in medical condition could be visibly noticed or detected.",
+        otherOptions: [
+          "Imperceptible: Impossible to perceive or notice.",
+          "Hidden: Kept out of sight; concealed.",
+          "Invisible: Unable to be seen."
+        ]
+      }
+    ];
+
+    /* ==========================================
+       APP STATE
+       ========================================== */
+    let currentIndex = 0;
+    let score = 0;
+    let userAnswers = []; // Records user responses for results
+
+    /* DOM Elements */
+    const quizScreen = document.getElementById('quiz-screen');
+    const resultsScreen = document.getElementById('results-screen');
+    const questionText = document.getElementById('question-text');
+    const complexContent = document.getElementById('complex-content');
+    const optionsGrid = document.getElementById('options-grid');
+    const explanationBox = document.getElementById('explanation-box');
+    const expText = document.getElementById('exp-text');
+    const expTitle = document.getElementById('exp-title');
+    const nextBtn = document.getElementById('next-btn');
+    const progressBadge = document.getElementById('progress-badge');
+    const themeToggleBtn = document.getElementById('theme-toggle-btn');
+    const themeIcon = document.getElementById('theme-icon');
+
+    /* Results Elements */
+    const scorePercentage = document.getElementById('score-percentage');
+    const scoreText = document.getElementById('score-text');
+    const statCorrectCount = document.getElementById('stat-correct-count');
+    const statIncorrectCount = document.getElementById('stat-incorrect-count');
+    const breakdownList = document.getElementById('breakdown-list');
+    const breakdownHeader = document.getElementById('breakdown-header');
+    const restartBtn = document.getElementById('restart-btn');
+
+    /* ==========================================
+       THEME MANAGEMENT
+       ========================================== */
+    themeToggleBtn.addEventListener('click', () => {
+      const currentTheme = document.body.getAttribute('data-theme');
+      const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+      document.body.setAttribute('data-theme', newTheme);
+      themeIcon.textContent = newTheme === 'light' ? '🌙' : '☀️';
+      themeToggleBtn.childNodes[1].textContent = newTheme === 'light' ? ' Dark' : ' Light';
+    });
+
+    /* ==========================================
+       QUIZ ENGINE LOGIC
+       ========================================== */
+    function loadQuestion() {
+      const q = quizData[currentIndex];
+      
+      // Update Progress
+      progressBadge.textContent = `Q ${currentIndex + 1} / ${quizData.length}`;
+      
+      // Reset State & UI
+      explanationBox.classList.remove('visible');
+      nextBtn.disabled = true;
+      optionsGrid.innerHTML = '';
+      complexContent.innerHTML = '';
+
+      // Format Question Text
+      questionText.textContent = q.question;
+
+      // Render Options
+      q.options.forEach((opt, index) => {
+        const btn = document.createElement('button');
+        btn.className = 'option-btn';
+        btn.textContent = opt;
+        btn.onclick = () => selectOption(index);
+        optionsGrid.appendChild(btn);
+      });
+
+      // Update Next Button Text for Last Question
+      if (currentIndex === quizData.length - 1) {
+        nextBtn.textContent = 'View Results 🏆';
+      } else {
+        nextBtn.textContent = 'Next Question ➔';
+      }
+    }
+
+    function selectOption(selectedIndex) {
+      const q = quizData[currentIndex];
+      const buttons = optionsGrid.querySelectorAll('.option-btn');
+      
+      // Disable all options
+      buttons.forEach(btn => btn.disabled = true);
+
+      const isCorrect = selectedIndex === q.answer;
+
+      if (isCorrect) {
+        buttons[selectedIndex].classList.add('correct');
+        score++;
+        expTitle.textContent = "✓ Correct!";
+        expTitle.style.color = "var(--correct-border)";
+      } else {
+        buttons[selectedIndex].classList.add('incorrect');
+        buttons[q.answer].classList.add('correct');
+        expTitle.textContent = "✕ Incorrect";
+        expTitle.style.color = "var(--incorrect-border)";
+      }
+
+      // Record Answer
+      userAnswers[currentIndex] = {
+        questionId: q.id,
+        selected: selectedIndex,
+        isCorrect: isCorrect
+      };
+
+      // Populate Explanation
+      expText.innerHTML = `
+        <strong>${q.word}</strong>: ${q.meaning}<br>
+        <em>Why:</em> ${q.why}<br>
+        <div style="margin-top:4px; font-size:0.8rem; opacity:0.85;">
+          ${q.otherOptions.join(' | ')}
+        </div>
+      `;
+      explanationBox.classList.add('visible');
+
+      // Enable Next Button
+      nextBtn.disabled = false;
+    }
+
+    nextBtn.addEventListener('click', () => {
+      if (currentIndex < quizData.length - 1) {
+        currentIndex++;
+        loadQuestion();
+      } else {
+        showResults();
+      }
+    });
+
+    /* ==========================================
+       RESULTS & REVIEW BREAKDOWN
+       ========================================== */
+    function showResults() {
+      quizScreen.style.display = 'none';
+      resultsScreen.classList.add('visible');
+
+      const pct = Math.round((score / quizData.length) * 100);
+      scorePercentage.textContent = `${pct}%`;
+      scoreText.textContent = `${score} / ${quizData.length}`;
+      statCorrectCount.textContent = score;
+      const incorrectCount = quizData.length - score;
+      statIncorrectCount.textContent = incorrectCount;
+
+      breakdownList.innerHTML = '';
+
+      if (incorrectCount === 0) {
+        breakdownHeader.textContent = "Perfect Score! No Incorrect Answers 🎉";
+      } else {
+        breakdownHeader.textContent = `Incorrect Answers Review (${incorrectCount})`;
+        
+        userAnswers.forEach((ans, idx) => {
+          if (!ans.isCorrect) {
+            const q = quizData[idx];
+            const item = document.createElement('div');
+            item.className = 'breakdown-item';
+            
+            const userChoiceText = ans.selected !== undefined ? q.options[ans.selected] : "None";
+            const correctChoiceText = q.options[q.answer];
+
+            item.innerHTML = `
+              <div class="breakdown-q">Q${idx + 1}: ${q.question.replace(/\n/g, ' ')}</div>
+              <div class="breakdown-ans">
+                <span class="your-ans">✖ Your Answer: ${userChoiceText}</span>
+                <span class="correct-ans">✓ Correct Answer: ${correctChoiceText}</span>
+              </div>
+            `;
+            breakdownList.appendChild(item);
+          }
+        });
+      }
+    }
+
+    restartBtn.addEventListener('click', () => {
+      currentIndex = 0;
+      score = 0;
+      userAnswers = [];
+      resultsScreen.classList.remove('visible');
+      quizScreen.style.display = 'flex';
+      loadQuestion();
+    });
+
+    // Initialize Quiz on Load
+    loadQuestion();
+  </script>
+</body>
+</html>
