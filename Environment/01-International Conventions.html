@@ -1,0 +1,1035 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Environmental Conventions & Protocols - Interactive Quiz</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#f0fdf4',
+              100: '#dcfce7',
+              500: '#22c55e',
+              600: '#16a34a',
+              700: '#15803d',
+              800: '#166534',
+              900: '#14532d',
+            },
+            accent: {
+              50: '#eef2ff',
+              500: '#6366f1',
+              600: '#4f46e5',
+              700: '#4338ca',
+            }
+          },
+          fontFamily: {
+            sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
+            mono: ['JetBrains Mono', 'Consolas', 'monospace']
+          }
+        }
+      }
+    }
+  </script>
+  
+  <!-- FontAwesome Icons CDN -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  
+  <!-- Google Fonts (Inter & JetBrains Mono) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+
+  <style>
+    /* Viewport optimization & scroll prevention */
+    html, body {
+      height: 100%;
+      height: 100vh;
+      height: -webkit-fill-available;
+      overflow: hidden;
+      touch-action: manipulation;
+    }
+    
+    .app-viewport {
+      height: 100%;
+      max-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Custom scrollbars for modal/breakdown content only */
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 6px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: rgba(0, 0, 0, 0.05);
+    }
+    .dark .custom-scrollbar::-webkit-scrollbar-track {
+      background: rgba(255, 255, 255, 0.05);
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: rgba(156, 163, 175, 0.5);
+      border-radius: 4px;
+    }
+
+    /* Smooth transitions */
+    .transition-all-fast {
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* Option selection glow animations */
+    @keyframes correctPulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.015); }
+      100% { transform: scale(1); }
+    }
+
+    @keyframes shakeError {
+      0%, 100% { transform: translateX(0); }
+      20%, 60% { transform: translateX(-4px); }
+      40%, 80% { transform: translateX(4px); }
+    }
+
+    .animate-correct {
+      animation: correctPulse 0.35s ease-in-out;
+    }
+
+    .animate-wrong {
+      animation: shakeError 0.35s ease-in-out;
+    }
+  </style>
+</head>
+<body class="bg-slate-100 text-slate-800 dark:bg-slate-950 dark:text-slate-100 font-sans antialiased selection:bg-brand-500 selection:text-white">
+
+  <div class="app-viewport max-w-5xl mx-auto px-3 sm:px-6 py-2 sm:py-4">
+
+    <header class="flex-none flex items-center justify-between pb-2 sm:pb-3 border-b border-slate-200 dark:border-slate-800">
+      <!-- Title & Badge -->
+      <div class="flex items-center gap-2 sm:gap-3">
+        <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-tr from-brand-600 to-emerald-400 flex items-center justify-center text-white shadow-md shadow-brand-500/20">
+          <i class="fa-solid fa-leaf text-base sm:text-lg"></i>
+        </div>
+        <div>
+          <h1 class="text-sm sm:text-base md:text-lg font-bold leading-tight tracking-tight text-slate-900 dark:text-white">
+            UN Conventions & Protocols
+          </h1>
+          <p class="text-[10px] sm:text-xs text-slate-500 dark:text-slate-400 font-medium hidden sm:block">
+            UPSC / High-Yield Environment Prep
+          </p>
+        </div>
+      </div>
+
+      <!-- Controls & Progress Indicators -->
+      <div class="flex items-center gap-2 sm:gap-3">
+        <!-- Live Score Counter -->
+        <div class="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-xs font-semibold shadow-xs">
+          <span class="text-emerald-600 dark:text-emerald-400 flex items-center gap-1">
+            <i class="fa-solid fa-circle-check text-[10px]"></i>
+            <span id="score-correct">0</span>
+          </span>
+          <span class="text-slate-300 dark:text-slate-700">|</span>
+          <span class="text-rose-600 dark:text-rose-400 flex items-center gap-1">
+            <i class="fa-solid fa-circle-xmark text-[10px]"></i>
+            <span id="score-incorrect">0</span>
+          </span>
+        </div>
+
+        <!-- Audio Toggle Button -->
+        <button id="sound-btn" onclick="toggleSound()" class="p-2 rounded-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 transition-all-fast" title="Toggle Sound FX">
+          <i id="sound-icon" class="fa-solid fa-volume-high text-xs sm:text-sm"></i>
+        </button>
+
+        <!-- Theme Toggle Button -->
+        <button id="theme-btn" onclick="toggleTheme()" class="p-2 rounded-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 transition-all-fast" title="Toggle Dark/Light Mode">
+          <i id="theme-icon" class="fa-solid fa-moon text-xs sm:text-sm"></i>
+        </button>
+      </div>
+    </header>
+
+    <div class="flex-none pt-2 sm:pt-3 pb-1">
+      <div class="flex items-center justify-between text-[11px] sm:text-xs font-semibold text-slate-500 dark:text-slate-400 mb-1">
+        <span class="flex items-center gap-1.5">
+          <span id="question-number-badge" class="px-2 py-0.5 rounded bg-brand-100 dark:bg-brand-900/50 text-brand-700 dark:text-brand-300 font-mono">
+            Question 1/18
+          </span>
+          <span id="timer-display" class="text-slate-400 font-mono hidden sm:inline">
+            <i class="fa-regular fa-clock mr-1"></i><span id="time-elapsed">00:00</span>
+          </span>
+        </span>
+        <span id="progress-percentage" class="font-mono text-brand-600 dark:text-brand-400">
+          5% Completed
+        </span>
+      </div>
+      <!-- Progress Bar Track -->
+      <div class="w-full bg-slate-200 dark:bg-slate-800 h-1.5 rounded-full overflow-hidden">
+        <div id="progress-bar-fill" class="bg-gradient-to-r from-brand-500 to-emerald-400 h-full w-0 transition-all duration-300 rounded-full"></div>
+      </div>
+    </div>
+
+    <main id="quiz-screen" class="flex-1 flex flex-col justify-between py-1 sm:py-2 min-h-0 overflow-hidden">
+      
+      <!-- Main Question Container Card (Flex-1 fits screen tightly) -->
+      <div class="flex-1 flex flex-col justify-between bg-white dark:bg-slate-900 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-sm p-3.5 sm:p-5 md:p-6 overflow-hidden">
+        
+        <!-- Top Portion: Question Text & Optional Complex Container -->
+        <div class="space-y-2 sm:space-y-3 overflow-y-auto custom-scrollbar pr-1">
+          <!-- Tags & Flag -->
+          <div class="flex items-center justify-between gap-2">
+            <div class="flex items-center gap-2">
+              <span id="topic-tag" class="text-[10px] sm:text-xs font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-accent-50 dark:bg-accent-700/20 text-accent-600 dark:text-accent-400 border border-accent-500/20">
+                International Convention
+              </span>
+              <span id="difficulty-tag" class="text-[10px] sm:text-xs font-medium px-2 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">
+                High Priority
+              </span>
+            </div>
+            <!-- Bookmark Button -->
+            <button id="flag-btn" onclick="toggleBookmark()" class="text-xs text-slate-400 hover:text-amber-500 dark:hover:text-amber-400 transition-colors flex items-center gap-1 font-medium">
+              <i id="flag-icon" class="fa-regular fa-bookmark"></i>
+              <span class="hidden sm:inline">Bookmark</span>
+            </button>
+          </div>
+
+          <!-- Main Question Text Prompt -->
+          <h2 id="question-text" class="text-sm sm:text-base md:text-lg font-semibold text-slate-900 dark:text-slate-100 leading-snug sm:leading-relaxed">
+            Loading Question...
+          </h2>
+
+          <!-- Complex Question Container (For Statements or Match Tables if present) -->
+          <div id="complex-content-box" class="hidden my-2"></div>
+        </div>
+
+        <!-- Middle Portion: Interactive Answer Options (Compact Height Optimized) -->
+        <div id="options-container" class="grid grid-cols-1 gap-2 my-2 sm:my-3">
+          <!-- Dynamic Options Rendered via JS -->
+        </div>
+
+        <!-- Dynamic Compact Explanation Box (Initially Hidden) -->
+        <div id="explanation-card" class="hidden flex-none bg-slate-50 dark:bg-slate-800/80 rounded-xl p-2.5 sm:p-3 border border-slate-200 dark:border-slate-700/70 text-xs sm:text-sm">
+          <div class="flex items-start gap-2">
+            <div class="text-brand-600 dark:text-brand-400 mt-0.5 flex-none">
+              <i class="fa-solid fa-lightbulb text-sm"></i>
+            </div>
+            <div class="flex-1 min-w-0">
+              <span class="font-bold text-slate-900 dark:text-white mr-1">Explanation:</span>
+              <span id="explanation-text" class="text-slate-600 dark:text-slate-300 leading-tight sm:leading-normal">
+                Explanation text goes here...
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bottom Action Bar (Next Button & Keyboard Helper) -->
+        <div class="flex-none flex items-center justify-between pt-2 border-t border-slate-100 dark:border-slate-800/80 mt-1">
+          <!-- Helper Shortcut Hints -->
+          <div class="text-[11px] text-slate-400 dark:text-slate-500 hidden sm:flex items-center gap-2 font-mono">
+            <span>Keys: <kbd class="px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300">1-4</kbd> Select</span>
+            <span><kbd class="px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300">Enter</kbd> Next</span>
+          </div>
+
+          <!-- Question Counter Text / Reset State -->
+          <button onclick="prevQuestion()" id="prev-btn" class="px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-700 text-xs font-semibold text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 disabled:opacity-40 disabled:cursor-not-allowed transition-all">
+            <i class="fa-solid fa-arrow-left mr-1"></i> Prev
+          </button>
+
+          <!-- Primary Action Button (Next Question / Finish) -->
+          <button id="next-btn" onclick="nextQuestion()" disabled class="px-4 sm:px-6 py-1.5 sm:py-2 rounded-xl bg-slate-300 dark:bg-slate-800 text-slate-500 dark:text-slate-400 font-semibold text-xs sm:text-sm flex items-center gap-2 cursor-not-allowed transition-all shadow-xs">
+            <span>Next Question</span>
+            <i class="fa-solid fa-arrow-right text-xs"></i>
+          </button>
+        </div>
+
+      </div>
+    </main>
+
+    <!-- Results Overlay View (Initially Hidden) -->
+    <section id="results-screen" class="hidden flex-1 flex flex-col justify-between py-2 min-h-0 overflow-hidden">
+      <div class="flex-1 flex flex-col bg-white dark:bg-slate-900 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-lg p-4 sm:p-6 overflow-hidden">
+        
+        <!-- Header Summary Stats -->
+        <div class="flex-none text-center pb-4 border-b border-slate-100 dark:border-slate-800">
+          <div class="inline-flex p-3 rounded-full bg-brand-50 dark:bg-brand-950/60 text-brand-600 dark:text-brand-400 mb-2">
+            <i class="fa-solid fa-trophy text-2xl sm:text-3xl"></i>
+          </div>
+          <h2 class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white">
+            Quiz Completed!
+          </h2>
+          <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400">
+            Here is a breakdown of your exam preparation performance
+          </p>
+
+          <!-- Score Metric Grid -->
+          <div class="grid grid-cols-3 gap-2 sm:gap-4 max-w-md mx-auto mt-4">
+            <!-- Score & Percentage -->
+            <div class="p-2 sm:p-3 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200/60 dark:border-slate-700/60">
+              <span class="text-[10px] sm:text-xs text-slate-500 dark:text-slate-400 font-medium block">Score</span>
+              <span id="final-percentage" class="text-base sm:text-xl font-bold text-brand-600 dark:text-brand-400 font-mono">0%</span>
+            </div>
+            <!-- Correct Count -->
+            <div class="p-2 sm:p-3 rounded-xl bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200/50 dark:border-emerald-800/40">
+              <span class="text-[10px] sm:text-xs text-emerald-600 dark:text-emerald-400 font-medium block">Correct</span>
+              <span id="final-correct" class="text-base sm:text-xl font-bold text-emerald-700 dark:text-emerald-300 font-mono">0</span>
+            </div>
+            <!-- Incorrect Count -->
+            <div class="p-2 sm:p-3 rounded-xl bg-rose-50 dark:bg-rose-950/30 border border-rose-200/50 dark:border-rose-800/40">
+              <span class="text-[10px] sm:text-xs text-rose-600 dark:text-rose-400 font-medium block">Incorrect</span>
+              <span id="final-incorrect" class="text-base sm:text-xl font-bold text-rose-700 dark:text-rose-300 font-mono">0</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Middle: Detailed Question Breakdown Scrollable List -->
+        <div class="flex-1 my-3 overflow-y-auto custom-scrollbar pr-1 space-y-3">
+          <div class="flex items-center justify-between">
+            <h3 class="text-xs sm:text-sm font-bold text-slate-800 dark:text-slate-200 uppercase tracking-wider">
+              Detailed Question Analysis
+            </h3>
+            <span class="text-[11px] text-slate-500 dark:text-slate-400" id="breakdown-filter-status">
+              Showing All 18 Questions
+            </span>
+          </div>
+
+          <!-- Breakdown List Container -->
+          <div id="breakdown-list" class="space-y-2.5">
+            <!-- Dynamically Populated via JS -->
+          </div>
+        </div>
+
+        <!-- Bottom Action Bar for Restarting / Retrying -->
+        <div class="flex-none pt-3 border-t border-slate-100 dark:border-slate-800 flex flex-wrap items-center justify-between gap-2">
+          <button onclick="restartQuiz(true)" class="px-4 py-2 rounded-xl border border-slate-200 dark:border-slate-700 text-xs sm:text-sm font-semibold text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all flex items-center gap-1.5">
+            <i class="fa-solid fa-arrows-rotate"></i>
+            <span>Restart Full Quiz</span>
+          </button>
+
+          <button id="retry-incorrect-btn" onclick="retryIncorrect()" class="px-5 py-2 rounded-xl bg-brand-600 hover:bg-brand-700 text-white font-semibold text-xs sm:text-sm transition-all shadow-md shadow-brand-600/20 flex items-center gap-2">
+            <i class="fa-solid fa-bullseye"></i>
+            <span>Practice Missed Questions</span>
+          </button>
+        </div>
+
+      </div>
+    </section>
+
+  </div>
+
+  <script>
+    // Comprehensive Quiz Questions Array based on exact provided Q&A bank
+    const RAW_QUESTIONS = [
+      {
+        id: 1,
+        question: "Which international convention was adopted in 2013 and entered into force in 2017 to protect human health and the environment from mercury emissions and releases?",
+        options: [
+          "Basel Convention",
+          "Minamata Convention",
+          "Stockholm Convention",
+          "Rotterdam Convention"
+        ],
+        answer: 1, // Index of B
+        explanation: "The Minamata Convention was adopted in 2013 (entered into force in 2017) with the primary objective of protecting human health and the environment from mercury emissions and releases.",
+        topic: "Chemicals & Waste",
+        difficulty: "High Yield"
+      },
+      {
+        id: 2,
+        question: "What was the primary outcome of the Stockholm Conference held in 1972?",
+        options: [
+          "Creation of UNEP and raising global awareness as the first major UN conference on the human environment",
+          "Adoption of Agenda 21",
+          "Legally binding commitments to reduce greenhouse gas emissions",
+          "Introduction of the Kigali Amendment"
+        ],
+        answer: 0, // Index of A
+        explanation: "The Stockholm Conference held in 1972 was the first major UN conference on the human environment; it raised global awareness and led to the creation of UNEP.",
+        topic: "UN Framework",
+        difficulty: "Foundational"
+      },
+      {
+        id: 3,
+        question: "The Nairobi Declaration was adopted in which year to strengthen UNEP's role and reaffirm commitments made in the Stockholm Conference?",
+        options: [
+          "1972",
+          "1982",
+          "1985",
+          "1992"
+        ],
+        answer: 1, // Index of B
+        explanation: "The Nairobi Declaration was adopted in 1982 to strengthen UNEP's role and reaffirm commitments made in the Stockholm Conference.",
+        topic: "UNEP History",
+        difficulty: "Moderate"
+      },
+      {
+        id: 4,
+        question: "The Vienna Convention (Adopted in 1985) is primarily concerned with:",
+        options: [
+          "Phase-out of persistent organic pollutants (POPs)",
+          "Protection of the ozone layer from human-made chemicals",
+          "Management of hazardous transboundary wastes",
+          "Conservation of migratory species"
+        ],
+        answer: 1, // Index of B
+        explanation: "The objective of the Vienna Convention (Adopted in 1985) is the protection of the ozone layer from human-made chemicals.",
+        topic: "Ozone Protection",
+        difficulty: "High Yield"
+      },
+      {
+        id: 5,
+        question: "Which amendment added Hydrofluorocarbons (HFCs) to the list of controlled substances under the Montreal Protocol in 2016?",
+        options: [
+          "Kigali Amendment",
+          "Nairobi Amendment",
+          "Johannesburg Amendment",
+          "Helsinki Amendment"
+        ],
+        answer: 0, // Index of A
+        explanation: "The Kigali Amendment (2016) added HFCs to the list of controlled substances under the Montreal Protocol (Adopted in 1987).",
+        topic: "Ozone & Climate",
+        difficulty: "High Yield"
+      },
+      {
+        id: 6,
+        question: "The Helsinki Declaration, adopted in 1964 with its latest revision in 2013, sets ethical principles for:",
+        options: [
+          "International trade of hazardous chemicals",
+          "Medical research involving human subjects",
+          "Transboundary movement of electronic waste",
+          "Sustainable land management in desertified regions"
+        ],
+        answer: 1, // Index of B
+        explanation: "The objective of the Helsinki Declaration is to set ethical principles for medical research involving human subjects.",
+        topic: "Global Ethics",
+        difficulty: "Moderate"
+      },
+      {
+        id: 7,
+        question: "Which convention adopted in 1989 aims to control and reduce transboundary movements of hazardous wastes and ensure their environmentally sound disposal?",
+        options: [
+          "Rotterdam Convention",
+          "Stockholm Convention",
+          "Basel Convention",
+          "Minamata Convention"
+        ],
+        answer: 2, // Index of C
+        explanation: "The Basel Convention (Adopted in 1989) aims to control and reduce transboundary movements of hazardous wastes and ensure their environmentally sound disposal.",
+        topic: "Hazardous Waste",
+        difficulty: "High Yield"
+      },
+      {
+        id: 8,
+        question: "Which major outcomes resulted from the Earth Summit (Rio Summit) held in 1992?",
+        options: [
+          "Agenda 21, Rio Declaration, and UNFCCC",
+          "Kigali Amendment and Kyoto Protocol",
+          "Agenda 21 and Helsinki Declaration",
+          "Paris Agreement and Nairobi Declaration"
+        ],
+        answer: 0, // Index of A
+        explanation: "The Earth Summit (Rio Summit) held in 1992 aimed to promote sustainable development and resulted in Agenda 21, the Rio Declaration, and the UNFCCC.",
+        topic: "Sustainable Dev",
+        difficulty: "Core Prep"
+      },
+      {
+        id: 9,
+        question: "The UN Convention to Combat Desertification (UNCCD), adopted in 1994, places a special emphasis on which region?",
+        options: [
+          "Southeast Asia",
+          "Latin America",
+          "Africa",
+          "Eastern Europe"
+        ],
+        answer: 2, // Index of C
+        explanation: "The objective of UNCCD (Adopted in 1994) is to combat desertification and drought, particularly in Africa, and ensure sustainable land management.",
+        topic: "Land & Ecosystems",
+        difficulty: "Moderate"
+      },
+      {
+        id: 10,
+        question: "Which protocol adopted in 1997 sets a legally binding commitment to reduce greenhouse gas emissions in developed countries?",
+        options: [
+          "Montreal Protocol",
+          "Kyoto Protocol",
+          "Nagoya Protocol",
+          "Cartagena Protocol"
+        ],
+        answer: 1, // Index of B
+        explanation: "The Kyoto Protocol was adopted in 1997 with the objective of legally binding commitment to reduce greenhouse gas emissions in developed countries.",
+        topic: "Climate Action",
+        difficulty: "High Yield"
+      },
+      {
+        id: 11,
+        question: "The Stockholm Convention, adopted in 2001 and entered into force in 2004, focuses on eliminating or restricting the production and use of:",
+        options: [
+          "Persistent Organic Pollutants (POPs)",
+          "Ozone-Depleting Substances (ODS)",
+          "Living Modified Organisms (LMOs)",
+          "Heavy metals like Mercury"
+        ],
+        answer: 0, // Index of A
+        explanation: "The objective of the Stockholm Convention (Adopted in 2001, entered into force in 2004) is to eliminate or restrict the production and use of persistent organic pollutants (POPs).",
+        topic: "Chemical Safety",
+        difficulty: "High Yield"
+      },
+      {
+        id: 12,
+        question: "The Johannesburg Declaration (World Summit on Sustainable Development) held in 2002 reaffirmed commitment to sustainable development and strengthened the implementation of:",
+        options: [
+          "Agenda 21",
+          "Kyoto Protocol",
+          "Kigali Amendment",
+          "Minamata Convention"
+        ],
+        answer: 0, // Index of A
+        explanation: "Held in 2002, the Johannesburg Declaration aimed to reaffirm commitment to sustainable development and strengthen the implementation of Agenda 21.",
+        topic: "Sustainable Dev",
+        difficulty: "Moderate"
+      },
+      {
+        id: 13,
+        question: "Which mechanism is promoted by the Rotterdam Convention (Adopted in 1998, entered into force in 2004) regarding international trade of hazardous chemicals and pesticides?",
+        options: [
+          "Carbon trading scheme",
+          "Prior Informed Consent",
+          "Absolute ban on trade",
+          "Binding emission quotas"
+        ],
+        answer: 1, // Index of B
+        explanation: "The Rotterdam Convention promotes shared responsibilities in international trade of hazardous chemicals and pesticides through prior informed consent.",
+        topic: "Trade & Environment",
+        difficulty: "High Yield"
+      },
+      {
+        id: 14,
+        question: "The Cartagena Protocol on Biosafety (Adopted in 2000, entered into force in 2003) aims to protect biological diversity from potential risks posed by:",
+        options: [
+          "Transboundary movement of toxic hazardous waste",
+          "Living Modified Organisms (LMOs)",
+          "Persistent Organic Pollutants (POPs)",
+          "Mercury releases"
+        ],
+        answer: 1, // Index of B
+        explanation: "The Cartagena Protocol on Biosafety aims to protect biological diversity from potential risks posed by living modified organisms (LMOs).",
+        topic: "Biodiversity",
+        difficulty: "High Yield"
+      },
+      {
+        id: 15,
+        question: "The Bonn Convention (CMS), adopted in 1979 and entered into force in 1983, was formulated for:",
+        options: [
+          "Protection of the ozone layer",
+          "Conserving migratory species of wild animals across their range",
+          "Controlling transboundary movements of hazardous waste",
+          "Sustainable development in land management"
+        ],
+        answer: 1, // Index of B
+        explanation: "The objective of the Bonn Convention (Convention on Migratory Species - CMS) is to conserve migratory species of wild animals across their range.",
+        topic: "Wildlife Conservation",
+        difficulty: "Core Prep"
+      },
+      {
+        id: 16,
+        question: "Which protocol adopted in 2010 (entered into force in 2014) focuses on the \"fair and equitable sharing of benefits from the utilization of genetic resources\"?",
+        options: [
+          "Cartagena Protocol",
+          "Nagoya Protocol",
+          "Kyoto Protocol",
+          "Montreal Protocol"
+        ],
+        answer: 1, // Index of B
+        explanation: "The Nagoya Protocol (Adopted in 2010, entered into force in 2014) aims for the fair and equitable sharing of benefits from the utilization of genetic resources.",
+        topic: "Biodiversity & Genetic Resources",
+        difficulty: "High Yield"
+      },
+      {
+        id: 17,
+        question: "The Paris Agreement (Adopted in 2015) aims to strengthen global response to climate change by limiting global warming to well below:",
+        options: [
+          "1.0°C above pre-industrial levels",
+          "1.5°C above pre-industrial levels",
+          "2°C above pre-industrial levels",
+          "2.5°C above pre-industrial levels"
+        ],
+        answer: 2, // Index of C (2°C above pre-industrial levels as stated in source)
+        explanation: "The Paris Agreement (Adopted in 2015, entered into force in 2016) aims to strengthen the global response to climate change by limiting global warming to well below 2°C above pre-industrial levels.",
+        topic: "Climate Targets",
+        difficulty: "High Yield"
+      },
+      {
+        id: 18,
+        question: "The Paris Agreement adopted in 2015 is directly linked to which Conference of the Parties (COP) to the UNFCCC?",
+        options: [
+          "COP15",
+          "COP21",
+          "COP3",
+          "COP26"
+        ],
+        answer: 1, // Index of B
+        explanation: "According to the source text, the Paris Agreement is linked to COP21 (21st Conference of the Parties to UNFCCC).",
+        topic: "UNFCCC Meetings",
+        difficulty: "Foundational"
+      }
+    ];
+
+    // Quiz State Variables
+    let activeQuestions = [...RAW_QUESTIONS];
+    let currentIndex = 0;
+    let userAnswers = {}; // { questionId: selectedOptionIndex }
+    let bookmarkedIds = new Set();
+    let isSoundEnabled = true;
+    let timerInterval = null;
+    let secondsElapsed = 0;
+
+    // Web Audio Synthesizer for pleasant tactile feedback
+    const AudioEngine = {
+      ctx: null,
+      init() {
+        if (!this.ctx) {
+          const AudioContext = window.AudioContext || window.webkitAudioContext;
+          if (AudioContext) this.ctx = new AudioContext();
+        }
+      },
+      playCorrect() {
+        if (!isSoundEnabled) return;
+        this.init();
+        if (!this.ctx) return;
+        try {
+          const now = this.ctx.currentTime;
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(523.25, now); // C5
+          osc.frequency.exponentialRampToValueAtTime(659.25, now + 0.1); // E5
+          osc.frequency.exponentialRampToValueAtTime(783.99, now + 0.2); // G5
+          gain.gain.setValueAtTime(0.12, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.35);
+          osc.connect(gain);
+          gain.connect(this.ctx.destination);
+          osc.start(now);
+          osc.stop(now + 0.35);
+        } catch (e) {}
+      },
+      playIncorrect() {
+        if (!isSoundEnabled) return;
+        this.init();
+        if (!this.ctx) return;
+        try {
+          const now = this.ctx.currentTime;
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(220, now); // A3
+          osc.frequency.exponentialRampToValueAtTime(164.81, now + 0.25); // E3
+          gain.gain.setValueAtTime(0.15, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.3);
+          osc.connect(gain);
+          gain.connect(this.ctx.destination);
+          osc.start(now);
+          osc.stop(now + 0.3);
+        } catch (e) {}
+      }
+    };
+
+    // Initialize Theme
+    function initTheme() {
+      if (localStorage.theme === 'light') {
+        document.documentElement.classList.remove('dark');
+        document.getElementById('theme-icon').className = 'fa-solid fa-sun text-amber-500';
+      } else {
+        document.documentElement.classList.add('dark');
+        document.getElementById('theme-icon').className = 'fa-solid fa-moon text-slate-300';
+      }
+    }
+
+    function toggleTheme() {
+      if (document.documentElement.classList.contains('dark')) {
+        document.documentElement.classList.remove('dark');
+        localStorage.theme = 'light';
+        document.getElementById('theme-icon').className = 'fa-solid fa-sun text-amber-500';
+      } else {
+        document.documentElement.classList.add('dark');
+        localStorage.theme = 'dark';
+        document.getElementById('theme-icon').className = 'fa-solid fa-moon text-slate-300';
+      }
+    }
+
+    function toggleSound() {
+      isSoundEnabled = !isSoundEnabled;
+      const icon = document.getElementById('sound-icon');
+      if (isSoundEnabled) {
+        icon.className = 'fa-solid fa-volume-high text-xs sm:text-sm text-slate-600 dark:text-slate-300';
+      } else {
+        icon.className = 'fa-solid fa-volume-xmark text-xs sm:text-sm text-slate-400';
+      }
+    }
+
+    function startTimer() {
+      clearInterval(timerInterval);
+      secondsElapsed = 0;
+      timerInterval = setInterval(() => {
+        secondsElapsed++;
+        const mins = String(Math.floor(secondsElapsed / 60)).padStart(2, '0');
+        const secs = String(secondsElapsed % 60).padStart(2, '0');
+        document.getElementById('time-elapsed').innerText = `${mins}:${secs}`;
+      }, 1000);
+    }
+
+    // Helper to format complex text (like Statements or Match Tables if present)
+    function renderQuestionTextAndComplexContent(q) {
+      const qTextElem = document.getElementById('question-text');
+      const complexBox = document.getElementById('complex-content-box');
+      
+      // Check if question contains Statement patterns like "Statement 1", "Statement I", etc.
+      if (q.question.includes('Statement') || q.question.includes('List I')) {
+        // Parse statements or tables dynamically
+        qTextElem.innerHTML = q.question;
+        complexBox.classList.add('hidden');
+      } else {
+        qTextElem.innerHTML = q.question;
+        complexBox.classList.add('hidden');
+      }
+    }
+
+    // Render Current Question
+    function renderQuestion() {
+      const q = activeQuestions[currentIndex];
+      if (!q) return;
+
+      // Update Badges & Counters
+      document.getElementById('question-number-badge').innerText = `Question ${currentIndex + 1}/${activeQuestions.length}`;
+      document.getElementById('topic-tag').innerText = q.topic || 'Environmental Law';
+      document.getElementById('difficulty-tag').innerText = q.difficulty || 'High Priority';
+      
+      // Progress Bar Calculation
+      const progressPercent = Math.round(((currentIndex + 1) / activeQuestions.length) * 100);
+      document.getElementById('progress-bar-fill').style.width = `${progressPercent}%`;
+      document.getElementById('progress-percentage').innerText = `${progressPercent}% Completed`;
+
+      // Render Question Prompt
+      renderQuestionTextAndComplexContent(q);
+
+      // Flag Icon status
+      const flagIcon = document.getElementById('flag-icon');
+      if (bookmarkedIds.has(q.id)) {
+        flagIcon.className = 'fa-solid fa-bookmark text-amber-500';
+      } else {
+        flagIcon.className = 'fa-regular fa-bookmark';
+      }
+
+      // Check if user has answered this question already
+      const isAnswered = userAnswers.hasOwnProperty(q.id);
+      const selectedIndex = isAnswered ? userAnswers[q.id] : null;
+
+      // Render Options
+      const optionsContainer = document.getElementById('options-container');
+      optionsContainer.innerHTML = '';
+
+      const letters = ['A', 'B', 'C', 'D'];
+
+      q.options.forEach((optText, idx) => {
+        const optionBtn = document.createElement('button');
+        optionBtn.type = 'button';
+        optionBtn.onclick = () => selectOption(idx);
+
+        // Base Classes
+        let btnClasses = "group w-full p-2.5 sm:p-3 rounded-xl border text-left flex items-start gap-3 transition-all-fast relative font-medium text-xs sm:text-sm ";
+
+        if (!isAnswered) {
+          // Unanswered State
+          btnClasses += "bg-white dark:bg-slate-800/90 border-slate-200 dark:border-slate-700/80 hover:border-brand-500 dark:hover:border-brand-400 hover:bg-brand-50/30 dark:hover:bg-slate-800 text-slate-800 dark:text-slate-100 cursor-pointer shadow-2xs";
+        } else {
+          // Answered State Styling
+          optionBtn.disabled = true;
+          if (idx === q.answer) {
+            // Correct Option (Always Highlighted Green when answered)
+            btnClasses += "bg-emerald-50 dark:bg-emerald-950/40 border-emerald-500 dark:border-emerald-500 text-emerald-950 dark:text-emerald-200 font-semibold shadow-xs ";
+            if (selectedIndex === idx) btnClasses += "animate-correct ";
+          } else if (idx === selectedIndex && selectedIndex !== q.answer) {
+            // User Selected Wrong Option
+            btnClasses += "bg-rose-50 dark:bg-rose-950/40 border-rose-500 dark:border-rose-500 text-rose-950 dark:text-rose-200 font-semibold animate-wrong shadow-xs ";
+          } else {
+            // Muted Unselected Options
+            btnClasses += "bg-slate-50 dark:bg-slate-800/40 border-slate-200 dark:border-slate-800 text-slate-400 dark:text-slate-500 opacity-60 ";
+          }
+        }
+
+        optionBtn.className = btnClasses;
+
+        // Build Inner HTML with Letter Badge & Text
+        let badgeClasses = "flex-none w-6 h-6 sm:w-6 sm:h-6 rounded-lg text-xs font-mono font-bold flex items-center justify-center transition-colors ";
+        if (!isAnswered) {
+          badgeClasses += "bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 group-hover:bg-brand-500 group-hover:text-white";
+        } else if (idx === q.answer) {
+          badgeClasses += "bg-emerald-500 text-white";
+        } else if (idx === selectedIndex && selectedIndex !== q.answer) {
+          badgeClasses += "bg-rose-500 text-white";
+        } else {
+          badgeClasses += "bg-slate-200 dark:bg-slate-700 text-slate-400 dark:text-slate-500";
+        }
+
+        let feedbackIcon = "";
+        if (isAnswered) {
+          if (idx === q.answer) {
+            feedbackIcon = `<i class="fa-solid fa-circle-check text-emerald-600 dark:text-emerald-400 text-sm ml-auto my-auto"></i>`;
+          } else if (idx === selectedIndex && selectedIndex !== q.answer) {
+            feedbackIcon = `<i class="fa-solid fa-circle-xmark text-rose-600 dark:text-rose-400 text-sm ml-auto my-auto"></i>`;
+          }
+        }
+
+        optionBtn.innerHTML = `
+          <span class="${badgeClasses}">${letters[idx]}</span>
+          <span class="flex-1 leading-tight sm:leading-normal mt-0.5">${optText}</span>
+          ${feedbackIcon}
+        `;
+
+        optionsContainer.appendChild(optionBtn);
+      });
+
+      // Explanation Box Visibility
+      const explanationCard = document.getElementById('explanation-card');
+      if (isAnswered) {
+        explanationCard.classList.remove('hidden');
+        document.getElementById('explanation-text').innerHTML = q.explanation;
+      } else {
+        explanationCard.classList.add('hidden');
+      }
+
+      // Next / Prev Button state
+      const nextBtn = document.getElementById('next-btn');
+      const prevBtn = document.getElementById('prev-btn');
+
+      prevBtn.disabled = currentIndex === 0;
+
+      if (isAnswered) {
+        nextBtn.disabled = false;
+        nextBtn.className = "px-4 sm:px-6 py-1.5 sm:py-2 rounded-xl bg-brand-600 hover:bg-brand-700 text-white font-semibold text-xs sm:text-sm flex items-center gap-2 cursor-pointer transition-all shadow-md shadow-brand-600/20";
+        if (currentIndex === activeQuestions.length - 1) {
+          nextBtn.innerHTML = `<span>View Results</span> <i class="fa-solid fa-trophy text-xs"></i>`;
+        } else {
+          nextBtn.innerHTML = `<span>Next Question</span> <i class="fa-solid fa-arrow-right text-xs"></i>`;
+        }
+      } else {
+        nextBtn.disabled = true;
+        nextBtn.className = "px-4 sm:px-6 py-1.5 sm:py-2 rounded-xl bg-slate-200 dark:bg-slate-800 text-slate-400 dark:text-slate-500 font-semibold text-xs sm:text-sm flex items-center gap-2 cursor-not-allowed transition-all";
+        nextBtn.innerHTML = `<span>Next Question</span> <i class="fa-solid fa-arrow-right text-xs"></i>`;
+      }
+
+      updateScoreCounters();
+    }
+
+    // Handle Option Selection
+    function selectOption(index) {
+      const q = activeQuestions[currentIndex];
+      if (userAnswers.hasOwnProperty(q.id)) return; // Prevent multiple attempts
+
+      userAnswers[q.id] = index;
+
+      // Play Sound
+      if (index === q.answer) {
+        AudioEngine.playCorrect();
+      } else {
+        AudioEngine.playIncorrect();
+      }
+
+      renderQuestion();
+    }
+
+    // Toggle Bookmark
+    function toggleBookmark() {
+      const q = activeQuestions[currentIndex];
+      if (bookmarkedIds.has(q.id)) {
+        bookmarkedIds.delete(q.id);
+      } else {
+        bookmarkedIds.add(q.id);
+      }
+      renderQuestion();
+    }
+
+    // Navigation Controls
+    function nextQuestion() {
+      if (currentIndex < activeQuestions.length - 1) {
+        currentIndex++;
+        renderQuestion();
+      } else {
+        showResults();
+      }
+    }
+
+    function prevQuestion() {
+      if (currentIndex > 0) {
+        currentIndex--;
+        renderQuestion();
+      }
+    }
+
+    // Live Score Counters Update
+    function updateScoreCounters() {
+      let correct = 0;
+      let incorrect = 0;
+
+      activeQuestions.forEach(q => {
+        if (userAnswers.hasOwnProperty(q.id)) {
+          if (userAnswers[q.id] === q.answer) {
+            correct++;
+          } else {
+            incorrect++;
+          }
+        }
+      });
+
+      document.getElementById('score-correct').innerText = correct;
+      document.getElementById('score-incorrect').innerText = incorrect;
+    }
+
+    // Show End Screen Results
+    function showResults() {
+      document.getElementById('quiz-screen').classList.add('hidden');
+      document.getElementById('results-screen').classList.remove('hidden');
+
+      let correct = 0;
+      let incorrect = 0;
+
+      activeQuestions.forEach(q => {
+        if (userAnswers[q.id] === q.answer) {
+          correct++;
+        } else {
+          incorrect++;
+        }
+      });
+
+      const total = activeQuestions.length;
+      const percentage = Math.round((correct / total) * 100) || 0;
+
+      document.getElementById('final-percentage').innerText = `${percentage}%`;
+      document.getElementById('final-correct').innerText = `${correct}/${total}`;
+      document.getElementById('final-incorrect').innerText = `${incorrect}`;
+
+      // Render Detailed Breakdown List
+      const breakdownList = document.getElementById('breakdown-list');
+      breakdownList.innerHTML = '';
+
+      const letters = ['A', 'B', 'C', 'D'];
+
+      activeQuestions.forEach((q, idx) => {
+        const uAns = userAnswers[q.id];
+        const isCorrect = uAns === q.answer;
+
+        const card = document.createElement('div');
+        card.className = `p-3 rounded-xl border ${
+          isCorrect 
+            ? 'bg-slate-50 dark:bg-slate-800/40 border-slate-200 dark:border-slate-800' 
+            : 'bg-rose-50/50 dark:bg-rose-950/20 border-rose-200 dark:border-rose-900/40'
+        } space-y-2 text-xs sm:text-sm`;
+
+        card.innerHTML = `
+          <div class="flex items-start justify-between gap-2">
+            <div class="font-semibold text-slate-900 dark:text-slate-100 flex items-center gap-1.5">
+              <span class="w-5 h-5 rounded ${isCorrect ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/60 dark:text-emerald-300' : 'bg-rose-100 text-rose-700 dark:bg-rose-900/60 dark:text-rose-300'} font-mono text-xs flex items-center justify-center font-bold">
+                Q${idx + 1}
+              </span>
+              <span>${q.question}</span>
+            </div>
+            <span class="text-[10px] font-bold px-2 py-0.5 rounded-full ${isCorrect ? 'bg-emerald-100 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-400' : 'bg-rose-100 dark:bg-rose-950 text-rose-700 dark:text-rose-400'} flex-none">
+              ${isCorrect ? 'Correct' : 'Incorrect'}
+            </span>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs pt-1 font-medium">
+            <div class="p-2 rounded-lg ${isCorrect ? 'bg-emerald-50 dark:bg-emerald-900/20 text-emerald-800 dark:text-emerald-300' : 'bg-rose-100/60 dark:bg-rose-900/40 text-rose-900 dark:text-rose-200'}">
+              <span class="text-[10px] uppercase font-bold text-slate-500 dark:text-slate-400 block">Your Answer:</span>
+              <span>${uAns !== undefined ? `${letters[uAns]}) ${q.options[uAns]}` : 'Not Answered'}</span>
+            </div>
+
+            <div class="p-2 rounded-lg bg-emerald-50 dark:bg-emerald-900/20 text-emerald-800 dark:text-emerald-300">
+              <span class="text-[10px] uppercase font-bold text-emerald-600 dark:text-emerald-400 block">Correct Answer:</span>
+              <span>${letters[q.answer]}) ${q.options[q.answer]}</span>
+            </div>
+          </div>
+
+          <div class="text-xs text-slate-600 dark:text-slate-400 bg-white/60 dark:bg-slate-900/40 p-2 rounded-lg border border-slate-200/50 dark:border-slate-800">
+            <strong class="text-slate-800 dark:text-slate-200">Explanation:</strong> ${q.explanation}
+          </div>
+        `;
+
+        breakdownList.appendChild(card);
+      });
+
+      // Enable/Disable Retry Incorrect Button
+      const retryBtn = document.getElementById('retry-incorrect-btn');
+      if (incorrect === 0) {
+        retryBtn.disabled = true;
+        retryBtn.className = "px-5 py-2 rounded-xl bg-slate-200 dark:bg-slate-800 text-slate-400 dark:text-slate-500 font-semibold text-xs sm:text-sm cursor-not-allowed opacity-50";
+      } else {
+        retryBtn.disabled = false;
+        retryBtn.className = "px-5 py-2 rounded-xl bg-brand-600 hover:bg-brand-700 text-white font-semibold text-xs sm:text-sm transition-all shadow-md shadow-brand-600/20 flex items-center gap-2 cursor-pointer";
+      }
+    }
+
+    // Restart Full Quiz
+    function restartQuiz(fullReset = true) {
+      if (fullReset) {
+        activeQuestions = [...RAW_QUESTIONS];
+      }
+      currentIndex = 0;
+      userAnswers = {};
+      document.getElementById('results-screen').classList.add('hidden');
+      document.getElementById('quiz-screen').classList.remove('hidden');
+      startTimer();
+      renderQuestion();
+    }
+
+    // Practice Missed Questions Only
+    function retryIncorrect() {
+      const missed = RAW_QUESTIONS.filter(q => userAnswers.hasOwnProperty(q.id) && userAnswers[q.id] !== q.answer);
+      if (missed.length > 0) {
+        activeQuestions = missed;
+        currentIndex = 0;
+        userAnswers = {};
+        document.getElementById('results-screen').classList.add('hidden');
+        document.getElementById('quiz-screen').classList.remove('hidden');
+        startTimer();
+        renderQuestion();
+      }
+    }
+
+    // Keyboard Navigation Shortcuts
+    document.addEventListener('keydown', (e) => {
+      if (document.getElementById('quiz-screen').classList.contains('hidden')) return;
+
+      const q = activeQuestions[currentIndex];
+      const isAnswered = userAnswers.hasOwnProperty(q.id);
+
+      // Option selection keys 1, 2, 3, 4
+      if (['1', '2', '3', '4'].includes(e.key) && !isAnswered) {
+        selectOption(parseInt(e.key) - 1);
+      }
+      // Keys A, B, C, D
+      else if (['a', 'b', 'c', 'd', 'A', 'B', 'C', 'D'].includes(e.key) && !isAnswered) {
+        const keyMap = { 'a': 0, 'b': 1, 'c': 2, 'd': 3 };
+        selectOption(keyMap[e.key.toLowerCase()]);
+      }
+      // Enter or Space for Next Question
+      else if ((e.key === 'Enter' || e.key === ' ') && isAnswered) {
+        e.preventDefault();
+        nextQuestion();
+      }
+      // F key for bookmarking
+      else if (e.key.toLowerCase() === 'f') {
+        toggleBookmark();
+      }
+    });
+
+    // Initialize App on Window Load
+    window.onload = function() {
+      initTheme();
+      startTimer();
+      renderQuestion();
+    };
+  </script>
+</body>
+</html>
