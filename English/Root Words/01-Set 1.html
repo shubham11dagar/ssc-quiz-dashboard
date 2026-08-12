@@ -1,0 +1,828 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Interactive Exam Preparation Quiz</title>
+  <style>
+    :root {
+      --bg-color: #f1f5f9;
+      --card-bg: #ffffff;
+      --text-main: #0f172a;
+      --text-muted: #475569;
+      --border-color: #e2e8f0;
+      --primary: #2563eb;
+      --primary-hover: #1d4ed8;
+      --success-bg: #dcfce7;
+      --success-border: #22c55e;
+      --success-text: #14532d;
+      --danger-bg: #fee2e2;
+      --danger-border: #ef4444;
+      --danger-text: #7f1d1d;
+      --callout-bg: #f8fafc;
+      --callout-border: #94a3b8;
+      --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+    }
+
+    [data-theme="dark"] {
+      --bg-color: #0f172a;
+      --card-bg: #1e293b;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --border-color: #334155;
+      --primary: #3b82f6;
+      --primary-hover: #60a5fa;
+      --success-bg: #064e3b;
+      --success-border: #10b981;
+      --success-text: #ecfdf5;
+      --danger-bg: #7f1d1d;
+      --danger-border: #f87171;
+      --danger-text: #fef2f2;
+      --callout-bg: #0f172a;
+      --callout-border: #475569;
+      --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.5);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 8px;
+      overflow: hidden;
+      transition: background-color 0.2s, color 0.2s;
+    }
+
+    /* Container fixed to viewport to avoid page scrolling */
+    .app-container {
+      width: 100%;
+      max-width: 800px;
+      height: 98vh;
+      max-height: 720px;
+      background: var(--card-bg);
+      border-radius: 10px;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border-color);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    /* Header Styling */
+    header {
+      padding: 10px 16px;
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: var(--card-bg);
+      flex-shrink: 0;
+    }
+
+    .brand {
+      font-weight: 700;
+      font-size: 1.1rem;
+      color: var(--primary);
+    }
+
+    .header-controls {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .theme-toggle {
+      background: none;
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      padding: 4px 8px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.8rem;
+    }
+
+    /* Progress Bar */
+    .progress-bar-container {
+      width: 100%;
+      height: 4px;
+      background-color: var(--border-color);
+      flex-shrink: 0;
+    }
+
+    .progress-bar {
+      height: 100%;
+      background-color: var(--primary);
+      width: 0%;
+      transition: width 0.3s ease;
+    }
+
+    /* Main Quiz Content Area */
+    .quiz-card {
+      padding: 14px 16px;
+      display: flex;
+      flex-direction: column;
+      flex-grow: 1;
+      overflow-y: auto;
+      justify-content: space-between;
+    }
+
+    .question-header {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--primary);
+      margin-bottom: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .question-text {
+      font-size: 0.98rem;
+      font-weight: 500;
+      line-height: 1.35;
+      margin-bottom: 10px;
+      color: var(--text-main);
+    }
+
+    /* Complex Question Formats */
+    .callout-box {
+      background-color: var(--callout-bg);
+      border-left: 3px solid var(--callout-border);
+      padding: 8px 12px;
+      margin: 8px 0;
+      border-radius: 0 6px 6px 0;
+      font-family: monospace;
+      font-size: 0.88rem;
+    }
+
+    .match-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 8px 0;
+      font-size: 0.85rem;
+    }
+
+    .match-table th, .match-table td {
+      border: 1px solid var(--border-color);
+      padding: 6px 10px;
+      text-align: left;
+    }
+
+    .match-table th {
+      background-color: var(--callout-bg);
+    }
+
+    /* Options List */
+    .options-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+
+    .option-btn {
+      width: 100%;
+      text-align: left;
+      padding: 8px 12px;
+      background-color: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      color: var(--text-main);
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      display: flex;
+      align-items: center;
+    }
+
+    .option-btn:hover:not(:disabled) {
+      border-color: var(--primary);
+      background-color: var(--callout-bg);
+    }
+
+    .option-btn:disabled {
+      cursor: default;
+    }
+
+    .option-btn.correct {
+      background-color: var(--success-bg) !important;
+      border-color: var(--success-border) !important;
+      color: var(--success-text) !important;
+      font-weight: 600;
+    }
+
+    .option-btn.incorrect {
+      background-color: var(--danger-bg) !important;
+      border-color: var(--danger-border) !important;
+      color: var(--danger-text) !important;
+    }
+
+    /* Explanation Box */
+    .explanation-box {
+      background-color: var(--callout-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      padding: 10px;
+      font-size: 0.82rem;
+      line-height: 1.35;
+      margin-top: 4px;
+      display: none;
+      max-height: 160px;
+      overflow-y: auto;
+    }
+
+    .explanation-box.visible {
+      display: block;
+    }
+
+    .explanation-title {
+      font-weight: 700;
+      margin-bottom: 4px;
+      color: var(--primary);
+    }
+
+    .explanation-box ul {
+      padding-left: 16px;
+      margin-top: 4px;
+    }
+
+    /* Footer & Sticky Action Buttons */
+    .quiz-footer {
+      padding: 10px 16px;
+      border-top: 1px solid var(--border-color);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: var(--card-bg);
+      flex-shrink: 0;
+    }
+
+    .btn-next {
+      background-color: var(--primary);
+      color: #fff;
+      border: none;
+      padding: 8px 18px;
+      border-radius: 6px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: background-color 0.15s ease;
+      margin-left: auto;
+    }
+
+    .btn-next:hover {
+      background-color: var(--primary-hover);
+    }
+
+    .btn-next:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    /* Results Screen */
+    .results-screen {
+      display: none;
+      flex-direction: column;
+      height: 100%;
+      padding: 16px;
+      overflow-y: auto;
+    }
+
+    .results-screen.active {
+      display: flex;
+    }
+
+    .results-header {
+      text-align: center;
+      margin-bottom: 16px;
+    }
+
+    .results-score {
+      font-size: 2rem;
+      font-weight: 800;
+      color: var(--primary);
+      margin: 4px 0;
+    }
+
+    .stats-summary {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+
+    .stat-badge {
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+
+    .stat-badge.correct { background: var(--success-bg); color: var(--success-text); }
+    .stat-badge.incorrect { background: var(--danger-bg); color: var(--danger-text); }
+
+    .breakdown-title {
+      font-size: 0.95rem;
+      font-weight: 700;
+      margin-bottom: 10px;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 4px;
+    }
+
+    .breakdown-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    .breakdown-item {
+      background-color: var(--callout-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      padding: 10px;
+      font-size: 0.85rem;
+    }
+
+    .breakdown-q { font-weight: 600; margin-bottom: 4px; }
+    .breakdown-ans { font-size: 0.8rem; margin-top: 2px; }
+    .text-danger { color: var(--danger-border); }
+    .text-success { color: var(--success-border); }
+
+    .btn-restart {
+      background-color: var(--primary);
+      color: #fff;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 6px;
+      font-weight: 600;
+      cursor: pointer;
+      align-self: center;
+      margin-top: auto;
+    }
+
+    /* Scrollbar styling for explanations & breakdown */
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 4px; }
+  </style>
+</head>
+<body>
+
+  <div class="app-container">
+    <!-- Header -->
+    <header>
+      <div class="brand">ExamPrep Quiz</div>
+      <div class="header-controls">
+        <span id="question-count" style="font-size: 0.85rem; color: var(--text-muted);">Q 1/40</span>
+        <button class="theme-toggle" id="theme-btn" onclick="toggleTheme()">🌙 Dark</button>
+      </div>
+    </header>
+
+    <!-- Progress Bar -->
+    <div class="progress-bar-container">
+      <div class="progress-bar" id="progress-bar"></div>
+    </div>
+
+    <!-- Active Quiz View -->
+    <div class="quiz-card" id="quiz-view">
+      <div>
+        <div class="question-header" id="q-category">Question</div>
+        <div class="question-text" id="q-text">Loading question...</div>
+        <div id="q-complex-container"></div>
+        <div class="options-grid" id="options-container"></div>
+      </div>
+
+      <div class="explanation-box" id="explanation-box">
+        <div class="explanation-title" id="exp-status">Explanation</div>
+        <div id="exp-content"></div>
+      </div>
+    </div>
+
+    <!-- Sticky Quiz Footer -->
+    <div class="quiz-footer" id="quiz-footer">
+      <button class="btn-next" id="next-btn" onclick="nextQuestion()" disabled>Next Question</button>
+    </div>
+
+    <!-- End-Screen Results Summary -->
+    <div class="results-screen" id="results-view">
+      <div class="results-header">
+        <h2>Quiz Completed!</h2>
+        <div class="results-score" id="res-score">0%</div>
+        <div class="stats-summary">
+          <span class="stat-badge correct" id="res-correct">Correct: 0</span>
+          <span class="stat-badge incorrect" id="res-incorrect">Incorrect: 0</span>
+        </div>
+      </div>
+
+      <div class="breakdown-title">Review Incorrect Answers</div>
+      <div class="breakdown-list" id="breakdown-container"></div>
+
+      <button class="btn-restart" onclick="restartQuiz()">Restart Quiz</button>
+    </div>
+  </div>
+
+  <script>
+    const questions = [
+      {
+        q: "Select the most appropriate option to fill in the blank.\nThe key witness was charged with _______ after financial records proved he lied under oath during the cross-examination.",
+        options: ["(a) Treason", "(b) Perjury", "(c) Slander", "(d) Contempt"],
+        answer: 1,
+        explanation: "<strong>Perjury</strong> — The offense of willfully telling an untruth in a court after having taken an oath.<br><em>Why used:</em> Lying under oath in a court of law is the exact definition of perjury.<ul><li><strong>Treason:</strong> Betraying one's country.</li><li><strong>Slander:</strong> False spoken statement damaging reputation.</li><li><strong>Contempt:</strong> Disregard/disobedience of court rules.</li></ul>"
+      },
+      {
+        q: "Select the most appropriate option to fill in the blank.\nThe High Court ruled that the regional police department exceeded its geographical _______ while arresting the suspect in another state.",
+        options: ["(a) Jurisdiction", "(b) Dominance", "(c) Governance", "(d) Boundary"],
+        answer: 0,
+        explanation: "<strong>Jurisdiction</strong> — The official power or territory in which justice and laws are administered.<br><em>Why used:</em> Police acting in another state concerns the legal boundary of official administrative power.<ul><li><strong>Dominance:</strong> Power/influence over others.</li><li><strong>Governance:</strong> Manner of governing a state/org.</li><li><strong>Boundary:</strong> Line marking limits of an area.</li></ul>"
+      },
+      {
+        q: "Select the most appropriate option to fill in the blank.\nFacing severe casualties and encirclement, the troops had no choice but to _______ to the advancing enemy forces.",
+        options: ["(a) Capitulate", "(b) Relinquish", "(c) Retreat", "(d) Concede"],
+        answer: 0,
+        explanation: "<strong>Capitulate</strong> — To surrender on negotiated terms.<br><em>Why used:</em> Surrendering under pressure in a military conflict is best expressed as capitulate.<ul><li><strong>Relinquish:</strong> Voluntarily cease to keep/claim.</li><li><strong>Retreat:</strong> Withdraw from enemy forces.</li><li><strong>Concede:</strong> Admit something is true after denying it.</li></ul>"
+      },
+      {
+        q: "Select the most appropriate option to fill in the blank.\nThe government appointed a renowned _______ to head the panel tasked with drafting reforms for the criminal justice system.",
+        options: ["(a) Jurist", "(b) Scholar", "(c) Diplomat", "(d) Bureaucrat"],
+        answer: 0,
+        explanation: "<strong>Jurist</strong> — An expert in law; a legal scholar.<br><em>Why used:</em> Drafting legal reforms requires an expert in law.<ul><li><strong>Scholar:</strong> Specialist in a branch of study.</li><li><strong>Diplomat:</strong> Official representing a country abroad.</li><li><strong>Bureaucrat:</strong> Official in a government department.</li></ul>"
+      },
+      {
+        q: "Select the most appropriate option to fill in the blank.\nThe constitution contains clear clauses that _______ the authority of the executive branch to prevent authoritarian abuse.",
+        options: ["(a) Restrict", "(b) Circumscribe", "(c) Delimit", "(d) Prohibit"],
+        answer: 1,
+        explanation: "<strong>Circumscribe</strong> — To restrict or draw a boundary around power or freedom.<br><em>Why used:</em> Drawing strict constitutional limits around official authority is defined as circumscribing.<ul><li><strong>Restrict:</strong> Put a limit on; keep within bounds.</li><li><strong>Delimit:</strong> Determine limits/boundaries of.</li><li><strong>Prohibit:</strong> Formally forbid something by law.</li></ul>"
+      },
+      {
+        q: "Select the most appropriate option to fill in the blank.\nArchaeologists discovered a rare Latin _______ carved deeply into the base of the ancient monument.",
+        options: ["(a) Manuscript", "(b) Inscription", "(c) Epitaph", "(d) Engraving"],
+        answer: 1,
+        explanation: "<strong>Inscription</strong> — Words engraved or carved into a stone, metal, or hard surface.<br><em>Why used:</em> Words carved into stone on a monument are called an inscription.<ul><li><strong>Manuscript:</strong> Document written by hand.</li><li><strong>Epitaph:</strong> Statement written in memory on a tombstone.</li><li><strong>Engraving:</strong> Print made from an engraved plate.</li></ul>"
+      },
+      {
+        q: "Select the most appropriate option to fill in the blank.\nRefusing to assert whether a supreme deity exists or not, he declared himself an _______ who relied solely on empirical proof.",
+        options: ["(a) Atheist", "(b) Agnostic", "(c) Skeptic", "(d) Heretic"],
+        answer: 1,
+        explanation: "<strong>Agnostic</strong> — One who believes that nothing can be known about the existence or nature of God.<br><em>Why used:</em> An individual who holds that the existence of God is unknowable.<ul><li><strong>Atheist:</strong> Person who disbelieves in God.</li><li><strong>Skeptic:</strong> Person inclined to question accepted opinions.</li><li><strong>Heretic:</strong> Person practicing religious heresy.</li></ul>"
+      },
+      {
+        q: "Select the most appropriate option to fill in the blank.\nPhilosophers who adhere to _______ claim that humans cannot possess absolute knowledge regarding the creation of the universe.",
+        options: ["(a) Agnosticism", "(b) Dogmatism", "(c) Rationalism", "(d) Secularism"],
+        answer: 0,
+        explanation: "<strong>Agnosticism</strong> — The philosophical doctrine that the existence of God or ultimate truth is unknowable.<ul><li><strong>Dogmatism:</strong> Laying down principles as incontrovertibly true.</li><li><strong>Rationalism:</strong> Opinions based on reason/knowledge.</li><li><strong>Secularism:</strong> Separation of state from religious institutions.</li></ul>"
+      },
+      {
+        q: "Select the most appropriate option to fill in the blank.\nEarly Childhood Education programs focus heavily on developing a child’s language skills and cognitive _______.",
+        options: ["(a) Perception", "(b) Cognition", "(c) Awareness", "(d) Intelligence"],
+        answer: 1,
+        explanation: "<strong>Cognition</strong> — The mental action or process of acquiring knowledge and understanding through thought and experience.<ul><li><strong>Perception:</strong> Ability to see/hear/aware through senses.</li><li><strong>Awareness:</strong> Knowledge/perception of a situation.</li><li><strong>Intelligence:</strong> Ability to acquire/apply knowledge.</li></ul>"
+      },
+      {
+        q: "Select the most appropriate option to fill in the blank.\nUnder the Criminal Procedure Code, a _______ offense allows police officers to make an arrest without requiring a judicial warrant.",
+        options: ["(a) Bailable", "(b) Cognizable", "(c) Punishable", "(d) Non-compoundable"],
+        answer: 1,
+        explanation: "<strong>Cognizable</strong> — Capable of being known, recognized, or judicially tried/investigated.<ul><li><strong>Bailable:</strong> For which bail is allowed.</li><li><strong>Punishable:</strong> Liable to be punished by law.</li><li><strong>Non-compoundable:</strong> Cannot be settled out of court.</li></ul>"
+      },
+      {
+        q: "Select the most appropriate option to fill in the blank.\nThe magistrate took official _______ of the corruption complaint and ordered an immediate investigation by the bureau.",
+        options: ["(a) Cognizance", "(b) Attention", "(c) Consideration", "(d) Jurisdiction"],
+        answer: 0,
+        explanation: "<strong>Cognizance</strong> — Knowledge, awareness, or official notice taken by a court or authority.<br><em>Collocation:</em> 'Taking cognizance' is standard legal terminology."
+      },
+      {
+        q: "Select the most appropriate option to fill in the blank.\nSecurity personnel must remain _______ of potential safety threats while managing large crowds during public events.",
+        options: ["(a) Mindful", "(b) Cognizant", "(c) Vigilant", "(d) Conscious"],
+        answer: 1,
+        explanation: "<strong>Cognizant</strong> — Being aware or having full knowledge of something (followed by 'of')."
+      },
+      {
+        q: "Select the most appropriate option to fill in the blank.\nThe monarch traveled _______ across foreign territories to avoid political unrest and assassination attempts.",
+        options: ["(a) Incognito", "(b) Anonymous", "(c) Undetected", "(d) Covertly"],
+        answer: 0,
+        explanation: "<strong>Incognito</strong> — With one's identity concealed or under an assumed name."
+      },
+      {
+        q: "Select the most appropriate option to fill in the blank.\nMedical experts provided a favorable _______, assuring the patient that complete recovery was expected within six weeks.",
+        options: ["(a) Diagnosis", "(b) Prognosis", "(c) Analysis", "(d) Prescription"],
+        answer: 1,
+        explanation: "<strong>Prognosis</strong> — A forecast of the likely outcome or recovery from a disease."
+      },
+      {
+        q: "Select the most appropriate option to fill in the blank.\nAs an outspoken _______, the philanthropist dedicated a major portion of his wealth to establishing women's universities.",
+        options: ["(a) Feminist", "(b) Philogynist", "(c) Humanitarian", "(d) Altruist"],
+        answer: 1,
+        explanation: "<strong>Philogynist</strong> — A person who loves, admires, or respects women."
+      },
+      {
+        q: "Select the most appropriate option to fill in the blank.\nIn ancient matriarchal societies, _______ was practiced, with elder women exercising supreme political authority.",
+        options: ["(a) Matriarchy", "(b) Gynarchy", "(c) Oligarchy", "(d) Autocracy"],
+        answer: 1,
+        explanation: "<strong>Gynarchy</strong> — Government or rule by women."
+      },
+      {
+        q: "Select the most appropriate option to fill in the blank.\nAdvancements in _______ have drastically improved maternal health care and lowered mortality rates across the nation.",
+        options: ["(a) Obstetrics", "(b) Gynaecology", "(c) Pediatrics", "(d) Pathology"],
+        answer: 1,
+        explanation: "<strong>Gynaecology</strong> — The branch of medicine concerned with diseases and health of women."
+      },
+      {
+        q: "Select the most appropriate option to fill in the blank.\nThe critic was accused of _______ after publishing several articles disparaging women's achievements in literature.",
+        options: ["(a) Chauvinism", "(b) Misogyny", "(c) Sexism", "(d) Bigotry"],
+        answer: 1,
+        explanation: "<strong>Misogyny</strong> — Hatred of, contempt for, or ingrained prejudice against women."
+      },
+      {
+        q: "Select the most appropriate option to fill in the blank.\nAnthropologists studied the societal impacts of _______ in rural tribes where men traditionally take multiple spouses.",
+        options: ["(a) Polygamy", "(b) Polygyny", "(c) Polyandry", "(d) Endogamy"],
+        answer: 1,
+        explanation: "<strong>Polygyny</strong> — The custom or practice of having more than one wife at a time."
+      },
+      {
+        q: "Select the most appropriate option to fill in the blank.\nThe executive summarized the lengthy annual report into a _______ overview highlighting only the vital fiscal figures.",
+        options: ["(a) Succinct", "(b) Concise", "(c) Brief", "(d) Terse"],
+        answer: 1,
+        explanation: "<strong>Concise</strong> — Giving a lot of information clearly in a few words; removing non-essentials."
+      },
+      {
+        q: "Select the most appropriate option to fill in the blank.\nThe laboratory required _______ measurements of chemicals, as even a microgram's error could ruin the experiment.",
+        options: ["(a) Exact", "(b) Precise", "(c) Accurate", "(d) Meticulous"],
+        answer: 1,
+        explanation: "<strong>Precise</strong> — Exact, sharp, and cut with absolute accuracy."
+      },
+      {
+        q: "Select the most appropriate option to fill in the blank.\nThe _______ host kept the dinner party guests entertained for hours with nonstop stories and anecdotes.",
+        options: ["(a) Talkative", "(b) Loquacious", "(c) Expressive", "(d) Voluble"],
+        answer: 1,
+        explanation: "<strong>Loquacious</strong> — Tendency to talk a great deal; extremely talkative."
+      },
+      {
+        q: "Select the most appropriate option to fill in the blank.\nThe spokesperson’s speech was criticized for resorting to _______ rather than answering the journalist's direct question.",
+        options: ["(a) Ambiguity", "(b) Circumlocution", "(c) Evasion", "(d) Equivocation"],
+        answer: 1,
+        explanation: "<strong>Circumlocution</strong> — The use of unnecessarily wordy and indirect language to express an idea."
+      },
+      {
+        q: "Select the most appropriate option to fill in the blank.\nShe won the national debate competition due to her flawless _______ and commanding stage presence.",
+        options: ["(a) Pronunciation", "(b) Elocution", "(c) Diction", "(d) Oration"],
+        answer: 1,
+        explanation: "<strong>Elocution</strong> — The skill or style of clear, expressive, and effective public speaking."
+      },
+      {
+        q: "Select the most appropriate option to fill in the blank.\nThe lawyer argued the defense case with such persuasive _______ that the jury was moved to acquit the defendant.",
+        options: ["(a) Rhetoric", "(b) Eloquence", "(c) Persuasion", "(d) Forcefulness"],
+        answer: 1,
+        explanation: "<strong>Eloquence</strong> — Fluent, forceful, and persuasive expressiveness in speech."
+      },
+      {
+        q: "Select the most appropriate option to fill in the blank.\nThe actor delivered a stirring _______ on stage, revealing his inner thoughts while standing completely alone.",
+        options: ["(a) Monologue", "(b) Soliloquy", "(c) Aside", "(d) Address"],
+        answer: 1,
+        explanation: "<strong>Soliloquy</strong> — An act of speaking one's thoughts aloud when by oneself in a play."
+      },
+      {
+        q: "Select the most appropriate option to fill in the blank.\nDuring the peace summit, the appointed _______ represented the rebel faction in private conversations with state mediators.",
+        options: ["(a) Delegate", "(b) Interlocutor", "(c) Representative", "(d) Envoy"],
+        answer: 1,
+        explanation: "<strong>Interlocutor</strong> — A person who takes part in a dialogue or formal conversation."
+      },
+      {
+        q: "Select the most appropriate option to fill in the blank.\nThe finance department assured the employees that it would _______ all travelling expenses incurred during official duty.",
+        options: ["(a) Refund", "(b) Reimburse", "(c) Compensate", "(d) Remit"],
+        answer: 1,
+        explanation: "<strong>Reimburse</strong> — To pay back or repay money spent by someone."
+      },
+      {
+        q: "Select the most appropriate option to fill in the blank.\nThe treasurer was authorized to _______ the approved research funds to the department head.",
+        options: ["(a) Allocate", "(b) Disburse", "(c) Distribute", "(d) Spend"],
+        answer: 1,
+        explanation: "<strong>Disburse</strong> — To pay out or distribute money from a public fund or treasury."
+      },
+      {
+        q: "Select the most appropriate option to fill in the blank.\nThe college _______ managed all official financial accounts and issued payments for university operations.",
+        options: ["(a) Cashier", "(b) Bursar", "(c) Treasurer", "(d) Auditor"],
+        answer: 1,
+        explanation: "<strong>Bursar</strong> — An officer or accountant who manages the financial affairs of a college or school."
+      },
+      {
+        q: "Select the most appropriate option to fill in the blank.\nThe negligence of the safety inspector was deemed _______, making him legally responsible for the accident.",
+        options: ["(a) Blameworthy", "(b) Culpable", "(c) Guilty", "(d) Negligent"],
+        answer: 1,
+        explanation: "<strong>Culpable</strong> — Deserving blame or considered responsible for a fault or crime."
+      },
+      {
+        q: "Select the most appropriate option to fill in the blank.\nPolice officers quickly apprehended the _______ as he tried to flee the crime scene with stolen goods.",
+        options: ["(a) Offender", "(b) Culprit", "(c) Suspect", "(d) Convict"],
+        answer: 1,
+        explanation: "<strong>Culprit</strong> — A person who is responsible for a crime or misdeed."
+      },
+      {
+        q: "Select the most appropriate option to fill in the blank.\nNew DNA evidence helped to _______ the falsely accused prisoner after ten years of wrongful imprisonment.",
+        options: ["(a) Vindicate", "(b) Exculpate", "(c) Absolve", "(d) Acquit"],
+        answer: 1,
+        explanation: "<strong>Exculpate</strong> — To clear from a charge of guilt or fault."
+      },
+      {
+        q: "Select the most appropriate option to fill in the blank.\nLiving as a total recluse, the old man became a known _______ who distrusted every member of his community.",
+        options: ["(a) Hermit", "(b) Misanthrope", "(c) Cynic", "(d) Pessimist"],
+        answer: 1,
+        explanation: "<strong>Misanthrope</strong> — A person who dislikes or hates humankind."
+      },
+      {
+        q: "Select the most appropriate option to fill in the blank.\nThe wealthy industrialist was celebrated as a generous _______ who funded dozens of public hospitals.",
+        options: ["(a) Benefactor", "(b) Philanthrope", "(c) Altruist", "(d) Patron"],
+        answer: 1,
+        explanation: "<strong>Philanthrope</strong> — A lover of mankind; a person who seeks to promote human welfare."
+      },
+      {
+        q: "Select the most appropriate option to fill in the blank.\nThe national economy remained stuck in the _______ for three consecutive quarters with zero growth.",
+        options: ["(a) Depression", "(b) Doldrums", "(c) Stagnation", "(d) Slump"],
+        answer: 1,
+        explanation: "<strong>Doldrums</strong> — A state or period of inactivity, stagnation, or depression."
+      },
+      {
+        q: "Select the most appropriate option to fill in the blank.\nDignitaries sent messages of _______ to the family of the deceased leader.",
+        options: ["(a) Sympathy", "(b) Condolence", "(c) Solace", "(d) Compassion"],
+        answer: 1,
+        explanation: "<strong>Condolence</strong> — An expression of sympathy and sorrow, especially on the occasion of a death."
+      },
+      {
+        q: "Select the most appropriate option to fill in the blank.\nHe experienced severe _______ and refused to step onto the high balcony of the skyscraper.",
+        options: ["(a) Vertigo", "(b) Acrophobia", "(c) Claustrophobia", "(d) Agoraphobia"],
+        answer: 1,
+        explanation: "<strong>Acrophobia</strong> — An extreme or irrational fear of heights."
+      },
+      {
+        q: "Select the most appropriate option to fill in the blank.\nAs an avid _______, he collected rare first-edition volumes and filled his home library with thousands of books.",
+        options: ["(a) Scholar", "(b) Bibliophile", "(c) Collector", "(d) Intellectual"],
+        answer: 1,
+        explanation: "<strong>Bibliophile</strong> — A person who collects or has a great love of books."
+      },
+      {
+        q: "Select the most appropriate option to fill in the blank.\nThe dictator established a strict _______, eliminating all opposing political parties and centralizing total control.",
+        options: ["(a) Totalitarianism", "(b) Autocracy", "(c) Oligarchy", "(d) Dictatorship"],
+        answer: 1,
+        explanation: "<strong>Autocracy</strong> — A system of government by one person with absolute power."
+      }
+    ];
+
+    let currentIndex = 0;
+    let userAnswers = new Array(questions.length).fill(null);
+
+    function initQuiz() {
+      renderQuestion();
+    }
+
+    function renderQuestion() {
+      const qData = questions[currentIndex];
+      
+      // Update Progress & Header
+      document.getElementById('question-count').innerText = `Q ${currentIndex + 1}/${questions.length}`;
+      document.getElementById('progress-bar').style.width = `${((currentIndex + 1) / questions.length) * 100}%`;
+      
+      // Question Text
+      document.getElementById('q-text').innerText = qData.q;
+
+      // Clear previous inputs/explanations
+      const optionsContainer = document.getElementById('options-container');
+      optionsContainer.innerHTML = '';
+      
+      const expBox = document.getElementById('explanation-box');
+      expBox.classList.remove('visible');
+      
+      const nextBtn = document.getElementById('next-btn');
+      nextBtn.disabled = true;
+      nextBtn.innerText = currentIndex === questions.length - 1 ? "Finish Quiz" : "Next Question";
+
+      // Render Options
+      qData.options.forEach((optText, idx) => {
+        const btn = document.createElement('button');
+        btn.className = 'option-btn';
+        btn.innerText = optText;
+        btn.onclick = () => selectOption(idx);
+        optionsContainer.appendChild(btn);
+      });
+    }
+
+    function selectOption(selectedIndex) {
+      const qData = questions[currentIndex];
+      userAnswers[currentIndex] = selectedIndex;
+
+      const buttons = document.querySelectorAll('.option-btn');
+      buttons.forEach((btn, idx) => {
+        btn.disabled = true;
+        if (idx === qData.answer) {
+          btn.classList.add('correct');
+        }
+        if (idx === selectedIndex && selectedIndex !== qData.answer) {
+          btn.classList.add('incorrect');
+        }
+      });
+
+      // Show Explanation
+      const expBox = document.getElementById('explanation-box');
+      const expStatus = document.getElementById('exp-status');
+      const expContent = document.getElementById('exp-content');
+
+      if (selectedIndex === qData.answer) {
+        expStatus.innerText = "Correct Answer!";
+        expStatus.style.color = "var(--success-border)";
+      } else {
+        expStatus.innerText = "Incorrect Answer";
+        expStatus.style.color = "var(--danger-border)";
+      }
+
+      expContent.innerHTML = qData.explanation;
+      expBox.classList.add('visible');
+
+      // Enable Next Button
+      document.getElementById('next-btn').disabled = false;
+    }
+
+    function nextQuestion() {
+      if (currentIndex < questions.length - 1) {
+        currentIndex++;
+        renderQuestion();
+      } else {
+        showResults();
+      }
+    }
+
+    function showResults() {
+      document.getElementById('quiz-view').style.display = 'none';
+      document.getElementById('quiz-footer').style.display = 'none';
+      document.getElementById('results-view').classList.add('active');
+
+      let correctCount = 0;
+      let incorrectCount = 0;
+      const breakdownContainer = document.getElementById('breakdown-container');
+      breakdownContainer.innerHTML = '';
+
+      questions.forEach((qData, idx) => {
+        const userAns = userAnswers[idx];
+        if (userAns === qData.answer) {
+          correctCount++;
+        } else {
+          incorrectCount++;
+          
+          // Add to breakdown
+          const item = document.createElement('div');
+          item.className = 'breakdown-item';
+          
+          const userText = userAns !== null ? qData.options[userAns] : "Not Answered";
+          const correctText = qData.options[qData.answer];
+
+          item.innerHTML = `
+            <div class="breakdown-q">Q${idx + 1}: ${qData.q.split('\n')[1] || qData.q}</div>
+            <div class="breakdown-ans text-danger">Your Answer: ${userText}</div>
+            <div class="breakdown-ans text-success">Correct Answer: ${correctText}</div>
+          `;
+          breakdownContainer.appendChild(item);
+        }
+      });
+
+      const percentage = Math.round((correctCount / questions.length) * 100);
+      document.getElementById('res-score').innerText = `${percentage}%`;
+      document.getElementById('res-correct').innerText = `Correct: ${correctCount}`;
+      document.getElementById('res-incorrect').innerText = `Incorrect: ${incorrectCount}`;
+
+      if (incorrectCount === 0) {
+        breakdownContainer.innerHTML = '<div style="text-align:center; font-size:0.9rem; color:var(--text-muted);">Perfect score! No incorrect answers to display.</div>';
+      }
+    }
+
+    function restartQuiz() {
+      currentIndex = 0;
+      userAnswers = new Array(questions.length).fill(null);
+      document.getElementById('results-view').classList.remove('active');
+      document.getElementById('quiz-view').style.display = 'flex';
+      document.getElementById('quiz-footer').style.display = 'flex';
+      renderQuestion();
+    }
+
+    function toggleTheme() {
+      const body = document.body;
+      const btn = document.getElementById('theme-btn');
+      if (body.getAttribute('data-theme') === 'dark') {
+        body.removeAttribute('data-theme');
+        btn.innerText = '🌙 Dark';
+      } else {
+        body.setAttribute('data-theme', 'dark');
+        btn.innerText = '☀️ Light';
+      }
+    }
+
+    // Initialize on load
+    window.onload = initQuiz;
+  </script>
+</body>
+</html>
