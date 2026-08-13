@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Indices & Reports 2025-2026 Quiz</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#f0fdf4',
+              100: '#dcfce7',
+              500: '#22c55e',
+              600: '#16a34a',
+              700: '#15803d',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+    }
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 5px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: rgba(156, 163, 175, 0.4);
+      border-radius: 10px;
+    }
+  </style>
+</head>
+<body class="bg-slate-100 dark:bg-slate-900 text-slate-800 dark:text-slate-100 h-full flex flex-col justify-between overflow-hidden transition-colors duration-200">
+
+  <!-- Header Section -->
+  <header class="bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 px-4 py-2.5 shadow-sm flex-shrink-0">
+    <div class="max-w-4xl mx-auto flex items-center justify-between gap-2">
+      <div class="flex items-center space-x-2">
+        <div class="p-1.5 bg-blue-100 dark:bg-blue-900/50 rounded-lg text-blue-600 dark:text-blue-400">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+          </svg>
+        </div>
+        <div>
+          <h1 class="text-sm md:text-base font-bold leading-tight">Reports & Indices 2025–26</h1>
+          <p class="text-[11px] text-slate-500 dark:text-slate-400 hidden sm:block">SSC CGL, CHSL, CPO & Competitive Exams Prep</p>
+        </div>
+      </div>
+
+      <!-- Quiz Stats Header -->
+      <div id="header-stats" class="flex items-center space-x-3 text-xs md:text-sm">
+        <div class="bg-slate-100 dark:bg-slate-700/60 px-2.5 py-1 rounded-md font-medium">
+          Q: <span id="current-num" class="text-blue-600 dark:text-blue-400 font-bold">1</span>/<span id="total-num">28</span>
+        </div>
+        <div class="bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-400 px-2.5 py-1 rounded-md font-semibold border border-emerald-200 dark:border-emerald-800/50">
+          Score: <span id="live-score">0</span>
+        </div>
+
+        <!-- Dark/Light Mode Toggle -->
+        <button id="theme-toggle" class="p-1.5 rounded-lg bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-600 transition-colors" title="Toggle Theme">
+          <!-- Sun Icon -->
+          <svg id="sun-icon" class="w-5 h-5 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path>
+          </svg>
+          <!-- Moon Icon -->
+          <svg id="moon-icon" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Progress Bar -->
+  <div class="w-full bg-slate-200 dark:bg-slate-700 h-1.5 flex-shrink-0">
+    <div id="progress-bar" class="bg-blue-600 h-1.5 transition-all duration-300 w-0"></div>
+  </div>
+
+  <!-- Main Viewport Area (No-Scroll Viewport Optimization) -->
+  <main class="flex-1 max-w-4xl w-full mx-auto p-3 sm:p-4 flex flex-col justify-between overflow-hidden">
+
+    <!-- Active Quiz View Container -->
+    <div id="quiz-container" class="flex-1 flex flex-col justify-between max-h-full overflow-hidden">
+      
+      <!-- Question Card -->
+      <div class="bg-white dark:bg-slate-800 rounded-xl shadow-md border border-slate-200 dark:border-slate-700 p-4 sm:p-5 flex-1 flex flex-col justify-between overflow-y-auto custom-scrollbar mb-3">
+        
+        <div>
+          <!-- Category / Badge Header -->
+          <div class="flex items-center justify-between mb-2">
+            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/60 dark:text-blue-300">
+              Exam Practice Standard
+            </span>
+            <span class="text-xs text-slate-400 dark:text-slate-500 font-mono" id="question-id-badge">Q1</span>
+          </div>
+
+          <!-- Question Text -->
+          <div id="question-text" class="text-sm sm:text-base md:text-lg font-semibold text-slate-900 dark:text-slate-100 leading-snug mb-3">
+            <!-- Question prompt will be dynamically inserted here -->
+          </div>
+
+          <!-- Additional Callout / Complex Formatting Slot -->
+          <div id="complex-content-slot" class="hidden mb-3"></div>
+
+          <!-- Answer Options Grid -->
+          <div id="options-container" class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 mt-2">
+            <!-- Option buttons rendered dynamically -->
+          </div>
+        </div>
+
+        <!-- Instant Feedback Explanation Box -->
+        <div id="explanation-box" class="hidden mt-3 p-3 rounded-lg border text-xs sm:text-sm leading-relaxed transition-all duration-200">
+          <div class="flex items-center font-bold mb-1" id="feedback-header">
+            <span id="feedback-icon" class="mr-1.5"></span>
+            <span id="feedback-title"></span>
+          </div>
+          <p id="explanation-text" class="text-slate-700 dark:text-slate-300"></p>
+        </div>
+
+      </div>
+
+      <!-- Footer Action Area -->
+      <div class="flex items-center justify-between bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-2.5 shadow-sm flex-shrink-0">
+        <div class="text-xs text-slate-500 dark:text-slate-400 font-medium px-2">
+          Select an option to view details
+        </div>
+        <button id="next-btn" onclick="nextQuestion()" disabled class="px-5 py-2 rounded-lg bg-blue-600 text-white font-semibold text-xs sm:text-sm hover:bg-blue-700 disabled:opacity-40 disabled:cursor-not-allowed transition-all shadow-sm flex items-center space-x-1">
+          <span>Next Question</span>
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
+          </svg>
+        </button>
+      </div>
+
+    </div>
+
+    <!-- Results Summary Screen (Initially Hidden) -->
+    <div id="results-container" class="hidden flex-1 bg-white dark:bg-slate-800 rounded-xl shadow-lg border border-slate-200 dark:border-slate-700 p-4 sm:p-6 flex flex-col max-h-full overflow-hidden">
+      
+      <div class="text-center mb-4 flex-shrink-0">
+        <h2 class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-slate-100">Quiz Completed!</h2>
+        <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400">Here is a breakdown of your performance</p>
+      </div>
+
+      <!-- Score KPI Cards -->
+      <div class="grid grid-cols-3 gap-3 mb-4 flex-shrink-0">
+        <div class="bg-slate-50 dark:bg-slate-700/50 p-3 rounded-xl border border-slate-200 dark:border-slate-600 text-center">
+          <div class="text-xs text-slate-500 dark:text-slate-400 font-medium">Final Score</div>
+          <div class="text-xl sm:text-2xl font-bold text-blue-600 dark:text-blue-400 mt-0.5" id="summary-score">0/28</div>
+        </div>
+        <div class="bg-emerald-50 dark:bg-emerald-950/30 p-3 rounded-xl border border-emerald-200 dark:border-emerald-800 text-center">
+          <div class="text-xs text-emerald-600 dark:text-emerald-400 font-medium">Accuracy</div>
+          <div class="text-xl sm:text-2xl font-bold text-emerald-600 dark:text-emerald-400 mt-0.5" id="summary-accuracy">0%</div>
+        </div>
+        <div class="bg-rose-50 dark:bg-rose-950/30 p-3 rounded-xl border border-rose-200 dark:border-rose-800 text-center">
+          <div class="text-xs text-rose-600 dark:text-rose-400 font-medium">Incorrect</div>
+          <div class="text-xl sm:text-2xl font-bold text-rose-600 dark:text-rose-400 mt-0.5" id="summary-incorrect">0</div>
+        </div>
+      </div>
+
+      <!-- Incorrect Questions Review List Header -->
+      <div class="flex items-center justify-between mb-2 flex-shrink-0">
+        <h3 class="text-sm font-bold text-slate-800 dark:text-slate-200">Review & Breakdown</h3>
+        <div class="flex space-x-1 text-xs">
+          <button id="filter-all" onclick="setReviewFilter('all')" class="px-2.5 py-1 rounded bg-blue-600 text-white font-medium">All</button>
+          <button id="filter-incorrect" onclick="setReviewFilter('incorrect')" class="px-2.5 py-1 rounded bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300 font-medium">Incorrect Only</button>
+        </div>
+      </div>
+
+      <!-- Review Scrollable Box -->
+      <div id="review-list" class="flex-1 overflow-y-auto custom-scrollbar space-y-3 pr-1 mb-4">
+        <!-- Review items dynamically generated -->
+      </div>
+
+      <!-- Restart Button Footer -->
+      <div class="flex justify-center flex-shrink-0 pt-2 border-t border-slate-200 dark:border-slate-700">
+        <button onclick="restartQuiz()" class="px-6 py-2.5 rounded-xl bg-blue-600 text-white font-semibold text-sm hover:bg-blue-700 transition-all shadow-md flex items-center space-x-2">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+          </svg>
+          <span>Restart Quiz</span>
+        </button>
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- JavaScript Application Logic -->
+  <script>
+    // Quiz Questions Data Source
+    const quizData = [
+      {
+        id: 1,
+        question: "Which organization releases the World Competitiveness Index 2026?",
+        options: [
+          "World Economic Forum (WEF)",
+          "Institute for Management Development (IMD)",
+          "World Bank",
+          "Transparency International"
+        ],
+        correct: 1,
+        explanation: "As per the document, the World Competitiveness Index 2026 is issued by IMD. Singapore topped the index, and India ranked 44th."
+      },
+      {
+        id: 2,
+        question: "What is India’s rank in the World Happiness Report 2026?",
+        options: [
+          "116th",
+          "127th",
+          "130th",
+          "131st"
+        ],
+        correct: 0,
+        explanation: "In the World Happiness Report 2026 (issued by Oxford Wellbeing Research Centre, Gallup & UNSDSN), India is ranked 116th, while Finland secured the top rank."
+      },
+      {
+        id: 3,
+        question: "The Corruption Perceptions Index (CPI) 2025 is released by which of the following organizations?",
+        options: [
+          "World Bank",
+          "World Economic Forum",
+          "Transparency International",
+          "Institute for Economics and Peace"
+        ],
+        correct: 2,
+        explanation: "The CPI 2025 is issued by Transparency International. Denmark achieved the top spot, and India was ranked 91st."
+      },
+      {
+        id: 4,
+        question: "Which country secured the 4th spot in the Climate Change Performance Index (CCPI) 2026, considering the first three spots remained empty?",
+        options: [
+          "Sweden",
+          "Finland",
+          "Denmark",
+          "Estonia"
+        ],
+        correct: 2,
+        explanation: "In the CCPI 2026, the first three spots were left empty, and Denmark occupied the 4th spot with a score of 80.52. India ranked 23rd out of 63 countries & EU."
+      },
+      {
+        id: 5,
+        question: "Which organization issues the Global Peace Index (GPI) 2026?",
+        options: [
+          "Reporters Without Borders",
+          "Institute for Economics and Peace (IEP)",
+          "United Nations Development Programme",
+          "Economist Intelligence Unit"
+        ],
+        correct: 1,
+        explanation: "The Global Peace Index 2026 is published by IEP. Iceland ranked 1st, and India achieved the 127th position."
+      },
+      {
+        id: 6,
+        question: "What is India’s rank in the World Press Freedom Index 2026?",
+        options: [
+          "131st",
+          "157th",
+          "138th",
+          "176th"
+        ],
+        correct: 1,
+        explanation: "Released by Reporters Without Borders (RSF), the World Press Freedom Index 2026 ranks Norway at 1st and India at 157th."
+      },
+      {
+        id: 7,
+        question: "The Human Development Index 2025 titled \"A Matter of Choice: People and Possibilities in the Age of AI\" was published by:",
+        options: [
+          "World Bank",
+          "World Economic Forum",
+          "United Nations Development Programme (UNDP)",
+          "UNESCO"
+        ],
+        correct: 2,
+        explanation: "HDI is released by UNDP. Iceland topped the index (score: 0.972), while India ranked 130th (score: 0.685)."
+      },
+      {
+        id: 8,
+        question: "Which country ranked 1st in the Global Firepower Index 2026?",
+        options: [
+          "Russia",
+          "China",
+          "USA",
+          "India"
+        ],
+        correct: 2,
+        explanation: "In the Global Firepower Index 2026, the USA topped the list, followed by other countries, while India secured the 4th spot."
+      },
+      {
+        id: 9,
+        question: "What is the rank of India in the Henley Passport Index (as of June 2026)?",
+        options: [
+          "80th",
+          "70th",
+          "94th",
+          "38th"
+        ],
+        correct: 0,
+        explanation: "According to Henley & Partners (using IATA data), Singapore ranked top, while India placed 80th with 56 visa-free access countries."
+      },
+      {
+        id: 10,
+        question: "In the Global Terrorism Index (GTI) 2026, which country ranked 13th along with Pakistan?",
+        options: [
+          "Afghanistan",
+          "India",
+          "Somalia",
+          "Nigeria"
+        ],
+        correct: 1,
+        explanation: "The Global Terrorism Index 2026 released by IEP ranks both India and Pakistan at the 13th position."
+      },
+      {
+        id: 11,
+        question: "Which organization releases the Global Innovation Index (GII)?",
+        options: [
+          "World Bank",
+          "World Intellectual Property Organization (WIPO)",
+          "World Economic Forum",
+          "Portulans Institute"
+        ],
+        correct: 1,
+        explanation: "The Global Innovation Index 2025 is published by WIPO. Switzerland topped for the 15th time, and India ranked 38th out of 139 countries."
+      },
+      {
+        id: 12,
+        question: "What is India’s rank in the UN Sustainable Development Report 2026?",
+        options: [
+          "94th",
+          "102nd",
+          "131st",
+          "132nd"
+        ],
+        correct: 0,
+        explanation: "Released by the UN Sustainable Development Solutions Network (SDSN), Finland ranked 1st, and India ranked 94th."
+      },
+      {
+        id: 13,
+        question: "Which organization releases the Global Gender Gap Report?",
+        options: [
+          "UNDP",
+          "UN Women",
+          "World Economic Forum (WEF)",
+          "Transparency International"
+        ],
+        correct: 2,
+        explanation: "The Global Gender Gap Report 2025 is released by WEF. Iceland topped (92.6%), while India stood at 131st rank."
+      },
+      {
+        id: 14,
+        question: "In the Global Hunger Index 2025, India’s rank is 102nd. Which organizations publish this index?",
+        options: [
+          "FAO & World Bank",
+          "Concern Worldwide & Welthungerhilfe",
+          "UNDP & UNICEF",
+          "WFP & WHO"
+        ],
+        correct: 1,
+        explanation: "The GHI 2025 is jointly published by Concern Worldwide and Welthungerhilfe (a German institute)."
+      },
+      {
+        id: 15,
+        question: "Which country topped the Global Energy Transition Index 2026 released by the World Economic Forum?",
+        options: [
+          "Denmark",
+          "Switzerland",
+          "Finland",
+          "Sweden"
+        ],
+        correct: 3,
+        explanation: "Sweden ranked 1st in the Global Energy Transition Index 2026 published by WEF. India secured the 70th rank."
+      },
+      {
+        id: 16,
+        question: "What is India's rank in the Network Readiness Index 2025 published by the Portulans Institute?",
+        options: [
+          "38th",
+          "45th",
+          "70th",
+          "80th"
+        ],
+        correct: 1,
+        explanation: "In the Network Readiness Index 2025, the US topped the list (Score - 79.13), and India ranked 45th (Score - 54.43)."
+      },
+      {
+        id: 17,
+        question: "Which country topped the Logistics Performance Index (LPI) published by the World Bank?",
+        options: [
+          "USA",
+          "Denmark",
+          "Singapore",
+          "Estonia"
+        ],
+        correct: 2,
+        explanation: "Singapore secured the 1st position in World Bank's Logistics Performance Index. India ranked 38th overall (and 22nd in International Shipments)."
+      },
+      {
+        id: 18,
+        question: "Which institution ranked 1st globally in the QS World Rankings 2027?",
+        options: [
+          "Harvard University",
+          "University of Oxford",
+          "Massachusetts Institute of Technology (MIT)",
+          "Stanford University"
+        ],
+        correct: 2,
+        explanation: "MIT topped the QS World Rankings 2027. Among Indian institutions, IIT Delhi was the top-ranked at 118th."
+      },
+      {
+        id: 19,
+        question: "Which city ranked top (1st) in the Global Liveability Index 2026 released by the Economist Intelligence Unit (EIU)?",
+        options: [
+          "Vienna",
+          "Copenhagen",
+          "Melbourne",
+          "Geneva"
+        ],
+        correct: 1,
+        explanation: "Copenhagen (Denmark), Vienna (Austria), and Melbourne (Australia) are listed among the top cities, with Copenhagen leading. New Delhi ranked 120th."
+      },
+      {
+        id: 20,
+        question: "What is India’s position in the Environmental Performance Index 2026?",
+        options: [
+          "176th",
+          "132nd",
+          "102nd",
+          "130th"
+        ],
+        correct: 0,
+        explanation: "Released by Yale Center for Environmental Law and Policy and Columbia University, Estonia topped the index and India ranked 176th."
+      },
+      {
+        id: 21,
+        question: "Which organization releases the Index of Economic Freedom 2026?",
+        options: [
+          "World Economic Forum",
+          "The Heritage Foundation",
+          "IMD",
+          "World Bank"
+        ],
+        correct: 1,
+        explanation: "The Index of Economic Freedom 2026 is published by The Heritage Foundation. Singapore topped the index, and India ranked 132nd."
+      },
+      {
+        id: 22,
+        question: "Which port was named India’s top container port, ranking 22nd globally in World Bank’s Container Port Performance Index (CPPI) 2025?",
+        options: [
+          "Mundra Port",
+          "Deendayal Port Authority",
+          "Jawaharlal Nehru Port Authority (JNPA)",
+          "Syama Prasad Mookerjee Port"
+        ],
+        correct: 2,
+        explanation: "According to the CPPI 2025 released by the World Bank, JNPA ranked 22nd globally, making it India's top container port."
+      },
+      {
+        id: 23,
+        question: "According to the SIPRI Yearbook 2026, which country was the largest importer (recipient) of major arms during 2021–25?",
+        options: [
+          "India",
+          "Ukraine",
+          "Saudi Arabia",
+          "Qatar"
+        ],
+        correct: 1,
+        explanation: "As per SIPRI data (2021–25), Ukraine was the largest arms recipient (9.7%), while India stood 2nd (8.2%)."
+      },
+      {
+        id: 24,
+        question: "According to SIPRI (2021–25), which country was the largest supplier of major arms globally?",
+        options: [
+          "France",
+          "Russia",
+          "Germany",
+          "USA"
+        ],
+        correct: 3,
+        explanation: "The USA was the largest global arms supplier accounting for 42.0% of total arms exports, followed by France (9.8%) and Russia (6.8%)."
+      },
+      {
+        id: 25,
+        question: "What is India's rank in total military spending in 2025 according to the SIPRI Yearbook 2026?",
+        options: [
+          "3rd",
+          "4th",
+          "5th",
+          "6th"
+        ],
+        correct: 2,
+        explanation: "In 2025 military spending, the top spenders were: 1. USA, 2. China, 3. Russia, 4. Germany, and 5. India ($92.1 Billion)."
+      },
+      {
+        id: 26,
+        question: "Which organization releases the Global Forest Resources Assessment (GFRA) 2025?",
+        options: [
+          "UNEP",
+          "Food and Agriculture Organization (FAO)",
+          "UNDP",
+          "Germanwatch"
+        ],
+        correct: 1,
+        explanation: "The GFRA 2025 is released by the FAO."
+      },
+      {
+        id: 27,
+        question: "What is India’s global rank in terms of total forest area according to the GFRA 2025 report by FAO?",
+        options: [
+          "3rd",
+          "5th",
+          "9th",
+          "10th"
+        ],
+        correct: 2,
+        explanation: "According to GFRA 2025, India moved up to 9th position globally in terms of total forest area."
+      },
+      {
+        id: 28,
+        question: "What is India’s global rank in terms of net annual forest area gain according to GFRA 2025?",
+        options: [
+          "1st",
+          "3rd",
+          "5th",
+          "9th"
+        ],
+        correct: 1,
+        explanation: "India continues to hold the 3rd position worldwide in net annual forest area gain. (Note: India also ranks 5th among top global carbon sinks)."
+      }
+    ];
+
+    // State Variables
+    let currentIndex = 0;
+    let score = 0;
+    let userAnswers = new Array(quizData.length).fill(null);
+    let reviewFilter = 'all';
+
+    // DOM Elements
+    const currentNumEl = document.getElementById('current-num');
+    const totalNumEl = document.getElementById('total-num');
+    const liveScoreEl = document.getElementById('live-score');
+    const progressBar = document.getElementById('progress-bar');
+    const questionTextEl = document.getElementById('question-text');
+    const optionsContainer = document.getElementById('options-container');
+    const explanationBox = document.getElementById('explanation-box');
+    const feedbackHeader = document.getElementById('feedback-header');
+    const feedbackIcon = document.getElementById('feedback-icon');
+    const feedbackTitle = document.getElementById('feedback-title');
+    const explanationText = document.getElementById('explanation-text');
+    const nextBtn = document.getElementById('next-btn');
+    const qBadge = document.getElementById('question-id-badge');
+
+    const quizContainer = document.getElementById('quiz-container');
+    const resultsContainer = document.getElementById('results-container');
+
+    // Theme Toggle Initialization
+    const themeToggleBtn = document.getElementById('theme-toggle');
+    const sunIcon = document.getElementById('sun-icon');
+    const moonIcon = document.getElementById('moon-icon');
+
+    function initTheme() {
+      if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        document.documentElement.classList.add('dark');
+        sunIcon.classList.remove('hidden');
+        moonIcon.classList.add('hidden');
+      } else {
+        document.documentElement.classList.remove('dark');
+        sunIcon.classList.add('hidden');
+        moonIcon.classList.remove('hidden');
+      }
+    }
+
+    themeToggleBtn.addEventListener('click', () => {
+      if (document.documentElement.classList.contains('dark')) {
+        document.documentElement.classList.remove('dark');
+        localStorage.setItem('theme', 'light');
+        sunIcon.classList.add('hidden');
+        moonIcon.classList.remove('hidden');
+      } else {
+        document.documentElement.classList.add('dark');
+        localStorage.setItem('theme', 'dark');
+        sunIcon.classList.remove('hidden');
+        moonIcon.classList.add('hidden');
+      }
+    });
+
+    // Initialize Quiz
+    function initQuiz() {
+      totalNumEl.textContent = quizData.length;
+      loadQuestion();
+    }
+
+    // Render Current Question
+    function loadQuestion() {
+      const q = quizData[currentIndex];
+      
+      // Update Stats
+      currentNumEl.textContent = currentIndex + 1;
+      liveScoreEl.textContent = score;
+      qBadge.textContent = `Q${q.id}`;
+      progressBar.style.width = `${((currentIndex + 1) / quizData.length) * 100}%`;
+
+      // Update Question Prompt
+      questionTextEl.textContent = q.question;
+
+      // Reset Options
+      optionsContainer.innerHTML = '';
+      explanationBox.classList.add('hidden');
+      nextBtn.disabled = true;
+
+      const labels = ['A', 'B', 'C', 'D'];
+
+      q.options.forEach((opt, idx) => {
+        const btn = document.createElement('button');
+        btn.className = `w-full text-left p-2.5 sm:p-3 rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/80 hover:bg-blue-50 dark:hover:bg-slate-700 hover:border-blue-300 transition-all text-xs sm:text-sm flex items-start space-x-2.5 font-medium cursor-pointer option-btn`;
+        btn.onclick = () => selectOption(idx);
+
+        btn.innerHTML = `
+          <span class="w-5 h-5 rounded-md bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300 flex items-center justify-center text-xs font-bold flex-shrink-0 mt-0.5 option-badge">${labels[idx]}</span>
+          <span class="flex-1 leading-snug">${opt}</span>
+        `;
+        optionsContainer.appendChild(btn);
+      });
+
+      // If already answered (navigating back/forward state)
+      if (userAnswers[currentIndex] !== null) {
+        selectOption(userAnswers[currentIndex], false);
+      }
+    }
+
+    // Handle Option Selection
+    function selectOption(index, isFirstTime = true) {
+      const q = quizData[currentIndex];
+      const buttons = optionsContainer.querySelectorAll('button');
+
+      if (isFirstTime && userAnswers[currentIndex] === null) {
+        userAnswers[currentIndex] = index;
+        if (index === q.correct) {
+          score++;
+          liveScoreEl.textContent = score;
+        }
+      }
+
+      const selectedIdx = userAnswers[currentIndex];
+      const isCorrect = selectedIdx === q.correct;
+
+      // Disable all buttons
+      buttons.forEach((btn, idx) => {
+        btn.disabled = true;
+        btn.classList.remove('hover:bg-blue-50', 'dark:hover:bg-slate-700', 'hover:border-blue-300', 'cursor-pointer');
+        btn.classList.add('cursor-default');
+
+        const badge = btn.querySelector('.option-badge');
+
+        if (idx === q.correct) {
+          btn.classList.remove('bg-slate-50', 'dark:bg-slate-800/80', 'border-slate-200', 'dark:border-slate-700');
+          btn.classList.add('bg-emerald-100', 'dark:bg-emerald-950/60', 'border-emerald-500', 'text-emerald-900', 'dark:text-emerald-200');
+          badge.classList.remove('bg-slate-200', 'dark:bg-slate-700');
+          badge.classList.add('bg-emerald-600', 'text-white');
+        } else if (idx === selectedIdx && !isCorrect) {
+          btn.classList.remove('bg-slate-50', 'dark:bg-slate-800/80', 'border-slate-200', 'dark:border-slate-700');
+          btn.classList.add('bg-rose-100', 'dark:bg-rose-950/60', 'border-rose-500', 'text-rose-900', 'dark:text-rose-200');
+          badge.classList.remove('bg-slate-200', 'dark:bg-slate-700');
+          badge.classList.add('bg-rose-600', 'text-white');
+        } else {
+          btn.classList.add('opacity-50');
+        }
+      });
+
+      // Show Explanation Box
+      explanationBox.classList.remove('hidden');
+      if (isCorrect) {
+        explanationBox.className = "mt-3 p-3 rounded-lg border text-xs sm:text-sm leading-relaxed transition-all duration-200 bg-emerald-50 dark:bg-emerald-950/40 border-emerald-200 dark:border-emerald-800/50 text-emerald-900 dark:text-emerald-200";
+        feedbackIcon.innerHTML = `<svg class="w-4 h-4 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>`;
+        feedbackTitle.textContent = "Correct Answer!";
+      } else {
+        explanationBox.className = "mt-3 p-3 rounded-lg border text-xs sm:text-sm leading-relaxed transition-all duration-200 bg-rose-50 dark:bg-rose-950/40 border-rose-200 dark:border-rose-800/50 text-rose-900 dark:text-rose-200";
+        feedbackIcon.innerHTML = `<svg class="w-4 h-4 text-rose-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>`;
+        feedbackTitle.textContent = `Incorrect! Correct: (${['A','B','C','D'][q.correct]}) ${q.options[q.correct]}`;
+      }
+      explanationText.textContent = q.explanation;
+
+      // Enable Next Button
+      nextBtn.disabled = false;
+    }
+
+    // Next Question Handler
+    function nextQuestion() {
+      if (currentIndex < quizData.length - 1) {
+        currentIndex++;
+        loadQuestion();
+      } else {
+        showResults();
+      }
+    }
+
+    // Show End Results
+    function showResults() {
+      quizContainer.classList.add('hidden');
+      resultsContainer.classList.remove('hidden');
+
+      const pct = Math.round((score / quizData.length) * 100);
+      document.getElementById('summary-score').textContent = `${score}/${quizData.length}`;
+      document.getElementById('summary-accuracy').textContent = `${pct}%`;
+      document.getElementById('summary-incorrect').textContent = `${quizData.length - score}`;
+
+      renderReviewList();
+    }
+
+    // Render Review Breakdown
+    function renderReviewList() {
+      const reviewListEl = document.getElementById('review-list');
+      reviewListEl.innerHTML = '';
+
+      quizData.forEach((q, idx) => {
+        const userAns = userAnswers[idx];
+        const isCorrect = userAns === q.correct;
+
+        if (reviewFilter === 'incorrect' && isCorrect) return;
+
+        const card = document.createElement('div');
+        card.className = `p-3 rounded-lg border text-xs sm:text-sm ${
+          isCorrect
+            ? 'bg-slate-50 dark:bg-slate-800/60 border-slate-200 dark:border-slate-700'
+            : 'bg-rose-50/50 dark:bg-rose-950/20 border-rose-200 dark:border-rose-900/50'
+        }`;
+
+        card.innerHTML = `
+          <div class="flex items-start justify-between gap-2 mb-1">
+            <span class="font-bold text-slate-800 dark:text-slate-200">Q${q.id}. ${q.question}</span>
+            <span class="px-2 py-0.5 rounded text-[10px] font-bold ${
+              isCorrect
+                ? 'bg-emerald-100 dark:bg-emerald-900/60 text-emerald-800 dark:text-emerald-300'
+                : 'bg-rose-100 dark:bg-rose-900/60 text-rose-800 dark:text-rose-300'
+            }">${isCorrect ? 'Correct' : 'Incorrect'}</span>
+          </div>
+          <div class="space-y-1 mt-1 text-slate-600 dark:text-slate-400">
+            <div><span class="font-semibold text-slate-700 dark:text-slate-300">Your Answer:</span> ${userAns !== null ? q.options[userAns] : 'Not Answered'}</div>
+            ${!isCorrect ? `<div><span class="font-semibold text-emerald-600 dark:text-emerald-400">Correct Answer:</span> ${q.options[q.correct]}</div>` : ''}
+            <div class="mt-1 pt-1 border-t border-slate-200 dark:border-slate-700/60 text-slate-500 dark:text-slate-400 text-[11px]"><span class="font-semibold">Explanation:</span> ${q.explanation}</div>
+          </div>
+        `;
+
+        reviewListEl.appendChild(card);
+      });
+
+      if (reviewListEl.children.length === 0) {
+        reviewListEl.innerHTML = `
+          <div class="text-center py-8 text-slate-500 dark:text-slate-400 text-sm">
+            🎉 Great job! No incorrect questions to display.
+          </div>
+        `;
+      }
+    }
+
+    function setReviewFilter(filter) {
+      reviewFilter = filter;
+      document.getElementById('filter-all').className = filter === 'all' ? 'px-2.5 py-1 rounded bg-blue-600 text-white font-medium' : 'px-2.5 py-1 rounded bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300 font-medium';
+      document.getElementById('filter-incorrect').className = filter === 'incorrect' ? 'px-2.5 py-1 rounded bg-blue-600 text-white font-medium' : 'px-2.5 py-1 rounded bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300 font-medium';
+      renderReviewList();
+    }
+
+    // Restart Quiz
+    function restartQuiz() {
+      currentIndex = 0;
+      score = 0;
+      userAnswers = new Array(quizData.length).fill(null);
+      resultsContainer.classList.add('hidden');
+      quizContainer.classList.remove('hidden');
+      initQuiz();
+    }
+
+    // Initialize application on load
+    window.addEventListener('DOMContentLoaded', () => {
+      initTheme();
+      initQuiz();
+    });
+  </script>
+</body>
+</html>
