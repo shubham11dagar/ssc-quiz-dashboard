@@ -1,0 +1,930 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Phrasal Verbs & Prepositions Mastery Quiz</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#f0f9ff',
+              100: '#e0f2fe',
+              500: '#0284c7',
+              600: '#0284c7',
+              700: '#0369a1',
+              800: '#075985',
+              900: '#0c4a6e',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+    
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+
+    /* Custom scrollbar for scrollable inner sections like explanation / breakdown */
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 5px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: rgba(156, 163, 175, 0.4);
+      border-radius: 9999px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+      background: rgba(156, 163, 175, 0.7);
+    }
+  </style>
+</head>
+<body class="bg-slate-100 dark:bg-slate-950 text-slate-800 dark:text-slate-100 h-screen w-screen overflow-hidden flex flex-col justify-between antialiased transition-colors duration-200">
+
+  <!-- TOP HEADER / NAVBAR -->
+  <header class="h-14 border-b border-slate-200 dark:border-slate-800 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md px-4 lg:px-8 flex items-center justify-between shrink-0 z-20">
+    <div class="flex items-center space-x-3">
+      <div class="w-8 h-8 rounded-lg bg-indigo-600 flex items-center justify-center text-white font-bold text-sm shadow-md shadow-indigo-500/20">
+        <i class="fa-solid fa-graduation-cap"></i>
+      </div>
+      <div>
+        <h1 class="font-bold text-sm sm:text-base leading-tight text-slate-900 dark:text-white">Phrasal Verbs & Prepositions</h1>
+        <p class="text-[11px] text-slate-500 dark:text-slate-400">Exam Prep Module • 36 Questions</p>
+      </div>
+    </div>
+
+    <!-- Header Stats & Actions -->
+    <div class="flex items-center space-x-2 sm:space-x-4">
+      <div id="liveScoreBadge" class="hidden sm:flex items-center space-x-2 px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-xs font-semibold text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
+        <span class="text-emerald-500"><i class="fa-solid fa-circle-check"></i> <span id="headerCorrectCount">0</span></span>
+        <span class="text-slate-300 dark:text-slate-600">|</span>
+        <span class="text-rose-500"><i class="fa-solid fa-circle-xmark"></i> <span id="headerIncorrectCount">0</span></span>
+      </div>
+
+      <!-- Theme Toggle -->
+      <button id="themeToggleBtn" onclick="toggleTheme()" class="w-9 h-9 rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 transition flex items-center justify-center" title="Toggle Theme">
+        <i id="themeIcon" class="fa-solid fa-moon text-sm"></i>
+      </button>
+
+      <!-- Navigator Drawer Trigger -->
+      <button onclick="toggleGridModal(true)" class="px-3 py-1.5 rounded-lg bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 hover:bg-indigo-100 dark:hover:bg-indigo-900/60 transition text-xs font-semibold flex items-center space-x-1.5 border border-indigo-200 dark:border-indigo-800/50">
+        <i class="fa-solid fa-grip"></i>
+        <span class="hidden sm:inline">Overview</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- PROGRESS BAR -->
+  <div class="w-full bg-slate-200 dark:bg-slate-800 h-1 shrink-0 relative overflow-hidden">
+    <div id="progressBar" class="bg-indigo-600 dark:bg-indigo-500 h-full transition-all duration-300 ease-out" style="width: 0%"></div>
+  </div>
+
+  <!-- MAIN CONTAINER (NO-SCROLL LAYOUT) -->
+  <main class="flex-1 max-w-5xl w-full mx-auto p-2 sm:p-4 flex flex-col min-h-0 relative">
+
+    <!-- QUIZ VIEW -->
+    <div id="quizScreen" class="flex-1 flex flex-col justify-between min-h-0 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-xl shadow-slate-200/50 dark:shadow-none p-3 sm:p-5 overflow-hidden">
+      
+      <!-- CARD HEADER: Question counter & Bookmark -->
+      <div class="flex items-center justify-between border-b border-slate-100 dark:border-slate-800/80 pb-2.5 shrink-0">
+        <div class="flex items-center space-x-2">
+          <span class="px-2.5 py-0.5 rounded-md bg-indigo-100 dark:bg-indigo-950 text-indigo-700 dark:text-indigo-300 font-bold text-xs">
+            Q <span id="qCurrentNum">1</span> / <span id="qTotalNum">36</span>
+          </span>
+          <span id="questionCategoryTag" class="text-xs text-slate-400 dark:text-slate-500 font-medium hidden sm:inline-block">Grammar & Phrasal Usage</span>
+        </div>
+
+        <div class="flex items-center space-x-2">
+          <button id="bookmarkBtn" onclick="toggleBookmark()" class="text-xs px-2.5 py-1 rounded-md text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition flex items-center space-x-1 border border-slate-200 dark:border-slate-700">
+            <i id="bookmarkIcon" class="fa-regular fa-bookmark"></i>
+            <span id="bookmarkText" class="hidden sm:inline">Flag for Review</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- QUESTION TEXT & DISPLAY CALLOUT -->
+      <div class="py-2 sm:py-3 flex-shrink-0">
+        <div class="p-3 sm:p-4 rounded-xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200/60 dark:border-slate-700/50 shadow-inner">
+          <p id="questionPrompt" class="text-base sm:text-lg font-semibold text-slate-800 dark:text-slate-100 leading-snug">
+            <!-- Question text inserted dynamically -->
+          </p>
+        </div>
+      </div>
+
+      <!-- OPTIONS CONTAINER (Compact layout) -->
+      <div id="optionsGrid" class="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-2.5 my-auto shrink-0">
+        <!-- Option buttons inserted dynamically -->
+      </div>
+
+      <!-- EXPLANATION / FEEDBACK BOX (Fixed Max-Height, Compact) -->
+      <div id="explanationBox" class="hidden my-2 p-3 rounded-xl border text-xs sm:text-sm custom-scrollbar overflow-y-auto max-h-24 sm:max-h-28 shrink-0 transition-all duration-200">
+        <div class="flex items-start space-x-2">
+          <div id="explanationStatusIcon" class="text-base mt-0.5"></div>
+          <div class="flex-1">
+            <h4 id="explanationTitle" class="font-bold mb-0.5">Explanation</h4>
+            <p id="explanationText" class="text-slate-600 dark:text-slate-300 leading-normal"></p>
+          </div>
+        </div>
+      </div>
+
+      <!-- FOOTER / NAVIGATION BUTTONS -->
+      <div class="pt-2 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between shrink-0">
+        <button id="prevBtn" onclick="prevQuestion()" class="px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 disabled:opacity-30 disabled:hover:bg-transparent transition flex items-center space-x-1">
+          <i class="fa-solid fa-chevron-left text-xs"></i>
+          <span>Previous</span>
+        </button>
+
+        <div class="text-[11px] text-slate-400 dark:text-slate-500 hidden sm:block">
+          Press <kbd class="px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 font-mono text-[10px]">1-4</kbd> to select, <kbd class="px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 font-mono text-[10px]">Enter</kbd> for next
+        </div>
+
+        <button id="nextBtn" onclick="nextQuestion()" class="px-5 py-2 rounded-xl text-xs sm:text-sm font-bold bg-indigo-600 hover:bg-indigo-700 text-white shadow-lg shadow-indigo-600/25 transition flex items-center space-x-1.5">
+          <span id="nextBtnText">Next Question</span>
+          <i id="nextBtnIcon" class="fa-solid fa-chevron-right text-xs"></i>
+        </button>
+      </div>
+
+    </div>
+
+    <!-- RESULTS SCREEN VIEW (Hidden by default) -->
+    <div id="resultsScreen" class="hidden flex-1 flex flex-col min-h-0 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-xl p-4 sm:p-6 overflow-hidden">
+      
+      <div class="text-center shrink-0 mb-4">
+        <span class="inline-block px-3 py-1 rounded-full bg-indigo-100 dark:bg-indigo-950 text-indigo-700 dark:text-indigo-300 text-xs font-extrabold uppercase tracking-wider mb-1">Exam Summary</span>
+        <h2 class="text-xl sm:text-2xl font-black text-slate-900 dark:text-white">Quiz Completed!</h2>
+      </div>
+
+      <!-- Stats Overview Cards Grid -->
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-4 shrink-0">
+        <div class="p-3 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200/60 dark:border-slate-700/60 text-center">
+          <p class="text-[11px] font-bold text-slate-400 dark:text-slate-500 uppercase">Score</p>
+          <p id="resPercentage" class="text-xl sm:text-2xl font-black text-indigo-600 dark:text-indigo-400">0%</p>
+          <p id="resScoreText" class="text-[11px] text-slate-500 dark:text-slate-400 font-medium">0 of 36 pts</p>
+        </div>
+        <div class="p-3 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200/60 dark:border-emerald-800/40 text-center">
+          <p class="text-[11px] font-bold text-emerald-600 dark:text-emerald-400 uppercase">Correct</p>
+          <p id="resCorrect" class="text-xl sm:text-2xl font-black text-emerald-600 dark:text-emerald-400">0</p>
+          <p class="text-[11px] text-emerald-600/80 dark:text-emerald-400/80 font-medium">Questions</p>
+        </div>
+        <div class="p-3 rounded-xl bg-rose-50 dark:bg-rose-950/40 border border-rose-200/60 dark:border-rose-800/40 text-center">
+          <p class="text-[11px] font-bold text-rose-600 dark:text-rose-400 uppercase">Incorrect</p>
+          <p id="resIncorrect" class="text-xl sm:text-2xl font-black text-rose-600 dark:text-rose-400">0</p>
+          <p class="text-[11px] text-rose-600/80 dark:text-rose-400/80 font-medium">Questions</p>
+        </div>
+        <div class="p-3 rounded-xl bg-amber-50 dark:bg-amber-950/40 border border-amber-200/60 dark:border-amber-800/40 text-center">
+          <p class="text-[11px] font-bold text-amber-600 dark:text-amber-400 uppercase">Unattempted</p>
+          <p id="resUnattempted" class="text-xl sm:text-2xl font-black text-amber-600 dark:text-amber-400">0</p>
+          <p class="text-[11px] text-amber-600/80 dark:text-amber-400/80 font-medium">Skipped</p>
+        </div>
+      </div>
+
+      <!-- Breakdown Filter & Header -->
+      <div class="flex items-center justify-between pb-2 mb-2 border-b border-slate-200 dark:border-slate-800 shrink-0">
+        <h3 class="font-bold text-sm text-slate-800 dark:text-slate-200">Detailed Review</h3>
+        <div class="flex space-x-1">
+          <button onclick="filterReview('all')" id="filterBtnAll" class="px-2.5 py-1 rounded-md text-xs font-semibold bg-indigo-600 text-white">All</button>
+          <button onclick="filterReview('incorrect')" id="filterBtnIncorrect" class="px-2.5 py-1 rounded-md text-xs font-semibold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200">Incorrect</button>
+          <button onclick="filterReview('flagged')" id="filterBtnFlagged" class="px-2.5 py-1 rounded-md text-xs font-semibold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200">Flagged</button>
+        </div>
+      </div>
+
+      <!-- Incorrect/Detailed Breakdown List (Scrollable area) -->
+      <div id="breakdownContainer" class="flex-1 min-h-0 overflow-y-auto custom-scrollbar space-y-3 pr-1">
+        <!-- Dynamic Breakdown Items -->
+      </div>
+
+      <!-- Restart Action Bar -->
+      <div class="pt-3 mt-3 border-t border-slate-200 dark:border-slate-800 flex justify-center shrink-0">
+        <button onclick="restartQuiz()" class="px-6 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-sm shadow-lg shadow-indigo-600/30 transition flex items-center space-x-2">
+          <i class="fa-solid fa-rotate-right"></i>
+          <span>Restart Quiz</span>
+        </button>
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- QUESTION NAVIGATOR MODAL / DRAWER -->
+  <div id="gridModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl w-full max-w-lg p-5 shadow-2xl flex flex-col max-h-[85vh]">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
+        <div>
+          <h3 class="font-bold text-base text-slate-900 dark:text-white">Question Navigator</h3>
+          <p class="text-xs text-slate-500">Jump to any question instantly</p>
+        </div>
+        <button onclick="toggleGridModal(false)" class="w-8 h-8 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 text-slate-500 flex items-center justify-center">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <!-- Grid Legend -->
+      <div class="flex items-center justify-around py-2 my-2 text-[11px] bg-slate-50 dark:bg-slate-800/50 rounded-lg">
+        <span class="flex items-center space-x-1"><span class="w-2.5 h-2.5 rounded-full bg-indigo-600 inline-block"></span><span>Current</span></span>
+        <span class="flex items-center space-x-1"><span class="w-2.5 h-2.5 rounded-full bg-emerald-500 inline-block"></span><span>Correct</span></span>
+        <span class="flex items-center space-x-1"><span class="w-2.5 h-2.5 rounded-full bg-rose-500 inline-block"></span><span>Incorrect</span></span>
+        <span class="flex items-center space-x-1"><span class="w-2.5 h-2.5 rounded-full bg-amber-400 inline-block"></span><span>Flagged</span></span>
+      </div>
+
+      <!-- Question Grid Numbers -->
+      <div id="questionGridBtns" class="grid grid-cols-6 sm:grid-cols-8 gap-2 overflow-y-auto custom-scrollbar p-1 flex-1">
+        <!-- Rendered dynamically -->
+      </div>
+
+      <div class="pt-3 mt-3 border-t border-slate-100 dark:border-slate-800 flex justify-end">
+        <button onclick="toggleGridModal(false)" class="px-4 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-xs font-bold text-slate-700 dark:text-slate-300">
+          Close Navigator
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // --- QUESTION DATABASE (36 Extracted Questions, Renumbered 1 to 36) ---
+    const quizData = [
+      {
+        id: 1,
+        question: "Have you ______ with the difficulties you might have to face?",
+        options: ["considered", "reckoned", "discussed", "pondered"],
+        correctIndex: 1,
+        explanation: "Reckon with - to consider or prepare for something when making plans."
+      },
+      {
+        id: 2,
+        question: "The teacher asked the students to _______ their ideas during the class discussion.",
+        options: ["get on", "put off", "bring up", "bring about"],
+        correctIndex: 2,
+        explanation: "Bring up - to start talking about a particular subject.\n(get on: make progress; put off: postpone; bring about: cause to happen)"
+      },
+      {
+        id: 3,
+        question: "The teacher asked the students to _______ their essays before the deadline.",
+        options: ["land in", "put off", "hand in", "hand up"],
+        correctIndex: 2,
+        explanation: "Hand in - to submit work or an item to a person in authority.\n(land in: end up in a situation; put off: postpone; hand up: hold hands up)"
+      },
+      {
+        id: 4,
+        question: "_________ that thought. It will be a great idea someday.",
+        options: ["Hold onto", "Hold to", "Hold on", "Hold against"],
+        correctIndex: 0,
+        explanation: "Hold onto - to keep or retain something useful/important.\n(Hold to: keep a promise; Hold on: wait; Hold against: bear a grudge)"
+      },
+      {
+        id: 5,
+        question: "Arunima __________ a lot during her vacation time.",
+        options: ["gets on", "gets about", "gets along", "gets after"],
+        correctIndex: 1,
+        explanation: "Gets about - to travel or move around to different places.\n(gets on: progress; gets along: have friendly relation; gets after: pursue or urge)"
+      },
+      {
+        id: 6,
+        question: "Though Pradeep _______ for Jamaica, he landed up in Nigeria.",
+        options: ["set out", "set up", "set about", "set aside"],
+        correctIndex: 0,
+        explanation: "Set out - to begin a journey.\n(set up: establish; set about: attack or start dealing with; set aside: save time/money)"
+      },
+      {
+        id: 7,
+        question: "Mohan _________ the charge of Centre for Life Skills from Mustafa.",
+        options: ["took out", "took through", "took off", "took over"],
+        correctIndex: 3,
+        explanation: "Took over - to assume control, authority, or responsibility.\n(took out: invite out; took through: guide/teach; took off: leave ground)"
+      },
+      {
+        id: 8,
+        question: "The details were __________ from one person to the other within no time.",
+        options: ["passed away", "passed in", "passed down", "passed out"],
+        correctIndex: 2,
+        explanation: "Passed down - to transfer or share information/traditions.\n(passed away: die; passed in: hand in for review; passed out: faint)"
+      },
+      {
+        id: 9,
+        question: "I envy the way she ______ all tasks with such ease and speed.",
+        options: ["carries out", "dwindles out", "bring about", "account for"],
+        correctIndex: 0,
+        explanation: "Carries out - to perform, execute, or complete a task successfully."
+      },
+      {
+        id: 10,
+        question: "It took seven years for Harish to __________ his migraine.",
+        options: ["shake off", "shake out", "shake up", "shake down"],
+        correctIndex: 0,
+        explanation: "Shake off - to successfully deal with or recover from an illness, injury, or habit."
+      },
+      {
+        id: 11,
+        question: "The police were on high alert on account of the ______ convict who had killed many people.",
+        options: ["run after", "walk away", "eloped", "runaway"],
+        correctIndex: 3,
+        explanation: "Runaway - someone who has escaped from custody or restraint."
+      },
+      {
+        id: 12,
+        question: "Don't you be clever with me, boy! I want to know what you're really __________.",
+        options: ["on to", "up to", "in to", "up about"],
+        correctIndex: 1,
+        explanation: "Up to - doing or planning something (often secret or mischievous)."
+      },
+      {
+        id: 13,
+        question: "The pudding fell ________ floor with a heart-stopping crash.",
+        options: ["upon the", "up to the", "in to the", "to the"],
+        correctIndex: 3,
+        explanation: "To the - indicates physical movement towards and contact with a surface/location."
+      },
+      {
+        id: 14,
+        question: "When we reached my room, I couldn't ________ back my smile.",
+        options: ["hold", "squeeze", "held", "kept"],
+        correctIndex: 0,
+        explanation: "Hold back - to suppress or restrain an emotion, laughter, or movement."
+      },
+      {
+        id: 15,
+        question: "Improve the sentence: Amal brightened of when they said he could go with them.",
+        options: [
+          "brightened in when they",
+          "brightened on when they",
+          "brightened upon when they",
+          "brightened up when they"
+        ],
+        correctIndex: 3,
+        explanation: "Brightened up - means to become happier, more cheerful, or energetic."
+      },
+      {
+        id: 16,
+        question: "Improve the sentence: No efforts have been made by the Indian cricket team to cash off on its vibrant image in the World Cup.",
+        options: [
+          "for cash through in",
+          "for cashing off on",
+          "to cash in on",
+          "to cash up on"
+        ],
+        correctIndex: 2,
+        explanation: "Cash in on - to take advantage of or profit from a situation."
+      },
+      {
+        id: 17,
+        question: "Improve the sentence: Food and water are the two basic necessities that citizens should have accessing in.",
+        options: [
+          "access for",
+          "access at",
+          "No improvement.",
+          "access to"
+        ],
+        correctIndex: 3,
+        explanation: "Access to - the right, opportunity, or means to use or enter something."
+      },
+      {
+        id: 18,
+        question: "The driver very subtly _____ the traffic violation he committed.",
+        options: ["ironed through", "ironed in", "ironed out", "ironed aside"],
+        correctIndex: 2,
+        explanation: "Ironed out - to resolve, settle, or smooth over difficulties or disputes."
+      },
+      {
+        id: 19,
+        question: "A fire ______ out in the basement of the house.",
+        options: ["broke", "breaking", "burned", "burnt"],
+        correctIndex: 0,
+        explanation: "Broke out - to start suddenly and violently (e.g., fire, war, epidemic)."
+      },
+      {
+        id: 20,
+        question: "Improve the sentence: Peter was brought in the penalty area.",
+        options: [
+          "was brought down of the",
+          "was brought of the",
+          "was brought on the",
+          "was brought down in the"
+        ],
+        correctIndex: 3,
+        explanation: "Brought down in the - to tackle or cause a player to fall within the penalty box."
+      },
+      {
+        id: 21,
+        question: "Improve the sentence: Mahesh's attitude annoyed me and I blew into.",
+        options: [
+          "annoyed me and I blew over",
+          "annoyed me and I blew off",
+          "annoyed me and I blew down of",
+          "annoyed me and I blew up"
+        ],
+        correctIndex: 3,
+        explanation: "Blew up - to lose one's temper suddenly and explode in anger."
+      },
+      {
+        id: 22,
+        question: "Improve the sentence: Since the storm knocked in the power, we've been using candles to light our home.",
+        options: [
+          "No substitution required",
+          "the storm knocked out the power",
+          "the storm knocked over the power",
+          "the storm knocked away the power"
+        ],
+        correctIndex: 1,
+        explanation: "Knocked out - to disrupt, extinguish, or disable electrical power/systems."
+      },
+      {
+        id: 23,
+        question: "Improve the sentence: Mr. Arvind was accused of beating up before the students in the class.",
+        options: [
+          "accused of beating up off the",
+          "accused of beating up of the",
+          "accused of beating up on the",
+          "accused of beating up in the"
+        ],
+        correctIndex: 2,
+        explanation: "Beating up on - to assault, hit repeatedly, or pick on someone."
+      },
+      {
+        id: 24,
+        question: "It's a challenge, as you yourself said, and men find it hard to turn ___________ challenges.",
+        options: ["up", "below", "down", "aside"],
+        correctIndex: 2,
+        explanation: "Turn down - to reject, decline, or refuse an offer or challenge."
+      },
+      {
+        id: 25,
+        question: "How can seawater from the oceans be ___________ fresh water that is suitable for people to drink?",
+        options: ["change about", "surrender in", "minced on", "turned into"],
+        correctIndex: 3,
+        explanation: "Turned into - transformed or converted into something else."
+      },
+      {
+        id: 26,
+        question: "The machine can be _______ to deliver a certain number of coins.",
+        options: ["met", "abet", "slashed", "set"],
+        correctIndex: 3,
+        explanation: "Set - programmed, adjusted, or put into a specified state/setting."
+      },
+      {
+        id: 27,
+        question: "Mentally strong people do not ______to suicide over trivial issues.",
+        options: ["Make up", "Give in", "Conceive on", "Fall in"],
+        correctIndex: 1,
+        explanation: "Give in - to surrender or submit under pressure or despair."
+      },
+      {
+        id: 28,
+        question: "The company’s profits were low and they were forced to __________ staff.",
+        options: ["lisp off", "lay off", "lay on", "lie on"],
+        correctIndex: 1,
+        explanation: "Lay off - to terminate or suspend employment due to economic reasons."
+      },
+      {
+        id: 29,
+        question: "She has_________ her money and jewellery to help the poor.",
+        options: ["given up", "given away", "given in", "given way"],
+        correctIndex: 1,
+        explanation: "Given away - donated, gifted, or distributed freely."
+      },
+      {
+        id: 30,
+        question: "According to the traditions, Easter Sunday is celebrated by ____________ part in an Easter vigil, lighting a new fire outside the church early on Sunday morning.",
+        options: ["taking", "Being", "bearing", "making"],
+        correctIndex: 0,
+        explanation: "Taking part - participating or being involved in an activity."
+      },
+      {
+        id: 31,
+        question: "She refused to back ______, so she was fired from the company.",
+        options: ["down", "over", "upon", "into"],
+        correctIndex: 0,
+        explanation: "Back down - to retreat, concede defeat, or withdraw a position/demand."
+      },
+      {
+        id: 32,
+        question: "Anita looked______the word in the dictionary, but she still did not understand it.",
+        options: ["to", "up", "from", "after"],
+        correctIndex: 1,
+        explanation: "Look up - search for information/meaning in a dictionary or reference book."
+      },
+      {
+        id: 33,
+        question: "The roof _______ the weight of the snow.",
+        options: ["collapsed under", "collapsed to", "collapsed with", "collapsed for"],
+        correctIndex: 0,
+        explanation: "Collapsed under - gave way or fell apart due to heavy pressure/weight."
+      },
+      {
+        id: 34,
+        question: "She swallowed _____________ her breakfast in a hurry.",
+        options: ["in", "up", "into", "down"],
+        correctIndex: 3,
+        explanation: "Swallow down - to eat or gulp down food/drink rapidly."
+      },
+      {
+        id: 35,
+        question: "I never could quite get the idea ________ my mind that I should do some teaching, yet I felt a great deal of satisfaction with the pastorate.",
+        options: ["out of", "out act", "out come", "out cast"],
+        correctIndex: 0,
+        explanation: "Get out of - to stop thinking about, remove, or banish an idea from one's mind."
+      },
+      {
+        id: 36,
+        question: "He is an honest man and his conduct is ______ suspicion.",
+        options: ["above", "below", "over", "against"],
+        correctIndex: 0,
+        explanation: "Above suspicion - too trustworthy, honourable, or upright to be suspected of wrongdoing."
+      }
+    ];
+
+    // --- APPLICATION STATE ---
+    let currentIndex = 0;
+    let userAnswers = new Array(quizData.length).fill(null); // Stores selected option index
+    let flaggedQuestions = new Set();
+    let currentFilter = 'all';
+
+    // --- INITIALIZATION ---
+    document.addEventListener('DOMContentLoaded', () => {
+      document.getElementById('qTotalNum').innerText = quizData.length;
+      renderQuestion();
+      setupKeyboardNav();
+    });
+
+    // --- THEME TOGGLE ---
+    function toggleTheme() {
+      const htmlEl = document.documentElement;
+      const themeIcon = document.getElementById('themeIcon');
+      if (htmlEl.classList.contains('dark')) {
+        htmlEl.classList.remove('dark');
+        themeIcon.className = 'fa-solid fa-sun text-sm text-amber-500';
+      } else {
+        htmlEl.classList.add('dark');
+        themeIcon.className = 'fa-solid fa-moon text-sm';
+      }
+    }
+
+    // --- QUESTION RENDERER ---
+    function renderQuestion() {
+      const q = quizData[currentIndex];
+      
+      // Update Question Meta
+      document.getElementById('qCurrentNum').innerText = currentIndex + 1;
+      
+      // Update Progress Bar
+      const progressPercent = ((currentIndex + 1) / quizData.length) * 100;
+      document.getElementById('progressBar').style.width = `${progressPercent}%`;
+
+      // Update Bookmark/Flag button
+      const bookmarkIcon = document.getElementById('bookmarkIcon');
+      const bookmarkText = document.getElementById('bookmarkText');
+      if (flaggedQuestions.has(currentIndex)) {
+        bookmarkIcon.className = 'fa-solid fa-bookmark text-amber-500';
+        bookmarkText.innerText = 'Flagged';
+      } else {
+        bookmarkIcon.className = 'fa-regular fa-bookmark';
+        bookmarkText.innerText = 'Flag for Review';
+      }
+
+      // Render Prompt (Highlighting fill-in blanks if present)
+      const formattedPrompt = q.question.replace(/______+/g, '<span class="inline-block px-2 py-0.5 rounded bg-indigo-100 dark:bg-indigo-900/60 text-indigo-700 dark:text-indigo-300 font-bold border-b-2 border-indigo-500">______</span>');
+      document.getElementById('questionPrompt').innerHTML = `<span class="text-indigo-600 dark:text-indigo-400 font-bold mr-1.5">${q.id}.</span>${formattedPrompt}`;
+
+      // Render Options
+      const optionsContainer = document.getElementById('optionsGrid');
+      optionsContainer.innerHTML = '';
+
+      const userChoice = userAnswers[currentIndex];
+      const isAnswered = userChoice !== null;
+
+      const labels = ['A', 'B', 'C', 'D'];
+
+      q.options.forEach((opt, idx) => {
+        const btn = document.createElement('button');
+        btn.onclick = () => selectOption(idx);
+        
+        // Base styling for option card
+        let btnClasses = "p-3 sm:py-3.5 sm:px-4 rounded-xl border text-left flex items-start space-x-3 transition-all duration-150 text-xs sm:text-sm font-medium relative group ";
+        
+        if (!isAnswered) {
+          btnClasses += "bg-slate-50 dark:bg-slate-800/80 border-slate-200 dark:border-slate-700/70 hover:border-indigo-400 dark:hover:border-indigo-500 hover:bg-indigo-50/50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200";
+        } else {
+          btn.disabled = true;
+          if (idx === q.correctIndex) {
+            // Correct answer styling
+            btnClasses += "bg-emerald-50 dark:bg-emerald-950/60 border-emerald-500 text-emerald-900 dark:text-emerald-200 font-semibold ring-1 ring-emerald-500";
+          } else if (idx === userChoice) {
+            // Incorrect chosen answer
+            btnClasses += "bg-rose-50 dark:bg-rose-950/60 border-rose-500 text-rose-900 dark:text-rose-200 font-semibold ring-1 ring-rose-500";
+          } else {
+            // Other unselected options
+            btnClasses += "bg-slate-50/50 dark:bg-slate-800/30 border-slate-200/50 dark:border-slate-800 text-slate-400 dark:text-slate-500 opacity-60";
+          }
+        }
+
+        btn.className = btnClasses;
+
+        // Label Badge (A, B, C, D)
+        let labelBadgeClass = "w-6 h-6 rounded-lg flex items-center justify-center font-bold text-xs shrink-0 mt-0.5 ";
+        if (isAnswered && idx === q.correctIndex) {
+          labelBadgeClass += "bg-emerald-500 text-white";
+        } else if (isAnswered && idx === userChoice) {
+          labelBadgeClass += "bg-rose-500 text-white";
+        } else {
+          labelBadgeClass += "bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300 group-hover:bg-indigo-600 group-hover:text-white transition";
+        }
+
+        btn.innerHTML = `
+          <span class="${labelBadgeClass}">${labels[idx]}</span>
+          <span class="flex-1 mt-0.5 leading-snug">${opt}</span>
+          ${isAnswered && idx === q.correctIndex ? '<i class="fa-solid fa-circle-check text-emerald-500 text-base mt-1"></i>' : ''}
+          ${isAnswered && idx === userChoice && idx !== q.correctIndex ? '<i class="fa-solid fa-circle-xmark text-rose-500 text-base mt-1"></i>' : ''}
+        `;
+
+        optionsContainer.appendChild(btn);
+      });
+
+      // Render Explanation Box if answered
+      const explanationBox = document.getElementById('explanationBox');
+      if (isAnswered) {
+        explanationBox.classList.remove('hidden');
+        const isCorrect = userChoice === q.correctIndex;
+
+        if (isCorrect) {
+          explanationBox.className = "my-2 p-3 rounded-xl border border-emerald-300 dark:border-emerald-800/60 bg-emerald-50/80 dark:bg-emerald-950/40 text-emerald-900 dark:text-emerald-200 text-xs sm:text-sm custom-scrollbar overflow-y-auto max-h-24 sm:max-h-28 shrink-0";
+          document.getElementById('explanationStatusIcon').innerHTML = '<i class="fa-solid fa-circle-check text-emerald-500"></i>';
+          document.getElementById('explanationTitle').innerText = "Correct Answer!";
+        } else {
+          explanationBox.className = "my-2 p-3 rounded-xl border border-rose-300 dark:border-rose-800/60 bg-rose-50/80 dark:bg-rose-950/40 text-rose-900 dark:text-rose-200 text-xs sm:text-sm custom-scrollbar overflow-y-auto max-h-24 sm:max-h-28 shrink-0";
+          document.getElementById('explanationStatusIcon').innerHTML = '<i class="fa-solid fa-circle-xmark text-rose-500"></i>';
+          document.getElementById('explanationTitle').innerText = "Incorrect Choice";
+        }
+
+        document.getElementById('explanationText').innerText = q.explanation;
+      } else {
+        explanationBox.classList.add('hidden');
+      }
+
+      // Update Navigation Buttons State
+      document.getElementById('prevBtn').disabled = currentIndex === 0;
+
+      const nextBtnText = document.getElementById('nextBtnText');
+      const nextBtnIcon = document.getElementById('nextBtnIcon');
+
+      if (currentIndex === quizData.length - 1) {
+        nextBtnText.innerText = "Finish Quiz";
+        nextBtnIcon.className = "fa-solid fa-flag-checkered text-xs";
+      } else {
+        nextBtnText.innerText = "Next Question";
+        nextBtnIcon.className = "fa-solid fa-chevron-right text-xs";
+      }
+
+      updateLiveScoreHeader();
+    }
+
+    // --- OPTION SELECTION ---
+    function selectOption(index) {
+      if (userAnswers[currentIndex] !== null) return; // Prevent changing after selection
+      userAnswers[currentIndex] = index;
+      renderQuestion();
+    }
+
+    // --- NAVIGATION LOGIC ---
+    function nextQuestion() {
+      if (currentIndex < quizData.length - 1) {
+        currentIndex++;
+        renderQuestion();
+      } else {
+        showResults();
+      }
+    }
+
+    function prevQuestion() {
+      if (currentIndex > 0) {
+        currentIndex--;
+        renderQuestion();
+      }
+    }
+
+    function jumpToQuestion(index) {
+      currentIndex = index;
+      toggleGridModal(false);
+      renderQuestion();
+    }
+
+    function toggleBookmark() {
+      if (flaggedQuestions.has(currentIndex)) {
+        flaggedQuestions.delete(currentIndex);
+      } else {
+        flaggedQuestions.add(currentIndex);
+      }
+      renderQuestion();
+    }
+
+    // --- LIVE SCORE HEADER ---
+    function updateLiveScoreHeader() {
+      let correct = 0;
+      let incorrect = 0;
+
+      userAnswers.forEach((ans, idx) => {
+        if (ans !== null) {
+          if (ans === quizData[idx].correctIndex) correct++;
+          else incorrect++;
+        }
+      });
+
+      document.getElementById('headerCorrectCount').innerText = correct;
+      document.getElementById('headerIncorrectCount').innerText = incorrect;
+    }
+
+    // --- RESULTS SCREEN LOGIC ---
+    function showResults() {
+      document.getElementById('quizScreen').classList.add('hidden');
+      document.getElementById('resultsScreen').classList.remove('hidden');
+
+      let correct = 0;
+      let incorrect = 0;
+      let unattempted = 0;
+
+      userAnswers.forEach((ans, idx) => {
+        if (ans === null) {
+          unattempted++;
+        } else if (ans === quizData[idx].correctIndex) {
+          correct++;
+        } else {
+          incorrect++;
+        }
+      });
+
+      const total = quizData.length;
+      const percentage = Math.round((correct / total) * 100);
+
+      document.getElementById('resPercentage').innerText = `${percentage}%`;
+      document.getElementById('resScoreText').innerText = `${correct} of ${total} pts`;
+      document.getElementById('resCorrect').innerText = correct;
+      document.getElementById('resIncorrect').innerText = incorrect;
+      document.getElementById('resUnattempted').innerText = unattempted;
+
+      filterReview('all');
+    }
+
+    function filterReview(type) {
+      currentFilter = type;
+
+      // Update Active Filter Button
+      const btnAll = document.getElementById('filterBtnAll');
+      const btnInc = document.getElementById('filterBtnIncorrect');
+      const btnFlag = document.getElementById('filterBtnFlagged');
+
+      const activeClass = "px-2.5 py-1 rounded-md text-xs font-semibold bg-indigo-600 text-white";
+      const inactiveClass = "px-2.5 py-1 rounded-md text-xs font-semibold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700";
+
+      btnAll.className = type === 'all' ? activeClass : inactiveClass;
+      btnInc.className = type === 'incorrect' ? activeClass : inactiveClass;
+      btnFlag.className = type === 'flagged' ? activeClass : inactiveClass;
+
+      const container = document.getElementById('breakdownContainer');
+      container.innerHTML = '';
+
+      quizData.forEach((q, idx) => {
+        const userChoice = userAnswers[idx];
+        const isCorrect = userChoice === q.correctIndex;
+        const isUnattempted = userChoice === null;
+        const isFlagged = flaggedQuestions.has(idx);
+
+        if (type === 'incorrect' && (isCorrect || isUnattempted)) return;
+        if (type === 'flagged' && !isFlagged) return;
+
+        const card = document.createElement('div');
+        card.className = "p-3 sm:p-4 rounded-xl border bg-slate-50/50 dark:bg-slate-800/40 border-slate-200 dark:border-slate-700/80 text-xs sm:text-sm";
+
+        let statusBadge = '';
+        if (isUnattempted) {
+          statusBadge = '<span class="px-2 py-0.5 rounded bg-amber-100 dark:bg-amber-950 text-amber-700 dark:text-amber-300 font-bold text-[11px]">Unattempted</span>';
+        } else if (isCorrect) {
+          statusBadge = '<span class="px-2 py-0.5 rounded bg-emerald-100 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-300 font-bold text-[11px]"><i class="fa-solid fa-check mr-1"></i>Correct</span>';
+        } else {
+          statusBadge = '<span class="px-2 py-0.5 rounded bg-rose-100 dark:bg-rose-950 text-rose-700 dark:text-rose-300 font-bold text-[11px]"><i class="fa-solid fa-xmark mr-1"></i>Incorrect</span>';
+        }
+
+        const userAnsText = isUnattempted ? '<em>None selected</em>' : q.options[userChoice];
+        const correctAnsText = q.options[q.correctIndex];
+
+        card.innerHTML = `
+          <div class="flex items-start justify-between gap-2 mb-2">
+            <h4 class="font-bold text-slate-900 dark:text-slate-100 leading-snug">
+              <span class="text-indigo-600 dark:text-indigo-400">Q${q.id}.</span> ${q.question}
+            </h4>
+            <div class="shrink-0 flex items-center space-x-1">
+              ${isFlagged ? '<span class="text-amber-500 text-xs mr-1" title="Flagged"><i class="fa-solid fa-bookmark"></i></span>' : ''}
+              ${statusBadge}
+            </div>
+          </div>
+          
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 my-2 text-xs">
+            <div class="p-2 rounded-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800">
+              <span class="block text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase">Your Answer</span>
+              <span class="${isCorrect ? 'text-emerald-600 dark:text-emerald-400 font-semibold' : 'text-rose-600 dark:text-rose-400 font-semibold'}">${userAnsText}</span>
+            </div>
+            <div class="p-2 rounded-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800">
+              <span class="block text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase">Correct Answer</span>
+              <span class="text-emerald-600 dark:text-emerald-400 font-semibold">${correctAnsText}</span>
+            </div>
+          </div>
+
+          <p class="text-slate-600 dark:text-slate-400 text-xs mt-2 italic bg-slate-100/80 dark:bg-slate-900/50 p-2 rounded-lg border border-slate-200/50 dark:border-slate-800/50">
+            <strong class="not-italic text-slate-700 dark:text-slate-300">Explanation:</strong> ${q.explanation}
+          </p>
+        `;
+
+        container.appendChild(card);
+      });
+
+      if (container.children.length === 0) {
+        container.innerHTML = `
+          <div class="p-8 text-center text-slate-400 dark:text-slate-500 text-xs">
+            <i class="fa-solid fa-circle-info text-2xl mb-2"></i>
+            <p>No questions match the selected filter.</p>
+          </div>
+        `;
+      }
+    }
+
+    function restartQuiz() {
+      currentIndex = 0;
+      userAnswers = new Array(quizData.length).fill(null);
+      flaggedQuestions.clear();
+
+      document.getElementById('resultsScreen').classList.add('hidden');
+      document.getElementById('quizScreen').classList.remove('hidden');
+
+      renderQuestion();
+    }
+
+    // --- NAVIGATOR MODAL DRAWER ---
+    function toggleGridModal(show) {
+      const modal = document.getElementById('gridModal');
+      if (show) {
+        modal.classList.remove('hidden');
+        renderGridButtons();
+      } else {
+        modal.classList.add('hidden');
+      }
+    }
+
+    function renderGridButtons() {
+      const container = document.getElementById('questionGridBtns');
+      container.innerHTML = '';
+
+      quizData.forEach((q, idx) => {
+        const btn = document.createElement('button');
+        btn.onclick = () => jumpToQuestion(idx);
+
+        const isCurrent = idx === currentIndex;
+        const userChoice = userAnswers[idx];
+        const isAnswered = userChoice !== null;
+        const isCorrect = isAnswered && userChoice === q.correctIndex;
+        const isFlagged = flaggedQuestions.has(idx);
+
+        let btnClass = "h-9 rounded-lg font-bold text-xs flex flex-col items-center justify-center relative transition ";
+
+        if (isCurrent) {
+          btnClass += "bg-indigo-600 text-white ring-2 ring-indigo-400 ";
+        } else if (isAnswered) {
+          if (isCorrect) btnClass += "bg-emerald-500 text-white ";
+          else btnClass += "bg-rose-500 text-white ";
+        } else {
+          btnClass += "bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 ";
+        }
+
+        btn.className = btnClass;
+        btn.innerHTML = `
+          <span>${idx + 1}</span>
+          ${isFlagged ? '<span class="absolute top-0.5 right-0.5 w-2 h-2 rounded-full bg-amber-400"></span>' : ''}
+        `;
+
+        container.appendChild(btn);
+      });
+    }
+
+    // --- KEYBOARD SHORTCUTS ---
+    function setupKeyboardNav() {
+      document.addEventListener('keydown', (e) => {
+        // Ignore if modal open
+        if (!document.getElementById('gridModal').classList.contains('hidden')) return;
+        if (!document.getElementById('resultsScreen').classList.contains('hidden')) return;
+
+        if (e.key === '1' || e.key === 'a' || e.key === 'A') selectOption(0);
+        else if (e.key === '2' || e.key === 'b' || e.key === 'B') selectOption(1);
+        else if (e.key === '3' || e.key === 'c' || e.key === 'C') selectOption(2);
+        else if (e.key === '4' || e.key === 'd' || e.key === 'D') selectOption(3);
+        else if (e.key === 'ArrowRight' || e.key === 'Enter') nextQuestion();
+        else if (e.key === 'ArrowLeft') prevQuestion();
+      });
+    }
+  </script>
+</body>
+</html>
