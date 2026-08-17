@@ -1,0 +1,948 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>English Grammar & Phrasal Verbs Quiz</title>
+  <style>
+    :root {
+      --bg: #f1f5f9;
+      --card-bg: #ffffff;
+      --text: #0f172a;
+      --text-muted: #64748b;
+      --border: #e2e8f0;
+      --primary: #3b82f6;
+      --primary-hover: #2563eb;
+      --success-bg: #dcfce7;
+      --success-border: #22c55e;
+      --success-text: #15803d;
+      --error-bg: #fee2e2;
+      --error-border: #ef4444;
+      --error-text: #b91c1c;
+      --btn-bg: #f8fafc;
+      --btn-hover: #f1f5f9;
+      --btn-border: #cbd5e1;
+      --highlight-box: #f8fafc;
+      --accent: #6366f1;
+      --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+    }
+
+    [data-theme="dark"] {
+      --bg: #0b0f19;
+      --card-bg: #131b2e;
+      --text: #f1f5f9;
+      --text-muted: #94a3b8;
+      --border: #1e293b;
+      --primary: #3b82f6;
+      --primary-hover: #60a5fa;
+      --success-bg: #064e3b;
+      --success-border: #10b981;
+      --success-text: #6ee7b7;
+      --error-bg: #450a0a;
+      --error-border: #f87171;
+      --error-text: #fca5a5;
+      --btn-bg: #1e293b;
+      --btn-hover: #334155;
+      --btn-border: #334155;
+      --highlight-box: #1e293b;
+      --accent: #818cf8;
+      --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.5), 0 2px 4px -2px rgb(0 0 0 / 0.5);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      user-select: none;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      height: 100vh;
+      height: 100dvh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 8px;
+      overflow: hidden;
+      transition: background-color 0.2s ease, color 0.2s ease;
+    }
+
+    /* Main Card Layout */
+    .quiz-card {
+      background-color: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      width: 100%;
+      max-width: 820px;
+      height: 94vh;
+      height: 94dvh;
+      display: flex;
+      flex-direction: column;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* Header */
+    .quiz-header {
+      padding: 10px 16px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-shrink: 0;
+    }
+
+    .q-meta {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .q-badge {
+      background: var(--primary);
+      color: white;
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 6px;
+      letter-spacing: 0.5px;
+    }
+
+    .score-badge {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+
+    .theme-toggle {
+      background: var(--btn-bg);
+      border: 1px solid var(--border);
+      color: var(--text);
+      cursor: pointer;
+      border-radius: 6px;
+      padding: 4px 8px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      transition: all 0.2s;
+    }
+
+    .theme-toggle:hover {
+      background: var(--btn-hover);
+    }
+
+    .progress-bar-container {
+      width: 100%;
+      height: 3px;
+      background: var(--border);
+      flex-shrink: 0;
+    }
+
+    .progress-bar {
+      height: 100%;
+      background: var(--primary);
+      width: 0%;
+      transition: width 0.3s ease;
+    }
+
+    /* Content Area - Designed to fit without window scrolling */
+    .quiz-content {
+      padding: 12px 18px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+      gap: 10px;
+    }
+
+    /* Question Typography */
+    .question-title {
+      font-size: 0.98rem;
+      font-weight: 600;
+      line-height: 1.4;
+      color: var(--text);
+    }
+
+    /* Options 2x2 Grid for compact viewport fit */
+    .options-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 8px;
+      margin-top: 2px;
+    }
+
+    @media (max-width: 600px) {
+      .options-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .option-btn {
+      background: var(--btn-bg);
+      border: 1px solid var(--btn-border);
+      border-radius: 8px;
+      padding: 8px 12px;
+      text-align: left;
+      font-size: 0.88rem;
+      color: var(--text);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      transition: all 0.15s ease;
+      min-height: 40px;
+    }
+
+    .option-btn:hover:not(:disabled) {
+      background: var(--btn-hover);
+      border-color: var(--primary);
+    }
+
+    .option-prefix {
+      font-weight: 700;
+      font-size: 0.75rem;
+      color: var(--accent);
+      background: rgba(99, 102, 241, 0.1);
+      width: 22px;
+      height: 22px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 4px;
+      flex-shrink: 0;
+    }
+
+    .option-btn.correct {
+      background: var(--success-bg) !important;
+      border-color: var(--success-border) !important;
+      color: var(--success-text) !important;
+      font-weight: 600;
+    }
+
+    .option-btn.correct .option-prefix {
+      background: var(--success-border);
+      color: #fff;
+    }
+
+    .option-btn.wrong {
+      background: var(--error-bg) !important;
+      border-color: var(--error-border) !important;
+      color: var(--error-text) !important;
+      font-weight: 600;
+    }
+
+    .option-btn.wrong .option-prefix {
+      background: var(--error-border);
+      color: #fff;
+    }
+
+    .option-btn:disabled {
+      cursor: default;
+    }
+
+    /* Compact Explanation Box */
+    .explanation-box {
+      background: var(--highlight-box);
+      border-left: 3px solid var(--primary);
+      border-radius: 6px;
+      padding: 8px 12px;
+      font-size: 0.8rem;
+      line-height: 1.35;
+      color: var(--text);
+      display: none;
+      animation: fadeIn 0.2s ease-in-out;
+      margin-top: auto;
+      max-height: 120px;
+      overflow-y: auto;
+    }
+
+    .explanation-title {
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 2px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    /* Footer Controls */
+    .quiz-footer {
+      padding: 8px 16px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-shrink: 0;
+      background: var(--card-bg);
+    }
+
+    .status-hint {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    .btn-next {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 7px 16px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background-color 0.15s ease, opacity 0.15s ease;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .btn-next:hover:not(:disabled) {
+      background: var(--primary-hover);
+    }
+
+    .btn-next:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+    }
+
+    /* Results Dashboard View */
+    .results-screen {
+      display: none;
+      flex-direction: column;
+      height: 100%;
+      padding: 16px;
+      overflow-y: auto;
+    }
+
+    .score-summary-card {
+      text-align: center;
+      padding: 12px;
+      background: var(--highlight-box);
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      margin-bottom: 12px;
+      flex-shrink: 0;
+    }
+
+    .score-percentage {
+      font-size: 2rem;
+      font-weight: 800;
+      color: var(--primary);
+      line-height: 1;
+      margin-bottom: 4px;
+    }
+
+    .score-stats {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+
+    .stat-correct { color: var(--success-text); }
+    .stat-incorrect { color: var(--error-text); }
+
+    .breakdown-title {
+      font-size: 0.85rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .breakdown-list {
+      flex: 1;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      padding-right: 4px;
+    }
+
+    .breakdown-item {
+      padding: 8px 12px;
+      border-radius: 8px;
+      background: var(--btn-bg);
+      border: 1px solid var(--border);
+      font-size: 0.8rem;
+    }
+
+    .breakdown-item .q-txt {
+      font-weight: 600;
+      margin-bottom: 4px;
+      color: var(--text);
+    }
+
+    .breakdown-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      font-size: 0.75rem;
+    }
+
+    .tag-user {
+      color: var(--error-text);
+      background: var(--error-bg);
+      padding: 2px 6px;
+      border-radius: 4px;
+    }
+
+    .tag-correct {
+      color: var(--success-text);
+      background: var(--success-bg);
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-weight: 600;
+    }
+
+    .results-actions {
+      margin-top: 10px;
+      display: flex;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .btn-restart {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 8px 20px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+
+<div class="quiz-card">
+  <!-- Quiz Interface Header -->
+  <div class="quiz-header">
+    <div class="q-meta">
+      <span class="q-badge" id="q-counter">Q 1 / 46</span>
+      <span class="score-badge" id="score-counter">Score: 0</span>
+    </div>
+    <button class="theme-toggle" id="theme-btn" aria-label="Toggle Theme">
+      <span id="theme-icon">🌙</span> <span id="theme-text">Dark</span>
+    </button>
+  </div>
+
+  <div class="progress-bar-container">
+    <div class="progress-bar" id="progress-bar"></div>
+  </div>
+
+  <!-- Active Question View -->
+  <div class="quiz-content" id="quiz-view">
+    <div class="question-title" id="question-text">Loading question...</div>
+    <div class="options-grid" id="options-container"></div>
+    <div class="explanation-box" id="explanation-box">
+      <div class="explanation-title">💡 Explanation & Context</div>
+      <div id="explanation-text"></div>
+    </div>
+  </div>
+
+  <!-- Quiz Interface Footer -->
+  <div class="quiz-footer" id="quiz-footer">
+    <div class="status-hint" id="status-hint">Select an answer</div>
+    <button class="btn-next" id="next-btn" disabled>Next Question &rarr;</button>
+  </div>
+
+  <!-- Results Dashboard View -->
+  <div class="results-screen" id="results-view">
+    <div class="score-summary-card">
+      <div class="score-percentage" id="res-percent">0%</div>
+      <div class="score-stats">
+        <span class="stat-correct" id="res-correct">Correct: 0</span>
+        <span class="stat-incorrect" id="res-incorrect">Incorrect: 0</span>
+      </div>
+    </div>
+    <div class="breakdown-title" id="breakdown-heading">Review Mistakes</div>
+    <div class="breakdown-list" id="breakdown-list"></div>
+    <div class="results-actions">
+      <button class="btn-restart" id="restart-btn">Restart Quiz ↻</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const quizData = [
+  {
+    q: "Prince Harry and his wife, Megan Markle announced their decision to ______ from their role as senior royals by leaving the United Kingdom and limiting their royal commitments.",
+    options: ["step up", "step on", "step in", "step back"],
+    answer: 3,
+    exp: "Step back - to stop doing something or withdraw from a role. (Step up: take action; Step in: intervene; Step on: behave unkindly)."
+  },
+  {
+    q: "We love to swing from the branches _______ the pond.",
+    options: ["over", "on", "in", "under"],
+    answer: 0,
+    exp: "The preposition 'over' indicates position directly above something (hanging/swinging across above the pond water)."
+  },
+  {
+    q: "Her dedication to her work was ______ what anyone had expected.",
+    options: ["over", "beyond", "beside", "through"],
+    answer: 1,
+    exp: "Beyond - outside the limit or surpassing what was expected/understood."
+  },
+  {
+    q: "One is sure _______ what one sees.",
+    options: ["about", "with", "around", "without"],
+    answer: 0,
+    exp: "Sure about - to be confident or certain regarding something."
+  },
+  {
+    q: "She kept pictures of her parents all _____ the house.",
+    options: ["about", "over", "through", "out"],
+    answer: 1,
+    exp: "All over - everywhere throughout an area."
+  },
+  {
+    q: "Rahul is _____ Coding.",
+    options: ["skilled on", "strong of", "experienced of", "experienced in"],
+    answer: 3,
+    exp: "Experienced in something - having the practical skill, practice, and knowledge to perform an activity."
+  },
+  {
+    q: "This drama is extremely informative ______ life in Roman times.",
+    options: ["on", "of", "about", "for"],
+    answer: 2,
+    exp: "Informative about - providing useful or interesting knowledge regarding a subject."
+  },
+  {
+    q: "Arun and his wife were ______ a baby boy after 18 years of their marriage.",
+    options: ["delighted with", "prepared with", "provided with", "blessed with"],
+    answer: 3,
+    exp: "Blessed with - to have something fortunate, special, or lucky bestowed upon one."
+  },
+  {
+    q: "One of the children stood at the door to ______ if he saw the apparitor coming, who was an officer of the spiritual court.",
+    options: ["give notice", "give advice", "give thought", "give a hand"],
+    answer: 0,
+    exp: "Give notice - to inform, alert, or warn someone in advance."
+  },
+  {
+    q: "The ocean waves swelled and reached ______ her head, and she started screaming.",
+    options: ["among", "upon", "above", "at"],
+    answer: 2,
+    exp: "Above - at or to a higher level overhead."
+  },
+  {
+    q: "I organised my dressing table by putting all the rubber bands ______ the drawer.",
+    options: ["for", "in", "on", "at"],
+    answer: 1,
+    exp: "The preposition 'in' signifies positioning inside an enclosed space or container."
+  },
+  {
+    q: "The court has absolved him ______ all the charges levied against him.",
+    options: ["to", "in", "with", "of"],
+    answer: 3,
+    exp: "We use the preposition 'of' with the verb 'absolved' (absolved of charges)."
+  },
+  {
+    q: "Several pictures and videos have been circulating ______ social media featuring her.",
+    options: ["by", "of", "to", "on"],
+    answer: 3,
+    exp: "We use 'on' when referring to digital channels and platforms (circulating on social media)."
+  },
+  {
+    q: "She tried to ______ what she had said earlier, but it was too late.",
+    options: ["take back", "run out", "put off", "go over"],
+    answer: 0,
+    exp: "Take back: To retract or withdraw something said. (Run out: exhaust; Put off: postpone; Go over: review)."
+  },
+  {
+    q: "The teacher _______ the instructions for the project.",
+    options: ["went through", "went off", "went down", "went over"],
+    answer: 3,
+    exp: "Went over: To review, repeat, or examine something carefully. (Went through: endure; Went off: explode/sound)."
+  },
+  {
+    q: "She left her job and _____ acting last year.",
+    options: ["took out", "took off", "took up", "took in"],
+    answer: 2,
+    exp: "Took up: To start a new hobby, interest, or profession. (Took off: rise/succeed; Took in: absorb/understand)."
+  },
+  {
+    q: "The manager ______ the proposal without a second thought.",
+    options: ["shot down", "shot up", "shot out", "shot in"],
+    answer: 0,
+    exp: "Shot down: To reject or dismiss an idea/proposal immediately."
+  },
+  {
+    q: "She needs to ______ the truth before it's too late.",
+    options: ["face up to", "fall back on", "look forward to", "run out of"],
+    answer: 0,
+    exp: "Face up to: To confront or accept an unpleasant reality or truth."
+  },
+  {
+    q: "He _______ from his job to pursue his dream of writing a novel.",
+    options: ["gave in", "handed over", "stepped down", "broke into"],
+    answer: 2,
+    exp: "Stepped down: To resign or leave a post/position. (Gave in: surrender; Handed over: transfer control)."
+  },
+  {
+    q: "The committee decided to _______ the proposal after much discussion.",
+    options: ["put forward", "pull out", "come across", "run down"],
+    answer: 0,
+    exp: "Put forward: To propose, present, or suggest an idea or plan."
+  },
+  {
+    q: "She _______ the job offer because it didn't meet her expectations.",
+    options: ["took up", "turned down", "set off", "fell through"],
+    answer: 1,
+    exp: "Turned down: To reject or refuse an offer or request."
+  },
+  {
+    q: "They were ________ by the complexity of the project and decided to seek help.",
+    options: ["run out", "taken aback", "set off", "put up"],
+    answer: 1,
+    exp: "Taken aback: To be surprised, shocked, or startled by something."
+  },
+  {
+    q: "The firemen managed to _______ the fire before it spread to other buildings.",
+    options: ["break out", "put out", "break in", "put off"],
+    answer: 1,
+    exp: "Put out: To extinguish a flame or fire. (Break out: start suddenly)."
+  },
+  {
+    q: "After losing the competition, she didn’t _______ and tried even harder.",
+    options: ["give up", "take off", "turn out", "make up"],
+    answer: 0,
+    exp: "Give up: To stop trying, surrender, or quit."
+  },
+  {
+    q: "I can't believe you _______ that old story about the haunted house.",
+    options: ["put up", "fell for", "came across", "got over"],
+    answer: 1,
+    exp: "Fell for: To be tricked or deceived by something."
+  },
+  {
+    q: "After a long day at work, he likes to _______ with a good book.",
+    options: ["turn down", "break out", "wind down", "run out"],
+    answer: 2,
+    exp: "Wind down: To relax and unwind after a busy period of activity."
+  },
+  {
+    q: "The police were able to ________ the suspect in a small town.",
+    options: ["turn in", "track down", "make up", "break in"],
+    answer: 1,
+    exp: "Track down: To locate or find someone/something after a diligent search."
+  },
+  {
+    q: "He ______ his coat before stepping out into the cold.",
+    options: ["took off", "put on", "ran into", "brought up"],
+    answer: 1,
+    exp: "Put on: To dress oneself in an item of clothing."
+  },
+  {
+    q: "She _______ a story to explain why she was late.",
+    options: ["made up", "took over", "looked into", "carried out"],
+    answer: 0,
+    exp: "Made up: Invented or fabricated an excuse or story."
+  },
+  {
+    q: "He decided to _______ smoking for the sake of his health.",
+    options: ["give up", "go on", "put away", "look after"],
+    answer: 0,
+    exp: "Give up: To cease or abandon a habit."
+  },
+  {
+    q: "The athlete _______ after the competition.",
+    options: ["passed out", "brought in", "gave away", "took up"],
+    answer: 0,
+    exp: "Passed out: Fainted or lost consciousness temporarily."
+  },
+  {
+    q: "The teacher asked the students to _______ the assignment before submitting it.",
+    options: ["look after", "go over", "make up", "put up"],
+    answer: 1,
+    exp: "Go over: To review, examine, or proofread work."
+  },
+  {
+    q: "He _______ a brilliant idea during the brainstorming session.",
+    options: ["came up with", "went through", "dropped out of", "turned up"],
+    answer: 0,
+    exp: "Came up with: To produce, discover, or think of an idea or plan."
+  },
+  {
+    q: "She _______ her mother when she was sick.",
+    options: ["got through", "looked after", "brought up", "ran out of"],
+    answer: 1,
+    exp: "Looked after: To nurse, care for, or attend to someone."
+  },
+  {
+    q: "The children were _____ by their grandparents after their parents passed away.",
+    options: ["brought up", "given in", "turned down", "gone through"],
+    answer: 0,
+    exp: "Brought up: Reared and raised as a child."
+  },
+  {
+    q: "He had to _______ on his work to meet the deadline.",
+    options: ["get along", "fall out", "catch up", "bring up"],
+    answer: 2,
+    exp: "Catch up: To reach an expected standard or complete overdue backlog."
+  },
+  {
+    q: "She couldn’t _______ the idea that he was leaving for good.",
+    options: ["make up", "get over", "break out", "give in"],
+    answer: 1,
+    exp: "Get over: To overcome, recover from, or accept an emotional upset."
+  },
+  {
+    q: "He was able to ______ the problem with his friend's help.",
+    options: ["sort out", "give away", "drop out", "turn off"],
+    answer: 0,
+    exp: "Sort out: To resolve, untangle, or organize a difficulty."
+  },
+  {
+    q: "He couldn’t ______ what his boss was trying to say during the meeting.",
+    options: ["make out", "break down", "hold up", "get away"],
+    answer: 0,
+    exp: "Make out: To discern, decipher, or comprehend with difficulty."
+  },
+  {
+    q: "The police managed to ______ the thief after a long chase.",
+    options: ["get away", "catch up with", "break down", "go over"],
+    answer: 1,
+    exp: "Catch up with: To reach someone who is ahead by moving faster."
+  },
+  {
+    q: "We need to _____ a new strategy to deal with this issue.",
+    options: ["come up with", "get out of", "go along with", "fall out of"],
+    answer: 0,
+    exp: "Come up with: To devise, create, or originate a strategy/plan."
+  },
+  {
+    q: "She was so tired that she _____ as soon as she got home.",
+    options: ["passed away", "fell off", "dozed off", "broke out"],
+    answer: 2,
+    exp: "Dozed off: To unintentionally fall lightly asleep."
+  },
+  {
+    q: "The manager _____ the team for their poor work on the project.",
+    options: ["looked down on", "made up for", "came down on", "praised up"],
+    answer: 2,
+    exp: "Came down on: To severely reprimand, criticize, or penalize someone."
+  },
+  {
+    q: "We should ______ the report again before submitting it to the client.",
+    options: ["look through", "take after", "hold on", "turn out"],
+    answer: 0,
+    exp: "Look through: To quickly inspect or read through a document."
+  },
+  {
+    q: "After hours of negotiation, they finally ____ to an agreement.",
+    options: ["came through", "came around", "came down", "came up"],
+    answer: 1,
+    exp: "Came around: To change one's mind or finally agree to something."
+  },
+  {
+    q: "He was able to ____ his anger during the argument.",
+    options: ["hold back", "hold off", "hold on", "hold out"],
+    answer: 0,
+    exp: "Hold back: To restrain, suppress, or prevent an emotion from spilling over."
+  }
+];
+
+let currentIndex = 0;
+let score = 0;
+let answered = false;
+let userAnswers = []; // Records user responses for review
+
+// DOM Elements
+const qCounter = document.getElementById("q-counter");
+const scoreCounter = document.getElementById("score-counter");
+const progressBar = document.getElementById("progress-bar");
+const questionText = document.getElementById("question-text");
+const optionsContainer = document.getElementById("options-container");
+const explanationBox = document.getElementById("explanation-box");
+const explanationText = document.getElementById("explanation-text");
+const nextBtn = document.getElementById("next-btn");
+const statusHint = document.getElementById("status-hint");
+
+const quizView = document.getElementById("quiz-view");
+const quizFooter = document.getElementById("quiz-footer");
+const resultsView = document.getElementById("results-view");
+const resPercent = document.getElementById("res-percent");
+const resCorrect = document.getElementById("res-correct");
+const resIncorrect = document.getElementById("res-incorrect");
+const breakdownList = document.getElementById("breakdown-list");
+const restartBtn = document.getElementById("restart-btn");
+
+const themeBtn = document.getElementById("theme-btn");
+const themeIcon = document.getElementById("theme-icon");
+const themeText = document.getElementById("theme-text");
+
+// Initialize Quiz
+function initQuiz() {
+  currentIndex = 0;
+  score = 0;
+  answered = false;
+  userAnswers = new Array(quizData.length).fill(null);
+  
+  quizView.style.display = "flex";
+  quizFooter.style.display = "flex";
+  resultsView.style.display = "none";
+  
+  renderQuestion();
+}
+
+function renderQuestion() {
+  answered = false;
+  const current = quizData[currentIndex];
+  
+  // Update header & progress
+  qCounter.textContent = `Q ${currentIndex + 1} / ${quizData.length}`;
+  scoreCounter.textContent = `Score: ${score}`;
+  progressBar.style.width = `${((currentIndex) / quizData.length) * 100}%`;
+  
+  // Render question text
+  questionText.textContent = `${currentIndex + 1}. ${current.q}`;
+  
+  // Reset state & options
+  optionsContainer.innerHTML = "";
+  explanationBox.style.display = "none";
+  nextBtn.disabled = true;
+  statusHint.textContent = "Select an option";
+
+  const prefixes = ["a", "b", "c", "d"];
+  current.options.forEach((opt, idx) => {
+    const btn = document.createElement("button");
+    btn.className = "option-btn";
+    btn.innerHTML = `<span class="option-prefix">${prefixes[idx]}</span> <span>${opt}</span>`;
+    btn.onclick = () => handleOptionClick(idx);
+    optionsContainer.appendChild(btn);
+  });
+}
+
+function handleOptionClick(selectedIdx) {
+  if (answered) return;
+  answered = true;
+  
+  const current = quizData[currentIndex];
+  const buttons = optionsContainer.querySelectorAll(".option-btn");
+  const isCorrect = selectedIdx === current.answer;
+  
+  userAnswers[currentIndex] = {
+    selected: selectedIdx,
+    correct: isCorrect
+  };
+
+  if (isCorrect) {
+    score++;
+    statusHint.textContent = "✓ Correct!";
+    statusHint.style.color = "var(--success-text)";
+  } else {
+    statusHint.textContent = "✕ Incorrect";
+    statusHint.style.color = "var(--error-text)";
+  }
+  scoreCounter.textContent = `Score: ${score}`;
+
+  buttons.forEach((btn, idx) => {
+    btn.disabled = true;
+    if (idx === current.answer) {
+      btn.classList.add("correct");
+    } else if (idx === selectedIdx) {
+      btn.classList.add("wrong");
+    }
+  });
+
+  // Display concise explanation
+  explanationText.textContent = current.exp;
+  explanationBox.style.display = "block";
+  
+  nextBtn.disabled = false;
+  nextBtn.focus();
+}
+
+nextBtn.addEventListener("click", () => {
+  currentIndex++;
+  if (currentIndex < quizData.length) {
+    renderQuestion();
+  } else {
+    showResults();
+  }
+});
+
+function showResults() {
+  quizView.style.display = "none";
+  quizFooter.style.display = "none";
+  resultsView.style.display = "flex";
+  progressBar.style.width = "100%";
+  
+  const total = quizData.length;
+  const percentage = Math.round((score / total) * 100);
+  const incorrectCount = total - score;
+
+  resPercent.textContent = `${percentage}%`;
+  resCorrect.textContent = `Correct: ${score}`;
+  resIncorrect.textContent = `Incorrect: ${incorrectCount}`;
+
+  breakdownList.innerHTML = "";
+  
+  const incorrectQuestions = userAnswers
+    .map((ans, idx) => ({ ...ans, index: idx }))
+    .filter(item => item && !item.correct);
+
+  if (incorrectQuestions.length === 0) {
+    breakdownList.innerHTML = `<div style="text-align:center; padding: 20px; font-weight:600; color:var(--success-text);">🎉 Perfect Score! No incorrect answers to review.</div>`;
+  } else {
+    const prefixes = ["(a)", "(b)", "(c)", "(d)"];
+    incorrectQuestions.forEach(item => {
+      const qData = quizData[item.index];
+      const div = document.createElement("div");
+      div.className = "breakdown-item";
+      
+      const userSelectedTxt = item.selected !== null ? `${prefixes[item.selected]} ${qData.options[item.selected]}` : "None";
+      const correctTxt = `${prefixes[qData.answer]} ${qData.options[qData.answer]}`;
+
+      div.innerHTML = `
+        <div class="q-txt">${item.index + 1}. ${qData.q}</div>
+        <div class="breakdown-tags">
+          <span class="tag-user">Your answer: ${userSelectedTxt}</span>
+          <span class="tag-correct">Correct: ${correctTxt}</span>
+        </div>
+      `;
+      breakdownList.appendChild(div);
+    });
+  }
+}
+
+restartBtn.addEventListener("click", initQuiz);
+
+// Theme Toggle Functionality
+let isDark = false;
+themeBtn.addEventListener("click", () => {
+  isDark = !isDark;
+  if (isDark) {
+    document.documentElement.setAttribute("data-theme", "dark");
+    themeIcon.textContent = "☀️";
+    themeText.textContent = "Light";
+  } else {
+    document.documentElement.removeAttribute("data-theme");
+    themeIcon.textContent = "🌙";
+    themeText.textContent = "Dark";
+  }
+});
+
+// Start the application
+initQuiz();
+</script>
+</body>
+</html>
