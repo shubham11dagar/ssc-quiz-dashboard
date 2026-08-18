@@ -1,0 +1,1010 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>English Grammar & Phrasal Verbs Master Class Quiz</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#f0f5ff',
+                            100: '#e0ebff',
+                            500: '#3b82f6',
+                            600: '#2563eb',
+                            700: '#1d4ed8'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'Fira Code', 'monospace']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&display=swap');
+
+        /* Custom smooth scrollbar for overflow areas */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.05);
+            border-radius: 4px;
+        }
+        .dark ::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(100, 116, 139, 0.3);
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(100, 116, 139, 0.5);
+        }
+
+        /* Prevent text selection flicker during fast option clicking */
+        .no-select {
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        /* Accent animations */
+        @keyframes pulse-subtle {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.95; transform: scale(0.998); }
+        }
+        .pulse-subtle {
+            animation: pulse-subtle 3s infinite ease-in-out;
+        }
+
+        /* Glassmorphism styling */
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+        }
+        .dark .glass-panel {
+            background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(12px);
+        }
+    </style>
+</head>
+<body class="h-full bg-slate-100 text-slate-800 dark:bg-slate-950 dark:text-slate-100 flex flex-col transition-colors duration-300 font-sans overflow-hidden antialiased">
+
+    <!-- TOP NAVIGATION BAR -->
+    <header class="h-14 border-b border-slate-200 dark:border-slate-800 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md px-4 sm:px-6 flex items-center justify-between z-20 shrink-0">
+        <div class="flex items-center space-x-3">
+            <div class="p-2 rounded-lg bg-indigo-600 text-white shadow-md shadow-indigo-500/20">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+                </svg>
+            </div>
+            <div>
+                <h1 class="text-base font-bold tracking-tight text-slate-900 dark:text-white leading-tight">Grammar Prep Prep-Master</h1>
+                <p class="text-xs text-slate-500 dark:text-slate-400 hidden sm:block">Phrasal Verbs & Sentence Correction Series</p>
+            </div>
+        </div>
+
+        <!-- RIGHT HEADER CONTROLS -->
+        <div class="flex items-center space-x-3">
+            <!-- Score Counter Badge -->
+            <div id="live-score-badge" class="px-3 py-1 rounded-full text-xs font-semibold bg-indigo-50 text-indigo-700 dark:bg-indigo-950/60 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-800/50 flex items-center gap-1.5">
+                <span>Score:</span>
+                <span id="live-score-val" class="font-bold text-sm">0</span>
+                <span class="text-slate-400">/</span>
+                <span id="live-total-val" class="text-slate-500 dark:text-slate-400">47</span>
+            </div>
+
+            <!-- Theme Toggle Button -->
+            <button id="theme-toggle" aria-label="Toggle dark mode" class="p-2 rounded-lg bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                <!-- Sun Icon -->
+                <svg id="sun-icon" class="w-5 h-5 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path>
+                </svg>
+                <!-- Moon Icon -->
+                <svg id="moon-icon" class="w-5 h-5 block dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
+                </svg>
+            </button>
+        </div>
+    </header>
+
+    <!-- MAIN APPLICATION CONTAINER (Viewport restricted to avoid scrolling) -->
+    <main class="flex-1 flex flex-col justify-center items-center p-2 sm:p-4 md:p-6 overflow-hidden relative">
+
+        <!-- QUIZ SCREEN -->
+        <div id="quiz-container" class="w-full max-w-4xl h-full max-h-[calc(100vh-4.5rem)] flex flex-col bg-white dark:bg-slate-900 rounded-2xl shadow-xl border border-slate-200/80 dark:border-slate-800 overflow-hidden relative transition-all duration-300">
+            
+            <!-- PROGRESS BAR TOP -->
+            <div class="w-full bg-slate-100 dark:bg-slate-800 h-2 relative overflow-hidden">
+                <div id="progress-bar" class="bg-gradient-to-r from-indigo-500 via-purple-500 to-indigo-600 h-full w-0 transition-all duration-300 ease-out"></div>
+            </div>
+
+            <!-- CARD HEADER INFO -->
+            <div class="px-5 py-3 border-b border-slate-100 dark:border-slate-800/80 flex items-center justify-between shrink-0 bg-slate-50/50 dark:bg-slate-900/50">
+                <div class="flex items-center space-x-2">
+                    <span id="question-badge" class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-indigo-100 text-indigo-800 dark:bg-indigo-900/60 dark:text-indigo-300 uppercase tracking-wider">
+                        Question 1
+                    </span>
+                    <span id="question-category" class="text-xs text-slate-500 dark:text-slate-400 font-medium">
+                        Phrasal Verb Choice
+                    </span>
+                </div>
+                <div class="text-xs text-slate-400 dark:text-slate-500 flex items-center gap-1 font-mono">
+                    <span>Keyboard shortcuts:</span>
+                    <kbd class="px-1.5 py-0.5 rounded bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-[10px]">1-4</kbd> or <kbd class="px-1.5 py-0.5 rounded bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-[10px]">A-D</kbd>
+                </div>
+            </div>
+
+            <!-- QUESTION CONTENT BODY (FLUID & COMPACT) -->
+            <div class="flex-1 p-4 sm:p-6 overflow-y-auto flex flex-col justify-between space-y-4">
+                
+                <!-- QUESTION TEXT / PROMPT AREA -->
+                <div id="question-box" class="space-y-3">
+                    <h2 id="question-text" class="text-base sm:text-lg md:text-xl font-semibold text-slate-900 dark:text-white leading-relaxed">
+                        <!-- Dynamic Question Text -->
+                    </h2>
+                    
+                    <!-- Advanced formatting container for segmented sentences or statement lists -->
+                    <div id="formatted-content" class="hidden">
+                        <!-- Rendered dynamically -->
+                    </div>
+                </div>
+
+                <!-- OPTIONS GRID CONTAINER -->
+                <div class="space-y-2.5">
+                    <div id="options-container" class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                        <!-- Options injected dynamically -->
+                    </div>
+                </div>
+
+                <!-- EXPLANATION BANNER (SLIDES IN UPON ANSWER) -->
+                <div id="explanation-box" class="hidden rounded-xl p-3.5 sm:p-4 text-xs sm:text-sm transition-all duration-300 border">
+                    <div class="flex items-start space-x-3">
+                        <div id="explanation-icon" class="shrink-0 mt-0.5 p-1 rounded-full text-white">
+                            <!-- Correct / Incorrect icon -->
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <p id="explanation-title" class="font-bold mb-1"></p>
+                            <p id="explanation-text" class="text-slate-600 dark:text-slate-300 leading-relaxed text-xs sm:text-sm overflow-y-auto max-h-24 pr-1"></p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- CARD FOOTER (ALWAYS VISIBLE NEXT BUTTON) -->
+            <div class="px-5 py-3 border-t border-slate-100 dark:border-slate-800 bg-slate-50/80 dark:bg-slate-900/80 flex items-center justify-between shrink-0">
+                <div class="text-xs text-slate-500 dark:text-slate-400">
+                    Question <span id="current-index-num" class="font-semibold text-slate-800 dark:text-slate-200">1</span> of <span id="total-questions-num" class="font-semibold text-slate-800 dark:text-slate-200">47</span>
+                </div>
+                <button id="next-btn" class="px-5 py-2 rounded-xl font-semibold text-sm bg-indigo-600 hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-600 text-white shadow-md shadow-indigo-500/20 active:scale-95 transition-all flex items-center space-x-2 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none">
+                    <span>Next Question</span>
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+                    </svg>
+                </button>
+            </div>
+
+        </div>
+
+        <!-- RESULTS SUMMARY SCREEN (Hidden by default) -->
+        <div id="results-container" class="hidden w-full max-w-4xl h-full max-h-[calc(100vh-4.5rem)] flex flex-col bg-white dark:bg-slate-900 rounded-2xl shadow-xl border border-slate-200/80 dark:border-slate-800 overflow-hidden relative">
+            
+            <!-- RESULTS HEADER -->
+            <div class="p-6 bg-gradient-to-r from-indigo-600 via-indigo-700 to-purple-700 text-white shrink-0 relative overflow-hidden">
+                <div class="relative z-10 flex flex-col sm:flex-row items-center justify-between gap-4">
+                    <div>
+                        <span class="inline-block px-3 py-1 rounded-full text-xs font-semibold bg-white/20 text-white mb-2 backdrop-blur-sm">Exam Assessment Complete</span>
+                        <h2 class="text-2xl sm:text-3xl font-extrabold tracking-tight">Quiz Results Breakdown</h2>
+                        <p class="text-indigo-100 text-xs sm:text-sm mt-1">Review your accuracy and detailed explanations for missed questions.</p>
+                    </div>
+                    <!-- Circular Score Percentage Gauge -->
+                    <div class="shrink-0 flex flex-col items-center justify-center bg-white/10 dark:bg-slate-950/30 backdrop-blur-md rounded-2xl p-4 border border-white/20 min-w-[120px]">
+                        <span id="result-percentage" class="text-3xl sm:text-4xl font-extrabold tracking-tight">0%</span>
+                        <span class="text-xs text-indigo-200 font-medium uppercase tracking-wider mt-1">Final Score</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- METRICS SUMMARY ROW -->
+            <div class="grid grid-cols-3 gap-2 p-4 bg-slate-50 dark:bg-slate-900/50 border-b border-slate-200 dark:border-slate-800 text-center shrink-0">
+                <div class="p-2 sm:p-3 bg-white dark:bg-slate-800/80 rounded-xl border border-slate-200/60 dark:border-slate-700/50">
+                    <p class="text-xs text-slate-500 dark:text-slate-400">Total Questions</p>
+                    <p id="res-total" class="text-lg sm:text-xl font-bold text-slate-800 dark:text-slate-100">47</p>
+                </div>
+                <div class="p-2 sm:p-3 bg-emerald-50 dark:bg-emerald-950/30 rounded-xl border border-emerald-200/60 dark:border-emerald-800/40">
+                    <p class="text-xs text-emerald-600 dark:text-emerald-400">Correct</p>
+                    <p id="res-correct" class="text-lg sm:text-xl font-bold text-emerald-700 dark:text-emerald-300">0</p>
+                </div>
+                <div class="p-2 sm:p-3 bg-rose-50 dark:bg-rose-950/30 rounded-xl border border-rose-200/60 dark:border-rose-800/40">
+                    <p class="text-xs text-rose-600 dark:text-rose-400">Incorrect</p>
+                    <p id="res-incorrect" class="text-lg sm:text-xl font-bold text-rose-700 dark:text-rose-300">0</p>
+                </div>
+            </div>
+
+            <!-- INCORRECT QUESTIONS REVIEW LIST (SCROLLABLE AREA) -->
+            <div class="flex-1 p-4 sm:p-6 overflow-y-auto space-y-4">
+                <div class="flex items-center justify-between mb-2">
+                    <h3 class="text-sm font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 flex items-center gap-2">
+                        <span>Review Missed Questions</span>
+                        <span id="missed-count-badge" class="px-2 py-0.5 rounded-full text-xs bg-rose-100 text-rose-800 dark:bg-rose-950 dark:text-rose-300 font-semibold">0</span>
+                    </h3>
+                </div>
+
+                <!-- Container for incorrect items -->
+                <div id="incorrect-list" class="space-y-3">
+                    <!-- Dynamic review cards -->
+                </div>
+            </div>
+
+            <!-- RESTART QUIZ FOOTER ACTION -->
+            <div class="p-4 border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 flex justify-end shrink-0">
+                <button id="restart-btn" class="px-6 py-2.5 rounded-xl font-bold text-sm bg-indigo-600 hover:bg-indigo-700 text-white shadow-lg shadow-indigo-500/25 active:scale-95 transition-all flex items-center space-x-2">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+                    </svg>
+                    <span>Restart Quiz</span>
+                </button>
+            </div>
+
+        </div>
+
+    </main>
+
+    <script>
+        // Comprehensive Dataset parsed directly from user input (Renumbered 1 to 47)
+        const quizData = [
+            {
+                id: 1,
+                category: "Phrasal Verb",
+                question: "She was so tired that she _____ as soon as she got home.",
+                options: ["passed away", "fell off", "dozed off", "broke out"],
+                answer: 2, // 0-indexed: c) dozed off
+                explanation: "<b>Dozed off:</b> To fall asleep, often unintentionally, usually for a short period.<br><br><b>Passed away:</b> To die.<br><b>Fell off:</b> To drop from a higher position.<br><b>Broke out:</b> To start suddenly (like war or disease)."
+            },
+            {
+                id: 2,
+                category: "Phrasal Verb",
+                question: "The manager _____ the team for their poor work on the project.",
+                options: ["looked down on", "made up for", "came down on", "praised up"],
+                answer: 2, // c) came down on
+                explanation: "<b>Came down on:</b> To criticize or punish someone severely.<br><br><b>Looked down on:</b> To view with superiority.<br><b>Made up for:</b> To compensate for.<br><b>Praised up:</b> To speak highly of."
+            },
+            {
+                id: 3,
+                category: "Phrasal Verb",
+                question: "We should ______ the report again before submitting it to the client.",
+                options: ["look through", "take after", "hold on", "turn out"],
+                answer: 0, // a) look through
+                explanation: "<b>Look through:</b> To examine or quickly scan something.<br><br><b>Take after:</b> To resemble a family member.<br><b>Hold on:</b> To wait.<br><b>Turn out:</b> To happen or result in a particular way."
+            },
+            {
+                id: 4,
+                category: "Phrasal Verb",
+                question: "After hours of negotiation, they finally ____ to an agreement.",
+                options: ["came through", "came around", "came down", "came up"],
+                answer: 1, // b) came around
+                explanation: "<b>Come around:</b> To change one's opinion or decision, often after some time.<br><br><b>Come through:</b> To survive or complete a challenge.<br><b>Come down:</b> To decrease.<br><b>Come up:</b> To arise in conversation."
+            },
+            {
+                id: 5,
+                category: "Phrasal Verb",
+                question: "He was able to ____ his anger during the argument.",
+                options: ["hold back", "hold off", "hold on", "hold out"],
+                answer: 0, // a) hold back
+                explanation: "<b>Hold back:</b> To restrain or prevent someone/something from moving forward or expressing emotion.<br><br><b>Hold off:</b> To delay or postpone.<br><b>Hold on:</b> To wait.<br><b>Hold out:</b> To resist/endure."
+            },
+            {
+                id: 6,
+                category: "Phrasal Verb",
+                question: "The company will ____ a new product next year.",
+                options: ["roll in", "roll out", "roll over", "roll up"],
+                answer: 1, // b) roll out
+                explanation: "<b>Roll out:</b> To introduce or launch something, such as a new product or service.<br><br><b>Roll in:</b> To arrive in large quantities.<br><b>Roll up:</b> To arrive casually."
+            },
+            {
+                id: 7,
+                category: "Phrasal Verb",
+                question: "He was walking too fast, and I couldn’t ___ with him.",
+                options: ["take up", "look after", "keep up", "break into"],
+                answer: 2, // c) keep up
+                explanation: "<b>Keep up:</b> Move at the same speed or pace.<br><br><b>Take up:</b> Start a new activity.<br><b>Look after:</b> Take care of.<br><b>Break into:</b> Enter by force."
+            },
+            {
+                id: 8,
+                category: "Phrasal Verb",
+                question: "I have to ___ my presentation for tomorrow's meeting.",
+                options: ["work on", "bring about", "take in", "look up to"],
+                answer: 0, // a) work on
+                explanation: "<b>Work on:</b> Spend time improving something.<br><br><b>Bring about:</b> Cause something to happen.<br><b>Take in:</b> Understand or absorb information.<br><b>Look up to:</b> Admire."
+            },
+            {
+                id: 9,
+                category: "Phrasal Verb",
+                question: "We need to ___ the old computer and buy a new one.",
+                options: ["get rid of", "keep up with", "run out of", "bring up"],
+                answer: 0, // a) get rid of
+                explanation: "<b>Get rid of:</b> Discard or remove.<br><br><b>Keep up with:</b> Stay updated or maintain pace.<br><b>Run out of:</b> Have no more left.<br><b>Bring up:</b> Mention a topic."
+            },
+            {
+                id: 10,
+                category: "Phrasal Verb",
+                question: "They decided to ____ a new employee to help with the increased workload.",
+                options: ["look after", "take on", "turn down", "back out"],
+                answer: 1, // b) take on
+                explanation: "<b>Take on:</b> To hire a new employee or accept a responsibility.<br><br><b>Look after:</b> Take care of.<br><b>Turn down:</b> Reject.<br><b>Back out:</b> Withdraw from commitment."
+            },
+            {
+                id: 11,
+                category: "Phrasal Verb",
+                question: "The teacher asked the student to ____ the errors in his essay.",
+                options: ["carry out", "look through", "point out", "take down"],
+                answer: 2, // c) point out
+                explanation: "<b>Point out:</b> To direct someone's attention to something.<br><br><b>Carry out:</b> Execute/perform a task.<br><b>Look through:</b> Examine/review.<br><b>Take down:</b> Write down/record."
+            },
+            {
+                id: 12,
+                category: "Phrasal Verb",
+                question: "She had to ____ the invitation to the party because of her busy schedule.",
+                options: ["turn down", "put off", "get over", "look after"],
+                answer: 0, // a) turn down
+                explanation: "<b>Turn down:</b> To reject or refuse something.<br><br><b>Put off:</b> Postpone.<br><b>Get over:</b> Recover from.<br><b>Look after:</b> Take care of."
+            },
+            {
+                id: 13,
+                category: "Phrasal Verb",
+                question: "He was very sad after they ___ last year.",
+                options: ["broke up", "gave away", "set off", "came across"],
+                answer: 0, // a) broke up
+                explanation: "<b>Broke up:</b> Ended a relationship.<br><br><b>Gave away:</b> Distributed for free.<br><b>Set off:</b> Begin a journey.<br><b>Came across:</b> Found by chance."
+            },
+            {
+                id: 14,
+                category: "Spot the Error",
+                type: "segmented",
+                question: "Identify the part containing an error:",
+                segments: [
+                    { label: "a", text: "Throw of" },
+                    { label: "b", text: "the old shoes;" },
+                    { label: "c", text: "nobody will wear" },
+                    { label: "d", text: "them now." }
+                ],
+                options: ["(a) Throw of", "(b) the old shoes;", "(c) nobody will wear", "(d) them now."],
+                answer: 0, // (a)
+                explanation: "<b>Incorrect Segment (a):</b> Replace <i>'Throw of'</i> with <i>'Throw away'</i> or <i>'Throw out'</i>. The phrase 'throw of' is grammatically incorrect in this context."
+            },
+            {
+                id: 15,
+                category: "Spot the Error",
+                type: "segmented",
+                question: "Identify the part containing an error:",
+                segments: [
+                    { label: "a", text: "The teacher was" },
+                    { label: "b", text: "taken back by" },
+                    { label: "c", text: "the audacity of" },
+                    { label: "d", text: "the new student." }
+                ],
+                options: ["(a) The teacher was", "(b) taken back by", "(c) the audacity of", "(d) the new student."],
+                answer: 1, // (b)
+                explanation: "<b>Incorrect Segment (b):</b> Replace <i>'taken back'</i> with <i>'taken aback'</i>. The idiom <b>'taken aback'</b> means to be surprised or shocked."
+            },
+            {
+                id: 16,
+                category: "Spot the Error",
+                type: "segmented",
+                question: "Identify the part containing an error:",
+                segments: [
+                    { label: "a", text: "It is difficult to live in" },
+                    { label: "b", text: "the societal expectations" },
+                    { label: "c", text: "when one has" },
+                    { label: "d", text: "fewer resources." }
+                ],
+                options: ["(a) It is difficult to live in", "(b) the societal expectations", "(c) when one has", "(d) fewer resources."],
+                answer: 0, // (a)
+                explanation: "<b>Incorrect Segment (a):</b> Replace <i>'live in'</i> with <i>'live up to'</i>. The correct phrasal verb meaning to meet expectations is <b>'live up to'</b>."
+            },
+            {
+                id: 17,
+                category: "Sentence Improvement",
+                question: "The Privacy Shield establishes a process to allow companies to transfer consumer data from European Union countries to the United States <u class='underline decoration-indigo-500 font-semibold'>in compliance in</u> EU law.",
+                options: ["No improvement", "in compliance for the", "in compliance under the", "in compliance with"],
+                answer: 3, // in compliance with
+                explanation: "<b>Correct Phrase:</b> 'In compliance <b>with</b>' is the standard idiomatic prepositional combination used to denote following rules or laws."
+            },
+            {
+                id: 18,
+                category: "Phrasal Verb",
+                question: "I will work overtime this week to ___ the time I missed last week.",
+                options: ["give up", "make up for", "hold on", "run out of"],
+                answer: 1, // b) make up for
+                explanation: "<b>Make up for:</b> Compensate for something.<br><br><b>Give up:</b> Stop trying.<br><b>Hold on:</b> Wait.<br><b>Run out of:</b> Exhaust supply."
+            },
+            {
+                id: 19,
+                category: "Sentence Improvement",
+                question: "The recent cloudburst completely <u class='underline decoration-indigo-500 font-semibold'>dismantled</u> the village and its people.",
+                options: ["took back", "took apart", "took after", "took up"],
+                answer: 1, // took apart
+                explanation: "<b>Took apart:</b> To separate something into pieces / dismantle.<br><br><b>Took back:</b> Return bought item.<br><b>Took after:</b> Resemble an elder.<br><b>Took up:</b> Start a passion/hobby."
+            },
+            {
+                id: 20,
+                category: "Phrasal Verb",
+                question: "The new construction sites have ________ attack by the environmentalists.",
+                options: ["come under", "come off", "come upon", "come out"],
+                answer: 0, // come under
+                explanation: "<b>Come under:</b> To be a person or thing being attacked or criticized (e.g., 'come under attack').<br><br><b>Come off:</b> Succeed.<br><b>Come upon:</b> Find by chance."
+            },
+            {
+                id: 21,
+                category: "Prepositional Verb",
+                question: "The movie ‘Desperate Ghosts’ was watched by my younger brother and he was ____________ horror.",
+                options: ["filled with", "filled of", "filled on", "filled off"],
+                answer: 0, // filled with
+                explanation: "<b>Filled with:</b> The adjective 'filled' takes the preposition 'with' when describing emotions or contents."
+            },
+            {
+                id: 22,
+                category: "Phrasal Verb",
+                question: "The two brothers ___________ when their father died.",
+                options: ["fell down", "look down upon", "got the sack", "fell out"],
+                answer: 3, // fell out
+                explanation: "<b>Fell out:</b> To have a quarrel or argument.<br><br><b>Fall down:</b> Collapse.<br><b>Look down upon:</b> Regard as inferior.<br><b>Get the sack:</b> Get dismissed from a job."
+            },
+            {
+                id: 23,
+                category: "Phrasal Verb",
+                question: "You need to ___ your diet if you want to see any results.",
+                options: ["break into", "give away", "stick to", "put off"],
+                answer: 2, // c) stick to
+                explanation: "<b>Stick to:</b> Adhere to or follow consistently.<br><br><b>Break into:</b> Enter forcefully.<br><b>Give away:</b> Distribute free.<br><b>Put off:</b> Postpone."
+            },
+            {
+                id: 24,
+                category: "Phrasal Verb",
+                question: "We need to ___ the pieces of the furniture before we can use it.",
+                options: ["give up", "put together", "look into", "take off"],
+                answer: 1, // b) put together
+                explanation: "<b>Put together:</b> Assemble or organize components.<br><br><b>Give up:</b> Stop.<br><b>Look into:</b> Investigate.<br><b>Take off:</b> Depart / succeed."
+            },
+            {
+                id: 25,
+                category: "Phrasal Verb",
+                question: "I hate to ___ my team, but I won’t be able to finish the project on time.",
+                options: ["let down", "turn down", "bring up", "break out"],
+                answer: 0, // a) let down
+                explanation: "<b>Let down:</b> Disappoint someone.<br><br><b>Turn down:</b> Reject.<br><b>Bring up:</b> Mention.<br><b>Break out:</b> Suddenly start."
+            },
+            {
+                id: 26,
+                category: "Phrasal Verb",
+                question: "His explanation doesn’t ___; there are too many inconsistencies.",
+                options: ["give away", "add up", "look after", "run into"],
+                answer: 1, // b) add up
+                explanation: "<b>Add up:</b> Make sense or be logical.<br><br><b>Give away:</b> Reveal/distribute.<br><b>Look after:</b> Take care of.<br><b>Run into:</b> Meet by chance."
+            },
+            {
+                id: 27,
+                category: "Phrasal Verb",
+                question: "He tried to ____ the mistake, but everyone noticed it.",
+                options: ["cover up", "bring up", "go over", "take off"],
+                answer: 0, // a) cover up
+                explanation: "<b>Cover up:</b> To hide, conceal, or mask an error/crime.<br><br><b>Bring up:</b> Mention.<br><b>Go over:</b> Review.<br><b>Take off:</b> Depart."
+            },
+            {
+                id: 28,
+                category: "Sentence Improvement",
+                question: "I am so glad that I <u class='underline decoration-indigo-500 font-semibold'>ran into</u> you on the way.",
+                options: ["No improvement required", "ran out of", "ran over", "ran away"],
+                answer: 0, // No improvement required
+                explanation: "<b>Ran into:</b> To meet someone by chance. The sentence is already grammatically correct."
+            },
+            {
+                id: 29,
+                category: "Sentence Improvement",
+                question: "The new chief is <u class='underline decoration-indigo-500 font-semibold'>gifted at</u> the power of eloquence.",
+                options: ["gifted with", "gifted for", "gifted among", "gifted of"],
+                answer: 0, // gifted with
+                explanation: "<b>Gifted with:</b> The correct adjective-preposition phrase is <i>'gifted with'</i> (meaning naturally endowed with a talent or ability)."
+            },
+            {
+                id: 30,
+                category: "Sentence Improvement",
+                question: "The wizard, while performing an item, accidentally set his own hat on fire and prompted <u class='underline decoration-indigo-500 font-semibold'>the fire alarm to go on</u>.",
+                options: ["the fire alarm to go away", "the fire alarm to go under", "the fire alarm to go off", "the fire alarm to go above"],
+                answer: 2, // go off
+                explanation: "<b>Go off:</b> Means to explode or trigger an alarm siren to start making noise.<br><i>'Go on'</i> means to continue."
+            },
+            {
+                id: 31,
+                category: "Sentence Improvement",
+                question: "Sonam’s cat used to chase the mouse into the kitchen and <u class='underline decoration-indigo-500 font-semibold'>knock through</u> a tower of pots and pans.",
+                options: ["knock inside a tower of pots", "knock over a tower of pots", "knock away a tower of pots", "knock out a tower of pots"],
+                answer: 1, // knock over
+                explanation: "<b>Knock over:</b> To strike or hit something so that it falls to the ground."
+            },
+            {
+                id: 32,
+                category: "Sentence Improvement",
+                question: "Since my friend was not feeling well, she asked me to <u class='underline decoration-indigo-500 font-semibold'>come over</u> and take care of her.",
+                options: ["No improvement", "come across", "come into", "come through"],
+                answer: 0, // No improvement
+                explanation: "<b>Come over:</b> To visit someone's home for a short duration. The original sentence is completely correct."
+            },
+            {
+                id: 33,
+                category: "Sentence Improvement",
+                question: "Peter was the last to know that she had been <u class='underline decoration-indigo-500 font-semibold'>cheating of him</u>.",
+                options: ["cheating up him", "cheating in him", "cheat of him", "cheating on him"],
+                answer: 3, // cheating on him
+                explanation: "<b>Cheat on:</b> To be sexually or romantically unfaithful to one's partner."
+            },
+            {
+                id: 34,
+                category: "Sentence Improvement",
+                question: "Samita <u class='underline decoration-indigo-500 font-semibold'>asked out</u> a favour of going early today.",
+                options: ["asked for", "asked over", "asked around", "asked after"],
+                answer: 0, // asked for
+                explanation: "<b>Asked for:</b> To request something (e.g., asked for a favor).<br><i>'Asked out'</i> means inviting someone on a date."
+            },
+            {
+                id: 35,
+                category: "Sentence Improvement",
+                question: "I opened the box beneath the table and <u class='underline decoration-indigo-500 font-semibold'>took of</u> a book, the Materia Medica.",
+                options: ["took out", "take off", "took in", "No substitution required"],
+                answer: 0, // took out
+                explanation: "<b>Took out:</b> To extract or remove an item from inside a container or box."
+            },
+            {
+                id: 36,
+                category: "Sentence Improvement",
+                question: "We <u class='underline decoration-indigo-500 font-semibold'>set up</u> on the journey early in the morning.",
+                options: ["set off", "set in", "No improvement required", "set about"],
+                answer: 0, // set off
+                explanation: "<b>Set off:</b> To begin or embark on a journey."
+            },
+            {
+                id: 37,
+                category: "Phrasal Verb",
+                question: "He tried to ____ the noise, but it was too loud.",
+                options: ["turn up", "drown out", "look into", "break down"],
+                answer: 1, // b) drown out
+                explanation: "<b>Drown out:</b> To overpower or cover a sound with a louder sound."
+            },
+            {
+                id: 38,
+                category: "Spot the Error",
+                type: "segmented",
+                question: "Identify the part containing an error:",
+                segments: [
+                    { label: "a", text: "When Christy" },
+                    { label: "b", text: "grew out," },
+                    { label: "c", text: "he turned out" },
+                    { label: "d", text: "to be a gentleman." }
+                ],
+                options: ["(a) When Christy", "(b) grew out,", "(c) he turned out", "(d) to be a gentleman."],
+                answer: 1, // (b)
+                explanation: "<b>Incorrect Segment (b):</b> Replace <i>'grew out'</i> with <i>'grew up'</i>. <b>'Grow up'</b> means to mature into an adult."
+            },
+            {
+                id: 39,
+                category: "Spot the Error",
+                type: "segmented",
+                question: "Identify the part containing an error:",
+                segments: [
+                    { label: "a", text: "I am very much" },
+                    { label: "b", text: "obliged of my friend" },
+                    { label: "c", text: "for the help" },
+                    { label: "d", text: "he rendered to me." }
+                ],
+                options: ["(a) I am very much", "(b) obliged of my friend", "(c) for the help", "(d) he rendered to me."],
+                answer: 1, // (b)
+                explanation: "<b>Incorrect Segment (b):</b> Replace <i>'obliged of'</i> with <i>'obliged to'</i>. One is <b>obliged to [someone]</b> for [something]."
+            },
+            {
+                id: 40,
+                category: "Spot the Error",
+                type: "segmented",
+                question: "Identify the part containing an error:",
+                segments: [
+                    { label: "a", text: "The companies were" },
+                    { label: "b", text: "giving in the prizes" },
+                    { label: "c", text: "to attract customers" },
+                    { label: "d", text: "during the festive season." }
+                ],
+                options: ["(a) The companies were", "(b) giving in the prizes", "(c) to attract customers", "(d) during the festive season."],
+                answer: 1, // (b)
+                explanation: "<b>Incorrect Segment (b):</b> Replace <i>'giving in'</i> with <i>'giving away'</i> or <i>'giving out'</i> (distribute freely). <i>'Give in'</i> means to surrender."
+            },
+            {
+                id: 41,
+                category: "Spot the Error",
+                type: "segmented",
+                question: "Identify the part containing an error:",
+                segments: [
+                    { label: "a", text: "You expressed your opinion" },
+                    { label: "b", text: "very clearly" },
+                    { label: "c", text: "but I am sorry" },
+                    { label: "d", text: "I cannot agree to you." }
+                ],
+                options: ["(a) You expressed your opinion", "(b) very clearly", "(c) but I am sorry", "(d) I cannot agree to you."],
+                answer: 3, // (d)
+                explanation: "<b>Incorrect Segment (d):</b> Replace <i>'agree to you'</i> with <i>'agree with you'</i>. One agrees <b>with</b> a person, but agrees <b>to</b> a proposal or plan."
+            },
+            {
+                id: 42,
+                category: "Spot the Error",
+                type: "segmented",
+                question: "Identify the part containing an error:",
+                segments: [
+                    { label: "a", text: "They have decided" },
+                    { label: "b", text: "to wind out" },
+                    { label: "c", text: "their business" },
+                    { label: "d", text: "without delay." }
+                ],
+                options: ["(a) They have decided", "(b) to wind out", "(c) their business", "(d) without delay."],
+                answer: 1, // (b)
+                explanation: "<b>Incorrect Segment (b):</b> Replace <i>'wind out'</i> with <i>'wind up'</i>. <b>'Wind up'</b> means to close down or liquidate a business."
+            },
+            {
+                id: 43,
+                category: "Spot the Error",
+                type: "segmented",
+                question: "Identify the part containing an error:",
+                segments: [
+                    { label: "a", text: "I used to eat into" },
+                    { label: "b", text: "in the evening" },
+                    { label: "c", text: "when my parents" },
+                    { label: "d", text: "were on night shifts." }
+                ],
+                options: ["(a) I used to eat into", "(b) in the evening", "(c) when my parents", "(d) were on night shifts."],
+                answer: 0, // (a)
+                explanation: "<b>Incorrect Segment (a):</b> Replace <i>'eat into'</i> with <i>'eat out'</i> (dine at restaurants). <i>'Eat into'</i> means consuming resources or savings."
+            },
+            {
+                id: 44,
+                category: "Spot the Error",
+                type: "segmented",
+                question: "Identify the part containing an error:",
+                segments: [
+                    { label: "a", text: "After a while," },
+                    { label: "b", text: "she look up" },
+                    { label: "c", text: "and saw that" },
+                    { label: "d", text: "it was getting dark." }
+                ],
+                options: ["(a) After a while,", "(b) she look up", "(c) and saw that", "(d) it was getting dark."],
+                answer: 1, // (b)
+                explanation: "<b>Incorrect Segment (b):</b> Replace <i>'look up'</i> with past tense <i>'looked up'</i> for consistency with 'saw' and 'was getting'."
+            },
+            {
+                id: 45,
+                category: "Spot the Error",
+                type: "segmented",
+                question: "Identify the part containing an error:",
+                segments: [
+                    { label: "a", text: "His mother’s transfer" },
+                    { label: "b", text: "from a small town to Delhi" },
+                    { label: "c", text: "brought up a huge change" },
+                    { label: "d", text: "in his schooling." }
+                ],
+                options: ["(a) His mother’s transfer", "(b) from a small town to Delhi", "(c) brought up a huge change", "(d) in his schooling."],
+                answer: 2, // (c)
+                explanation: "<b>Incorrect Segment (c):</b> Replace <i>'brought up'</i> with <i>'brought about'</i>. <b>'Bring about'</b> means to cause something to happen."
+            },
+            {
+                id: 46,
+                category: "Spot the Error",
+                type: "segmented",
+                question: "Identify the part containing an error:",
+                segments: [
+                    { label: "a", text: "She always" },
+                    { label: "b", text: "likes to" },
+                    { label: "c", text: "show on" },
+                    { label: "d", text: "her wealth." }
+                ],
+                options: ["(a) She always", "(b) likes to", "(c) show on", "(d) her wealth."],
+                answer: 2, // (c)
+                explanation: "<b>Incorrect Segment (c):</b> Replace <i>'show on'</i> with <i>'show off'</i>. <b>'Show off'</b> means to boastfully display something."
+            },
+            {
+                id: 47,
+                category: "Spot the Error",
+                type: "segmented",
+                question: "Identify the part containing an error:",
+                segments: [
+                    { label: "a", text: "It is his job" },
+                    { label: "b", text: "to chase out" },
+                    { label: "c", text: "clients with" },
+                    { label: "d", text: "outstanding debts." }
+                ],
+                options: ["(a) It is his job", "(b) to chase out", "(c) clients with", "(d) outstanding debts."],
+                answer: 1, // (b)
+                explanation: "<b>Incorrect Segment (b):</b> Replace <i>'chase out'</i> with <i>'chase up'</i> or <i>'chase down'</i> (meaning to follow up with someone regarding unpaid debts or pending tasks)."
+            }
+        ];
+
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let userAnswers = new Array(quizData.length).fill(null);
+        let isAnswered = false;
+
+        // DOM elements
+        const quizContainer = document.getElementById('quiz-container');
+        const resultsContainer = document.getElementById('results-container');
+        const questionTextEl = document.getElementById('question-text');
+        const formattedContentEl = document.getElementById('formatted-content');
+        const optionsContainerEl = document.getElementById('options-container');
+        const explanationBoxEl = document.getElementById('explanation-box');
+        const explanationTitleEl = document.getElementById('explanation-title');
+        const explanationTextEl = document.getElementById('explanation-text');
+        const explanationIconEl = document.getElementById('explanation-icon');
+        const nextBtn = document.getElementById('next-btn');
+        const progressBar = document.getElementById('progress-bar');
+        const currentNumEl = document.getElementById('current-index-num');
+        const totalNumEl = document.getElementById('total-questions-num');
+        const liveScoreVal = document.getElementById('live-score-val');
+        const liveTotalVal = document.getElementById('live-total-val');
+        const questionBadge = document.getElementById('question-badge');
+        const questionCategory = document.getElementById('question-category');
+        const themeToggleBtn = document.getElementById('theme-toggle');
+
+        // Dark Mode support
+        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            document.documentElement.classList.add('dark');
+        }
+        themeToggleBtn.addEventListener('click', () => {
+            document.documentElement.classList.toggle('dark');
+        });
+
+        function initApp() {
+            totalNumEl.textContent = quizData.length;
+            liveTotalVal.textContent = quizData.length;
+            loadQuestion(0);
+        }
+
+        function loadQuestion(index) {
+            isAnswered = false;
+            const q = quizData[index];
+
+            // Reset UI states
+            explanationBoxEl.classList.add('hidden');
+            explanationBoxEl.className = "hidden rounded-xl p-3.5 sm:p-4 text-xs sm:text-sm transition-all duration-300 border";
+            nextBtn.disabled = true;
+
+            // Update Progress Bar & Counters
+            currentNumEl.textContent = index + 1;
+            const progressPercent = ((index + 1) / quizData.length) * 100;
+            progressBar.style.width = `${progressPercent}%`;
+
+            // Category & Badge
+            questionBadge.textContent = `Q${index + 1}`;
+            questionCategory.textContent = q.category || "English Grammar";
+
+            // Main Question Prompt
+            questionTextEl.innerHTML = q.question;
+
+            // Render special formatting if segmented sentence or statement type
+            if (q.type === 'segmented' && q.segments) {
+                formattedContentEl.classList.remove('hidden');
+                formattedContentEl.innerHTML = `
+                    <div class="p-3 bg-slate-50 dark:bg-slate-800/60 rounded-xl border border-slate-200 dark:border-slate-700/60 flex flex-wrap gap-2 items-center text-sm font-mono my-2">
+                        ${q.segments.map(seg => `
+                            <span class="inline-flex items-center bg-white dark:bg-slate-900 px-2.5 py-1 rounded-lg border border-slate-200 dark:border-slate-700 shadow-sm">
+                                <span class="text-indigo-600 dark:text-indigo-400 font-bold mr-1.5">(${seg.label})</span>
+                                <span class="text-slate-700 dark:text-slate-200">${seg.text}</span>
+                            </span>
+                        `).join('')}
+                    </div>
+                `;
+            } else {
+                formattedContentEl.classList.add('hidden');
+                formattedContentEl.innerHTML = '';
+            }
+
+            // Render Options
+            optionsContainerEl.innerHTML = '';
+            const optionLabels = ['A', 'B', 'C', 'D'];
+
+            q.options.forEach((optText, optIdx) => {
+                const button = document.createElement('button');
+                button.className = `option-btn w-full p-3 sm:p-3.5 rounded-xl border border-slate-200 dark:border-slate-700/80 bg-white dark:bg-slate-800/80 hover:bg-slate-50 dark:hover:bg-slate-700/60 text-left transition-all duration-200 flex items-center justify-between group focus:outline-none focus:ring-2 focus:ring-indigo-500 no-select`;
+                button.setAttribute('data-index', optIdx);
+
+                button.innerHTML = `
+                    <div class="flex items-center space-x-3 pr-2 min-w-0">
+                        <span class="opt-label shrink-0 w-7 h-7 rounded-lg bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 font-bold text-xs flex items-center justify-center transition-colors group-hover:bg-indigo-600 group-hover:text-white">
+                            ${optionLabels[optIdx]}
+                        </span>
+                        <span class="opt-text text-xs sm:text-sm text-slate-700 dark:text-slate-200 font-medium leading-snug">
+                            ${optText}
+                        </span>
+                    </div>
+                    <div class="opt-status-icon shrink-0 w-5 h-5 opacity-0 transition-opacity flex items-center justify-center"></div>
+                `;
+
+                button.addEventListener('click', () => handleOptionClick(optIdx));
+                optionsContainerEl.appendChild(button);
+            });
+        }
+
+        function handleOptionClick(selectedIndex) {
+            if (isAnswered) return;
+            isAnswered = true;
+
+            const q = quizData[currentQuestionIndex];
+            userAnswers[currentQuestionIndex] = selectedIndex;
+            const isCorrect = selectedIndex === q.answer;
+
+            if (isCorrect) {
+                score++;
+                liveScoreVal.textContent = score;
+            }
+
+            const optionButtons = optionsContainerEl.querySelectorAll('.option-btn');
+
+            optionButtons.forEach((btn, idx) => {
+                btn.disabled = true;
+                btn.classList.remove('hover:bg-slate-50', 'dark:hover:bg-slate-700/60');
+                
+                const labelSpan = btn.querySelector('.opt-label');
+                const iconDiv = btn.querySelector('.opt-status-icon');
+
+                if (idx === q.answer) {
+                    // Correct Option Highlight
+                    btn.className = `option-btn w-full p-3 sm:p-3.5 rounded-xl border-2 border-emerald-500 bg-emerald-50/80 dark:bg-emerald-950/40 text-left transition-all duration-200 flex items-center justify-between no-select`;
+                    labelSpan.className = "opt-label shrink-0 w-7 h-7 rounded-lg bg-emerald-600 text-white font-bold text-xs flex items-center justify-center";
+                    iconDiv.className = "opt-status-icon shrink-0 w-5 h-5 text-emerald-600 dark:text-emerald-400 opacity-100";
+                    iconDiv.innerHTML = `<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path></svg>`;
+                } else if (idx === selectedIndex && !isCorrect) {
+                    // Incorrect Choice Highlight
+                    btn.className = `option-btn w-full p-3 sm:p-3.5 rounded-xl border-2 border-rose-500 bg-rose-50/80 dark:bg-rose-950/40 text-left transition-all duration-200 flex items-center justify-between no-select`;
+                    labelSpan.className = "opt-label shrink-0 w-7 h-7 rounded-lg bg-rose-600 text-white font-bold text-xs flex items-center justify-center";
+                    iconDiv.className = "opt-status-icon shrink-0 w-5 h-5 text-rose-600 dark:text-rose-400 opacity-100";
+                    iconDiv.innerHTML = `<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"></path></svg>`;
+                } else {
+                    btn.classList.add('opacity-50');
+                }
+            });
+
+            // Show Explanation Box
+            explanationBoxEl.classList.remove('hidden');
+            if (isCorrect) {
+                explanationBoxEl.classList.add('bg-emerald-50/90', 'dark:bg-emerald-950/30', 'border-emerald-200', 'dark:border-emerald-800/50');
+                explanationTitleEl.textContent = "Correct Answer!";
+                explanationTitleEl.className = "font-bold mb-0.5 text-emerald-800 dark:text-emerald-300";
+                explanationIconEl.className = "shrink-0 mt-0.5 p-1 rounded-full bg-emerald-500 text-white";
+                explanationIconEl.innerHTML = `<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>`;
+            } else {
+                explanationBoxEl.classList.add('bg-rose-50/90', 'dark:bg-rose-950/30', 'border-rose-200', 'dark:border-rose-800/50');
+                explanationTitleEl.textContent = "Incorrect";
+                explanationTitleEl.className = "font-bold mb-0.5 text-rose-800 dark:text-rose-300";
+                explanationIconEl.className = "shrink-0 mt-0.5 p-1 rounded-full bg-rose-500 text-white";
+                explanationIconEl.innerHTML = `<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M6 18L18 6M6 6l12 12"></path></svg>`;
+            }
+
+            explanationTextEl.innerHTML = q.explanation;
+            nextBtn.disabled = false;
+            nextBtn.focus();
+        }
+
+        nextBtn.addEventListener('click', () => {
+            if (currentQuestionIndex < quizData.length - 1) {
+                currentQuestionIndex++;
+                loadQuestion(currentQuestionIndex);
+            } else {
+                showResults();
+            }
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (resultsContainer.classList.contains('hidden') === false) return;
+
+            // Keys 1, 2, 3, 4 or A, B, C, D
+            const key = e.key.toUpperCase();
+            let optionIndex = -1;
+
+            if (['1', 'A'].includes(key)) optionIndex = 0;
+            if (['2', 'B'].includes(key)) optionIndex = 1;
+            if (['3', 'C'].includes(key)) optionIndex = 2;
+            if (['4', 'D'].includes(key)) optionIndex = 3;
+
+            if (optionIndex !== -1 && !isAnswered) {
+                handleOptionClick(optionIndex);
+            } else if ((e.key === 'Enter' || e.key === ' ') && isAnswered) {
+                e.preventDefault();
+                nextBtn.click();
+            }
+        });
+
+        function showResults() {
+            quizContainer.classList.add('hidden');
+            resultsContainer.classList.remove('hidden');
+
+            const total = quizData.length;
+            const percentage = Math.round((score / total) * 100);
+            const incorrectCount = total - score;
+
+            document.getElementById('result-percentage').textContent = `${percentage}%`;
+            document.getElementById('res-total').textContent = total;
+            document.getElementById('res-correct').textContent = score;
+            document.getElementById('res-incorrect').textContent = incorrectCount;
+            document.getElementById('missed-count-badge').textContent = incorrectCount;
+
+            const incorrectListEl = document.getElementById('incorrect-list');
+            incorrectListEl.innerHTML = '';
+
+            if (incorrectCount === 0) {
+                incorrectListEl.innerHTML = `
+                    <div class="text-center py-8 p-4 bg-emerald-50 dark:bg-emerald-950/20 rounded-2xl border border-emerald-200 dark:border-emerald-800/40">
+                        <div class="w-12 h-12 bg-emerald-500 text-white rounded-full flex items-center justify-center mx-auto mb-3 shadow-lg shadow-emerald-500/30">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                        </div>
+                        <h4 class="text-lg font-bold text-emerald-800 dark:text-emerald-300">Perfect Score! Outstanding!</h4>
+                        <p class="text-xs text-emerald-600 dark:text-emerald-400 mt-1">You answered all questions correctly without a single mistake.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            // Populate incorrect questions
+            quizData.forEach((q, idx) => {
+                const userChoiceIdx = userAnswers[idx];
+                if (userChoiceIdx !== q.answer) {
+                    const item = document.createElement('div');
+                    item.className = "p-4 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/70 text-xs sm:text-sm space-y-2";
+
+                    const userChoiceText = userChoiceIdx !== null ? q.options[userChoiceIdx] : "Not Answered";
+                    const correctChoiceText = q.options[q.answer];
+
+                    item.innerHTML = `
+                        <div class="flex items-start justify-between gap-2">
+                            <span class="font-bold text-indigo-600 dark:text-indigo-400 text-xs uppercase tracking-wider">Question ${idx + 1}</span>
+                            <span class="px-2 py-0.5 rounded text-[10px] font-semibold bg-rose-100 text-rose-800 dark:bg-rose-950 dark:text-rose-300">Incorrect</span>
+                        </div>
+                        <p class="font-semibold text-slate-800 dark:text-slate-100">${q.question}</p>
+                        
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1 font-mono text-xs">
+                            <div class="p-2 rounded bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-900/40 text-rose-800 dark:text-rose-300">
+                                <span class="font-bold block text-[10px] uppercase text-rose-500">Your Answer:</span>
+                                ${userChoiceText}
+                            </div>
+                            <div class="p-2 rounded bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-900/40 text-emerald-800 dark:text-emerald-300">
+                                <span class="font-bold block text-[10px] uppercase text-emerald-500">Correct Answer:</span>
+                                ${correctChoiceText}
+                            </div>
+                        </div>
+
+                        <div class="p-2.5 rounded bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 text-slate-600 dark:text-slate-300 text-xs leading-relaxed">
+                            <span class="font-bold text-slate-700 dark:text-slate-200">Explanation: </span> ${q.explanation}
+                        </div>
+                    `;
+                    incorrectListEl.appendChild(item);
+                }
+            });
+        }
+
+        document.getElementById('restart-btn').addEventListener('click', () => {
+            currentQuestionIndex = 0;
+            score = 0;
+            userAnswers = new Array(quizData.length).fill(null);
+            liveScoreVal.textContent = "0";
+
+            resultsContainer.classList.add('hidden');
+            quizContainer.classList.remove('hidden');
+
+            loadQuestion(0);
+        });
+
+        // Initialize application on DOM ready
+        window.onload = initApp;
+    </script>
+</body>
+</html>
