@@ -1,0 +1,1068 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>SSC Exam Practice - Government Schemes Quiz</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        ssc: {
+                            50: '#eef2ff',
+                            100: '#e0e7ff',
+                            500: '#6366f1',
+                            600: '#4f46e5',
+                            700: '#4338ca',
+                            800: '#3730a3',
+                            900: '#312e81',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'Fira Code', 'Monaco', 'Consolas', 'monospace']
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Google Fonts Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        /* Custom UI Tweaks for Ultra-Compact Viewport Compliance */
+        body {
+            font-family: 'Inter', sans-serif;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        /* Custom Scrollbar for inner feedback overflow if needed on small screens */
+        ::-webkit-scrollbar {
+            width: 4px;
+            height: 4px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(156, 163, 175, 0.4);
+            border-radius: 9999px;
+        }
+
+        .statement-card {
+            background-image: radial-gradient(rgba(99, 102, 241, 0.08) 1px, transparent 0);
+            background-size: 12px 12px;
+        }
+
+        .dark .statement-card {
+            background-image: radial-gradient(rgba(255, 255, 255, 0.06) 1px, transparent 0);
+        }
+
+        /* Pulse highlight animation for options */
+        @keyframes pulse-subtle {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.85; }
+        }
+        .pulse-option {
+            animation: pulse-subtle 1.5s infinite ease-in-out;
+        }
+    </style>
+</head>
+
+<body class="h-full bg-slate-100 dark:bg-slate-950 text-slate-800 dark:text-slate-100 transition-colors duration-200 overflow-hidden flex flex-col">
+
+    <!-- TOP COMPACT NAVIGATION HEADER -->
+    <header class="bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 shrink-0 px-3 py-2 sm:px-6">
+        <div class="max-w-5xl mx-auto flex items-center justify-between gap-2">
+            <!-- Brand & Exam Title -->
+            <div class="flex items-center space-x-2.5 min-w-0">
+                <div class="w-8 h-8 rounded-lg bg-gradient-to-tr from-indigo-600 to-indigo-800 text-white flex items-center justify-center font-bold text-base shadow-sm shrink-0">
+                    <i class="fa-solid fa-graduation-cap"></i>
+                </div>
+                <div class="truncate">
+                    <div class="flex items-center gap-2">
+                        <h1 class="text-xs sm:text-sm font-bold tracking-tight text-slate-900 dark:text-white truncate">
+                            SSC CGL / CHSL Master Quiz
+                        </h1>
+                        <span class="hidden sm:inline-block px-2 py-0.5 text-[10px] font-semibold bg-indigo-100 dark:bg-indigo-950 text-indigo-700 dark:text-indigo-300 rounded-full border border-indigo-200 dark:border-indigo-800">
+                            Govt Schemes 2026
+                        </span>
+                    </div>
+                    <p class="text-[10px] text-slate-500 dark:text-slate-400 truncate">Targeted Exam Simulation</p>
+                </div>
+            </div>
+
+            <!-- Quiz Controls & Progress Info -->
+            <div class="flex items-center space-x-2 sm:space-x-3 shrink-0">
+                <!-- Score Counter Badge -->
+                <div id="live-score-badge" class="hidden xs:flex items-center space-x-1.5 px-2.5 py-1 bg-slate-100 dark:bg-slate-800 rounded-md text-xs font-semibold border border-slate-200 dark:border-slate-700">
+                    <span class="text-slate-500 dark:text-slate-400">Score:</span>
+                    <span id="header-score" class="text-indigo-600 dark:text-indigo-400 font-bold">0</span>
+                    <span class="text-slate-400">/</span>
+                    <span id="header-total-qs">23</span>
+                </div>
+
+                <!-- Palette Modal Trigger -->
+                <button id="open-palette-btn" onclick="togglePaletteModal(true)" class="p-1.5 sm:px-2.5 sm:py-1 rounded-md text-xs font-medium bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 flex items-center gap-1.5 transition">
+                    <i class="fa-solid fa-th-large text-indigo-500"></i>
+                    <span class="hidden sm:inline">Palette</span>
+                </button>
+
+                <!-- Dark/Light Theme Toggle -->
+                <button id="theme-toggle-btn" onclick="toggleTheme()" aria-label="Toggle Theme" class="p-1.5 sm:p-2 rounded-md bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700 transition">
+                    <i id="theme-toggle-icon" class="fa-solid fa-moon text-xs sm:text-sm"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN QUIZ CONTAINER (Viewport-bounded, No scroll on body) -->
+    <main class="flex-1 max-w-5xl w-full mx-auto p-2 sm:p-4 flex flex-col justify-between overflow-hidden relative">
+
+        <!-- QUIZ ACTIVE VIEW CARD -->
+        <div id="quiz-view" class="h-full flex flex-col justify-between max-h-full">
+
+            <!-- Progress Header & Stats Row -->
+            <div class="mb-2 shrink-0">
+                <div class="flex items-center justify-between text-xs font-medium text-slate-500 dark:text-slate-400 mb-1.5">
+                    <div class="flex items-center space-x-2">
+                        <span id="q-number-tag" class="px-2 py-0.5 bg-indigo-600 text-white rounded font-bold text-[11px] uppercase tracking-wider">
+                            Q 1 / 23
+                        </span>
+                        <span id="q-category-tag" class="text-[11px] font-semibold text-slate-600 dark:text-slate-300 bg-slate-200 dark:bg-slate-800 px-2 py-0.5 rounded">
+                            Standard MCQ
+                        </span>
+                    </div>
+                    <div class="flex items-center space-x-3 text-[11px]">
+                        <span id="accuracy-pill" class="text-emerald-600 dark:text-emerald-400 font-bold hidden sm:inline">
+                            Accuracy: 100%
+                        </span>
+                        <span id="question-status-text" class="italic text-slate-400">
+                            Unanswered
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Slim Progress Bar -->
+                <div class="w-full h-1.5 bg-slate-200 dark:bg-slate-800 rounded-full overflow-hidden">
+                    <div id="progress-bar-fill" class="h-full bg-indigo-600 transition-all duration-300" style="width: 4.34%;"></div>
+                </div>
+            </div>
+
+            <!-- QUESTION CARD AREA (Flex grow, compact padding) -->
+            <div id="card-container" class="flex-1 bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm p-3 sm:p-5 flex flex-col justify-between min-h-0 overflow-y-auto mb-2">
+                
+                <!-- Upper Section: Question text & Statements -->
+                <div class="space-y-2.5">
+                    <!-- Main Question Heading -->
+                    <h2 id="question-text" class="text-xs sm:text-base font-semibold text-slate-900 dark:text-slate-100 leading-snug">
+                        Loading question...
+                    </h2>
+
+                    <!-- Statement Box (Rendered dynamically for complex statement type questions) -->
+                    <div id="statements-box" class="hidden statement-card p-2.5 sm:p-3 rounded-lg border border-indigo-200 dark:border-indigo-900/60 bg-indigo-50/40 dark:bg-slate-800/50 space-y-1.5">
+                        <div class="text-[11px] font-bold uppercase tracking-wider text-indigo-700 dark:text-indigo-400 flex items-center gap-1.5 mb-1">
+                            <i class="fa-solid fa-list-check"></i> Given Statements / Lists:
+                        </div>
+                        <div id="statements-list" class="space-y-1 text-xs sm:text-sm text-slate-700 dark:text-slate-300 font-mono">
+                            <!-- Injected statement items -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Middle Section: Options Grid -->
+                <div id="options-grid" class="grid grid-cols-1 sm:grid-cols-2 gap-2 my-2 shrink-0">
+                    <!-- Options buttons injected here via JS -->
+                </div>
+
+                <!-- Lower Section: Compact Feedback & Explanation Container -->
+                <div id="explanation-box" class="hidden shrink-0 rounded-lg p-2.5 text-xs sm:text-sm border transition-all duration-200">
+                    <div class="flex items-start gap-2">
+                        <div id="feedback-icon" class="text-base shrink-0 mt-0.5"></div>
+                        <div class="min-w-0 flex-1">
+                            <div id="feedback-title" class="font-bold mb-0.5"></div>
+                            <div id="explanation-text" class="text-slate-600 dark:text-slate-300 leading-tight text-xs sm:text-sm max-h-20 overflow-y-auto pr-1"></div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- BOTTOM ALWAYS-VISIBLE ACTION BAR -->
+            <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-2 sm:px-4 sm:py-2.5 flex items-center justify-between shrink-0 shadow-sm">
+                <!-- Navigation Prev Button -->
+                <button id="prev-btn" onclick="navigateQuestion(-1)" class="px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg text-xs font-semibold bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 disabled:opacity-40 disabled:cursor-not-allowed transition flex items-center gap-1.5">
+                    <i class="fa-solid fa-arrow-left text-[10px]"></i>
+                    <span>Prev</span>
+                </button>
+
+                <div class="flex items-center space-x-2">
+                    <!-- Clear/Skip -->
+                    <button id="bookmark-btn" onclick="toggleBookmark()" class="p-2 sm:px-3 sm:py-2 rounded-lg text-xs font-medium text-slate-500 hover:text-indigo-600 dark:text-slate-400 dark:hover:text-indigo-400 transition" title="Bookmark Question">
+                        <i id="bookmark-icon" class="fa-regular fa-bookmark"></i>
+                    </button>
+
+                    <!-- Next Question / Finish Button -->
+                    <button id="next-btn" onclick="navigateQuestion(1)" class="px-4 py-1.5 sm:px-6 sm:py-2 rounded-lg text-xs sm:text-sm font-bold bg-indigo-600 hover:bg-indigo-700 text-white shadow-sm transition flex items-center gap-2">
+                        <span id="next-btn-text">Next Question</span>
+                        <i id="next-btn-icon" class="fa-solid fa-arrow-right text-xs"></i>
+                    </button>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- END-SCREEN RESULTS SUMMARY VIEW (Hidden by default) -->
+        <div id="results-view" class="hidden h-full flex flex-col justify-between max-h-full overflow-hidden">
+            
+            <div class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-md p-4 sm:p-6 flex-1 flex flex-col min-h-0 overflow-y-auto space-y-4">
+                
+                <!-- Result Header & Grade Badge -->
+                <div class="text-center space-y-1 border-b border-slate-200 dark:border-slate-800 pb-4 shrink-0">
+                    <div id="result-badge-icon" class="w-12 h-12 mx-auto rounded-full bg-emerald-100 dark:bg-emerald-900/50 text-emerald-600 dark:text-emerald-400 flex items-center justify-center text-2xl mb-1">
+                        <i class="fa-solid fa-trophy"></i>
+                    </div>
+                    <h2 class="text-lg sm:text-xl font-extrabold text-slate-900 dark:text-white">Quiz Completed!</h2>
+                    <p id="result-subtitle" class="text-xs text-slate-500 dark:text-slate-400">Here is a detailed analysis of your performance.</p>
+                </div>
+
+                <!-- High-Impact Stat Grid -->
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 shrink-0">
+                    <div class="p-2.5 bg-slate-50 dark:bg-slate-800/60 rounded-lg border border-slate-200 dark:border-slate-700/60 text-center">
+                        <div class="text-[11px] font-medium text-slate-500 dark:text-slate-400 uppercase">Score</div>
+                        <div id="res-score" class="text-lg font-black text-indigo-600 dark:text-indigo-400">0 / 23</div>
+                    </div>
+                    <div class="p-2.5 bg-slate-50 dark:bg-slate-800/60 rounded-lg border border-slate-200 dark:border-slate-700/60 text-center">
+                        <div class="text-[11px] font-medium text-slate-500 dark:text-slate-400 uppercase">Percentage</div>
+                        <div id="res-percentage" class="text-lg font-black text-slate-800 dark:text-slate-100">0%</div>
+                    </div>
+                    <div class="p-2.5 bg-emerald-50 dark:bg-emerald-950/40 rounded-lg border border-emerald-200 dark:border-emerald-800/60 text-center">
+                        <div class="text-[11px] font-medium text-emerald-600 dark:text-emerald-400 uppercase">Correct</div>
+                        <div id="res-correct" class="text-lg font-black text-emerald-600 dark:text-emerald-400">0</div>
+                    </div>
+                    <div class="p-2.5 bg-rose-50 dark:bg-rose-950/40 rounded-lg border border-rose-200 dark:border-rose-800/60 text-center">
+                        <div class="text-[11px] font-medium text-rose-600 dark:text-rose-400 uppercase">Incorrect</div>
+                        <div id="res-incorrect" class="text-lg font-black text-rose-600 dark:text-rose-400">0</div>
+                    </div>
+                </div>
+
+                <!-- Detailed Review Section -->
+                <div class="flex-1 min-h-0 flex flex-col space-y-2">
+                    <div class="flex items-center justify-between shrink-0">
+                        <h3 class="text-xs sm:text-sm font-bold text-slate-900 dark:text-white flex items-center gap-1.5">
+                            <i class="fa-solid fa-list-check text-indigo-500"></i> Incorrect & Skipped Questions Review
+                        </h3>
+                        <span id="incorrect-count-badge" class="px-2 py-0.5 text-[10px] font-bold bg-rose-100 dark:bg-rose-950 text-rose-700 dark:text-rose-300 rounded-full">
+                            0 Questions
+                        </span>
+                    </div>
+
+                    <!-- Scrollable List for Incorrect Questions -->
+                    <div id="incorrect-list" class="flex-1 overflow-y-auto space-y-2 pr-1 border border-slate-200 dark:border-slate-800 rounded-lg p-2 bg-slate-50/50 dark:bg-slate-900/50">
+                        <!-- Dynamically filled with detailed analysis -->
+                    </div>
+                </div>
+
+                <!-- Action Footer -->
+                <div class="pt-2 border-t border-slate-200 dark:border-slate-800 flex items-center justify-center space-x-3 shrink-0">
+                    <button onclick="restartQuiz()" class="px-5 py-2 rounded-lg text-xs sm:text-sm font-bold bg-indigo-600 hover:bg-indigo-700 text-white shadow transition flex items-center gap-2">
+                        <i class="fa-solid fa-rotate-right"></i> Restart Quiz
+                    </button>
+                    <button onclick="copySummary()" class="px-4 py-2 rounded-lg text-xs sm:text-sm font-medium bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 transition flex items-center gap-2">
+                        <i class="fa-regular fa-copy"></i> Copy Scorecard
+                    </button>
+                </div>
+
+            </div>
+
+        </div>
+
+    </main>
+
+    <!-- QUESTION PALETTE MODAL / DRAWER -->
+    <div id="palette-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-3 transition-opacity">
+        <div class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 w-full max-w-md p-4 shadow-2xl space-y-3">
+            <div class="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-2">
+                <div class="flex items-center space-x-2">
+                    <i class="fa-solid fa-th-large text-indigo-500"></i>
+                    <h3 class="text-sm font-bold text-slate-900 dark:text-white">Question Navigator</h3>
+                </div>
+                <button onclick="togglePaletteModal(false)" class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 text-sm p-1">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <!-- Legend -->
+            <div class="grid grid-cols-4 gap-1 text-[10px] text-center font-medium">
+                <div class="p-1 bg-emerald-100 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-300 rounded">Correct</div>
+                <div class="p-1 bg-rose-100 dark:bg-rose-950 text-rose-700 dark:text-rose-300 rounded">Incorrect</div>
+                <div class="p-1 bg-indigo-100 dark:bg-indigo-950 text-indigo-700 dark:text-indigo-300 rounded">Current</div>
+                <div class="p-1 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 rounded">Pending</div>
+            </div>
+
+            <!-- Grid of 23 questions -->
+            <div id="palette-grid" class="grid grid-cols-6 sm:grid-cols-8 gap-1.5 max-h-60 overflow-y-auto p-1">
+                <!-- Dynamically generated -->
+            </div>
+
+            <div class="pt-2 border-t border-slate-200 dark:border-slate-800 text-right">
+                <button onclick="togglePaletteModal(false)" class="px-4 py-1.5 bg-indigo-600 text-white rounded-lg text-xs font-semibold hover:bg-indigo-700 transition">
+                    Done
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // QUESTION BANK DATA STRUCTURE
+        const questionsData = [
+            {
+                id: 1,
+                question: "What is the primary difference between Central Sector Schemes and Centrally Sponsored Schemes?",
+                type: "standard",
+                options: [
+                    "A) Central Sector Schemes are funded 50-50, while Centrally Sponsored Schemes are 100% funded by States.",
+                    "B) Central Sector Schemes receive 100% direct funding from the Central Government, whereas Centrally Sponsored Schemes have shared funding between the Center and States.",
+                    "C) Central Sector Schemes are managed exclusively by private entities, while Centrally Sponsored Schemes are managed by the Union Government.",
+                    "D) Centrally Sponsored Schemes receive 100% funding directly from the Central Government."
+                ],
+                correct: 1,
+                explanation: "Central Sector Schemes have 100% direct funding from the Central Government, while Centrally Sponsored Schemes share funding between the Center and State Governments."
+            },
+            {
+                id: 2,
+                question: "Under the Pradhan Mantri Kisan Samman Nidhi (PM-KISAN) scheme, what is the annual financial benefit provided per eligible family?",
+                type: "standard",
+                options: [
+                    "A) ₹4,000 in two installments",
+                    "B) ₹5,000 in one single payment",
+                    "C) ₹6,000 in three equal installments of ₹2,000 each",
+                    "D) ₹8,000 in four equal installments"
+                ],
+                correct: 2,
+                explanation: "PM-KISAN provides ₹6,000 per annum per family, transferred via DBT in three equal installments of ₹2,000 each."
+            },
+            {
+                id: 3,
+                question: "What is the maximum total subsidy capped under the PM Surya Ghar: Muft Bijli Yojana for a 3 kW capacity rooftop solar setup?",
+                type: "standard",
+                options: [
+                    "A) ₹60,000",
+                    "B) ₹75,000",
+                    "C) ₹78,000",
+                    "D) ₹90,000"
+                ],
+                correct: 2,
+                explanation: "The subsidy is capped at 3 kW: ₹30,000 per kW for the first 2 kW (₹60,000) and ₹18,000 for the 3rd kW, totaling a maximum of ₹78,000."
+            },
+            {
+                id: 4,
+                question: "Which of the following schemes were subsumed to create the unified framework of 'Samagra Shiksha'?",
+                type: "statement",
+                statements: [
+                    "1. Sarva Shiksha Abhiyan (SSA)",
+                    "2. Rashtriya Madhyamik Shiksha Abhiyan (RMSA)",
+                    "3. Teacher Education",
+                    "4. Rashtriya Uchchatar Shiksha Abhiyan (RUSA)"
+                ],
+                options: [
+                    "A) 1 and 2 only",
+                    "B) 1, 2, and 3 only",
+                    "C) 1, 3, and 4 only",
+                    "D) 1, 2, 3, and 4"
+                ],
+                correct: 1,
+                explanation: "Samagra Shiksha merges three existing schemes: Sarva Shiksha Abhiyan (SSA), Rashtriya Madhyamik Shiksha Abhiyan (RMSA), and Teacher Education."
+            },
+            {
+                id: 5,
+                question: "Which Ministry serves as the primary Nodal Ministry for the PM Vishwakarma Yojana?",
+                type: "standard",
+                options: [
+                    "A) Ministry of Skill Development and Entrepreneurship",
+                    "B) Ministry of Finance",
+                    "C) Ministry of Micro, Small and Medium Enterprises (MSME)",
+                    "D) Ministry of Commerce and Industry"
+                ],
+                correct: 2,
+                explanation: "The PM Vishwakarma Yojana is jointly implemented by MSME, MSDE, and the Department of Financial Services, with the Ministry of MSME acting as the primary nodal ministry."
+            },
+            {
+                id: 6,
+                question: "What is the primary target regarding bus deployment under the PM-eBus Sewa scheme?",
+                type: "standard",
+                options: [
+                    "A) Deployment of 5,000 e-buses",
+                    "B) Deployment of 10,000 e-buses",
+                    "C) Deployment of 15,000 e-buses",
+                    "D) Deployment of 20,000 e-buses"
+                ],
+                correct: 1,
+                explanation: "Key targets under PM-eBus Sewa include the deployment of 10,000 electric buses using Public-Private Partnership (PPP) models."
+            },
+            {
+                id: 7,
+                question: "Under the Prime Minister’s Employment Generation Programme (PMEGP), what are the maximum project cost subsidy limits for the manufacturing and service sectors, respectively?",
+                type: "standard",
+                options: [
+                    "A) Up to ₹25 lakh for Manufacturing; Up to ₹10 lakh for Service",
+                    "B) Up to ₹50 lakh for Manufacturing; Up to ₹20 lakh for Service",
+                    "C) Up to ₹1 crore for Manufacturing; Up to ₹50 lakh for Service",
+                    "D) Up to ₹20 lakh for Manufacturing; Up to ₹50 lakh for Service"
+                ],
+                correct: 1,
+                explanation: "Under PMEGP, the maximum limits are up to ₹50 lakh for the manufacturing sector and up to ₹20 lakh for the service sector."
+            },
+            {
+                id: 8,
+                question: "Which national body administers and manages the PM Employment Generation Programme (PMEGP)?",
+                type: "standard",
+                options: [
+                    "A) Small Industries Development Bank of India (SIDBI)",
+                    "B) National Skill Development Corporation (NSDC)",
+                    "C) Khadi and Village Industries Commission (KVIC)",
+                    "D) NITI Aayog"
+                ],
+                correct: 2,
+                explanation: "PMEGP is administered and managed nationally by KVIC under the Ministry of MSME."
+            },
+            {
+                id: 9,
+                question: "What is the target production capacity of green hydrogen set by the National Green Hydrogen Mission by the year 2030?",
+                type: "standard",
+                options: [
+                    "A) 2 MMT per annum",
+                    "B) 5 MMT per annum",
+                    "C) 10 MMT per annum",
+                    "D) 20 MMT per annum"
+                ],
+                correct: 1,
+                explanation: "The mission targets achieving a green hydrogen production capacity of 5 Million Metric Tonnes (MMT) per annum by 2030."
+            },
+            {
+                id: 10,
+                question: "Which type of hydrogen production involves using natural gas (methane) along with Carbon Capture & Storage (CCS) to capture emitted CO₂?",
+                type: "standard",
+                options: [
+                    "A) Green Hydrogen",
+                    "B) Blue Hydrogen",
+                    "C) Brown Hydrogen",
+                    "D) Black Hydrogen"
+                ],
+                correct: 1,
+                explanation: "Blue hydrogen is produced from natural gas (methane) where CO₂ emitted as a byproduct is captured and stored underground via Carbon Capture & Storage (CCS)."
+            },
+            {
+                id: 11,
+                question: "Which of the following sub-schemes is NOT one of the 5 sub-schemes encompassed under the PRITHVI Vigyan Scheme?",
+                type: "standard",
+                options: [
+                    "A) ACROSS",
+                    "B) O-SMART",
+                    "C) MATSYA",
+                    "D) REACHOUT"
+                ],
+                correct: 2,
+                explanation: "The 5 sub-schemes under PRITHVI Vigyan are ACROSS, O-SMART, PACER, SAGES, and REACHOUT. (MATSYA 6000 is a vehicle under the Deep Ocean Mission)."
+            },
+            {
+                id: 12,
+                question: "Under the Pradhan Mantri MUDRA Yojana (PMMY), what is the loan range specified for the 'Tarun Plus' category?",
+                type: "standard",
+                options: [
+                    "A) Up to ₹50,000",
+                    "B) ₹50,000 to ₹5 lakh",
+                    "C) ₹5 lakh to ₹10 lakh",
+                    "D) ₹10 lakh to ₹20 lakh"
+                ],
+                correct: 3,
+                explanation: "The categories under PMMY are Shishu (up to ₹50,000), Kishore (₹50,000 to ₹5 lakh), Tarun (₹5 lakh to ₹10 lakh), and Tarun Plus (₹10 lakh to ₹20 lakh)."
+            },
+            {
+                id: 13,
+                question: "What is the loan amount provided per bank branch under the Stand-Up India Scheme, and for what type of enterprise?",
+                type: "standard",
+                options: [
+                    "A) ₹50,000 to ₹5 lakh for Brownfield enterprises",
+                    "B) ₹10 lakh to ₹1 crore exclusively for Greenfield enterprises",
+                    "C) ₹10 lakh to ₹20 lakh for both Greenfield and Brownfield units",
+                    "D) Up to ₹10 crore for micro-enterprises"
+                ],
+                correct: 1,
+                explanation: "Stand-Up India provides bank loans between ₹10 lakh and ₹1 crore exclusively for setting up Greenfield enterprises to SC, ST, and Women entrepreneurs."
+            },
+            {
+                id: 14,
+                question: "Which crucial condition applies to applicants under the Pradhan Mantri Ujjwala Yojana (PMUY)?",
+                type: "standard",
+                options: [
+                    "A) Must be a registered small farmer",
+                    "B) Only female adult members of the household can apply",
+                    "C) Only male earning heads of the family can apply",
+                    "D) Restricted only to urban slum dwellers"
+                ],
+                correct: 1,
+                explanation: "Under PMUY, male members cannot apply; connections are provided exclusively in the name of adult female members of the household."
+            },
+            {
+                id: 15,
+                question: "The 'Aditi Scheme' launched in July 2025 by the Ministry of Power is implemented by which agency?",
+                type: "standard",
+                options: [
+                    "A) Central Electricity Authority (CEA)",
+                    "B) Solar Energy Corporation of India (SECI)",
+                    "C) Bureau of Energy Efficiency (BEE)",
+                    "D) NTPC Limited"
+                ],
+                correct: 2,
+                explanation: "The Aditi Scheme has a budget outlay of ₹1,000 crore and is implemented by the Bureau of Energy Efficiency (BEE)."
+            },
+            {
+                id: 16,
+                question: "The PM-JANMAN scheme specifically targets the welfare and development of which community group?",
+                type: "standard",
+                options: [
+                    "A) Nomadic pastoral communities",
+                    "B) 75 Particularly Vulnerable Tribal Groups (PVTGs)",
+                    "C) Unorganized construction workers",
+                    "D) Handloom weavers across border districts"
+                ],
+                correct: 1,
+                explanation: "PM-JANMAN focuses on providing basic amenities to 75 Particularly Vulnerable Tribal Groups (PVTGs) living across 18 States and 1 UT."
+            },
+            {
+                id: 17,
+                question: "What is the target depth and crew capacity of the submersible vehicle 'MATSYA 6000' under the Deep Ocean Mission?",
+                type: "standard",
+                options: [
+                    "A) Depth of 3,000 meters carrying 5 crew members",
+                    "B) Depth of 5,000 meters carrying 2 crew members",
+                    "C) Depth of 6,000 meters carrying 3 crew members",
+                    "D) Depth of 10,000 meters carrying 1 crew member"
+                ],
+                correct: 2,
+                explanation: "The MATSYA 6000 vehicle is designed to send 3 human crew members to a depth of 6,000 meters."
+            },
+            {
+                id: 18,
+                question: "Under the Namo Drone Didi Programme, how many Women Self-Help Groups (SHGs) under DAY-NRLM are targeted to receive drones?",
+                type: "standard",
+                options: [
+                    "A) 5,000 SHGs",
+                    "B) 10,000 SHGs",
+                    "C) 15,000 SHGs",
+                    "D) 25,000 SHGs"
+                ],
+                correct: 2,
+                explanation: "The scheme targets 15,000 selected Women Self-Help Groups (SHGs) under the DAY-NRLM framework."
+            },
+            {
+                id: 19,
+                question: "Regarding agricultural pricing under the PM-AASHA framework, which crop is NOT covered under MSP but receives a Fair and Remunerative Price (FRP)?",
+                type: "standard",
+                options: [
+                    "A) Wheat",
+                    "B) Paddy",
+                    "C) Sugarcane",
+                    "D) Cotton"
+                ],
+                correct: 2,
+                explanation: "MSP is announced for 22 crops, whereas Sugarcane does not fall under MSP; it receives a Fair and Remunerative Price (FRP)."
+            },
+            {
+                id: 20,
+                question: "What is the entry age limit for subscribing to the Atal Pension Yojana (APY)?",
+                type: "standard",
+                options: [
+                    "A) 18 to 35 years",
+                    "B) 18 to 40 years",
+                    "C) 21 to 50 years",
+                    "D) 18 to 60 years"
+                ],
+                correct: 1,
+                explanation: "To join Atal Pension Yojana, an Indian citizen must be between the entry age of 18 and 40 years."
+            },
+            {
+                id: 21,
+                question: "Which of the following is NOT one of the 7 approved locations for PM MITRA Mega Textile Parks?",
+                type: "standard",
+                options: [
+                    "A) Virudhunagar (Tamil Nadu)",
+                    "B) Kalaburagi (Karnataka)",
+                    "C) Dhar (Madhya Pradesh)",
+                    "D) Varanasi (Uttar Pradesh)"
+                ],
+                correct: 3,
+                explanation: "The 7 approved PM MITRA park locations are Virudhunagar (TN), Warangal (Telangana), Kalaburagi (Karnataka), Amravati (Maharashtra), Navsari (Gujarat), Dhar (MP), and Lucknow (UP). (Varanasi is not among the locations; Lucknow is the site in Uttar Pradesh)."
+            },
+            {
+                id: 22,
+                question: "What is the primary objective of the 'One Nation One Subscription' (ONOS) initiative?",
+                type: "standard",
+                options: [
+                    "A) Universal single broadband connection across all village panchayats",
+                    "B) Single national subscription access to international scholarly journals and scientific research content for academic institutions",
+                    "C) Unified single-window application portal for school admissions",
+                    "D) Subsidized electricity connections for higher education facilities"
+                ],
+                correct: 1,
+                explanation: "ONOS provides single national subscription access to international research content and scholarly journals across academic institutions in India."
+            },
+            {
+                id: 23,
+                question: "Consider the following statements regarding 'NPS Vatsalya' and 'Mission Vatsalya':",
+                type: "statement",
+                statements: [
+                    "1. NPS Vatsalya is a pension/savings scheme for minor children under the Ministry of Finance.",
+                    "2. Mission Vatsalya is a child protection and development scheme under the Ministry of Women and Child Development."
+                ],
+                options: [
+                    "A) 1 only",
+                    "B) 2 only",
+                    "C) Both 1 and 2",
+                    "D) Neither 1 nor 2"
+                ],
+                correct: 2,
+                explanation: "Both statements are correct: NPS Vatsalya is a financial savings scheme under the Ministry of Finance, whereas Mission Vatsalya is under the Ministry of Women and Child Development."
+            }
+        ];
+
+        // APP STATE VARIABLES
+        let currentIndex = 0;
+        let userAnswers = new Array(questionsData.length).fill(null);
+        let bookmarked = new Array(questionsData.length).fill(false);
+        let currentTheme = 'light';
+
+        window.addEventListener('DOMContentLoaded', () => {
+            initTheme();
+            renderQuestion(currentIndex);
+            updatePaletteGrid();
+
+            // Keyboard Navigation Shortcuts
+            window.addEventListener('keydown', (e) => {
+                if (document.getElementById('palette-modal').classList.contains('hidden') === false) return;
+                if (document.getElementById('results-view').classList.contains('hidden') === false) return;
+
+                if (e.key === '1' || e.key === 'a' || e.key === 'A') selectOption(0);
+                else if (e.key === '2' || e.key === 'b' || e.key === 'B') selectOption(1);
+                else if (e.key === '3' || e.key === 'c' || e.key === 'C') selectOption(2);
+                else if (e.key === '4' || e.key === 'd' || e.key === 'D') selectOption(3);
+                else if (e.key === 'Enter' || e.key === 'ArrowRight') {
+                    navigateQuestion(1);
+                } else if (e.key === 'ArrowLeft') {
+                    navigateQuestion(-1);
+                }
+            });
+        });
+
+        // THEME MANAGEMENT
+        function initTheme() {
+            if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                currentTheme = 'dark';
+            }
+            applyTheme();
+        }
+
+        function toggleTheme() {
+            currentTheme = currentTheme === 'light' ? 'dark' : 'light';
+            applyTheme();
+        }
+
+        function applyTheme() {
+            const html = document.documentElement;
+            const icon = document.getElementById('theme-toggle-icon');
+            if (currentTheme === 'dark') {
+                html.classList.add('dark');
+                icon.className = 'fa-solid fa-sun text-amber-400 text-xs sm:text-sm';
+            } else {
+                html.classList.remove('dark');
+                icon.className = 'fa-solid fa-moon text-slate-600 text-xs sm:text-sm';
+            }
+        }
+
+        function renderQuestion(index) {
+            const q = questionsData[index];
+            const isAnswered = userAnswers[index] !== null;
+            const selectedOpt = userAnswers[index];
+
+            // Update Progress Header
+            document.getElementById('q-number-tag').textContent = `Q ${index + 1} / ${questionsData.length}`;
+            document.getElementById('q-category-tag').textContent = q.type === 'statement' ? 'Statement-Based' : 'Standard MCQ';
+            
+            const progressPct = ((index + 1) / questionsData.length) * 100;
+            document.getElementById('progress-bar-fill').style.width = `${progressPct}%`;
+
+            // Status Indicator Text
+            const statusText = document.getElementById('question-status-text');
+            if (isAnswered) {
+                if (selectedOpt === q.correct) {
+                    statusText.innerHTML = `<span class="text-emerald-600 dark:text-emerald-400 font-bold"><i class="fa-solid fa-circle-check"></i> Correct</span>`;
+                } else {
+                    statusText.innerHTML = `<span class="text-rose-600 dark:text-rose-400 font-bold"><i class="fa-solid fa-circle-xmark"></i> Incorrect</span>`;
+                }
+            } else {
+                statusText.textContent = "Unanswered";
+                statusText.className = "italic text-slate-400";
+            }
+
+            // Question Text
+            document.getElementById('question-text').textContent = q.question;
+
+            // Render Statements callout if present
+            const statementsBox = document.getElementById('statements-box');
+            const statementsList = document.getElementById('statements-list');
+            if (q.type === 'statement' && q.statements && q.statements.length > 0) {
+                statementsBox.classList.remove('hidden');
+                statementsList.innerHTML = q.statements.map(stmt => `
+                    <div class="p-1.5 rounded bg-white/70 dark:bg-slate-900/60 border border-indigo-100 dark:border-slate-800">
+                        ${stmt}
+                    </div>
+                `).join('');
+            } else {
+                statementsBox.classList.add('hidden');
+            }
+
+            // Render Options Buttons
+            const optionsGrid = document.getElementById('options-grid');
+            optionsGrid.innerHTML = '';
+
+            q.options.forEach((optText, optIdx) => {
+                const btn = document.createElement('button');
+                btn.type = 'button';
+                btn.className = getOptionStyleClass(optIdx, index);
+                btn.disabled = isAnswered;
+                btn.onclick = () => selectOption(optIdx);
+
+                btn.innerHTML = `
+                    <div class="flex items-center justify-between w-full">
+                        <span class="text-left font-medium text-xs sm:text-sm flex-1 pr-2">${optText}</span>
+                        <div class="opt-status-icon shrink-0">
+                            ${getOptionIcon(optIdx, index)}
+                        </div>
+                    </div>
+                `;
+                optionsGrid.appendChild(btn);
+            });
+
+            // Render Explanation Box
+            const expBox = document.getElementById('explanation-box');
+            if (isAnswered) {
+                expBox.classList.remove('hidden');
+                const isCorrect = selectedOpt === q.correct;
+                
+                if (isCorrect) {
+                    expBox.className = "shrink-0 rounded-lg p-2.5 text-xs sm:text-sm border bg-emerald-50 dark:bg-emerald-950/40 border-emerald-200 dark:border-emerald-800/80 text-emerald-950 dark:text-emerald-200";
+                    document.getElementById('feedback-icon').innerHTML = `<i class="fa-solid fa-circle-check text-emerald-600 dark:text-emerald-400 text-base"></i>`;
+                    document.getElementById('feedback-title').textContent = "Correct Answer!";
+                } else {
+                    expBox.className = "shrink-0 rounded-lg p-2.5 text-xs sm:text-sm border bg-rose-50 dark:bg-rose-950/40 border-rose-200 dark:border-rose-800/80 text-rose-950 dark:text-rose-200";
+                    document.getElementById('feedback-icon').innerHTML = `<i class="fa-solid fa-circle-xmark text-rose-600 dark:text-rose-400 text-base"></i>`;
+                    document.getElementById('feedback-title').textContent = "Incorrect Attempt";
+                }
+
+                document.getElementById('explanation-text').innerHTML = `
+                    <strong>Explanation:</strong> ${q.explanation}
+                `;
+            } else {
+                expBox.classList.add('hidden');
+            }
+
+            // Navigation Buttons State
+            document.getElementById('prev-btn').disabled = index === 0;
+
+            const nextBtnText = document.getElementById('next-btn-text');
+            const nextBtnIcon = document.getElementById('next-btn-icon');
+            if (index === questionsData.length - 1) {
+                nextBtnText.textContent = "Finish Quiz";
+                nextBtnIcon.className = "fa-solid fa-flag-checkered text-xs";
+            } else {
+                nextBtnText.textContent = "Next Question";
+                nextBtnIcon.className = "fa-solid fa-arrow-right text-xs";
+            }
+
+            // Bookmark icon
+            const bmIcon = document.getElementById('bookmark-icon');
+            if (bookmarked[index]) {
+                bmIcon.className = "fa-solid fa-bookmark text-indigo-600 dark:text-indigo-400";
+            } else {
+                bmIcon.className = "fa-regular fa-bookmark";
+            }
+
+            updateLiveHeaderScore();
+        }
+
+        // Option Styling helper
+        function getOptionStyleClass(optIdx, qIdx) {
+            const base = "p-2.5 sm:p-3 rounded-lg border text-left transition-all duration-150 flex items-center justify-between ";
+            const selectedOpt = userAnswers[qIdx];
+            const correctOpt = questionsData[qIdx].correct;
+
+            if (selectedOpt === null) {
+                // Default unattempted state
+                return base + "bg-slate-50 dark:bg-slate-800/80 border-slate-200 dark:border-slate-700/80 hover:bg-indigo-50/60 dark:hover:bg-slate-700 hover:border-indigo-300 dark:hover:border-indigo-500 text-slate-800 dark:text-slate-200 cursor-pointer";
+            }
+
+            if (optIdx === correctOpt) {
+                // Highlight Correct Option Green
+                return base + "bg-emerald-100 dark:bg-emerald-950/80 border-emerald-500 dark:border-emerald-600 text-emerald-900 dark:text-emerald-100 font-semibold shadow-sm";
+            } else if (optIdx === selectedOpt && selectedOpt !== correctOpt) {
+                // Highlight Selected Incorrect Option Red
+                return base + "bg-rose-100 dark:bg-rose-950/80 border-rose-500 dark:border-rose-600 text-rose-900 dark:text-rose-100 font-semibold";
+            } else {
+                // Dim non-selected options
+                return base + "bg-slate-100/50 dark:bg-slate-900/50 border-slate-200/50 dark:border-slate-800/50 text-slate-400 dark:text-slate-500 opacity-60 cursor-not-allowed";
+            }
+        }
+
+        function getOptionIcon(optIdx, qIdx) {
+            const selectedOpt = userAnswers[qIdx];
+            const correctOpt = questionsData[qIdx].correct;
+
+            if (selectedOpt === null) return '';
+
+            if (optIdx === correctOpt) {
+                return `<i class="fa-solid fa-circle-check text-emerald-600 dark:text-emerald-400 text-sm"></i>`;
+            } else if (optIdx === selectedOpt && selectedOpt !== correctOpt) {
+                return `<i class="fa-solid fa-circle-xmark text-rose-600 dark:text-rose-400 text-sm"></i>`;
+            }
+            return '';
+        }
+
+        function selectOption(optIndex) {
+            if (userAnswers[currentIndex] !== null) return; // Prevent re-answering
+            userAnswers[currentIndex] = optIndex;
+            renderQuestion(currentIndex);
+            updatePaletteGrid();
+        }
+
+        function navigateQuestion(direction) {
+            const newIndex = currentIndex + direction;
+            if (newIndex >= 0 && newIndex < questionsData.length) {
+                currentIndex = newIndex;
+                renderQuestion(currentIndex);
+            } else if (newIndex >= questionsData.length) {
+                showResultsView();
+            }
+        }
+
+        function toggleBookmark() {
+            bookmarked[currentIndex] = !bookmarked[currentIndex];
+            renderQuestion(currentIndex);
+            updatePaletteGrid();
+        }
+
+        function updateLiveHeaderScore() {
+            let correctCount = 0;
+            userAnswers.forEach((ans, idx) => {
+                if (ans === questionsData[idx].correct) correctCount++;
+            });
+            document.getElementById('header-score').textContent = correctCount;
+
+            const attempted = userAnswers.filter(a => a !== null).length;
+            const accuracyPill = document.getElementById('accuracy-pill');
+            if (attempted > 0) {
+                const accPct = Math.round((correctCount / attempted) * 100);
+                accuracyPill.textContent = `Accuracy: ${accPct}%`;
+            } else {
+                accuracyPill.textContent = `Accuracy: 100%`;
+            }
+        }
+
+        // PALETTE MODAL CONTROLS
+        function togglePaletteModal(show) {
+            const modal = document.getElementById('palette-modal');
+            if (show) {
+                updatePaletteGrid();
+                modal.classList.remove('hidden');
+            } else {
+                modal.classList.add('hidden');
+            }
+        }
+
+        function updatePaletteGrid() {
+            const grid = document.getElementById('palette-grid');
+            grid.innerHTML = '';
+
+            questionsData.forEach((q, idx) => {
+                const btn = document.createElement('button');
+                btn.type = 'button';
+                const ans = userAnswers[idx];
+                const isCurrent = idx === currentIndex;
+
+                let colorClasses = "bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-700";
+
+                if (ans !== null) {
+                    if (ans === q.correct) {
+                        colorClasses = "bg-emerald-500 text-white border-emerald-600 font-bold";
+                    } else {
+                        colorClasses = "bg-rose-500 text-white border-rose-600 font-bold";
+                    }
+                }
+
+                if (isCurrent) {
+                    colorClasses += " ring-2 ring-indigo-500 ring-offset-1 dark:ring-offset-slate-900";
+                }
+
+                btn.className = `p-2 rounded-lg text-xs font-semibold border flex items-center justify-center transition hover:scale-105 ${colorClasses}`;
+                btn.textContent = idx + 1;
+                btn.onclick = () => {
+                    currentIndex = idx;
+                    renderQuestion(currentIndex);
+                    togglePaletteModal(false);
+                };
+                grid.appendChild(btn);
+            });
+        }
+
+        function showResultsView() {
+            document.getElementById('quiz-view').classList.add('hidden');
+            document.getElementById('results-view').classList.remove('hidden');
+
+            let correctCount = 0;
+            let incorrectCount = 0;
+            let unattemptedCount = 0;
+
+            const incorrectItems = [];
+
+            questionsData.forEach((q, idx) => {
+                const userAns = userAnswers[idx];
+                if (userAns === q.correct) {
+                    correctCount++;
+                } else {
+                    if (userAns !== null) incorrectCount++;
+                    else unattemptedCount++;
+
+                    incorrectItems.push({
+                        qIndex: idx,
+                        question: q,
+                        userAnswer: userAns
+                    });
+                }
+            });
+
+            const totalQs = questionsData.length;
+            const percentage = Math.round((correctCount / totalQs) * 100);
+
+            // Populate Stat Cards
+            document.getElementById('res-score').textContent = `${correctCount} / ${totalQs}`;
+            document.getElementById('res-percentage').textContent = `${percentage}%`;
+            document.getElementById('res-correct').textContent = correctCount;
+            document.getElementById('res-incorrect').textContent = incorrectCount + unattemptedCount;
+
+            // Subtitle & Icon update
+            const badgeIcon = document.getElementById('result-badge-icon');
+            if (percentage >= 80) {
+                badgeIcon.className = "w-12 h-12 mx-auto rounded-full bg-emerald-100 dark:bg-emerald-950 text-emerald-600 dark:text-emerald-400 flex items-center justify-center text-2xl mb-1";
+                badgeIcon.innerHTML = `<i class="fa-solid fa-trophy"></i>`;
+                document.getElementById('result-subtitle').textContent = "Outstanding Performance! You're fully ready for SSC Schemes MCQs.";
+            } else if (percentage >= 50) {
+                badgeIcon.className = "w-12 h-12 mx-auto rounded-full bg-amber-100 dark:bg-amber-950 text-amber-600 dark:text-amber-400 flex items-center justify-center text-2xl mb-1";
+                badgeIcon.innerHTML = `<i class="fa-solid fa-medal"></i>`;
+                document.getElementById('result-subtitle').textContent = "Good effort! Review your missed questions below to polish your score.";
+            } else {
+                badgeIcon.className = "w-12 h-12 mx-auto rounded-full bg-rose-100 dark:bg-rose-950 text-rose-600 dark:text-rose-400 flex items-center justify-center text-2xl mb-1";
+                badgeIcon.innerHTML = `<i class="fa-solid fa-book-open"></i>`;
+                document.getElementById('result-subtitle').textContent = "More practice needed. Thoroughly review the explanation box for missed concepts.";
+            }
+
+            // Populate Review Breakdown
+            const incorrectListContainer = document.getElementById('incorrect-list');
+            document.getElementById('incorrect-count-badge').textContent = `${incorrectItems.length} Questions`;
+
+            if (incorrectItems.length === 0) {
+                incorrectListContainer.innerHTML = `
+                    <div class="p-6 text-center text-emerald-600 dark:text-emerald-400 font-bold text-sm">
+                        <i class="fa-solid fa-circle-check text-2xl mb-2"></i>
+                        <p>Perfect Score! You answered every question correctly.</p>
+                    </div>
+                `;
+            } else {
+                incorrectListContainer.innerHTML = incorrectItems.map(item => {
+                    const q = item.question;
+                    const userSelectedText = item.userAnswer !== null ? q.options[item.userAnswer] : "Skipped / Unattempted";
+                    const correctText = q.options[q.correct];
+
+                    let statementsHTML = '';
+                    if (q.type === 'statement' && q.statements) {
+                        statementsHTML = `
+                            <div class="my-1 p-2 bg-indigo-50/50 dark:bg-slate-800/50 rounded border border-indigo-100 dark:border-slate-800 text-[11px] font-mono space-y-0.5">
+                                ${q.statements.map(s => `<div>${s}</div>`).join('')}
+                            </div>
+                        `;
+                    }
+
+                    return `
+                        <div class="p-3 bg-white dark:bg-slate-900 rounded-lg border border-slate-200 dark:border-slate-800 space-y-1.5 text-xs">
+                            <div class="font-bold text-slate-800 dark:text-slate-100">
+                                <span class="text-indigo-600 dark:text-indigo-400">Q${item.qIndex + 1}.</span> ${q.question}
+                            </div>
+                            ${statementsHTML}
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-1.5 pt-1">
+                                <div class="p-1.5 rounded bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-900 text-rose-800 dark:text-rose-300">
+                                    <strong class="text-[10px] uppercase block text-rose-600 dark:text-rose-400">Your Answer:</strong>
+                                    ${userSelectedText}
+                                </div>
+                                <div class="p-1.5 rounded bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-900 text-emerald-800 dark:text-emerald-300">
+                                    <strong class="text-[10px] uppercase block text-emerald-600 dark:text-emerald-400">Correct Answer:</strong>
+                                    ${correctText}
+                                </div>
+                            </div>
+                            <div class="p-2 bg-slate-50 dark:bg-slate-800/80 rounded text-slate-600 dark:text-slate-300 text-[11px] leading-tight mt-1">
+                                <strong>Explanation:</strong> ${q.explanation}
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            }
+        }
+
+        function restartQuiz() {
+            currentIndex = 0;
+            userAnswers = new Array(questionsData.length).fill(null);
+            bookmarked = new Array(questionsData.length).fill(false);
+            
+            document.getElementById('results-view').classList.add('hidden');
+            document.getElementById('quiz-view').classList.remove('hidden');
+            
+            renderQuestion(0);
+            updatePaletteGrid();
+        }
+
+        function copySummary() {
+            let correctCount = 0;
+            userAnswers.forEach((ans, idx) => {
+                if (ans === questionsData[idx].correct) correctCount++;
+            });
+            const total = questionsData.length;
+            const pct = Math.round((correctCount / total) * 100);
+
+            const textToCopy = `SSC Government Schemes Quiz Results:\nScore: ${correctCount}/${total} (${pct}%)\nAttempted on SSC Exam Practice App.`;
+
+            // Standard fallback clipboard copy
+            const dummy = document.createElement("textarea");
+            document.body.appendChild(dummy);
+            dummy.value = textToCopy;
+            dummy.select();
+            document.execCommand("copy");
+            document.body.removeChild(dummy);
+
+            // Toast feedback
+            const copyBtn = event.currentTarget;
+            const originalHTML = copyBtn.innerHTML;
+            copyBtn.innerHTML = `<i class="fa-solid fa-check text-emerald-500"></i> Copied!`;
+            setTimeout(() => {
+                copyBtn.innerHTML = originalHTML;
+            }, 2000);
+        }
+    </script>
+</body>
+</html>
