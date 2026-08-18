@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Olympic Sports & Exam Preparation Quiz</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#eff6ff',
+                            100: '#dbeafe',
+                            500: '#3b82f6',
+                            600: '#2563eb',
+                            700: '#1d4ed8',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Font Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            user-select: none;
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: rgba(156, 163, 175, 0.4);
+            border-radius: 9999px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: rgba(156, 163, 175, 0.7);
+        }
+        .option-btn {
+            transition: all 0.18s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .option-btn:hover:not(:disabled) {
+            transform: translateY(-1px);
+        }
+        .option-btn:active:not(:disabled) {
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body class="bg-gray-100 dark:bg-gray-950 text-gray-800 dark:text-gray-100 antialiased h-screen overflow-hidden flex flex-col justify-between">
+
+    <!-- App Header -->
+    <header class="h-14 min-h-[56px] bg-white/90 dark:bg-gray-900/90 backdrop-blur border-b border-gray-200 dark:border-gray-800 px-4 md:px-6 flex items-center justify-between z-20 shrink-0">
+        <div class="flex items-center space-x-3">
+            <div class="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center text-white font-bold text-lg shadow-md shadow-blue-500/20">
+                <i class="fa-solid fa-trophy text-sm"></i>
+            </div>
+            <div>
+                <h1 class="text-base font-bold tracking-tight text-gray-900 dark:text-white leading-tight">Olympic Prep Quiz</h1>
+                <p class="text-[10px] text-gray-500 dark:text-gray-400 font-medium hidden sm:block">Exam Simulation & Assessment</p>
+            </div>
+        </div>
+
+        <!-- Right Header Stats & Controls -->
+        <div class="flex items-center space-x-3 md:space-x-5">
+            <!-- Question Navigation Pill -->
+            <div id="quizHeaderStats" class="flex items-center space-x-3 text-xs md:text-sm">
+                <div class="bg-gray-100 dark:bg-gray-800 px-3 py-1.5 rounded-full font-semibold border border-gray-200 dark:border-gray-700 flex items-center space-x-1.5">
+                    <span class="text-blue-600 dark:text-blue-400">Q:</span>
+                    <span id="headerCurrentQ">1</span>
+                    <span class="text-gray-400">/</span>
+                    <span id="headerTotalQ">30</span>
+                </div>
+                <!-- Live Score Tracker -->
+                <div class="hidden sm:flex items-center space-x-2 font-medium bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-400 px-3 py-1.5 rounded-full border border-emerald-200 dark:border-emerald-800/50">
+                    <i class="fa-solid fa-circle-check text-xs"></i>
+                    <span id="headerScore">0</span>
+                </div>
+            </div>
+
+            <!-- Dark / Light Theme Toggle -->
+            <button id="themeToggleBtn" aria-label="Toggle Theme" class="w-9 h-9 rounded-full bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 flex items-center justify-center text-gray-600 dark:text-gray-300 transition-colors">
+                <i id="themeIcon" class="fa-solid fa-moon"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- Progress Bar (Sticky Top) -->
+    <div class="w-full bg-gray-200 dark:bg-gray-800 h-1 shrink-0 overflow-hidden">
+        <div id="progressBar" class="bg-blue-600 h-full w-0 transition-all duration-300 ease-out"></div>
+    </div>
+
+    <!-- MAIN CONTAINER (Fixed Viewport No-Scroll Container) -->
+    <main class="flex-1 max-w-4xl w-full mx-auto p-3 sm:p-4 flex flex-col justify-between overflow-hidden relative">
+
+        <!-- Active Quiz Card Section -->
+        <div id="quizScreen" class="flex-1 flex flex-col justify-between overflow-hidden">
+            
+            <!-- Card Body Container -->
+            <div class="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl p-4 sm:p-5 shadow-sm flex flex-col justify-between overflow-hidden flex-1 mb-3">
+                
+                <!-- Question Header & Badges -->
+                <div class="flex items-center justify-between pb-2 border-b border-gray-100 dark:border-gray-800 shrink-0">
+                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-md text-xs font-semibold bg-blue-50 dark:bg-blue-950/60 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-800/50">
+                        <i class="fa-solid fa-pen-nib text-[10px] mr-1.5"></i>
+                        Question <span id="qNumberBadge" class="ml-1">1</span>
+                    </span>
+                    <span class="text-xs font-medium text-gray-500 dark:text-gray-400 flex items-center gap-1">
+                        <i class="fa-regular fa-clock text-xs"></i> Single Choice
+                    </span>
+                </div>
+
+                <!-- Question Content Box (Compact Scrollable if text long) -->
+                <div class="my-2 sm:my-3 overflow-y-auto custom-scrollbar max-h-[35vh] sm:max-h-[30vh] pr-1">
+                    <h2 id="questionTitle" class="text-sm sm:text-base md:text-lg font-semibold leading-snug text-gray-900 dark:text-gray-100">
+                        <!-- Dynamic Question Text -->
+                    </h2>
+                    <!-- Complex Question Container (For Statements / Match Lists) -->
+                    <div id="complexQuestionBox" class="hidden mt-2"></div>
+                </div>
+
+                <!-- Options Grid (Flexible layout) -->
+                <div id="optionsContainer" class="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-2.5 my-1 shrink-0">
+                    <!-- Dynamic Option Buttons -->
+                </div>
+
+                <!-- Explanation Alert Box (Hidden until answer chosen) -->
+                <div id="explanationBox" class="hidden mt-2 p-2.5 sm:p-3 rounded-xl border text-xs sm:text-sm flex-1 overflow-y-auto custom-scrollbar max-h-[22vh] sm:max-h-[20vh] transition-all">
+                    <div class="flex items-start space-x-2">
+                        <div id="explanationIcon" class="mt-0.5 shrink-0 text-base"></div>
+                        <div class="flex-1 leading-relaxed">
+                            <span id="explanationStatus" class="font-bold block mb-0.5"></span>
+                            <p id="explanationText" class="text-gray-700 dark:text-gray-300"></p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Sticky Action Control Footer -->
+            <div class="flex items-center justify-between pt-1 shrink-0">
+                <button id="prevBtn" onclick="navigateQuestion(-1)" class="px-3.5 py-2 text-xs sm:text-sm font-semibold text-gray-600 dark:text-gray-300 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-800 disabled:opacity-40 disabled:cursor-not-allowed flex items-center space-x-1.5 transition-colors">
+                    <i class="fa-solid fa-chevron-left text-[11px]"></i>
+                    <span>Prev</span>
+                </button>
+
+                <div class="flex items-center space-x-2">
+                    <button id="skipBtn" onclick="skipQuestion()" class="px-3 py-2 text-xs font-medium text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 transition-colors">
+                        Skip
+                    </button>
+                    <button id="nextBtn" onclick="navigateQuestion(1)" class="px-5 py-2 text-xs sm:text-sm font-bold text-white bg-blue-600 hover:bg-blue-700 active:bg-blue-800 rounded-xl shadow-md shadow-blue-500/20 disabled:opacity-50 disabled:cursor-not-allowed flex items-center space-x-1.5 transition-all">
+                        <span id="nextBtnText">Next Question</span>
+                        <i class="fa-solid fa-arrow-right text-xs"></i>
+                    </button>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Results Summary View (Hidden by default) -->
+        <div id="resultsScreen" class="hidden flex-1 flex-col overflow-hidden">
+            <div class="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl p-4 sm:p-6 shadow-md flex flex-col h-full overflow-hidden">
+                
+                <!-- Results Header -->
+                <div class="text-center pb-4 border-b border-gray-200 dark:border-gray-800 shrink-0">
+                    <div class="inline-flex p-3 bg-blue-50 dark:bg-blue-950/50 text-blue-600 dark:text-blue-400 rounded-full mb-2">
+                        <i class="fa-solid fa-square-poll-vertical text-2xl"></i>
+                    </div>
+                    <h2 class="text-xl sm:text-2xl font-extrabold text-gray-900 dark:text-white">Quiz Completed!</h2>
+                    <p class="text-xs sm:text-sm text-gray-500 dark:text-gray-400 mt-0.5">Here is your performance summary & score report</p>
+                </div>
+
+                <!-- Score Cards Grid -->
+                <div class="grid grid-cols-3 gap-2 sm:gap-4 my-4 shrink-0">
+                    <div class="bg-blue-50/70 dark:bg-blue-950/30 border border-blue-100 dark:border-blue-900/50 p-2.5 sm:p-3 rounded-xl text-center">
+                        <span class="text-[10px] sm:text-xs font-semibold uppercase tracking-wider text-blue-600 dark:text-blue-400">Final Score</span>
+                        <div class="text-lg sm:text-2xl font-black text-blue-700 dark:text-blue-300 mt-0.5">
+                            <span id="resScore">0</span><span class="text-xs sm:text-base font-normal text-gray-500">/30</span>
+                        </div>
+                    </div>
+                    <div class="bg-emerald-50/70 dark:bg-emerald-950/30 border border-emerald-100 dark:border-emerald-900/50 p-2.5 sm:p-3 rounded-xl text-center">
+                        <span class="text-[10px] sm:text-xs font-semibold uppercase tracking-wider text-emerald-600 dark:text-emerald-400">Accuracy</span>
+                        <div id="resPercentage" class="text-lg sm:text-2xl font-black text-emerald-700 dark:text-emerald-300 mt-0.5">0%</div>
+                    </div>
+                    <div class="bg-rose-50/70 dark:bg-rose-950/30 border border-rose-100 dark:border-rose-900/50 p-2.5 sm:p-3 rounded-xl text-center">
+                        <span class="text-[10px] sm:text-xs font-semibold uppercase tracking-wider text-rose-600 dark:text-rose-400">Incorrect</span>
+                        <div id="resIncorrect" class="text-lg sm:text-2xl font-black text-rose-700 dark:text-rose-300 mt-0.5">0</div>
+                    </div>
+                </div>
+
+                <!-- Review Section Header -->
+                <div class="flex items-center justify-between pb-2 mb-2 border-b border-gray-100 dark:border-gray-800 shrink-0">
+                    <h3 class="text-xs sm:text-sm font-bold text-gray-800 dark:text-gray-200 uppercase tracking-wide">
+                        Incorrect Questions Breakdown
+                    </h3>
+                    <span id="incorrectBadge" class="text-xs bg-rose-100 dark:bg-rose-900/50 text-rose-700 dark:text-rose-300 font-semibold px-2 py-0.5 rounded-full">0 Review Items</span>
+                </div>
+
+                <!-- Incorrect Questions Review List (Scrollable area) -->
+                <div id="incorrectListContainer" class="flex-1 overflow-y-auto custom-scrollbar space-y-3 pr-1">
+                    <!-- Dynamic review items inserted here -->
+                </div>
+
+                <!-- Restart Button Sticky Footer -->
+                <div class="pt-3 border-t border-gray-200 dark:border-gray-800 mt-3 shrink-0 flex justify-center">
+                    <button onclick="restartQuiz()" class="w-full sm:w-auto px-8 py-2.5 bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white font-bold rounded-xl shadow-md shadow-blue-500/20 flex items-center justify-center space-x-2 transition-all">
+                        <i class="fa-solid fa-rotate-right text-sm"></i>
+                        <span>Restart Quiz</span>
+                    </button>
+                </div>
+
+            </div>
+        </div>
+
+    </main>
+
+    <script>
+        // Questions Data Array (Renumbered 1 to 30 as requested)
+        const quizData = [
+            {
+                id: 1,
+                question: "Which Roman Emperor banned the Ancient Olympic Games?",
+                options: ["Julius Caesar", "Nero", "Theodosius I", "Augustus"],
+                answer: 2,
+                explanation: "Roman Emperor Theodosius I banned the Ancient Olympic Games."
+            },
+            {
+                id: 2,
+                question: "In which Olympic edition did the traditional Olympic torch relay begin?",
+                options: ["1896 Athens", "1936 Berlin", "1924 Paris", "1948 London"],
+                answer: 1,
+                explanation: "The Olympic torch relay tradition began at the 1936 Berlin Olympics."
+            },
+            {
+                id: 3,
+                question: "According to WADA/NADA anti-doping penalties, what is the sanction for an intentional first-time doping violation?",
+                options: ["2 years", "4 years", "Lifetime ban", "1 year"],
+                answer: 1,
+                explanation: "An intentional 1st violation carries a 4-year ban, whereas an unintentional violation carries 2 years."
+            },
+            {
+                id: 4,
+                question: "In which Olympic Games did India make its Olympic Tennis debut with 5 players?",
+                options: ["1900 Paris", "1920 Belgium", "1924 Paris", "1996 Atlanta"],
+                answer: 2,
+                explanation: "India made its tennis debut at the 1924 Paris Olympics with 5 players (4 male, 1 female)."
+            },
+            {
+                id: 5,
+                question: "At the 1960 Rome Olympics, Milkha Singh secured 4th place in the 400m event with an electronic timing of:",
+                options: ["45.60 sec", "45.73 sec", "46.10 sec", "45.42 sec"],
+                answer: 1,
+                explanation: "Milkha Singh finished 4th in the 400m race with a manual time of 45.6 sec and an electronic time of 45.73 sec."
+            },
+            {
+                id: 6,
+                question: "The term \"Parry\", used as a defensive action, is associated with which Olympic sport?",
+                options: ["Boxing", "Wrestling", "Fencing", "Archery"],
+                answer: 2,
+                explanation: "\"Parry\" is a defensive action term associated with the sport of fencing."
+            },
+            {
+                id: 7,
+                question: "Which was the first Asian city to host the Olympic Games (in 1964)?",
+                options: ["Seoul", "Beijing", "Tokyo", "Singapore"],
+                answer: 2,
+                explanation: "Tokyo (Japan) became the first Asian host city for the Olympics in 1964."
+            },
+            {
+                id: 8,
+                question: "Which two sports were introduced at the 1964 Tokyo Olympics?",
+                options: ["Table Tennis and Tennis", "Judo and Volleyball", "Badminton and Golf", "Fencing and Shooting"],
+                answer: 1,
+                explanation: "Judo and Volleyball were introduced for the first time in the 1964 Tokyo Olympics."
+            },
+            {
+                id: 9,
+                question: "Who was the first Indian to qualify for Fencing at the Olympic Games (Tokyo 2020)?",
+                options: ["C.A. Bhavani Devi", "Bilquis Mir", "Shiny Wilson", "Deepa Malik"],
+                answer: 0,
+                explanation: "C.A. Bhavani Devi (from Tamil Nadu) was the first Indian fencer to qualify for the Olympic Games."
+            },
+            {
+                id: 10,
+                question: "In the 2024 Paris Olympics Opening Ceremony, where did the athletes' parade take place?",
+                options: ["Inside the Stade de France", "On boats along the Seine River", "Around the Eiffel Tower", "Along the Champs-Élysées"],
+                answer: 1,
+                explanation: "The 2024 Paris Olympics held its opening ceremony outside a stadium for the first time, parading athletes on boats along the Seine River."
+            },
+            {
+                id: 11,
+                question: "Who was India's sole representative at the 1964 Winter Olympics in Innsbruck, Austria?",
+                options: ["Shiva Keshavan", "Jeremy Bujakowski", "Arif Mohd. Khan", "Shailaja Kumar"],
+                answer: 1,
+                explanation: "Jeremy Bujakowski represented India as its sole participant in Alpine Skiing at the 1964 Winter Olympics."
+            },
+            {
+                id: 12,
+                question: "Who was the first Indian female athlete to compete in the Winter Olympics (1988)?",
+                options: ["Neha Ahuja", "Shailaja Kumar", "Shiny Wilson", "Deepa Malik"],
+                answer: 1,
+                explanation: "Shailaja Kumar was the first Indian woman to represent the country at the Winter Olympics (1988)."
+            },
+            {
+                id: 13,
+                question: "Shiva Keshavan represented India in which sport across six Winter Olympics (1998–2018)?",
+                options: ["Alpine Skiing", "Luge", "Bobsleigh", "Speed Skating"],
+                answer: 1,
+                explanation: "Shiva Keshavan is a 6-time Olympian representing India in Luge."
+            },
+            {
+                id: 14,
+                question: "Which is the first city in the world to host both Summer (2008) and Winter (2022) Olympic editions?",
+                options: ["Tokyo", "Paris", "Beijing", "London"],
+                answer: 2,
+                explanation: "Beijing is the first city to host both the Summer Olympics (2008) and Winter Olympics (2022)."
+            },
+            {
+                id: 15,
+                question: "In which Olympic Games did P.T. Usha narrowly miss out on winning the Bronze medal in 400m hurdles by 0.01 seconds?",
+                options: ["1980 Moscow", "1984 Los Angeles", "1988 Seoul", "1992 Barcelona"],
+                answer: 1,
+                explanation: "At the 1984 Los Angeles Olympics, P.T. Usha finished 4th in the 400m hurdles, losing the bronze medal by just 0.01 seconds."
+            },
+            {
+                id: 16,
+                question: "Who is the most decorated Olympian of all time, winning 28 total medals (23 gold) for the USA?",
+                options: ["Usain Bolt", "Michael Phelps", "Thomas Hicks", "Charles Jewtraw"],
+                answer: 1,
+                explanation: "Michael Phelps (USA) is the most decorated Olympian in history with 28 Olympic medals (23 Gold, 3 Silver, 2 Bronze)."
+            },
+            {
+                id: 17,
+                question: "Which sport is confirmed to return/be included in the 2028 Los Angeles Olympics alongside Baseball, Squash, Softball, and Lacrosse?",
+                options: ["Polo", "Cricket", "Tug of War", "Kabaddi"],
+                answer: 1,
+                explanation: "Cricket, along with Squash, Baseball, Softball, Lacrosse, and Flag Football, is included for the 2028 LA Olympics."
+            },
+            {
+                id: 18,
+                question: "Who was the first Indian boxer to participate in the Super Heavyweight boxing category at the Tokyo 2020 Olympics?",
+                options: ["Vijender Singh", "Satish Kumar", "Amit Panghal", "Shiva Thapa"],
+                answer: 1,
+                explanation: "Satish Kumar became the first Indian boxer to compete in the Super Heavyweight category at the Tokyo 2020 Olympics."
+            },
+            {
+                id: 19,
+                question: "Who was the first woman to carry India’s national flag at an Olympic Games opening ceremony (1992 Barcelona)?",
+                options: ["Shiny Wilson", "P.T. Usha", "Karnam Malleswari", "Mary Kom"],
+                answer: 0,
+                explanation: "Shiny Wilson became the first woman flag bearer for India at the 1992 Summer Olympics Opening Ceremony."
+            },
+            {
+                id: 20,
+                question: "Who won the Bronze medal for India in Men's Freestyle 57kg Wrestling at the Paris 2024 Olympics, becoming India's youngest Olympic medalist?",
+                options: ["Ravi Dahiya", "Bajrang Punia", "Aman Sehrawat", "Sushil Kumar"],
+                answer: 2,
+                explanation: "Aman Sehrawat won bronze in the 57kg wrestling category at Paris 2024 and became India's youngest Olympic medalist."
+            },
+            {
+                id: 21,
+                question: "Who served as the Chef de Mission for the Indian contingent at the 2024 Paris Olympics?",
+                options: ["Abhinav Bindra", "Gagan Narang", "PR Sreejesh", "Sharath Kamal"],
+                answer: 1,
+                explanation: "Olympic medalist Gagan Narang was appointed the Chef de Mission of the Indian contingent for Paris 2024."
+            },
+            {
+                id: 22,
+                question: "Who became the first Indian woman to serve as an Olympic jury member?",
+                options: ["Deepa Malik", "Bilquis Mir", "P.T. Usha", "Shiny Wilson"],
+                answer: 1,
+                explanation: "Bilquis Mir is the first Indian woman to serve as a jury member at the Olympics."
+            },
+            {
+                id: 23,
+                question: "How many total medals did India win at the 2024 Paris Paralympics?",
+                options: ["19", "24", "29 (7 Gold, 9 Silver, 13 Bronze)", "32"],
+                answer: 2,
+                explanation: "India won a record total of 29 medals (7 gold, 9 silver, and 13 bronze) at the 2024 Paris Paralympics."
+            },
+            {
+                id: 24,
+                question: "Which Indian para-athlete won a Gold medal in the Men’s Individual Recurve Open Archery event at the Paris 2024 Paralympics?",
+                options: ["Harvinder Singh", "Sumit Antil", "Dharambir", "Nitesh Kumar"],
+                answer: 0,
+                explanation: "Harvinder Singh won the gold medal in Men's individual recurve open archery at the 2024 Paris Paralympics."
+            },
+            {
+                id: 25,
+                question: "Who won the Gold medal in the Men’s Javelin Throw F64 event at the Paris 2024 Paralympics?",
+                options: ["Navdeep Singh", "Sumit Antil", "Praveen Kumar", "Dharambir"],
+                answer: 1,
+                explanation: "Sumit Antil secured the gold medal in the Men's Javelin Throw F64 event at the Paris 2024 Paralympics."
+            },
+            {
+                id: 26,
+                question: "Who won the Bronze medal in Men’s 50m Rifle 3 Positions shooting at the Paris 2024 Olympics?",
+                options: ["Sarabjot Singh", "Swapnil Kusale", "Vijay Kumar", "Gagan Narang"],
+                answer: 1,
+                explanation: "Swapnil Kusale won bronze in the Men's 50m Rifle 3 Positions event at Paris 2024."
+            },
+            {
+                id: 27,
+                question: "Who were India's flag bearers for the Opening Ceremony of the 2024 Paris Olympics?",
+                options: ["PR Sreejesh and Manu Bhaker", "Neeraj Chopra and Lovlina Borgohain", "Achanta Sharath Kamal and PV Sindhu", "Abhinav Bindra and Mary Kom"],
+                answer: 2,
+                explanation: "Table Tennis player Achanta Sharath Kamal and shuttler PV Sindhu served as India's flag bearers at the Paris 2024 Opening Ceremony."
+            },
+            {
+                id: 28,
+                question: "Who were the closing ceremony flag bearers for India at the 2024 Paris Olympics?",
+                options: ["Neeraj Chopra and Mirabai Chanu", "PR Sreejesh and Manu Bhaker", "Aman Sehrawat and Vinesh Phogat", "Sharath Kamal and Swapnil Kusale"],
+                answer: 1,
+                explanation: "PR Sreejesh (hockey) and Manu Bhaker (shooting) carried India's flag at the Paris 2024 Closing Ceremony."
+            },
+            {
+                id: 29,
+                question: "What was India's overall ranking in the medal tally at the Paris 2024 Olympic Games?",
+                options: ["48th", "65th", "71st", "81st"],
+                answer: 2,
+                explanation: "India finished at the 71st position out of 206 participating nations at the 2024 Paris Olympics."
+            },
+            {
+                id: 30,
+                question: "The first Winter Paralympic Games were held in 1976 in which country?",
+                options: ["France", "Austria", "Sweden", "Italy"],
+                answer: 2,
+                explanation: "The inaugural Winter Paralympics were hosted by Sweden in 1976."
+            }
+        ];
+
+        let currentIdx = 0;
+        let userAnswers = new Array(quizData.length).fill(null);
+        const optionPrefixes = ['A', 'B', 'C', 'D'];
+
+        // DOM elements
+        const themeToggleBtn = document.getElementById('themeToggleBtn');
+        const themeIcon = document.getElementById('themeIcon');
+        const headerCurrentQ = document.getElementById('headerCurrentQ');
+        const headerTotalQ = document.getElementById('headerTotalQ');
+        const headerScore = document.getElementById('headerScore');
+        const progressBar = document.getElementById('progressBar');
+        const qNumberBadge = document.getElementById('qNumberBadge');
+        const questionTitle = document.getElementById('questionTitle');
+        const optionsContainer = document.getElementById('optionsContainer');
+        const explanationBox = document.getElementById('explanationBox');
+        const explanationIcon = document.getElementById('explanationIcon');
+        const explanationStatus = document.getElementById('explanationStatus');
+        const explanationText = document.getElementById('explanationText');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const nextBtnText = document.getElementById('nextBtnText');
+        const quizScreen = document.getElementById('quizScreen');
+        const resultsScreen = document.getElementById('resultsScreen');
+
+        // Dark / Light Mode Toggle
+        function initTheme() {
+            if (localStorage.getItem('quiz_theme') === 'light') {
+                document.documentElement.classList.remove('dark');
+                themeIcon.className = 'fa-solid fa-sun';
+            } else {
+                document.documentElement.classList.add('dark');
+                themeIcon.className = 'fa-solid fa-moon';
+            }
+        }
+
+        themeToggleBtn.addEventListener('click', () => {
+            if (document.documentElement.classList.contains('dark')) {
+                document.documentElement.classList.remove('dark');
+                localStorage.setItem('quiz_theme', 'light');
+                themeIcon.className = 'fa-solid fa-sun';
+            } else {
+                document.documentElement.classList.add('dark');
+                localStorage.setItem('quiz_theme', 'dark');
+                themeIcon.className = 'fa-solid fa-moon';
+            }
+        });
+
+        // Render Question Function
+        function renderQuestion() {
+            const q = quizData[currentIdx];
+            headerCurrentQ.innerText = currentIdx + 1;
+            headerTotalQ.innerText = quizData.length;
+            qNumberBadge.innerText = `${currentIdx + 1} of ${quizData.length}`;
+            
+            // Update progress bar width
+            const progressPercent = ((currentIdx + 1) / quizData.length) * 100;
+            progressBar.style.width = `${progressPercent}%`;
+
+            // Calculate current live score
+            const scoreCount = userAnswers.reduce((acc, val, idx) => {
+                return val === quizData[idx].answer ? acc + 1 : acc;
+            }, 0);
+            headerScore.innerText = scoreCount;
+
+            // Update question text
+            questionTitle.innerText = q.question;
+
+            // Reset Options
+            optionsContainer.innerHTML = '';
+            const answeredIndex = userAnswers[currentIdx];
+            const isAnswered = answeredIndex !== null;
+
+            q.options.forEach((optText, optIdx) => {
+                const btn = document.createElement('button');
+                btn.className = `option-btn w-full text-left p-2.5 sm:p-3 rounded-xl border font-medium text-xs sm:text-sm flex items-center space-x-2.5 sm:space-x-3 text-gray-800 dark:text-gray-200 bg-gray-50 dark:bg-gray-800/60 border-gray-200 dark:border-gray-700/80 hover:bg-gray-100 dark:hover:bg-gray-800 focus:outline-none`;
+
+                // Add key badge icon
+                const badge = document.createElement('span');
+                badge.className = `w-6 h-6 sm:w-7 sm:h-7 rounded-lg text-xs font-bold flex items-center justify-center shrink-0 bg-white dark:bg-gray-700 text-gray-600 dark:text-gray-300 border border-gray-200 dark:border-gray-600`;
+                badge.innerText = optionPrefixes[optIdx];
+
+                const label = document.createElement('span');
+                label.className = 'flex-1 leading-tight';
+                label.innerText = optText;
+
+                btn.appendChild(badge);
+                btn.appendChild(label);
+
+                if (isAnswered) {
+                    btn.disabled = true;
+                    if (optIdx === q.answer) {
+                        // Correct Option Style
+                        btn.className = `option-btn w-full text-left p-2.5 sm:p-3 rounded-xl border font-medium text-xs sm:text-sm flex items-center space-x-2.5 sm:space-x-3 text-emerald-900 dark:text-emerald-100 bg-emerald-100/80 dark:bg-emerald-950/70 border-emerald-400 dark:border-emerald-600`;
+                        badge.className = `w-6 h-6 sm:w-7 sm:h-7 rounded-lg text-xs font-bold flex items-center justify-center shrink-0 bg-emerald-600 text-white`;
+                        badge.innerHTML = `<i class="fa-solid fa-check"></i>`;
+                    } else if (optIdx === answeredIndex) {
+                        // User Wrong Selection Style
+                        btn.className = `option-btn w-full text-left p-2.5 sm:p-3 rounded-xl border font-medium text-xs sm:text-sm flex items-center space-x-2.5 sm:space-x-3 text-rose-900 dark:text-rose-100 bg-rose-100/80 dark:bg-rose-950/70 border-rose-400 dark:border-rose-600`;
+                        badge.className = `w-6 h-6 sm:w-7 sm:h-7 rounded-lg text-xs font-bold flex items-center justify-center shrink-0 bg-rose-600 text-white`;
+                        badge.innerHTML = `<i class="fa-solid fa-xmark"></i>`;
+                    } else {
+                        btn.classList.add('opacity-50');
+                    }
+                } else {
+                    btn.onclick = () => selectOption(optIdx);
+                }
+
+                optionsContainer.appendChild(btn);
+            });
+
+            // Explanation Display
+            if (isAnswered) {
+                explanationBox.classList.remove('hidden');
+                const isCorrect = answeredIndex === q.answer;
+                if (isCorrect) {
+                    explanationBox.className = "mt-2 p-2.5 sm:p-3 rounded-xl border text-xs sm:text-sm flex-1 overflow-y-auto custom-scrollbar max-h-[22vh] sm:max-h-[20vh] transition-all bg-emerald-50 dark:bg-emerald-950/40 border-emerald-200 dark:border-emerald-800 text-emerald-900 dark:text-emerald-200";
+                    explanationIcon.innerHTML = `<i class="fa-solid fa-circle-check text-emerald-600 dark:text-emerald-400"></i>`;
+                    explanationStatus.innerText = "Correct Answer!";
+                    explanationStatus.className = "font-bold block mb-0.5 text-emerald-700 dark:text-emerald-300";
+                } else {
+                    explanationBox.className = "mt-2 p-2.5 sm:p-3 rounded-xl border text-xs sm:text-sm flex-1 overflow-y-auto custom-scrollbar max-h-[22vh] sm:max-h-[20vh] transition-all bg-rose-50 dark:bg-rose-950/40 border-rose-200 dark:border-rose-800 text-rose-900 dark:text-rose-200";
+                    explanationIcon.innerHTML = `<i class="fa-solid fa-circle-xmark text-rose-600 dark:text-rose-400"></i>`;
+                    explanationStatus.innerText = "Incorrect Answer!";
+                    explanationStatus.className = "font-bold block mb-0.5 text-rose-700 dark:text-rose-300";
+                }
+                explanationText.innerText = q.explanation;
+            } else {
+                explanationBox.classList.add('hidden');
+            }
+
+            // Update Prev / Next Buttons
+            prevBtn.disabled = currentIdx === 0;
+            if (currentIdx === quizData.length - 1) {
+                nextBtnText.innerText = "Finish Quiz";
+            } else {
+                nextBtnText.innerText = "Next Question";
+            }
+        }
+
+        // Handle Option Selection
+        function selectOption(index) {
+            if (userAnswers[currentIdx] !== null) return;
+            userAnswers[currentIdx] = index;
+            renderQuestion();
+        }
+
+        // Handle Question Navigation
+        function navigateQuestion(step) {
+            const nextIndex = currentIdx + step;
+            if (nextIndex >= 0 && nextIndex < quizData.length) {
+                currentIdx = nextIndex;
+                renderQuestion();
+            } else if (nextIndex >= quizData.length) {
+                showResults();
+            }
+        }
+
+        function skipQuestion() {
+            navigateQuestion(1);
+        }
+
+        // Display Final Results Summary
+        function showResults() {
+            quizScreen.classList.add('hidden');
+            resultsScreen.classList.remove('hidden');
+            resultsScreen.classList.add('flex');
+
+            let correct = 0;
+            let incorrect = 0;
+            const incorrectListContainer = document.getElementById('incorrectListContainer');
+            incorrectListContainer.innerHTML = '';
+
+            quizData.forEach((q, idx) => {
+                const uAns = userAnswers[idx];
+                if (uAns === q.answer) {
+                    correct++;
+                } else {
+                    incorrect++;
+                    // Render Breakdown Card for Incorrect/Unanswered Questions
+                    const card = document.createElement('div');
+                    card.className = "p-3 rounded-xl bg-gray-50 dark:bg-gray-800/70 border border-gray-200 dark:border-gray-700 text-xs sm:text-sm";
+                    
+                    const uAnsText = uAns !== null ? `${optionPrefixes[uAns]}) ${q.options[uAns]}` : "Not Answered (Skipped)";
+                    const cAnsText = `${optionPrefixes[q.answer]}) ${q.options[q.answer]}`;
+
+                    card.innerHTML = `
+                        <div class="font-bold text-gray-900 dark:text-gray-100 mb-1.5 flex items-start gap-1.5">
+                            <span class="text-blue-600 dark:text-blue-400 shrink-0">Q${idx + 1}.</span>
+                            <span>${q.question}</span>
+                        </div>
+                        <div class="space-y-1 pl-4 border-l-2 border-rose-400 dark:border-rose-600 my-1">
+                            <div class="text-rose-600 dark:text-rose-400 font-medium">
+                                <span class="font-semibold">Your Answer:</span> ${uAnsText}
+                            </div>
+                            <div class="text-emerald-600 dark:text-emerald-400 font-medium">
+                                <span class="font-semibold">Correct Answer:</span> ${cAnsText}
+                            </div>
+                        </div>
+                        <div class="mt-1.5 text-gray-500 dark:text-gray-400 text-xs bg-white dark:bg-gray-900/50 p-2 rounded-lg border border-gray-100 dark:border-gray-800">
+                            <span class="font-semibold text-gray-700 dark:text-gray-300">Explanation:</span> ${q.explanation}
+                        </div>
+                    `;
+                    incorrectListContainer.appendChild(card);
+                }
+            });
+
+            // Calculate percentage
+            const percentage = Math.round((correct / quizData.length) * 100);
+
+            document.getElementById('resScore').innerText = correct;
+            document.getElementById('resPercentage').innerText = `${percentage}%`;
+            document.getElementById('resIncorrect').innerText = incorrect;
+            document.getElementById('incorrectBadge').innerText = `${incorrect} Incorrect / Skipped`;
+
+            if (incorrect === 0) {
+                incorrectListContainer.innerHTML = `
+                    <div class="text-center py-8 text-emerald-600 dark:text-emerald-400 font-bold">
+                        <i class="fa-solid fa-circle-check text-4xl mb-2"></i>
+                        <p>Perfect Score! You answered all questions correctly.</p>
+                    </div>
+                `;
+            }
+        }
+
+        // Restart Quiz
+        function restartQuiz() {
+            currentIdx = 0;
+            userAnswers = new Array(quizData.length).fill(null);
+            resultsScreen.classList.add('hidden');
+            resultsScreen.classList.remove('flex');
+            quizScreen.classList.remove('hidden');
+            renderQuestion();
+        }
+
+        // Keyboard Shortcuts (1-4 or A-D, Left/Right arrow)
+        document.addEventListener('keydown', (e) => {
+            if (resultsScreen.classList.contains('hidden')) {
+                if (e.key === 'ArrowRight') {
+                    navigateQuestion(1);
+                } else if (e.key === 'ArrowLeft') {
+                    navigateQuestion(-1);
+                } else if (['1', '2', '3', '4'].includes(e.key)) {
+                    selectOption(parseInt(e.key) - 1);
+                } else if (['a', 'b', 'c', 'd'].includes(e.key.toLowerCase())) {
+                    const map = { 'a': 0, 'b': 1, 'c': 2, 'd': 3 };
+                    selectOption(map[e.key.toLowerCase()]);
+                }
+            }
+        });
+
+        // Initialize App on DOM Load
+        window.onload = function () {
+            initTheme();
+            renderQuestion();
+        };
+    </script>
+</body>
+</html>
