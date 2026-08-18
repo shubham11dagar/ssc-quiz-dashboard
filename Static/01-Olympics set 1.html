@@ -1,0 +1,980 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Olympic Games Exam Prep Quiz</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#f0f9ff',
+                            100: '#e0f2fe',
+                            500: '#0284c7',
+                            600: '#0284c7',
+                            700: '#0369a1',
+                        },
+                        gold: '#f59e0b',
+                        olympicBlue: '#0081C8',
+                        olympicYellow: '#FCB131',
+                        olympicBlack: '#000000',
+                        olympicGreen: '#00A651',
+                        olympicRed: '#EE334E'
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'Menlo', 'monospace']
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- FontAwesome Icons CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap');
+
+        /* Custom scrollbar for results list and breakdown modal */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(156, 163, 175, 0.4);
+            border-radius: 9999px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(156, 163, 175, 0.7);
+        }
+
+        .no-select {
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        /* Responsive glassmorphic elements */
+        .glass-card {
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+
+        /* Pulse highlight for current target question in navigation grid */
+        @keyframes subtle-pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.04); }
+        }
+        .active-q-btn {
+            animation: subtle-pulse 2s infinite ease-in-out;
+        }
+    </style>
+</head>
+<body class="bg-slate-100 dark:bg-slate-950 text-slate-800 dark:text-slate-100 font-sans transition-colors duration-200 antialiased h-screen max-h-screen overflow-hidden flex flex-col">
+
+    <!-- TOP NAVIGATION HEADER -->
+    <header class="h-14 sm:h-16 px-4 sm:px-6 bg-white/80 dark:bg-slate-900/80 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between shrink-0 glass-card z-20">
+        <div class="flex items-center space-x-3">
+            <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-blue-600 via-yellow-500 to-emerald-500 flex items-center justify-center text-white shadow-md shadow-blue-500/20">
+                <i class="fa-solid font-bold text-lg">🏅</i>
+            </div>
+            <div>
+                <h1 class="font-extrabold text-sm sm:text-base leading-tight tracking-tight bg-gradient-to-r from-blue-600 via-indigo-500 to-sky-500 bg-clip-text text-transparent">
+                    Olympic Prep Quiz
+                </h1>
+                <p class="text-[10px] sm:text-xs text-slate-500 dark:text-slate-400 font-medium">Exam Mastery Series</p>
+            </div>
+        </div>
+
+        <!-- Top Right Controls & Timer -->
+        <div class="flex items-center space-x-2 sm:space-x-4">
+            <!-- Sound FX Toggle -->
+            <button id="soundToggleBtn" onclick="toggleSound()" class="p-2 text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-200 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors text-sm" title="Toggle Sound FX">
+                <i id="soundIcon" class="fa-solid fa-volume-high"></i>
+            </button>
+
+            <!-- Keyboard Help Toggle -->
+            <button onclick="toggleKeyHelpModal()" class="hidden sm:flex items-center space-x-1 p-2 text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-200 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors text-xs font-mono">
+                <i class="fa-solid fa-keyboard"></i>
+            </button>
+
+            <!-- Theme Toggle -->
+            <button id="themeToggleBtn" onclick="toggleTheme()" class="p-2 text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-200 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors text-sm" title="Toggle Dark/Light Mode">
+                <i id="themeIcon" class="fa-solid fa-moon"></i>
+            </button>
+
+            <!-- Quick Matrix Navigator Button -->
+            <button onclick="toggleNavDrawer()" class="flex items-center space-x-1.5 px-3 py-1.5 bg-slate-200/70 dark:bg-slate-800 hover:bg-slate-300/80 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 text-xs font-semibold rounded-lg transition-all">
+                <i class="fa-solid fa-th"></i>
+                <span class="hidden sm:inline">Overview</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- MAIN CONTAINER (Fixed Viewport) -->
+    <main class="flex-1 min-h-0 relative flex flex-col p-2 sm:p-4 max-w-5xl mx-auto w-full justify-between overflow-hidden">
+
+        <!-- QUIZ ACTIVE VIEW CONTAINER -->
+        <div id="quizView" class="h-full flex flex-col justify-between space-y-2 sm:space-y-3">
+            
+            <!-- Progress Bar & Question Stats -->
+            <div class="bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800/80 rounded-xl px-4 py-2.5 shadow-sm shrink-0">
+                <div class="flex justify-between items-center text-xs font-semibold text-slate-500 dark:text-slate-400 mb-1.5">
+                    <div class="flex items-center space-x-2">
+                        <span id="questionCategoryBadge" class="px-2 py-0.5 rounded bg-blue-100 dark:bg-blue-950/70 text-blue-700 dark:text-blue-300 font-bold uppercase tracking-wider text-[10px]">
+                            General Knowledge
+                        </span>
+                        <span id="qIndexText" class="text-slate-700 dark:text-slate-200 font-bold">Question 1 of 30</span>
+                    </div>
+                    <div class="flex items-center space-x-3">
+                        <div id="scoreLiveBadge" class="text-emerald-600 dark:text-emerald-400 font-bold">
+                            Score: <span id="currentScoreVal">0</span>
+                        </div>
+                        <div class="text-slate-400">|</div>
+                        <div class="flex items-center space-x-1 text-slate-600 dark:text-slate-300">
+                            <i class="fa-regular fa-clock"></i>
+                            <span id="quizTimerText" class="font-mono">00:00</span>
+                        </div>
+                    </div>
+                </div>
+                <!-- Visual Bar -->
+                <div class="w-full bg-slate-200 dark:bg-slate-800 h-2 rounded-full overflow-hidden">
+                    <div id="progressBarFill" class="bg-gradient-to-r from-blue-500 via-indigo-500 to-sky-400 h-full w-0 transition-all duration-300 ease-out rounded-full"></div>
+                </div>
+            </div>
+
+            <!-- QUESTION CARD (Viewport auto-fitting content box) -->
+            <div class="flex-1 min-h-0 bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 rounded-2xl shadow-lg p-3.5 sm:p-5 flex flex-col justify-between overflow-y-auto relative">
+
+                <!-- Question Prompt Block -->
+                <div class="space-y-3 shrink-0">
+                    <h2 id="questionText" class="text-base sm:text-lg font-bold text-slate-900 dark:text-slate-100 leading-snug tracking-tight">
+                        <!-- Rendered Question Text -->
+                    </h2>
+
+                    <!-- Complex Question Formatting Slot (Statements / Match List Callouts) -->
+                    <div id="complexFormattingContainer" class="hidden">
+                        <!-- Statement Box / Match Table inserted dynamically here -->
+                    </div>
+                </div>
+
+                <!-- Options Stack / Grid -->
+                <div id="optionsContainer" class="grid grid-cols-1 gap-2 sm:gap-2.5 my-2">
+                    <!-- Option Buttons Rendered Dynamically -->
+                </div>
+
+                <!-- Explanation / Instant Feedback Alert Box -->
+                <div id="explanationContainer" class="hidden shrink-0 mt-2 p-3 rounded-xl border text-xs sm:text-sm transition-all animate-fadeIn">
+                    <div class="flex items-start space-x-2">
+                        <div id="feedbackIcon" class="mt-0.5 text-base shrink-0"></div>
+                        <div class="flex-1 min-w-0">
+                            <div id="feedbackTitle" class="font-bold text-xs uppercase tracking-wider mb-0.5"></div>
+                            <p id="explanationText" class="text-slate-700 dark:text-slate-300 text-xs sm:text-sm leading-relaxed"></p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- QUIZ BOTTOM ACTIONS (Always Visible, Sticky/Fixed height) -->
+            <div class="bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 rounded-xl px-4 py-2.5 flex items-center justify-between shadow-sm shrink-0">
+                <button id="prevBtn" onclick="goToPrevQuestion()" class="px-3.5 py-2 text-xs sm:text-sm font-semibold text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-lg transition-colors flex items-center space-x-1.5 disabled:opacity-40 disabled:cursor-not-allowed">
+                    <i class="fa-solid fa-arrow-left"></i>
+                    <span>Prev</span>
+                </button>
+
+                <div class="flex items-center space-x-2">
+                    <!-- Question Jump Button / Badge -->
+                    <span id="qStatusIndicator" class="text-xs text-slate-500 dark:text-slate-400 font-medium hidden sm:inline">
+                        Unanswered
+                    </span>
+                </div>
+
+                <div class="flex items-center space-x-2">
+                    <button id="nextBtn" onclick="goToNextQuestion()" class="px-5 py-2 text-xs sm:text-sm font-bold text-white bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 active:scale-95 rounded-lg shadow-md shadow-blue-500/20 transition-all flex items-center space-x-2">
+                        <span id="nextBtnText">Next Question</span>
+                        <i id="nextBtnIcon" class="fa-solid fa-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- RESULTS SUMMARY VIEW CONTAINER -->
+        <div id="resultsView" class="hidden h-full flex flex-col justify-between space-y-3 bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 rounded-2xl shadow-xl p-4 sm:p-6 overflow-hidden">
+            
+            <!-- Header Summary -->
+            <div class="text-center shrink-0">
+                <div class="inline-flex items-center justify-center w-12 h-12 sm:w-16 sm:h-16 rounded-full bg-blue-100 dark:bg-blue-900/40 text-blue-600 dark:text-blue-400 text-2xl sm:text-3xl mb-2 shadow-inner">
+                    🏆
+                </div>
+                <h2 class="text-xl sm:text-2xl font-extrabold text-slate-900 dark:text-white">Quiz Completed!</h2>
+                <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400 font-medium">Here is your performance summary for the Olympic Games Exam</p>
+            </div>
+
+            <!-- Score Stats Metrics Grid -->
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 shrink-0">
+                <div class="bg-slate-50 dark:bg-slate-800/60 p-3 rounded-xl border border-slate-200/60 dark:border-slate-700/60 text-center">
+                    <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider block mb-0.5">Final Score</span>
+                    <span id="finalScoreMetric" class="text-xl sm:text-2xl font-black text-blue-600 dark:text-blue-400">0 / 30</span>
+                </div>
+                <div class="bg-slate-50 dark:bg-slate-800/60 p-3 rounded-xl border border-slate-200/60 dark:border-slate-700/60 text-center">
+                    <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider block mb-0.5">Percentage</span>
+                    <span id="finalPercentageMetric" class="text-xl sm:text-2xl font-black text-emerald-600 dark:text-emerald-400">0%</span>
+                </div>
+                <div class="bg-slate-50 dark:bg-slate-800/60 p-3 rounded-xl border border-slate-200/60 dark:border-slate-700/60 text-center">
+                    <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider block mb-0.5">Correct Answers</span>
+                    <span id="finalCorrectMetric" class="text-xl sm:text-2xl font-black text-emerald-500">0</span>
+                </div>
+                <div class="bg-slate-50 dark:bg-slate-800/60 p-3 rounded-xl border border-slate-200/60 dark:border-slate-700/60 text-center">
+                    <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider block mb-0.5">Incorrect / Skipped</span>
+                    <span id="finalIncorrectMetric" class="text-xl sm:text-2xl font-black text-rose-500">0</span>
+                </div>
+            </div>
+
+            <!-- Incorrect / Review Items Breakdown List -->
+            <div class="flex-1 min-h-0 flex flex-col bg-slate-50 dark:bg-slate-950/50 rounded-xl border border-slate-200 dark:border-slate-800 p-3">
+                <div class="flex items-center justify-between pb-2 mb-2 border-b border-slate-200 dark:border-slate-800 shrink-0">
+                    <h3 class="text-xs sm:text-sm font-bold text-slate-800 dark:text-slate-200 flex items-center space-x-1.5">
+                        <i class="fa-solid fa-list-check text-blue-500"></i>
+                        <span>Question Breakdown & Review</span>
+                    </h3>
+                    <div class="flex items-center space-x-2 text-xs">
+                        <button onclick="filterReviewList('all')" id="filterBtnAll" class="px-2 py-0.5 rounded font-bold bg-blue-600 text-white">All</button>
+                        <button onclick="filterReviewList('incorrect')" id="filterBtnIncorrect" class="px-2 py-0.5 rounded font-semibold text-slate-500 hover:text-slate-800 dark:hover:text-slate-200">Incorrect Only</button>
+                    </div>
+                </div>
+
+                <div id="breakdownScrollList" class="flex-1 overflow-y-auto space-y-2.5 pr-1">
+                    <!-- Review items injected dynamically -->
+                </div>
+            </div>
+
+            <!-- Results Bottom Actions -->
+            <div class="flex items-center justify-between shrink-0 pt-1">
+                <button onclick="restartQuiz()" class="w-full sm:w-auto px-6 py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold text-sm rounded-xl shadow-md transition-all flex items-center justify-center space-x-2">
+                    <i class="fa-solid fa-rotate-right"></i>
+                    <span>Restart Quiz</span>
+                </button>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- OVERVIEW MATRIX DRAWER MODAL -->
+    <div id="navDrawer" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-30 hidden transition-opacity flex justify-end">
+        <div class="w-full max-w-sm bg-white dark:bg-slate-900 h-full p-4 sm:p-5 flex flex-col justify-between shadow-2xl border-l border-slate-200 dark:border-slate-800">
+            <div>
+                <div class="flex justify-between items-center pb-3 border-b border-slate-200 dark:border-slate-800 mb-4">
+                    <h3 class="font-bold text-slate-900 dark:text-white flex items-center space-x-2">
+                        <i class="fa-solid fa-th text-blue-500"></i>
+                        <span>Question Navigator</span>
+                    </h3>
+                    <button onclick="toggleNavDrawer()" class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200">
+                        <i class="fa-solid fa-xmark text-lg"></i>
+                    </button>
+                </div>
+
+                <p class="text-xs text-slate-500 dark:text-slate-400 mb-3">Jump directly to any question. Color indicates answer status.</p>
+
+                <!-- 5-column grid for 30 questions -->
+                <div id="questionMatrixGrid" class="grid grid-cols-5 gap-2 max-h-[60vh] overflow-y-auto p-1">
+                    <!-- Matrix buttons rendered dynamically -->
+                </div>
+            </div>
+
+            <div class="pt-3 border-t border-slate-200 dark:border-slate-800 space-y-2 text-xs">
+                <div class="flex items-center space-x-4">
+                    <span class="flex items-center space-x-1.5"><span class="w-3 h-3 rounded-full bg-emerald-500 inline-block"></span><span>Correct</span></span>
+                    <span class="flex items-center space-x-1.5"><span class="w-3 h-3 rounded-full bg-rose-500 inline-block"></span><span>Incorrect</span></span>
+                    <span class="flex items-center space-x-1.5"><span class="w-3 h-3 rounded-full bg-slate-300 dark:bg-slate-700 inline-block"></span><span>Pending</span></span>
+                </div>
+                <button onclick="submitQuizEarly()" class="w-full py-2 bg-rose-500/10 hover:bg-rose-500/20 text-rose-600 dark:text-rose-400 border border-rose-500/30 rounded-lg font-bold transition-colors">
+                    End Quiz & View Score
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- KEYBOARD HELP MODAL -->
+    <div id="keyHelpModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-40 hidden flex items-center justify-center p-4">
+        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 max-w-xs w-full shadow-2xl space-y-4">
+            <div class="flex justify-between items-center border-b border-slate-200 dark:border-slate-800 pb-2">
+                <h4 class="font-bold text-sm text-slate-900 dark:text-white flex items-center space-x-2">
+                    <i class="fa-solid fa-keyboard text-blue-500"></i>
+                    <span>Keyboard Shortcuts</span>
+                </h4>
+                <button onclick="toggleKeyHelpModal()" class="text-slate-400 hover:text-slate-200">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            <div class="space-y-2 text-xs font-mono">
+                <div class="flex justify-between items-center"><span class="bg-slate-100 dark:bg-slate-800 px-2 py-1 rounded text-slate-700 dark:text-slate-300 font-bold">1 - 4 / A - D</span><span class="text-slate-500">Select Option</span></div>
+                <div class="flex justify-between items-center"><span class="bg-slate-100 dark:bg-slate-800 px-2 py-1 rounded text-slate-700 dark:text-slate-300 font-bold">Enter / Space</span><span class="text-slate-500">Next Question</span></div>
+                <div class="flex justify-between items-center"><span class="bg-slate-100 dark:bg-slate-800 px-2 py-1 rounded text-slate-700 dark:text-slate-300 font-bold">← / →</span><span class="text-slate-500">Prev / Next</span></div>
+            </div>
+            <button onclick="toggleKeyHelpModal()" class="w-full py-1.5 bg-blue-600 text-white font-bold rounded-lg text-xs">Got it</button>
+        </div>
+    </div>
+
+    <script>
+        // Comprehensive Question Dataset with metadata for standard, statement, and match-list types
+        const questionsData = [
+            {
+                id: 1,
+                question: "Where are the current headquarters of the International Olympic Committee (IOC) located?",
+                options: ["Paris, France", "Athens, Greece", "Lausanne, Switzerland", "Rome, Italy"],
+                answer: 2, // Index of C
+                explanation: "The IOC was initially headquartered in Paris, France, but is currently located in Lausanne, Switzerland."
+            },
+            {
+                id: 2,
+                question: "The International Olympic Committee (IOC) was founded in 1894 by Demetrius Vikelas and which other co-founder?",
+                options: ["Pierre de Coubertin", "Thomas Hicks", "Dorabji Tata", "Michael Phelps"],
+                answer: 0,
+                explanation: "The IOC was founded in 1894 by Pierre de Coubertin (2nd President) and Demetrius Vikelas (1st President)."
+            },
+            {
+                id: 3,
+                question: "What is the official motto of the Olympic Games?",
+                options: ["\"Faster, Higher, Braver\"", "\"Citius, Altius, Fortius - Communiter\"", "\"We Have Wings\"", "\"Unity in Diversity\""],
+                answer: 1,
+                explanation: "The official motto is \"Citius, Altius, Fortius - Communiter\" translating to \"Faster, Higher, Stronger - Together\"."
+            },
+            {
+                id: 4,
+                question: "How many member countries are affiliated with the International Olympic Committee (IOC)?",
+                options: ["193", "200", "206", "210"],
+                answer: 2,
+                explanation: "The IOC has 206 total member National Olympic Committees, which is more than the UN's 193 member states."
+            },
+            {
+                id: 5,
+                question: "In which year and city were the first modern Summer Olympic Games held?",
+                options: ["1900, Paris", "1896, Athens", "1924, Chamonix", "1960, Rome"],
+                answer: 1,
+                explanation: "The first modern Summer Olympics took place in 1896 in Athens, Greece."
+            },
+            {
+                id: 6,
+                question: "In which edition of the Olympic Games did women participate for the first time?",
+                options: ["1896 Athens Olympics", "1900 Paris Olympics", "1920 Belgium Olympics", "1928 Amsterdam Olympics"],
+                answer: 1,
+                explanation: "First female participation in the Olympics was seen during the 1900 Second Olympic Games in Paris, France."
+            },
+            {
+                id: 7,
+                question: "Where were the first Winter Olympic Games held in 1924?",
+                options: ["Innsbruck, Austria", "Chamonix, France", "Turin, Italy", "Salt Lake City, USA"],
+                answer: 1,
+                explanation: "The first Winter Olympics were held in 1924 in Chamonix, France."
+            },
+            {
+                id: 8,
+                question: "The first Paralympic Games were held in 1960 in which city?",
+                options: ["Paris, France", "London, UK", "Rome, Italy", "Tokyo, Japan"],
+                answer: 2,
+                explanation: "Rome, Italy hosted the very first Paralympic Games in 1960."
+            },
+            {
+                id: 9,
+                question: "Who was the captain of the Indian Men’s Hockey Team at the 1928 Amsterdam Olympics?",
+                options: ["Major Dhyan Chand", "Jaipal Singh Munda", "Kishan Lal", "Vasudevan Bhaskaran"],
+                answer: 1,
+                explanation: "Jaipal Singh Munda captained the Indian Men's Hockey team in the 1928 Amsterdam Olympics."
+            },
+            {
+                id: 10,
+                question: "In the 1932 Los Angeles Olympics, what was the score by which the Indian Men's Hockey Team defeated the USA?",
+                options: ["8-1", "14-0", "24-1", "7-0"],
+                answer: 2,
+                explanation: "India won against the USA with a massive scoreline of 24-1 in the 1932 Los Angeles Olympics."
+            },
+            {
+                id: 11,
+                question: "Who led the Indian Men’s Hockey team to a gold medal in the 1948 London Olympics?",
+                options: ["Kishan Lal", "Balbir Singh Sr.", "K.D. Jadhav", "Jaipal Singh Munda"],
+                answer: 0,
+                explanation: "At the 1948 London Olympics, the Indian Men's Hockey team was led by Kishan Lal."
+            },
+            {
+                id: 12,
+                question: "Which Indian hockey player scored 5 goals in the 1952 Helsinki Olympics and was the first recipient of the Padma Shri award?",
+                options: ["Major Dhyan Chand", "Balbir Singh Sr.", "Dhanraj Pillay", "Kishan Lal"],
+                answer: 1,
+                explanation: "Balbir Singh Sr. scored 5 goals at the 1952 Helsinki Olympics final and was the first recipient of the Padma Shri award among hockey players."
+            },
+            {
+                id: 13,
+                question: "In which Olympic Games did India win its 8th Hockey Gold medal?",
+                options: ["1964 Tokyo", "1972 Munich", "1980 Moscow", "1956 Melbourne"],
+                answer: 2,
+                explanation: "India won its 8th Olympic Gold medal in hockey at the 1980 Moscow Olympics under captain Vasudevan Bhaskaran."
+            },
+            {
+                id: 14,
+                question: "Which country has hosted the Olympic Games the most number of times (8 times)?",
+                options: ["United Kingdom", "France", "USA", "Greece"],
+                answer: 2,
+                explanation: "The USA has hosted the Olympics the most times (8 times: 4 Summer and 4 Winter Olympics)."
+            },
+            {
+                id: 15,
+                question: "Which city is scheduled to host the 2032 Summer Olympic Games?",
+                options: ["Los Angeles, USA", "Milan, Italy", "Brisbane, Australia", "French Alps, France"],
+                answer: 2,
+                explanation: "Brisbane (Australia) will host the 2032 Summer Olympics."
+            },
+            {
+                id: 16,
+                question: "Who was the first Indian (Anglo-Indian) medalist to win two silver medals at the 1900 Paris Olympics?",
+                options: ["Purma Banerjee", "Norman Pritchard", "K.D. Jadhav", "Leander Paes"],
+                answer: 1,
+                explanation: "Norman Pritchard won two silver medals in 1900 (200m sprint and 200m hurdles)."
+            },
+            {
+                id: 17,
+                question: "Who was India's first flag bearer at the 1920 Belgium Olympics?",
+                options: ["Purma Banerjee", "Dorabji Tata", "Norman Pritchard", "Major Dhyan Chand"],
+                answer: 0,
+                explanation: "Purma Banerjee was India's first official flag bearer at the 1920 Antwerp (Belgium) Olympics."
+            },
+            {
+                id: 18,
+                question: "Who won independent India's first individual Olympic medal (Bronze) in wrestling at the 1952 Helsinki Olympics?",
+                options: ["Sushil Kumar", "Yogeshwar Dutt", "K.D. Jadhav", "Bajrang Punia"],
+                answer: 2,
+                explanation: "K.D. Jadhav (also referred to as 'Pocket Dynamo') won the bronze medal in wrestling at the 1952 Helsinki Olympics."
+            },
+            {
+                id: 19,
+                question: "Who became the first Indian woman to win an Olympic medal (Bronze in weightlifting at Sydney 2000)?",
+                options: ["Mary Kom", "Karnam Malleswari", "Saina Nehwal", "Sakshi Malik"],
+                answer: 1,
+                explanation: "Karnam Malleswari became the first Indian woman to win an Olympic medal (bronze in weightlifting) at the 2000 Sydney Olympics."
+            },
+            {
+                id: 20,
+                question: "Who was the first Indian shooter to win an Olympic medal (Silver at the 2004 Athens Olympics)?",
+                options: ["Abhinav Bindra", "Gagan Narang", "Vijay Kumar", "Rajyavardhan Singh Rathore"],
+                answer: 3,
+                explanation: "Rajyavardhan Singh Rathore won silver in double trap shooting at Athens 2004, becoming the first Indian shooter to win an Olympic medal."
+            },
+            {
+                id: 21,
+                question: "Who was the first Indian to win an individual Gold medal at the Olympic Games (2008 Beijing)?",
+                options: ["Neeraj Chopra", "Abhinav Bindra", "Sushil Kumar", "Leander Paes"],
+                answer: 1,
+                explanation: "Abhinav Bindra won individual gold in the 10m Air Rifle event at the 2008 Beijing Olympics."
+            },
+            {
+                id: 22,
+                question: "Which day is celebrated as \"National Javelin Day\" in honor of Neeraj Chopra’s gold medal win at the Tokyo 2020 Olympics?",
+                options: ["15th August", "29th August", "7th August", "23rd July"],
+                answer: 2,
+                explanation: "Neeraj Chopra won the historic track and field gold medal on 7th August (Tokyo 2020), which is now celebrated as National Javelin Day."
+            },
+            {
+                id: 23,
+                question: "Who was the first Indian woman to win an Olympic medal in Badminton (Bronze at the 2012 London Olympics)?",
+                options: ["PV Sindhu", "Saina Nehwal", "Jwala Gutta", "Ashwini Ponnappa"],
+                answer: 1,
+                explanation: "Saina Nehwal won bronze at the 2012 London Olympics, becoming the first Indian to win an Olympic medal in Badminton."
+            },
+            {
+                id: 24,
+                question: "Which Indian female boxer won a bronze medal at the 2012 London Olympics?",
+                options: ["Lovlina Borgohain", "Nikhat Zareen", "Mary Kom", "Saweety Boora"],
+                answer: 2,
+                explanation: "Mary Kom won bronze at the 2012 London Olympics and is the first Indian female boxer to earn an Olympic medal."
+            },
+            {
+                id: 25,
+                question: "What was India’s total medal tally at the 2020 Tokyo Olympics?",
+                options: ["5", "6", "7", "8"],
+                answer: 2,
+                explanation: "India achieved its highest single-edition medal tally of 7 medals (1 Gold, 2 Silver, 4 Bronze) at the 2020 Tokyo Olympics."
+            },
+            {
+                id: 26,
+                question: "Who was the official mascot of the 2020 Tokyo Paralympics?",
+                options: ["Miraitowa", "Someity", "Phryge", "Bing Dwen Dwen"],
+                answer: 1,
+                explanation: "Someity was the official mascot for the 2020 Tokyo Paralympic Games (Miraitowa was the mascot for the Olympics)."
+            },
+            {
+                id: 27,
+                question: "Who was the first Indian woman to win multiple medals in a single edition of the Olympics (Paris 2024)?",
+                options: ["PV Sindhu", "Manu Bhaker", "Avani Lekhara", "Lovlina Borgohain"],
+                answer: 1,
+                explanation: "Manu Bhaker won bronze in the individual 10m air pistol and another bronze in the mixed team 10m pistol event with Sarabjot Singh at the 2024 Paris Olympics."
+            },
+            {
+                id: 28,
+                question: "Who was the first President of the Indian Olympic Association (IOA) established in 1927?",
+                options: ["Maharaja Bhupindra Singh", "Dorabji Tata", "P.T. Usha", "Gagan Narang"],
+                answer: 1,
+                explanation: "The Indian Olympic Association (IOA) was established in 1927 with Sir Dorabji Tata as its founding President."
+            },
+            {
+                id: 29,
+                question: "What is the official length of a Marathon race?",
+                options: ["40.195 km", "41.500 km", "42.195 km", "45.000 km"],
+                answer: 2,
+                explanation: "The official standard distance of an Olympic marathon is 42.195 km (26 miles 385 yards)."
+            },
+            {
+                id: 30,
+                question: "According to modern Olympic specifications, what is the major metal component of an Olympic gold medal?",
+                options: ["Pure Gold", "Copper", "Silver (minimum 92.5%)", "Bronze"],
+                answer: 2,
+                explanation: "Modern Olympic gold medals are primarily composed of silver (at least 92.5% silver) plated with a minimum of 6 grams of pure gold."
+            }
+        ];
+
+        // App State
+        let currentQuestionIndex = 0;
+        let userAnswers = new Array(questionsData.length).fill(null); // stores selected option index
+        let soundEnabled = true;
+        let timerSeconds = 0;
+        let timerInterval = null;
+        let reviewFilter = 'all';
+
+        // Web Audio Synthesizer for lightweight sound effects without external files
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        let audioCtx = null;
+
+        function initAudio() {
+            if (!audioCtx) {
+                audioCtx = new AudioContext();
+            }
+        }
+
+        function playSound(type) {
+            if (!soundEnabled) return;
+            try {
+                initAudio();
+                if (audioCtx.state === 'suspended') {
+                    audioCtx.resume();
+                }
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+
+                const now = audioCtx.currentTime;
+
+                if (type === 'select') {
+                    osc.frequency.setValueAtTime(320, now);
+                    osc.frequency.exponentialRampToValueAtTime(440, now + 0.05);
+                    gain.gain.setValueAtTime(0.1, now);
+                    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.05);
+                    osc.start(now);
+                    osc.stop(now + 0.05);
+                } else if (type === 'correct') {
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(523.25, now); // C5
+                    osc.frequency.setValueAtTime(659.25, now + 0.08); // E5
+                    gain.gain.setValueAtTime(0.15, now);
+                    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.25);
+                    osc.start(now);
+                    osc.stop(now + 0.25);
+                } else if (type === 'incorrect') {
+                    osc.type = 'sawtooth';
+                    osc.frequency.setValueAtTime(220, now);
+                    osc.frequency.exponentialRampToValueAtTime(140, now + 0.15);
+                    gain.gain.setValueAtTime(0.15, now);
+                    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.2);
+                    osc.start(now);
+                    osc.stop(now + 0.2);
+                }
+            } catch(e) {
+                // Audio safely ignored if unsupported
+            }
+        }
+
+        function toggleTheme() {
+            const html = document.documentElement;
+            const icon = document.getElementById('themeIcon');
+            if (html.classList.contains('dark')) {
+                html.classList.remove('dark');
+                icon.className = 'fa-solid fa-sun text-amber-500';
+            } else {
+                html.classList.add('dark');
+                icon.className = 'fa-solid fa-moon';
+            }
+        }
+
+        function toggleSound() {
+            soundEnabled = !soundEnabled;
+            const icon = document.getElementById('soundIcon');
+            icon.className = soundEnabled ? 'fa-solid fa-volume-high text-blue-500' : 'fa-solid fa-volume-xmark text-slate-400';
+        }
+
+        function toggleKeyHelpModal() {
+            const modal = document.getElementById('keyHelpModal');
+            modal.classList.toggle('hidden');
+        }
+
+        function startTimer() {
+            if (timerInterval) clearInterval(timerInterval);
+            timerSeconds = 0;
+            timerInterval = setInterval(() => {
+                timerSeconds++;
+                const mins = String(Math.floor(timerSeconds / 60)).padStart(2, '0');
+                const secs = String(timerSeconds % 60).padStart(2, '0');
+                document.getElementById('quizTimerText').innerText = `${mins}:${secs}`;
+            }, 1000);
+        }
+
+        function renderQuestion() {
+            const q = questionsData[currentQuestionIndex];
+            const qIndexText = document.getElementById('qIndexText');
+            const questionText = document.getElementById('questionText');
+            const complexContainer = document.getElementById('complexFormattingContainer');
+            const optionsContainer = document.getElementById('optionsContainer');
+            const explanationContainer = document.getElementById('explanationContainer');
+            const progressBarFill = document.getElementById('progressBarFill');
+            const qStatusIndicator = document.getElementById('qStatusIndicator');
+
+            // Header progress
+            qIndexText.innerText = `Question ${currentQuestionIndex + 1} of ${questionsData.length}`;
+            const progressPct = ((currentQuestionIndex + 1) / questionsData.length) * 100;
+            progressBarFill.style.width = `${progressPct}%`;
+
+            // Question Text & Complex formatting parser
+            questionText.innerText = q.question;
+            complexContainer.className = 'hidden';
+            complexContainer.innerHTML = '';
+
+            // Render Options
+            optionsContainer.innerHTML = '';
+            const optionLabels = ['A', 'B', 'C', 'D'];
+            const answeredIndex = userAnswers[currentQuestionIndex];
+            const isAnswered = answeredIndex !== null;
+
+            q.options.forEach((optText, idx) => {
+                const btn = document.createElement('button');
+                btn.className = `w-full text-left p-3 sm:p-3.5 rounded-xl border font-medium text-xs sm:text-sm flex items-center justify-between transition-all duration-150 no-select relative`;
+
+                // Base styling depending on state
+                if (!isAnswered) {
+                    btn.className += ` bg-slate-50 dark:bg-slate-800/80 border-slate-200 dark:border-slate-700 hover:border-blue-500 dark:hover:border-blue-500 hover:bg-blue-50/50 dark:hover:bg-blue-950/30 text-slate-800 dark:text-slate-200`;
+                    btn.onclick = () => selectOption(idx);
+                } else {
+                    btn.disabled = true;
+                    btn.classList.add('cursor-default');
+
+                    if (idx === q.answer) {
+                        // Correct option styling
+                        btn.className += ` bg-emerald-50 dark:bg-emerald-950/50 border-emerald-500 dark:border-emerald-500 text-emerald-900 dark:text-emerald-200 font-bold shadow-sm`;
+                    } else if (idx === answeredIndex) {
+                        // Incorrectly selected option styling
+                        btn.className += ` bg-rose-50 dark:bg-rose-950/50 border-rose-500 dark:border-rose-500 text-rose-900 dark:text-rose-200 font-bold shadow-sm`;
+                    } else {
+                        // Remaining options disabled muted
+                        btn.className += ` bg-slate-50/50 dark:bg-slate-900/40 border-slate-200/60 dark:border-slate-800/60 text-slate-400 dark:text-slate-600 opacity-60`;
+                    }
+                }
+
+                // Inner content layout
+                const leftDiv = document.createElement('div');
+                leftDiv.className = 'flex items-center space-x-3 pr-2 min-w-0';
+
+                const badgeSpan = document.createElement('span');
+                badgeSpan.className = `w-6 h-6 rounded-lg text-xs font-bold flex items-center justify-center shrink-0 transition-colors ${
+                    isAnswered && idx === q.answer 
+                        ? 'bg-emerald-500 text-white' 
+                        : isAnswered && idx === answeredIndex 
+                        ? 'bg-rose-500 text-white' 
+                        : 'bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300'
+                }`;
+                badgeSpan.innerText = optionLabels[idx];
+
+                const textSpan = document.createElement('span');
+                textSpan.className = 'truncate sm:whitespace-normal';
+                textSpan.innerText = optText;
+
+                leftDiv.appendChild(badgeSpan);
+                leftDiv.appendChild(textSpan);
+                btn.appendChild(leftDiv);
+
+                // Status Icon right side
+                if (isAnswered) {
+                    const iconRight = document.createElement('div');
+                    iconRight.className = 'shrink-0 text-sm';
+                    if (idx === q.answer) {
+                        iconRight.innerHTML = `<i class="fa-solid fa-circle-check text-emerald-500"></i>`;
+                    } else if (idx === answeredIndex) {
+                        iconRight.innerHTML = `<i class="fa-solid fa-circle-xmark text-rose-500"></i>`;
+                    }
+                    btn.appendChild(iconRight);
+                }
+
+                optionsContainer.appendChild(btn);
+            });
+
+            // Instant Feedback Explanation Box
+            if (isAnswered) {
+                const isCorrect = answeredIndex === q.answer;
+                explanationContainer.classList.remove('hidden');
+                
+                const feedbackIcon = document.getElementById('feedbackIcon');
+                const feedbackTitle = document.getElementById('feedbackTitle');
+                const explanationText = document.getElementById('explanationText');
+
+                if (isCorrect) {
+                    explanationContainer.className = 'shrink-0 mt-2 p-3 rounded-xl border bg-emerald-50/90 dark:bg-emerald-950/40 border-emerald-300 dark:border-emerald-800 text-emerald-900 dark:text-emerald-200';
+                    feedbackIcon.innerHTML = `<i class="fa-solid fa-circle-check text-emerald-600 dark:text-emerald-400"></i>`;
+                    feedbackTitle.innerText = 'Correct Answer';
+                    feedbackTitle.className = 'font-bold text-xs uppercase tracking-wider mb-0.5 text-emerald-700 dark:text-emerald-300';
+                } else {
+                    explanationContainer.className = 'shrink-0 mt-2 p-3 rounded-xl border bg-rose-50/90 dark:bg-rose-950/40 border-rose-300 dark:border-rose-800 text-rose-900 dark:text-rose-200';
+                    feedbackIcon.innerHTML = `<i class="fa-solid fa-triangle-exclamation text-rose-600 dark:text-rose-400"></i>`;
+                    feedbackTitle.innerText = `Incorrect (Correct Answer: ${optionLabels[q.answer]})`;
+                    feedbackTitle.className = 'font-bold text-xs uppercase tracking-wider mb-0.5 text-rose-700 dark:text-rose-300';
+                }
+                explanationText.innerText = q.explanation;
+                qStatusIndicator.innerText = isCorrect ? 'Answered (Correct)' : 'Answered (Incorrect)';
+            } else {
+                explanationContainer.classList.add('hidden');
+                qStatusIndicator.innerText = 'Unanswered';
+            }
+
+            // Controls update
+            document.getElementById('prevBtn').disabled = currentQuestionIndex === 0;
+            
+            const nextBtnText = document.getElementById('nextBtnText');
+            const nextBtnIcon = document.getElementById('nextBtnIcon');
+            
+            if (currentQuestionIndex === questionsData.length - 1) {
+                nextBtnText.innerText = 'Submit Quiz';
+                nextBtnIcon.className = 'fa-solid fa-check-double';
+            } else {
+                nextBtnText.innerText = 'Next Question';
+                nextBtnIcon.className = 'fa-solid fa-arrow-right';
+            }
+
+            // Update live score display
+            calculateCurrentScore();
+            renderMatrixGrid();
+        }
+
+        function selectOption(index) {
+            if (userAnswers[currentQuestionIndex] !== null) return; // Prevent double select
+            
+            userAnswers[currentQuestionIndex] = index;
+            const q = questionsData[currentQuestionIndex];
+            
+            if (index === q.answer) {
+                playSound('correct');
+            } else {
+                playSound('incorrect');
+            }
+
+            renderQuestion();
+        }
+
+        function calculateCurrentScore() {
+            let score = 0;
+            userAnswers.forEach((ans, idx) => {
+                if (ans === questionsData[idx].answer) {
+                    score++;
+                }
+            });
+            document.getElementById('currentScoreVal').innerText = score;
+        }
+
+        function goToNextQuestion() {
+            playSound('select');
+            if (currentQuestionIndex < questionsData.length - 1) {
+                currentQuestionIndex++;
+                renderQuestion();
+            } else {
+                finishQuiz();
+            }
+        }
+
+        function goToPrevQuestion() {
+            if (currentQuestionIndex > 0) {
+                playSound('select');
+                currentQuestionIndex--;
+                renderQuestion();
+            }
+        }
+
+        function jumpToQuestion(idx) {
+            playSound('select');
+            currentQuestionIndex = idx;
+            renderQuestion();
+            toggleNavDrawer(false);
+        }
+
+        function toggleNavDrawer(forceState) {
+            const drawer = document.getElementById('navDrawer');
+            if (typeof forceState === 'boolean') {
+                if (forceState) drawer.classList.remove('hidden');
+                else drawer.classList.add('hidden');
+            } else {
+                drawer.classList.toggle('hidden');
+            }
+        }
+
+        function renderMatrixGrid() {
+            const grid = document.getElementById('questionMatrixGrid');
+            grid.innerHTML = '';
+            
+            questionsData.forEach((q, idx) => {
+                const btn = document.createElement('button');
+                const userAns = userAnswers[idx];
+                const isCurrent = idx === currentQuestionIndex;
+
+                let stateClasses = 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-700';
+                if (userAns !== null) {
+                    if (userAns === q.answer) {
+                        stateClasses = 'bg-emerald-500 text-white border-emerald-600 font-bold';
+                    } else {
+                        stateClasses = 'bg-rose-500 text-white border-rose-600 font-bold';
+                    }
+                }
+
+                btn.className = `h-9 rounded-lg font-mono text-xs font-semibold border flex items-center justify-center transition-all ${stateClasses} ${isCurrent ? 'ring-2 ring-blue-500 ring-offset-2 dark:ring-offset-slate-900 active-q-btn' : 'hover:opacity-80'}`;
+                btn.innerText = idx + 1;
+                btn.onclick = () => jumpToQuestion(idx);
+                grid.appendChild(btn);
+            });
+        }
+
+        function submitQuizEarly() {
+            toggleNavDrawer(false);
+            finishQuiz();
+        }
+
+        function finishQuiz() {
+            if (timerInterval) clearInterval(timerInterval);
+            playSound('correct');
+
+            document.getElementById('quizView').classList.add('hidden');
+            document.getElementById('resultsView').classList.remove('hidden');
+
+            // Calculate final metrics
+            let correctCount = 0;
+            userAnswers.forEach((ans, idx) => {
+                if (ans === questionsData[idx].answer) correctCount++;
+            });
+
+            const total = questionsData.length;
+            const incorrectCount = total - correctCount;
+            const pct = Math.round((correctCount / total) * 100);
+
+            document.getElementById('finalScoreMetric').innerText = `${correctCount} / ${total}`;
+            document.getElementById('finalPercentageMetric').innerText = `${pct}%`;
+            document.getElementById('finalCorrectMetric').innerText = correctCount;
+            document.getElementById('finalIncorrectMetric').innerText = incorrectCount;
+
+            renderReviewList();
+        }
+
+        function filterReviewList(mode) {
+            reviewFilter = mode;
+            document.getElementById('filterBtnAll').className = mode === 'all' 
+                ? 'px-2 py-0.5 rounded font-bold bg-blue-600 text-white' 
+                : 'px-2 py-0.5 rounded font-semibold text-slate-500 hover:text-slate-800 dark:hover:text-slate-200';
+            
+            document.getElementById('filterBtnIncorrect').className = mode === 'incorrect' 
+                ? 'px-2 py-0.5 rounded font-bold bg-blue-600 text-white' 
+                : 'px-2 py-0.5 rounded font-semibold text-slate-500 hover:text-slate-800 dark:hover:text-slate-200';
+
+            renderReviewList();
+        }
+
+        function renderReviewList() {
+            const container = document.getElementById('breakdownScrollList');
+            container.innerHTML = '';
+            const optionLabels = ['A', 'B', 'C', 'D'];
+
+            questionsData.forEach((q, idx) => {
+                const userAns = userAnswers[idx];
+                const isCorrect = userAns === q.answer;
+
+                if (reviewFilter === 'incorrect' && isCorrect) return;
+
+                const card = document.createElement('div');
+                card.className = `p-3 rounded-xl border text-xs space-y-1.5 ${
+                    isCorrect 
+                        ? 'bg-emerald-50/40 dark:bg-emerald-950/20 border-emerald-200 dark:border-emerald-900/40' 
+                        : 'bg-rose-50/40 dark:bg-rose-950/20 border-rose-200 dark:border-rose-900/40'
+                }`;
+
+                const topHeader = document.createElement('div');
+                topHeader.className = 'flex justify-between items-start';
+                topHeader.innerHTML = `
+                    <span class="font-bold text-slate-800 dark:text-slate-200">Q${idx + 1}. ${q.question}</span>
+                    <span class="shrink-0 ml-2 px-1.5 py-0.5 rounded text-[10px] font-extrabold uppercase ${
+                        isCorrect ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300' : 'bg-rose-100 text-rose-700 dark:bg-rose-950 dark:text-rose-300'
+                    }">${isCorrect ? 'Correct' : 'Incorrect'}</span>
+                `;
+
+                const ansInfo = document.createElement('div');
+                ansInfo.className = 'space-y-0.5 text-[11px] text-slate-600 dark:text-slate-400';
+                
+                const userAnsText = userAns !== null ? `${optionLabels[userAns]}) ${q.options[userAns]}` : 'Not Answered';
+                const correctAnsText = `${optionLabels[q.answer]}) ${q.options[q.answer]}`;
+
+                ansInfo.innerHTML = `
+                    <div><span class="font-bold">Your Answer:</span> <span class="${isCorrect ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400 font-semibold'}">${userAnsText}</span></div>
+                    ${!isCorrect ? `<div><span class="font-bold">Correct Answer:</span> <span class="text-emerald-600 dark:text-emerald-400 font-semibold">${correctAnsText}</span></div>` : ''}
+                    <div class="mt-1 pt-1 border-t border-slate-200/50 dark:border-slate-800/50 text-slate-500 italic">${q.explanation}</div>
+                `;
+
+                card.appendChild(topHeader);
+                card.appendChild(ansInfo);
+                container.appendChild(card);
+            });
+
+            if (container.children.length === 0) {
+                container.innerHTML = `<div class="text-center py-6 text-slate-400 text-xs">No questions found in this filter.</div>`;
+            }
+        }
+
+        function restartQuiz() {
+            currentQuestionIndex = 0;
+            userAnswers = new Array(questionsData.length).fill(null);
+            document.getElementById('resultsView').classList.add('hidden');
+            document.getElementById('quizView').classList.remove('hidden');
+            startTimer();
+            renderQuestion();
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (document.getElementById('quizView').classList.contains('hidden')) return;
+
+            // Keys 1-4 or A-D
+            if (['1', '2', '3', '4'].includes(e.key)) {
+                selectOption(parseInt(e.key) - 1);
+            } else if (['a', 'b', 'c', 'd'].includes(e.key.toLowerCase())) {
+                const map = { 'a': 0, 'b': 1, 'c': 2, 'd': 3 };
+                selectOption(map[e.key.toLowerCase()]);
+            } else if (e.key === 'ArrowRight' || e.key === 'Enter' || e.key === ' ') {
+                if (e.target.tagName !== 'BUTTON') {
+                    e.preventDefault();
+                    goToNextQuestion();
+                }
+            } else if (e.key === 'ArrowLeft') {
+                goToPrevQuestion();
+            }
+        });
+
+        window.onload = function() {
+            startTimer();
+            renderQuestion();
+        };
+    </script>
+</body>
+</html>
