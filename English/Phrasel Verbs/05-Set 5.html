@@ -1,0 +1,829 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive English Phrasal Verbs & Prepositions Quiz</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#eef2ff',
+                            100: '#e0e7ff',
+                            500: '#6366f1',
+                            600: '#4f46e5',
+                            700: '#4338ca',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Custom scrollbars and transitions for smooth compact feel */
+        * {
+            transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+        }
+        body {
+            overflow: hidden; /* Enforce viewport fit */
+            user-select: none;
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: rgba(156, 163, 175, 0.5);
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body class="h-full bg-slate-100 dark:bg-slate-900 text-slate-800 dark:text-slate-100 flex flex-col justify-between font-sans overflow-hidden">
+
+    <!-- HEADER -->
+    <header class="w-full bg-white dark:bg-slate-800 shadow-sm px-6 py-3 flex items-center justify-between z-10 shrink-0">
+        <div class="flex items-center space-x-3">
+            <div class="bg-indigo-600 text-white p-2 rounded-lg font-bold text-lg shadow-md">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                  <path d="M9 48v-2a2 2 0 012-2h4a2 2 0 012 2v2h4a2 2 0 012 2v10a2 2 0 01-2 2H3a2 2 0 01-2-2V6a2 2 0 012-2h6z" />
+                  <path fill-rule="evenodd" d="M4 4h12v12H4V4zm3 3h6v2H7V7zm0 4h6v2H7v-2z" clip-rule="evenodd"/>
+                </svg>
+            </div>
+            <div>
+                <h1 id="app-title" class="text-base font-bold tracking-tight text-slate-900 dark:text-white">English Exam Master Quiz</h1>
+                <p id="app-subtitle" class="text-xs text-slate-500 dark:text-slate-400">Phrasal Verbs, Prepositions & Idioms Practice</p>
+            </div>
+        </div>
+        
+        <div class="flex items-center space-x-4">
+            <!-- Theme Toggle -->
+            <button id="theme-toggle" class="p-2 rounded-lg bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-600 transition" aria-label="Toggle Theme">
+                <!-- Sun Icon -->
+                <svg id="theme-sun" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 hidden dark:block" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+                </svg>
+                <!-- Moon Icon -->
+                <svg id="theme-moon" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 block dark:hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+                </svg>
+            </button>
+        </div>
+    </header>
+
+    <!-- MAIN CONTENT CONTAINER -->
+    <main class="flex-1 flex items-center justify-center p-4 overflow-hidden">
+        
+        <!-- QUIZ SCREEN -->
+        <div id="quiz-screen" class="w-full max-w-2xl bg-white dark:bg-slate-800 rounded-2xl shadow-xl flex flex-col h-[calc(100vh-7rem)] max-h-[640px] border border-slate-200 dark:border-slate-700 overflow-hidden">
+            
+            <!-- Quiz Progress & Header inside card -->
+            <div class="px-6 py-3 border-b border-slate-100 dark:border-slate-700/60 flex items-center justify-between shrink-0 bg-slate-50/50 dark:bg-slate-800/50">
+                <div class="flex items-center space-x-2">
+                    <span id="question-badge" class="text-xs font-semibold px-2.5 py-1 rounded-full bg-indigo-50 dark:bg-indigo-900/40 text-indigo-600 dark:text-indigo-400">
+                        Question 1 of 45
+                    </span>
+                </div>
+                <!-- Mini Progress Bar -->
+                <div class="w-32 bg-slate-200 dark:bg-slate-700 h-2 rounded-full overflow-hidden">
+                    <div id="progress-bar" class="bg-indigo-600 h-full w-0 transition-all duration-300"></div>
+                </div>
+            </div>
+
+            <!-- Question & Options Container (Scrollable internally if content is lengthy, but styled for compactness) -->
+            <div class="flex-1 overflow-y-auto custom-scrollbar p-6 flex flex-col justify-between space-y-4">
+                
+                <div class="space-y-3">
+                    <!-- Question Prompt -->
+                    <h2 id="question-text" class="text-base sm:text-lg font-semibold text-slate-900 dark:text-white leading-snug">
+                        Loading question...
+                    </h2>
+
+                    <!-- Options Grid -->
+                    <div id="options-container" class="grid grid-cols-1 gap-2 pt-1">
+                        <!-- Populated dynamically -->
+                    </div>
+                </div>
+
+                <!-- Explanation Box (Initially Hidden / Compact) -->
+                <div id="explanation-box" class="hidden rounded-xl p-3 bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-700 text-xs sm:text-sm animate-fadeIn">
+                    <div class="flex items-center space-x-1.5 font-semibold mb-1" id="explanation-header">
+                        <!-- Dynamic Status Icon & Title -->
+                    </div>
+                    <p id="explanation-text" class="text-slate-600 dark:text-slate-300 leading-relaxed"></p>
+                </div>
+
+            </div>
+
+            <!-- Card Footer / Action Bar -->
+            <div class="p-4 px-6 border-t border-slate-100 dark:border-slate-700/60 bg-slate-50/50 dark:bg-slate-800/50 flex items-center justify-between shrink-0">
+                <span id="score-tracker" class="text-xs font-medium text-slate-500 dark:text-slate-400">
+                    Correct: <strong id="current-score" class="text-emerald-600 dark:text-emerald-400">0</strong>
+                </span>
+                <button id="next-btn" onclick="handleNext()" disabled class="px-5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-medium text-sm shadow-sm disabled:opacity-40 disabled:cursor-not-allowed transition transform active:scale-95">
+                    Next Question &rarr;
+                </button>
+            </div>
+
+        </div>
+
+        <!-- END SCREEN (SUMMARY) -->
+        <div id="end-screen" class="hidden w-full max-w-2xl bg-white dark:bg-slate-800 rounded-2xl shadow-xl flex flex-col h-[calc(100vh-7rem)] max-h-[640px] border border-slate-200 dark:border-slate-700 overflow-hidden">
+            
+            <div class="p-6 border-b border-slate-100 dark:border-slate-700 text-center shrink-0">
+                <h2 class="text-xl font-bold text-slate-900 dark:text-white">Quiz Completed! 🎉</h2>
+                <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Here is a detailed breakdown of your performance.</p>
+            </div>
+
+            <!-- Score Summary Cards -->
+            <div class="px-6 py-4 bg-slate-50 dark:bg-slate-900/40 border-b border-slate-100 dark:border-slate-700 flex justify-around items-center shrink-0">
+                <div class="text-center">
+                    <span class="text-xs text-slate-500 dark:text-slate-400 block font-medium uppercase tracking-wider">Final Score</span>
+                    <span id="final-score-val" class="text-2xl font-black text-indigo-600 dark:text-indigo-400">0 / 0</span>
+                </div>
+                <div class="h-8 w-px bg-slate-200 dark:bg-slate-700"></div>
+                <div class="text-center">
+                    <span class="text-xs text-slate-500 dark:text-slate-400 block font-medium uppercase tracking-wider">Percentage</span>
+                    <span id="final-percentage-val" class="text-2xl font-black text-emerald-600 dark:text-emerald-400">0%</span>
+                </div>
+                <div class="h-8 w-px bg-slate-200 dark:bg-slate-700"></div>
+                <div class="text-center">
+                    <span class="text-xs text-slate-500 dark:text-slate-400 block font-medium uppercase tracking-wider">Incorrect</span>
+                    <span id="final-incorrect-val" class="text-2xl font-black text-rose-600 dark:text-rose-400">0</span>
+                </div>
+            </div>
+
+            <!-- Detailed Breakdown List (Scrollable) -->
+            <div class="flex-1 overflow-y-auto custom-scrollbar p-6 space-y-4">
+                <h3 class="text-sm font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider">Incorrect Questions Breakdown</h3>
+                <div id="incorrect-list-container" class="space-y-3">
+                    <!-- Populated dynamically or shows empty state -->
+                </div>
+            </div>
+
+            <!-- Restart Footer -->
+            <div class="p-4 px-6 border-t border-slate-100 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-800/50 flex justify-end shrink-0">
+                <button onclick="restartQuiz()" class="px-6 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-medium text-sm shadow-sm transition transform active:scale-95">
+                    Restart Quiz 🔄
+                </button>
+            </div>
+
+        </div>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="w-full text-center py-2 text-xs text-slate-400 dark:text-slate-500 shrink-0">
+        Interactive Exam Practice &bull; Optimized Viewport Layout
+    </footer>
+
+    <!-- SCRIPT DATA & APP LOGIC -->
+    <script>
+        // Raw dataset normalized cleanly with sequential numbering starting at 1
+        const rawQuestions = [
+            {
+                id: 1,
+                question: "I tried to ___ my work, but the noise kept distracting me.",
+                options: [
+                    { text: "give up", isCorrect: false, rationale: "Give up means to stop trying or to quit something, often due to difficulty or lack of success." },
+                    { text: "catch up on", isCorrect: true, rationale: "Catch up on means to do something that you have not been able to do until now." },
+                    { text: "run into", isCorrect: false, rationale: "Run into means to encounter someone or something unexpectedly, or to experience a problem." },
+                    { text: "break down", isCorrect: false, rationale: "Break down means to stop functioning or to lose control emotionally." }
+                ]
+            },
+            {
+                id: 2,
+                question: "The project manager decided to ____ the work to meet the deadline.",
+                options: [
+                    { text: "look forward to", isCorrect: false, rationale: "Look forward to means to anticipate with pleasure." },
+                    { text: "give in", isCorrect: false, rationale: "Give in means to surrender or yield." },
+                    { text: "speed up", isCorrect: true, rationale: "Speed up means to accelerate work to meet targets or deadlines." },
+                    { text: "back out", isCorrect: false, rationale: "Back out means to withdraw from an agreement." }
+                ]
+            },
+            {
+                id: 3,
+                question: "The team will ____ the new strategy during the next meeting.",
+                options: [
+                    { text: "break down", isCorrect: false, rationale: "Break down here would mean to analyze or divide into parts, but 'lay out' is specifically suited for outlining or explaining plans." },
+                    { text: "put up with", isCorrect: false, rationale: "Put up with means to tolerate." },
+                    { text: "lay out", isCorrect: true, rationale: "Lay out means to explain, present, or arrange a strategy clearly." },
+                    { text: "take off", isCorrect: false, rationale: "Take off means to become successful or depart." }
+                ]
+            },
+            {
+                id: 4,
+                question: "The manager had to ____ the issue to avoid further complications.",
+                options: [
+                    { text: "deal with", isCorrect: true, rationale: "Deal with means to manage or handle an issue effectively." },
+                    { text: "look into", isCorrect: false, rationale: "Look into means to investigate, though 'deal with' directly refers to handling complications." },
+                    { text: "break down", isCorrect: false, rationale: "Break down means to fail or stop working." },
+                    { text: "put up", isCorrect: false, rationale: "Put up means to erect or provide." }
+                ]
+            },
+            {
+                id: 5,
+                question: "He plans to ____ with the training next week.",
+                options: [
+                    { text: "fall back", isCorrect: false, rationale: "Fall back means to retreat." },
+                    { text: "go ahead", isCorrect: true, rationale: "Go ahead means to proceed with a plan or action." },
+                    { text: "take over", isCorrect: false, rationale: "Take over means to assume control." },
+                    { text: "put off", isCorrect: false, rationale: "Put off means to delay." }
+                ]
+            },
+            {
+                id: 6,
+                question: "He needs to ____ how to improve his time management.",
+                options: [
+                    { text: "figure out", isCorrect: true, rationale: "Figure out means to solve, understand, or determine something." },
+                    { text: "look down on", isCorrect: false, rationale: "Look down on means to think of someone as inferior." },
+                    { text: "give up", isCorrect: false, rationale: "Give up means to quit." },
+                    { text: "fall back", isCorrect: false, rationale: "Fall back means to retreat." }
+                ]
+            },
+            {
+                id: 7,
+                question: "She couldn't ___ the disappointment when she didn't get the job.",
+                options: [
+                    { text: "get over", isCorrect: true, rationale: "Get over means to recover from something, especially a setback, disappointment, or illness." },
+                    { text: "put on", isCorrect: false, rationale: "Put on means to wear or start a performance." },
+                    { text: "break out", isCorrect: false, rationale: "Break out means to start suddenly." },
+                    { text: "turn out", isCorrect: false, rationale: "Turn out means to end up in a particular way." }
+                ]
+            },
+            {
+                id: 8,
+                question: "She plans to ____ the situation before making a decision.",
+                options: [
+                    { text: "weigh up", isCorrect: true, rationale: "Weigh up means to consider carefully before deciding." },
+                    { text: "back out", isCorrect: false, rationale: "Back out means to withdraw." },
+                    { text: "turn down", isCorrect: false, rationale: "Turn down means to reject." },
+                    { text: "give in", isCorrect: false, rationale: "Give in means to yield." }
+                ]
+            },
+            {
+                id: 9,
+                question: "You must be on your guard ______ pickpockets, when you enter a crowded metro.",
+                options: [
+                    { text: "for", isCorrect: false, rationale: "Incorrect preposition pairing in this context." },
+                    { text: "across", isCorrect: false, rationale: "Does not fit standard idiom." },
+                    { text: "against", isCorrect: true, rationale: "The correct idiom is 'on one's guard against', meaning vigilant or protective against a threat." },
+                    { text: "with", isCorrect: false, rationale: "Incorrect preposition." }
+                ]
+            },
+            {
+                id: 10,
+                question: "The kite was stuck so high on the tree that it was ______ the reach of the boys.",
+                options: [
+                    { text: "below", isCorrect: false, rationale: "Below means at a lower level." },
+                    { text: "beneath", isCorrect: false, rationale: "Beneath means under something." },
+                    { text: "beside", isCorrect: false, rationale: "Beside means next to." },
+                    { text: "beyond", isCorrect: true, rationale: "'Beyond the reach' is the correct idiomatic expression meaning out of reach." }
+                ]
+            },
+            {
+                id: 11,
+                question: "Poverty was staring her ______ the face.",
+                options: [
+                    { text: "to", isCorrect: false, rationale: "Incorrect preposition." },
+                    { text: "in", isCorrect: true, rationale: "The phrase is 'staring someone in the face', meaning very obvious or confronting directly." },
+                    { text: "at", isCorrect: false, rationale: "Incorrect preposition." },
+                    { text: "on", isCorrect: false, rationale: "Incorrect preposition." }
+                ]
+            },
+            {
+                id: 12,
+                question: "She has inherited her fondness ______ tennis from her parents.",
+                options: [
+                    { text: "at", isCorrect: false, rationale: "Incorrect preposition." },
+                    { text: "to", isCorrect: false, rationale: "Incorrect preposition." },
+                    { text: "by", isCorrect: false, rationale: "Incorrect preposition." },
+                    { text: "for", isCorrect: true, rationale: "Fondness is correctly followed by the preposition 'for'." }
+                ]
+            },
+            {
+                id: 13,
+                question: "He was born in a business family and has a natural aptitude ______ business.",
+                options: [
+                    { text: "for", isCorrect: true, rationale: "Aptitude is correctly paired with 'for' to denote a natural talent or suitability." },
+                    { text: "at", isCorrect: false, rationale: "Incorrect preposition for aptitude." },
+                    { text: "on", isCorrect: false, rationale: "Incorrect preposition." },
+                    { text: "to", isCorrect: false, rationale: "Incorrect preposition." }
+                ]
+            },
+            {
+                id: 14,
+                question: "The fan was directly ______ my head.",
+                options: [
+                    { text: "over", isCorrect: true, rationale: "'Over' is used when something is positioned vertically above without touching." },
+                    { text: "on", isCorrect: false, rationale: "'On' implies direct contact." },
+                    { text: "at", isCorrect: false, rationale: "Incorrect preposition." },
+                    { text: "below", isCorrect: false, rationale: "Below means lower." }
+                ]
+            },
+            {
+                id: 15,
+                question: "This visit will not interfere ______ our plans.",
+                options: [
+                    { text: "into", isCorrect: false, rationale: "Incorrect preposition." },
+                    { text: "with", isCorrect: true, rationale: "Interfere takes the preposition 'with' when referring to disrupting a process or plan." },
+                    { text: "at", isCorrect: false, rationale: "Incorrect preposition." },
+                    { text: "from", isCorrect: false, rationale: "Incorrect preposition." }
+                ]
+            },
+            {
+                id: 16,
+                question: "It is said that children who learn to use their body, mind and emotions for their own well-being, work ______ the wellbeing of others.",
+                options: [
+                    { text: "within", isCorrect: false, rationale: "Incorrect preposition." },
+                    { text: "into", isCorrect: false, rationale: "Incorrect preposition." },
+                    { text: "forwards", isCorrect: false, rationale: "Not idiomatic here." },
+                    { text: "towards", isCorrect: true, rationale: "'Towards' indicates working in the direction of or contributing to a goal." }
+                ]
+            },
+            {
+                id: 17,
+                question: "A literature festival on the beach: With waves crashing on the beach, the Kerala Literature Festival got ______ in Kozhikode.",
+                options: [
+                    { text: "away", isCorrect: false, rationale: "Incorrect collocation." },
+                    { text: "underway", isCorrect: true, rationale: "'Get underway' means to begin or start an event or activity." },
+                    { text: "wayward", isCorrect: false, rationale: "Wayward means difficult to control." },
+                    { text: "apart", isCorrect: false, rationale: "Incorrect collocation." }
+                ]
+            },
+            {
+                id: 18,
+                question: "Do not meddle ____ the affairs of others.",
+                options: [
+                    { text: "From", isCorrect: false, rationale: "Incorrect preposition." },
+                    { text: "In", isCorrect: true, rationale: "Meddle takes the preposition 'in' when interfering in matters." },
+                    { text: "To", isCorrect: false, rationale: "Incorrect preposition." },
+                    { text: "at", isCorrect: false, rationale: "Incorrect preposition." }
+                ]
+            },
+            {
+                id: 19,
+                question: "The boy was leaning against the pillar _____ his hands _____ his pockets.",
+                options: [
+                    { text: "for, into", isCorrect: false, rationale: "Incorrect preposition pairing." },
+                    { text: "with, in", isCorrect: true, rationale: "'With his hands in his pockets' correctly describes the accompanying posture." },
+                    { text: "with, from", isCorrect: false, rationale: "Incorrect preposition." },
+                    { text: "for, in", isCorrect: false, rationale: "Incorrect preposition pairing." }
+                ]
+            },
+            {
+                id: 20,
+                question: "Please sign these documents ______ ink so that they can be preserved.",
+                options: [
+                    { text: "with", isCorrect: false, rationale: "While 'with a pen' is correct, writing in a substance like ink or pen takes 'in'." },
+                    { text: "by", isCorrect: false, rationale: "Incorrect preposition." },
+                    { text: "from", isCorrect: false, rationale: "Incorrect preposition." },
+                    { text: "in", isCorrect: true, rationale: "We use 'in ink' when referring to writing materials used." }
+                ]
+            },
+            {
+                id: 21,
+                question: "Identify the part with an error in: Urgent activities are those things (a) / that you must do immediately, (b) / as they require quick action (c) / and cannot be put on. (d)",
+                options: [
+                    { text: "(a)", isCorrect: false, rationale: "No error in part a." },
+                    { text: "(b)", isCorrect: false, rationale: "No error in part b." },
+                    { text: "(c)", isCorrect: false, rationale: "No error in part c." },
+                    { text: "(d)", isCorrect: true, rationale: "Error in part (d). 'Put on' is incorrect; it should be 'put off' (meaning to delay) or 'put aside'." }
+                ]
+            },
+            {
+                id: 22,
+                question: "Identify the part with an error in: All the decorative lights (a) / were boxed up (b) / and put out for next year (c) / no error (d)",
+                options: [
+                    { text: "(a)", isCorrect: false, rationale: "No error." },
+                    { text: "(b)", isCorrect: false, rationale: "No error." },
+                    { text: "(c)", isCorrect: true, rationale: "Error in (c). 'Put out' means to extinguish or inconvenience; it should be 'put away' for storage." },
+                    { text: "(d)", isCorrect: false, rationale: "There is an error present." }
+                ]
+            },
+            {
+                id: 23,
+                question: "Identify the part with an error in: The volunteer gave on to (a) / the food packets to the (b) / children of the orphanage. (c) / no error (d)",
+                options: [
+                    { text: "(a)", isCorrect: true, rationale: "Error in (a). 'Gave on to' is incorrect; it should be 'gave out' or 'distributed'." },
+                    { text: "(b)", isCorrect: false, rationale: "No error." },
+                    { text: "(c)", isCorrect: false, rationale: "No error." },
+                    { text: "(d)", isCorrect: false, rationale: "Error exists in (a)." }
+                ]
+            },
+            {
+                id: 24,
+                question: "Identify the part with an error in: The workers called out (a) / the strike because (b) / the management acceded to (c) / all their demands. (d)",
+                options: [
+                    { text: "(a)", isCorrect: true, rationale: "Error in (a). 'Called out' is incorrect here; it should be 'called off' (meaning to cancel a strike)." },
+                    { text: "(b)", isCorrect: false, rationale: "No error." },
+                    { text: "(c)", isCorrect: false, rationale: "No error." },
+                    { text: "(d)", isCorrect: false, rationale: "Error exists in (a)." }
+                ]
+            },
+            {
+                id: 25,
+                question: "Identify the part with an error in: The judges eliminated the (a) / classical singer, as she dropped of (b) / in the middle of the competition. (c) / no error (d)",
+                options: [
+                    { text: "(a)", isCorrect: false, rationale: "No error." },
+                    { text: "(b)", isCorrect: true, rationale: "Error in (b). 'Dropped of' is incorrect; it should be 'dropped out' (meaning to withdraw from a competition)." },
+                    { text: "(c)", isCorrect: false, rationale: "No error." },
+                    { text: "(d)", isCorrect: false, rationale: "Error exists in (b)." }
+                ]
+            },
+            {
+                id: 26,
+                question: "The entire opposition ____ Narendra Modi for demonetisation.",
+                options: [
+                    { text: "Kicked off", isCorrect: false, rationale: "Kick off means to begin or start something." },
+                    { text: "Kicked out", isCorrect: false, rationale: "Kick out means to force someone to leave." },
+                    { text: "Jumped to", isCorrect: false, rationale: "Jump to means to reach a hasty conclusion." },
+                    { text: "Jumped on", isCorrect: true, rationale: "Jump on someone means to criticize them as soon as they make a mistake or statement." }
+                ]
+            },
+            {
+                id: 27,
+                question: "She saw her husband talking to another woman and immediately jumped to conclusions...",
+                options: [
+                    { text: "Figure out", isCorrect: false, rationale: "Figure out means to solve or understand." },
+                    { text: "Jumped off", isCorrect: false, rationale: "Jumped off means to physically leap." },
+                    { text: "Jumped into", isCorrect: false, rationale: "Jumped into means to enter quickly." },
+                    { text: "No improvement", isCorrect: true, rationale: "'Jumped to conclusions' is already correct and idiomatic." }
+                ]
+            },
+            {
+                id: 28,
+                question: "You should have __ that __ yourself; it wasn't necessary to say it out loud.",
+                options: [
+                    { text: "Put, to", isCorrect: false, rationale: "Incorrect verb combination." },
+                    { text: "Kept, to", isCorrect: true, rationale: "'Keep something to oneself' means to keep information private or secret." },
+                    { text: "Kept, from", isCorrect: false, rationale: "Incorrect preposition pairing." },
+                    { text: "Hold, back", isCorrect: false, rationale: "Grammatically incorrect form in this structure." }
+                ]
+            },
+            {
+                id: 29,
+                question: "The seller _____ the price of the car after some negotiation.",
+                options: [
+                    { text: "Knocked off", isCorrect: false, rationale: "Knock off means to stop working or complete a task." },
+                    { text: "Knocked down", isCorrect: true, rationale: "Knocked down means to reduce the price of something." },
+                    { text: "Knocked up", isCorrect: false, rationale: "Knock up means to awaken someone." },
+                    { text: "Knocked out", isCorrect: false, rationale: "Knock out means to make someone unconscious." }
+                ]
+            },
+            {
+                id: 30,
+                question: "He used to ___ his classmates ___ without any rhyme or reason, causing trouble.",
+                options: [
+                    { text: "Knock, off", isCorrect: false, rationale: "Incorrect phrasal verb." },
+                    { text: "Kick, off", isCorrect: false, rationale: "Incorrect phrasal verb." },
+                    { text: "Hold, over", isCorrect: false, rationale: "Hold over means to postpone." },
+                    { text: "Knock, about", isCorrect: true, rationale: "Knock someone about means to behave violently or treat someone roughly." }
+                ]
+            },
+            {
+                id: 31,
+                question: "The puppy eagerly drank the milk from the bowl, because it was likely hungry.",
+                options: [
+                    { text: "Lapped up", isCorrect: true, rationale: "Lap up means for animals to drink with the tongue, or to take in something eagerly." },
+                    { text: "Lapped in", isCorrect: false, rationale: "Incorrect preposition." },
+                    { text: "Jotted on", isCorrect: false, rationale: "Incorrect collocation." },
+                    { text: "Jotted down", isCorrect: false, rationale: "Jot down means to write quickly." }
+                ]
+            },
+            {
+                id: 32,
+                question: "What lies out his success in SSC CGL is two years of hard work and dedication.",
+                options: [
+                    { text: "Lies behind", isCorrect: true, rationale: "'Lie behind' means to be the real reason, cause, or motivation for something." },
+                    { text: "Looks after", isCorrect: false, rationale: "Look after means to take care of." },
+                    { text: "Lies with", isCorrect: false, rationale: "Lie with means to be somebody's responsibility." },
+                    { text: "No improvement", isCorrect: false, rationale: "Improvement is required here." }
+                ]
+            },
+            {
+                id: 33,
+                question: "If you _____ him, you’re asking for trouble—he doesn’t take jokes lightly.",
+                options: [
+                    { text: "Mess up", isCorrect: false, rationale: "Mess up means to make a mistake or ruin something." },
+                    { text: "Mess with", isCorrect: true, rationale: "Mess with means to provoke, tease, or interfere with someone." },
+                    { text: "Mess down", isCorrect: false, rationale: "Not a standard phrasal verb." },
+                    { text: "Miss with", isCorrect: false, rationale: "Grammatically incorrect." }
+                ]
+            },
+            {
+                id: 34,
+                question: "It’s important to ____ when you make a mistake, so you can learn from it.",
+                options: [
+                    { text: "Pass out", isCorrect: false, rationale: "Pass out means to faint." },
+                    { text: "Cut down", isCorrect: false, rationale: "Cut down means to reduce." },
+                    { text: "Own up", isCorrect: true, rationale: "Own up means to admit or confess to a mistake or wrongdoing." },
+                    { text: "Look down", isCorrect: false, rationale: "Look down means to despise." }
+                ]
+            },
+            {
+                id: 35,
+                question: "The rule admits about no exceptions; it must be followed strictly.",
+                options: [
+                    { text: "Admits of", isCorrect: true, rationale: "'Admit of' means to allow or provide scope for something." },
+                    { text: "Admits on", isCorrect: false, rationale: "Incorrect preposition." },
+                    { text: "Admits with", isCorrect: false, rationale: "Incorrect preposition." },
+                    { text: "No improvement", isCorrect: false, rationale: "Improvement is needed." }
+                ]
+            },
+            {
+                id: 36,
+                question: "The professor asked the student to ______ his argument regarding climate change.",
+                options: [
+                    { text: "Attend on", isCorrect: false, rationale: "Attend on means to serve or take care of someone." },
+                    { text: "Back down", isCorrect: false, rationale: "Back down means to withdraw a claim." },
+                    { text: "Amplify on", isCorrect: true, rationale: "Amplify on means to elaborate or expand on a point with more details." },
+                    { text: "Amplify of", isCorrect: false, rationale: "Incorrect preposition." }
+                ]
+            },
+            {
+                id: 37,
+                question: "The company decided to _____ outdated policies to improve efficiency.",
+                options: [
+                    { text: "Go away from", isCorrect: false, rationale: "Incorrect phrasing." },
+                    { text: "Do away with", isCorrect: true, rationale: "Do away with means to abolish, eliminate, or remove completely." },
+                    { text: "Account for", isCorrect: false, rationale: "Account for means to explain the reason for." },
+                    { text: "Back up", isCorrect: false, rationale: "Back up means to support." }
+                ]
+            },
+            {
+                id: 38,
+                question: "I dream __ traveling the world one day.",
+                options: [
+                    { text: "Of", isCorrect: true, rationale: "Dream takes the preposition 'of' when thinking about aspirations and desires." },
+                    { text: "On", isCorrect: false, rationale: "Incorrect preposition." },
+                    { text: "For", isCorrect: false, rationale: "Incorrect preposition." },
+                    { text: "Upon", isCorrect: false, rationale: "Incorrect preposition." }
+                ]
+            },
+            {
+                id: 39,
+                question: "His friends ____ him __ to jump off the high dive, even though he was afraid.",
+                options: [
+                    { text: "Dragged, on", isCorrect: false, rationale: "Drag on means to last longer than expected." },
+                    { text: "Egged, on", isCorrect: true, rationale: "'Egg on' means to encourage or provoke someone to do something risky or foolish." },
+                    { text: "Dwelt, on", isCorrect: false, rationale: "Dwell on means to think about repeatedly." },
+                    { text: "Drew, on", isCorrect: false, rationale: "Draw on means to utilize resources." }
+                ]
+            },
+            {
+                id: 40,
+                question: "They had to eke for their supplies to last through the winter.",
+                options: [
+                    { text: "Eke out", isCorrect: true, rationale: "'Eke out' means to manage to make something last or stretch by using it frugally." },
+                    { text: "Eke down", isCorrect: false, rationale: "Incorrect phrasal verb." },
+                    { text: "Eke into", isCorrect: false, rationale: "Incorrect prepositional pairing." },
+                    { text: "No improvement", isCorrect: false, rationale: "Improvement is required." }
+                ]
+            },
+            {
+                id: 41,
+                question: "You can ______ Nidhi to deliver the project on time; she's very reliable.",
+                options: [
+                    { text: "Bank upon", isCorrect: false, rationale: "While correct, there is another comprehensive option." },
+                    { text: "Rely on", isCorrect: false, rationale: "While correct, there is a better inclusive choice." },
+                    { text: "Count on", isCorrect: false, rationale: "While correct, multiple options apply." },
+                    { text: "All of the above", isCorrect: true, rationale: "Bank upon, rely on, and count on are all valid synonyms for depending on someone." }
+                ]
+            },
+            {
+                id: 42,
+                question: "The failure of his business venture left him feeling cast away for weeks.",
+                options: [
+                    { text: "Catch on", isCorrect: false, rationale: "Catch on means to become popular or understand." },
+                    { text: "Cast down", isCorrect: true, rationale: "'Cast down' means to cause someone to feel unhappy or discouraged. 'Cast away' means thrown away." },
+                    { text: "Calm down", isCorrect: false, rationale: "Calm down means to relax." },
+                    { text: "Catch out", isCorrect: false, rationale: "Catch out means to discover someone in a mistake." }
+                ]
+            },
+            {
+                id: 43,
+                question: "The challenging situation ___ all of his courage and resilience.",
+                options: [
+                    { text: "Called forth", isCorrect: true, rationale: "'Call forth' means to evoke, elicit, or cause a reaction/response to arise." },
+                    { text: "Called down", isCorrect: false, rationale: "Call down means to invoke in a negative sense." },
+                    { text: "Called up", isCorrect: false, rationale: "Call up means to summon for duty." },
+                    { text: "Called on", isCorrect: false, rationale: "Call on means to visit someone." }
+                ]
+            },
+            {
+                id: 44,
+                question: "The weather forecast says we are _____ a stormy weekend.",
+                options: [
+                    { text: "About to", isCorrect: false, rationale: "About to indicates something happening very soon." },
+                    { text: "In for", isCorrect: true, rationale: "'In for' means to be about to experience or undergo something, typically difficult or unpleasant." },
+                    { text: "Nose about", isCorrect: false, rationale: "Nose about means to search around." },
+                    { text: "Move on", isCorrect: false, rationale: "Move on means to focus on other matters." }
+                ]
+            },
+            {
+                id: 45,
+                question: "The committee fell in with the proposal, and it was approved unanimously.",
+                options: [
+                    { text: "Fell out", isCorrect: false, rationale: "Fall out means to quarrel." },
+                    { text: "Fell off", isCorrect: false, rationale: "Fall off means to decrease or drop from a position." },
+                    { text: "Fell through", isCorrect: false, rationale: "Fall through means to fail unexpectedly." },
+                    { text: "No improvement", isCorrect: true, rationale: "'Fall in with' means to agree with or accept plans/ideas, so no improvement is needed." }
+                ]
+            }
+        ];
+
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let userAnswers = []; // stores { questionId, questionText, selectedOption, correctOption, isCorrect, rationale }
+        let selectedOptionIndex = null;
+        let isAnswerLocked = false;
+
+        // Theme Toggle Logic
+        const themeToggleBtn = document.getElementById('theme-toggle');
+        const htmlElement = document.documentElement;
+
+        themeToggleBtn.addEventListener('click', () => {
+            if (htmlElement.classList.contains('dark')) {
+                htmlElement.classList.remove('dark');
+                localStorage.setItem('theme', 'light');
+            } else {
+                htmlElement.classList.add('dark');
+                localStorage.setItem('theme', 'dark');
+            }
+        });
+
+        // Initialize Theme from localStorage
+        if (localStorage.getItem('theme') === 'dark' || (!localStorage.getItem('theme') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            htmlElement.classList.add('dark');
+        }
+
+        function loadQuestion() {
+            isAnswerLocked = false;
+            selectedOptionIndex = null;
+            
+            const q = rawQuestions[currentQuestionIndex];
+            
+            // Update Progress
+            document.getElementById('question-badge').innerText = `Question ${currentQuestionIndex + 1} of ${rawQuestions.length}`;
+            const progressPercent = ((currentQuestionIndex) / rawQuestions.length) * 100;
+            document.getElementById('progress-bar').style.width = `${progressPercent}%`;
+            
+            // Set Question Text
+            document.getElementById('question-text').innerText = `${currentQuestionIndex + 1}. ${q.question}`;
+            
+            // Render Options
+            const optionsContainer = document.getElementById('options-container');
+            optionsContainer.innerHTML = '';
+            
+            q.options.forEach((opt, idx) => {
+                const btn = document.createElement('button');
+                btn.className = `w-full text-left p-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800/80 hover:bg-slate-50 dark:hover:bg-slate-700/60 text-slate-700 dark:text-slate-200 text-xs sm:text-sm font-medium flex items-center justify-between transition shadow-2xs`;
+                btn.innerHTML = `
+                    <span class="flex items-center space-x-2">
+                        <span class="w-6 h-6 rounded-lg bg-slate-100 dark:bg-slate-700 text-slate-500 dark:text-slate-400 font-bold text-xs flex items-center justify-center shrink-0">${String.fromCharCode(65 + idx)}</span>
+                        <span>${opt.text}</span>
+                    </span>
+                `;
+                btn.onclick = () => selectOption(idx);
+                optionsContainer.appendChild(btn);
+            });
+
+            // Hide explanation & disable next button until answered
+            document.getElementById('explanation-box').classList.add('hidden');
+            const nextBtn = document.getElementById('next-btn');
+            nextBtn.disabled = true;
+            nextBtn.innerText = currentQuestionIndex === rawQuestions.length - 1 ? 'View Results 🏆' : 'Next Question →';
+            
+            // Update Score display
+            document.getElementById('current-score').innerText = score;
+        }
+
+        function selectOption(idx) {
+            if (isAnswerLocked) return;
+            isAnswerLocked = true;
+            selectedOptionIndex = idx;
+
+            const q = rawQuestions[currentQuestionIndex];
+            const optionsContainer = document.getElementById('options-container');
+            const buttons = optionsContainer.getElementsByTagName('button');
+            
+            let correctIdx = q.options.findIndex(o => o.isCorrect);
+            let isCorrect = q.options[idx].isCorrect;
+
+            if (isCorrect) {
+                score++;
+                document.getElementById('current-score').innerText = score;
+            }
+
+            // Record user answer for summary
+            userAnswers.push({
+                questionNumber: currentQuestionIndex + 1,
+                questionText: q.question,
+                selectedText: q.options[idx].text,
+                correctText: q.options[correctIdx].text,
+                isCorrect: isCorrect,
+                rationale: q.options[idx].rationale || q.options[correctIdx].rationale
+            });
+
+            // Style buttons
+            for (let i = 0; i < buttons.length; i++) {
+                buttons[i].disabled = true;
+                if (i === correctIdx) {
+                    buttons[i].className = "w-full text-left p-3 rounded-xl border border-emerald-500 bg-emerald-50 dark:bg-emerald-950/40 text-emerald-900 dark:text-emerald-200 text-xs sm:text-sm font-medium flex items-center justify-between shadow-xs";
+                } else if (i === idx && !isCorrect) {
+                    buttons[i].className = "w-full text-left p-3 rounded-xl border border-rose-500 bg-rose-50 dark:bg-rose-950/40 text-rose-900 dark:text-rose-200 text-xs sm:text-sm font-medium flex items-center justify-between shadow-xs";
+                } else {
+                    buttons[i].className += " opacity-50";
+                }
+            }
+
+            // Show explanation box
+            const expBox = document.getElementById('explanation-box');
+            const expHeader = document.getElementById('explanation-header');
+            const expText = document.getElementById('explanation-text');
+
+            expBox.classList.remove('hidden');
+            if (isCorrect) {
+                expHeader.innerHTML = `<span class="text-emerald-600 dark:text-emerald-400 flex items-center">✓ Correct!</span>`;
+            } else {
+                expHeader.innerHTML = `<span class="text-rose-600 dark:text-rose-400 flex items-center">✕ Incorrect. Correct answer: <strong class="ml-1 underline">${q.options[correctIdx].text}</strong></span>`;
+            }
+            expText.innerText = q.options[idx].rationale;
+
+            // Enable Next Button
+            document.getElementById('next-btn').disabled = false;
+        }
+
+        function handleNext() {
+            currentQuestionIndex++;
+            if (currentQuestionIndex < rawQuestions.length) {
+                loadQuestion();
+            } else {
+                showEndScreen();
+            }
+        }
+
+        function showEndScreen() {
+            document.getElementById('quiz-screen').classList.add('hidden');
+            document.getElementById('end-screen').classList.remove('hidden');
+
+            const totalQ = rawQuestions.length;
+            const percentage = Math.round((score / totalQ) * 100);
+            const incorrectCount = totalQ - score;
+
+            document.getElementById('final-score-val').innerText = `${score} / ${totalQ}`;
+            document.getElementById('final-percentage-val').innerText = `${percentage}%`;
+            document.getElementById('final-incorrect-val').innerText = incorrectCount;
+
+            // Populate Incorrect Breakdown List
+            const incorrectContainer = document.getElementById('incorrect-list-container');
+            incorrectContainer.innerHTML = '';
+
+            const incorrectItems = userAnswers.filter(a => !a.isCorrect);
+
+            if (incorrectItems.length === 0) {
+                incorrectContainer.innerHTML = `
+                    <div class="p-4 rounded-xl bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-800 text-center">
+                        <p class="text-emerald-700 dark:text-emerald-300 font-semibold text-sm">🏆 Incredible job! You answered every single question correctly without mistakes!</p>
+                    </div>
+                `;
+            } else {
+                incorrectItems.forEach((item, idx) => {
+                    const card = document.createElement('div');
+                    card.className = "p-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800/80 text-xs space-y-1.5 shadow-2xs";
+                    card.innerHTML = `
+                        <div class="font-semibold text-slate-900 dark:text-white">Q${item.questionNumber}: ${item.questionText}</div>
+                        <div class="flex flex-col sm:flex-row sm:space-x-4 text-slate-600 dark:text-slate-300">
+                            <span class="text-rose-600 dark:text-rose-400">Your Answer: <strong>${item.selectedText}</strong></span>
+                            <span class="text-emerald-600 dark:text-emerald-400">Correct Answer: <strong>${item.correctText}</strong></span>
+                        </div>
+                        <p class="text-slate-500 dark:text-slate-400 italic pt-1 border-t border-slate-100 dark:border-slate-700/50">${item.rationale}</p>
+                    `;
+                    incorrectContainer.appendChild(card);
+                });
+            }
+        }
+
+        function restartQuiz() {
+            currentQuestionIndex = 0;
+            score = 0;
+            userAnswers = [];
+            document.getElementById('end-screen').classList.add('hidden');
+            document.getElementById('quiz-screen').classList.remove('hidden');
+            loadQuestion();
+        }
+
+        // Initialize First Question on Load
+        window.onload = () => {
+            loadQuestion();
+        };
+    </script>
+</body>
+</html>
+```eof
