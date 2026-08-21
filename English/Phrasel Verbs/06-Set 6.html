@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="en" class="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Phrasal Verbs Exam Practice</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#eef2ff',
+                            100: '#e0e7ff',
+                            500: '#6366f1',
+                            600: '#4f46e5',
+                            700: '#4338ca',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Custom scrollbars and compact layout helpers */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(156, 163, 175, 0.5);
+            border-radius: 3px;
+        }
+        .option-btn {
+            transition: all 0.2s ease-in-out;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-100 min-h-screen flex flex-col justify-between transition-colors duration-300 overflow-hidden">
+
+    <!-- Header -->
+    <header class="w-full bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 px-4 py-3 shadow-sm flex justify-between items-center z-10 shrink-0">
+        <div class="flex items-center space-x-3">
+            <div class="bg-indigo-600 text-white p-2 rounded-lg shadow-md">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                </svg>
+            </div>
+            <div>
+                <h1 class="font-bold text-base sm:text-lg leading-tight">Phrasal Verbs & Idioms Masterclass</h1>
+                <p class="text-xs text-slate-500 dark:text-slate-400">Interactive Exam Prep</p>
+            </div>
+        </div>
+
+        <div class="flex items-center space-x-3">
+            <div id="progress-badge" class="hidden sm:inline-block px-3 py-1 bg-indigo-50 dark:bg-indigo-950 text-indigo-700 dark:text-indigo-300 text-xs font-semibold rounded-full border border-indigo-200 dark:border-indigo-800">
+                Question <span id="current-q-num">1</span> of <span id="total-q-num">27</span>
+            </div>
+            <!-- Dark / Light Mode Toggle -->
+            <button onclick="toggleDarkMode()" aria-label="Toggle Dark Mode" class="p-2 rounded-full bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-600 transition">
+                <svg id="theme-icon-light" class="h-5 w-5 hidden dark:block" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+                </svg>
+                <svg id="theme-icon-dark" class="h-5 w-5 block dark:hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+                </svg>
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Viewport Container -->
+    <main class="flex-1 max-w-3xl w-full mx-auto p-3 sm:p-4 flex flex-col justify-center items-center overflow-hidden">
+
+        <!-- Quiz Card Container -->
+        <div id="quiz-container" class="w-full bg-white dark:bg-slate-800 rounded-2xl shadow-xl border border-slate-200 dark:border-slate-700 flex flex-col max-h-[calc(100vh-100px)] overflow-hidden">
+            
+            <!-- Question Header / Statement Box -->
+            <div class="p-4 sm:p-5 border-b border-slate-100 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-800/50 shrink-0">
+                <div class="flex justify-between items-center mb-2">
+                    <span id="q-counter-tag" class="text-xs font-bold uppercase tracking-wider text-indigo-600 dark:text-indigo-400">Question 1</span>
+                    <span id="score-tracker" class="text-xs font-medium text-slate-500 dark:text-slate-400">Score: <span id="current-score">0</span></span>
+                </div>
+                <!-- Question Prompt -->
+                <h2 id="question-text" class="text-sm sm:text-base font-semibold text-slate-900 dark:text-white leading-snug">
+                    Loading question...
+                </h2>
+            </div>
+
+            <!-- Options & Explanation Scrollable Area -->
+            <div class="p-4 sm:p-5 overflow-y-auto flex-1 space-y-2.5">
+                <div id="options-container" class="grid grid-cols-1 gap-2.5">
+                    <!-- Dynamic Options -->
+                </div>
+
+                <!-- Explanation Box (Initially Hidden) -->
+                <div id="explanation-box" class="hidden mt-3 p-3.5 rounded-xl border text-xs sm:text-sm animate-fade-in transition-all">
+                    <div class="font-bold flex items-center mb-1" id="explanation-title">
+                        <svg class="h-4 w-4 mr-1.5 inline" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        <span id="explanation-header-text">Explanation</span>
+                    </div>
+                    <p id="explanation-text" class="text-slate-600 dark:text-slate-300 leading-relaxed"></p>
+                </div>
+            </div>
+
+            <!-- Card Footer / Action Button -->
+            <div class="p-3 sm:p-4 border-t border-slate-100 dark:border-slate-700 bg-slate-50/80 dark:bg-slate-800/80 flex justify-end shrink-0">
+                <button id="next-btn" onclick="handleNextQuestion()" disabled class="px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 disabled:bg-slate-300 dark:disabled:bg-slate-700 disabled:cursor-not-allowed text-white font-medium text-sm rounded-xl shadow-md transition flex items-center space-x-2">
+                    <span id="next-btn-text">Next Question</span>
+                    <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                    </svg>
+                </button>
+            </div>
+
+        </div>
+
+        <!-- End Screen / Results Container (Initially Hidden) -->
+        <div id="results-container" class="hidden w-full bg-white dark:bg-slate-800 rounded-2xl shadow-xl border border-slate-200 dark:border-slate-700 p-5 sm:p-6 flex flex-col max-h-[calc(100vh-100px)] overflow-hidden">
+            <div class="text-center pb-4 border-b border-slate-100 dark:border-slate-700 shrink-0">
+                <div class="inline-flex items-center justify-center w-12 h-12 bg-indigo-100 dark:bg-indigo-900 text-indigo-600 dark:text-indigo-300 rounded-full mb-2 shadow-inner">
+                    <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                </div>
+                <h2 class="text-xl font-bold text-slate-900 dark:text-white">Quiz Completed!</h2>
+                <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Here is a summary of your performance.</p>
+            </div>
+
+            <!-- Score Overview Cards -->
+            <div class="grid grid-cols-3 gap-3 my-4 shrink-0">
+                <div class="bg-indigo-50 dark:bg-indigo-950/50 p-3 rounded-xl border border-indigo-100 dark:border-indigo-900 text-center">
+                    <span class="block text-xs font-semibold text-indigo-600 dark:text-indigo-400 uppercase">Score</span>
+                    <span id="res-score" class="text-lg sm:text-xl font-bold text-indigo-700 dark:text-indigo-300">0/27</span>
+                </div>
+                <div class="bg-emerald-50 dark:bg-emerald-950/50 p-3 rounded-xl border border-emerald-100 dark:border-emerald-900 text-center">
+                    <span class="block text-xs font-semibold text-emerald-600 dark:text-emerald-400 uppercase">Correct</span>
+                    <span id="res-correct" class="text-lg sm:text-xl font-bold text-emerald-700 dark:text-emerald-300">0</span>
+                </div>
+                <div class="bg-rose-50 dark:bg-rose-950/50 p-3 rounded-xl border border-rose-100 dark:border-rose-900 text-center">
+                    <span class="block text-xs font-semibold text-rose-600 dark:text-rose-400 uppercase">Incorrect</span>
+                    <span id="res-incorrect" class="text-lg sm:text-xl font-bold text-rose-700 dark:text-rose-300">0</span>
+                </div>
+            </div>
+
+            <!-- Incorrect Breakdown List -->
+            <div class="flex-1 overflow-y-auto pr-1">
+                <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Review Breakdown (Incorrect Answers)</h3>
+                <div id="incorrect-list" class="space-y-2.5">
+                    <!-- Populated dynamically -->
+                </div>
+            </div>
+
+            <!-- Restart Button -->
+            <div class="pt-4 border-t border-slate-100 dark:border-slate-700 mt-2 shrink-0 flex justify-center">
+                <button onclick="restartQuiz()" class="px-6 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-medium text-sm rounded-xl shadow-md transition flex items-center space-x-2">
+                    <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                    </svg>
+                    <span>Restart Quiz</span>
+                </button>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- JavaScript Application Logic -->
+    <script>
+        const questions = [
+            {
+                question: "Their plans for the new restaurant fell on due to a lack of funding.",
+                options: [
+                    { text: "Fell through", isCorrect: true, rationale: "Fall through - To fail to be completed or to come to an end, often unexpectedly." },
+                    { text: "Fell for", isCorrect: false, rationale: "Fall for means to fall in love with or to become a victim of a trick." },
+                    { text: "Feel for", isCorrect: false, rationale: "Feel for means to have sympathy for someone." },
+                    { text: "End up", isCorrect: false, rationale: "End up means to do something finally or reach a state eventually." }
+                ]
+            },
+            {
+                question: "It took a while for the team to ____ the underlying issue causing the software problems.",
+                options: [
+                    { text: "Get about", isCorrect: false, rationale: "Get about means to spread, move around, or be socially active." },
+                    { text: "Get on to", isCorrect: true, rationale: "Get on to - To become aware of or discover something, usually through investigation or observation." },
+                    { text: "Get around", isCorrect: false, rationale: "Get around means to navigate or travel from place to place." },
+                    { text: "Find down", isCorrect: false, rationale: "Find down is not a standard English phrasal verb." }
+                ]
+            },
+            {
+                question: "They don’t always agree, but they get up with each other quite well.",
+                options: [
+                    { text: "Get along with", isCorrect: true, rationale: "Get along with - To have a positive and friendly relationship with someone." },
+                    { text: "Get on", isCorrect: false, rationale: "Get on means to continue or make progress." },
+                    { text: "Get out", isCorrect: false, rationale: "Get out means to move out of a place or leave." },
+                    { text: "Get away with", isCorrect: false, rationale: "Get away with means to escape consequences or repercussions for wrongdoing." }
+                ]
+            },
+            {
+                question: "At the party, he ____ by telling exaggerated stories about his adventures.",
+                options: [
+                    { text: "Hammed it up", isCorrect: true, rationale: "Ham it up – To overact or exaggerate one's performance or behaviour for dramatic or comedic effect." },
+                    { text: "Followed through", isCorrect: false, rationale: "Follow through means to complete an action or task." },
+                    { text: "Figured on", isCorrect: false, rationale: "Figure on means to expect something to happen or be the case." },
+                    { text: "Filled in", isCorrect: false, rationale: "Fill in means to add what is necessary to make something complete or substitute someone." }
+                ]
+            },
+            {
+                question: "He hankers ___ the vintage car he sold years ago and wishes he could buy it back.",
+                options: [
+                    { text: "For", isCorrect: false, rationale: "While hanker for exists colloquially, 'hanker after' is the standard phrasal verb idiom." },
+                    { text: "After", isCorrect: true, rationale: "Hanker after – To strongly desire or crave something; to yearn for something persistently." },
+                    { text: "On", isCorrect: false, rationale: "'Hanker on' is grammatically incorrect in this context." },
+                    { text: "To", isCorrect: false, rationale: "'Hanker to' does not match standard prepositional pairing here." }
+                ]
+            },
+            {
+                question: "He knew very well that there is no value of him in this group so he ------------",
+                options: [
+                    { text: "Preferred to", isCorrect: false, rationale: "Preferred to does not fit the specific phrasal action idiom of quietly exiting." },
+                    { text: "Slipped off", isCorrect: true, rationale: "Slip off - to leave quietly and unobtrusively." },
+                    { text: "Move on", isCorrect: false, rationale: "Move on means to concentrate one's opinion or attention on other matters in recovering from a setback." },
+                    { text: "Nailed down", isCorrect: false, rationale: "Nail down means to identify something precisely or reach a definite agreement." }
+                ]
+            },
+            {
+                question: "The new product in very good in quality and in an affordable price for everyone , so it is highly --------------in market this time.",
+                options: [
+                    { text: "Noted down", isCorrect: false, rationale: "Note down means to write something so that you don’t forget it." },
+                    { text: "Moved out", isCorrect: false, rationale: "Move out means to leave a house or residence." },
+                    { text: "Sought after", isCorrect: true, rationale: "Sought after – (Works as an adjective) In great demand by many people." },
+                    { text: "Part from", isCorrect: false, rationale: "Part from means to leave or renounce someone." }
+                ]
+            },
+            {
+                question: "The definition of a good relationship is that when he/she tide him/her --------- when another one is facing his bad time.",
+                options: [
+                    { text: "On", iscorrect: false, rationale: "Tide on is incorrect; the correct preposition is over." },
+                    { text: "Over", isCorrect: true, rationale: "Tide someone over – To help someone in difficulty, usually by providing financial or practical support." },
+                    { text: "Off", isCorrect: false, rationale: "Tide off is not standard in this context." },
+                    { text: "At", isCorrect: false, rationale: "Tide at is grammatically incorrect." }
+                ]
+            },
+            {
+                question: "At present, some of the youtube and instagram influencers who use abusive words in their conversation are telling ------------ the children.",
+                options: [
+                    { text: "At", isCorrect: false, rationale: "Tell at is incorrect." },
+                    { text: "In", isCorrect: false, rationale: "Tell in is incorrect." },
+                    { text: "Off", isCorrect: false, rationale: "Tell off means to scold someone directly." },
+                    { text: "Upon", isCorrect: true, rationale: "Tell upon – To affect someone or something adversely or take a toll." }
+                ]
+            },
+            {
+                question: "He has to reject his friend’s invitation to birthday party because he is -------------- his work.",
+                options: [
+                    { text: "Sought after", isCorrect: false, rationale: "Sought after means in great demand." },
+                    { text: "Snowed under", isCorrect: true, rationale: "Snowed under – To have a lot of work or other things to deal with; to be extremely busy." },
+                    { text: "Part with", isCorrect: false, rationale: "Part with means to relinquish possession of something." },
+                    { text: "Part from", isCorrect: false, rationale: "Part from means to leave someone." }
+                ]
+            },
+            {
+                question: "When she got the news of her son’s death in an accident she got ---------",
+                options: [
+                    { text: "Blacked out", isCorrect: true, rationale: "Black out – To become unconscious due to extreme shock or trauma." },
+                    { text: "Looked black", isCorrect: false, rationale: "Look black means to appear unfavorable or threatening." },
+                    { text: "Happy", isCorrect: false, rationale: "Contradicts the tragic context of the sentence." },
+                    { text: "Joyful", isCorrect: false, rationale: "Contradicts the tragic context of the sentence." }
+                ]
+            },
+            {
+                question: "Raju didn’t complete his homework on time so the teacher called him -------",
+                options: [
+                    { text: "Down", isCorrect: true, rationale: "Call someone down - To scold or reprimand someone." },
+                    { text: "Off", isCorrect: false, rationale: "Call off means to cancel an event or arrangement." },
+                    { text: "For", isCorrect: false, rationale: "Call for means to demand or require something." },
+                    { text: "Up", isCorrect: false, rationale: "Call up means to make a phone call or recall memories." }
+                ]
+            },
+            {
+                question: "Many businesses were ------- during lockdown.",
+                options: [
+                    { text: "Ended up", isCorrect: false, rationale: "End up means to finish in a certain state or place." },
+                    { text: "Fend off", isCorrect: false, rationale: "Fend off means to defend against or ward off." },
+                    { text: "Dressed down", isCorrect: false, rationale: "Dress down means to scold or wear casual clothing." },
+                    { text: "Shut down", isCorrect: true, rationale: "Shut down – To close a business or operation permanently or temporarily." }
+                ]
+            },
+            {
+                question: "Now exams are very close, so we should ------------- this.",
+                options: [
+                    { text: "Prepared for", isCorrect: false, rationale: "Grammatically incorrect after modal verb 'should' which requires base verb form." },
+                    { text: "Gear up for", isCorrect: true, rationale: "Gear up for - To get ready or prepare oneself for something coming up." },
+                    { text: "Give up", isCorrect: false, rationale: "Give up means to stop trying or quit." },
+                    { text: "Gain on", isCorrect: false, rationale: "Gain on means to catch up to or draw closer to someone." }
+                ]
+            },
+            {
+                question: "When my all policies went wrong and business was in loss I --------- my wife’s savings.",
+                options: [
+                    { text: "Fly at", isCorrect: false, rationale: "Fly at means to attack someone physically or verbally." },
+                    { text: "Got back", isCorrect: false, rationale: "Get back means to return." },
+                    { text: "Fool around", isCorrect: false, rationale: "Fool around means to waste time or behave playfully." },
+                    { text: "Fall back on", isCorrect: true, rationale: "Fall back on – To seek support or resources, especially financial support, in times of need." }
+                ]
+            },
+            {
+                question: "When any law goes against constitution , the supreme court has power to ---------- that law.",
+                options: [
+                    { text: "Done away with", isCorrect: false, rationale: "Grammatically invalid after infinitive 'to' which requires base form 'do away with'." },
+                    { text: "Repeal", isCorrect: true, rationale: "Repeal - To revoke or officially cancel a law or congressional act." },
+                    { text: "Get up", isCorrect: false, rationale: "Get up means to rise from bed." },
+                    { text: "Give up", isCorrect: false, rationale: "Give up means to stop doing something." }
+                ]
+            },
+            {
+                question: "When I was playing football in my garden , he ------------ on me and I was shocked for some time.",
+                options: [
+                    { text: "Dropped in", isCorrect: true, rationale: "Drop in - To pay an unexpected, casual, or impromptu visit." },
+                    { text: "Figured on", isCorrect: false, rationale: "Figure on means to plan on or anticipate." },
+                    { text: "Caved in", isCorrect: false, rationale: "Cave in means to collapse or yield under pressure." },
+                    { text: "Fill in", isCorrect: false, rationale: "Fill in means to supply missing details or substitute." }
+                ]
+            },
+            {
+                question: "His business has been in loss for past 4 years and I think his business is almost---------",
+                options: [
+                    { text: "Get at", isCorrect: false, rationale: "Get at means to criticize or imply something." },
+                    { text: "Done for", isCorrect: true, rationale: "Done for – Ruined, doomed, or beyond saving." },
+                    { text: "Done away with", isCorrect: false, rationale: "Done away with means abolished or eliminated." },
+                    { text: "Gear up for", isCorrect: false, rationale: "Gear up for means to prepare for." }
+                ]
+            },
+            {
+                question: "It is a very bad habit to cut someone------ while they are talking over some serious issue.",
+                options: [
+                    { text: "In", isCorrect: true, rationale: "Cut in - To interrupt someone while speaking." },
+                    { text: "At", isCorrect: false, rationale: "Cut at is not standard in this context." },
+                    { text: "After", isCorrect: false, rationale: "Cut after is incorrect." },
+                    { text: "On", isCorrect: false, rationale: "Cut on is incorrect." }
+                ]
+            },
+            {
+                question: "The person who always -------- wealth can never be in a good relation with family members.",
+                options: [
+                    { text: "Runs away with", isCorrect: false, rationale: "Run away with means to be carried away by emotion or win easily." },
+                    { text: "Runs away", isCorrect: false, rationale: "Run away means to flee from a place." },
+                    { text: "Runs after", isCorrect: true, rationale: "Run after – To pursue or chase obsessively (e.g., wealth or status)." },
+                    { text: "Round up", isCorrect: false, rationale: "Round up means to gather or arrest people/animals." }
+                ]
+            },
+            {
+                question: "As soon as the MP saw the media , he ------- to avoid media’s questions.",
+                options: [
+                    { text: "Put at", isCorrect: false, rationale: "Put at means to estimate or calculate." },
+                    { text: "Pulled down", isCorrect: false, rationale: "Pull down means to demolish a building." },
+                    { text: "Pulled up", isCorrect: false, rationale: "Pull up means to criticize or stop a vehicle." },
+                    { text: "Ran away", isCorrect: true, rationale: "Run away – To flee or escape from a situation." }
+                ]
+            },
+            {
+                question: "The workers ......... the unfair policies of the government.",
+                options: [
+                    { text: "Railed against", isCorrect: true, rationale: "Rail against - To complain angrily and bitterly about something." },
+                    { text: "Roped in", isCorrect: false, rationale: "Rope in means to persuade someone to take part in an activity despite reluctance." },
+                    { text: "Stood by", isCorrect: false, rationale: "Stand by means to support or remain loyal to someone." },
+                    { text: "Rooted out", isCorrect: false, rationale: "Root out means to eradicate or destroy completely." }
+                ]
+            },
+            {
+                question: "If you -------- anyone , surely you will be affected adversely in direct or indirect way.",
+                options: [
+                    { text: "Rip off", isCorrect: true, rationale: "Rip off - To cheat someone financially or charge exorbitant prices." },
+                    { text: "Rip out", isCorrect: false, rationale: "Rip out means to remove quickly and roughly." },
+                    { text: "Rip up", isCorrect: false, rationale: "Rip up means to tear something into small pieces." },
+                    { text: "Rip on", isCorrect: false, rationale: "Rip on means to tease or mock someone." }
+                ]
+            },
+            {
+                question: "Rahul was ......... by his boss because he often comes late.",
+                options: [
+                    { text: "Pulled through", isCorrect: false, rationale: "Pull through means to survive or succeed in a difficult situation." },
+                    { text: "Pulled round", isCorrect: false, rationale: "Pull round means to recover health after an illness." },
+                    { text: "Pulled up", isCorrect: true, rationale: "Pull up – To reprimand or criticize someone for wrongdoing." },
+                    { text: "Pulled with", isCorrect: false, rationale: "Pull with is not a standard phrasal verb here." }
+                ]
+            },
+            {
+                question: "The authorities have .......... many unauthorized buildings in our city.",
+                options: [
+                    { text: "Pulled out", isCorrect: false, rationale: "Pull out means to withdraw or leave." },
+                    { text: "Pulled down", isCorrect: true, rationale: "Pull down – To demolish or destroy a building or structure." },
+                    { text: "Pulled round", isCorrect: false, rationale: "Pull round means to recover from illness." },
+                    { text: "Pulled with", isCorrect: false, rationale: "Pull with is incorrect." }
+                ]
+            },
+            {
+                question: "It is getting dark so we should ………. any hotel.",
+                options: [
+                    { text: "Put up with", isCorrect: false, rationale: "Put up with means to tolerate or endure something unpleasant." },
+                    { text: "Stayed in", isCorrect: false, rationale: "Grammatically incorrect after modal verb 'should' which requires base verb 'stay'." },
+                    { text: "Put up at", isCorrect: true, rationale: "Put up at – To stay temporarily at a hotel or lodging." },
+                    { text: "Put out", isCorrect: false, rationale: "Put out means to extinguish a fire or inconvenience someone." }
+                ]
+            },
+            {
+                question: "The rich always ---------- the poor due to their miserable condition.",
+                options: [
+                    { text: "Put up", isCorrect: false, rationale: "Put up means to erect, build, or provide lodging." },
+                    { text: "Put down", isCorrect: true, rationale: "Put down – To suppress, belittle, or criticize someone." },
+                    { text: "Put on", isCorrect: false, rationale: "Put on means to assume an attitude, clothe oneself, or deceive." },
+                    { text: "Put at", isCorrect: false, rationale: "Put at means to estimate or calculate a figure." }
+                ]
+            }
+        ];
+
+        let currentIndex = 0;
+        let score = 0;
+        let userAnswers = new Array(questions.length).fill(null);
+        let answeredCurrent = false;
+
+        // DOM Elements
+        const currentQNumEl = document.getElementById('current-q-num');
+        const totalQNumEl = document.getElementById('total-q-num');
+        const qCounterTag = document.getElementById('q-counter-tag');
+        const questionTextEl = document.getElementById('question-text');
+        const optionsContainer = document.getElementById('options-container');
+        const explanationBox = document.getElementById('explanation-box');
+        const explanationTitle = document.getElementById('explanation-title');
+        const explanationHeader = document.getElementById('explanation-header-text');
+        const explanationText = document.getElementById('explanation-text');
+        const nextBtn = document.getElementById('next-btn');
+        const nextBtnText = document.getElementById('next-btn-text');
+        const currentScoreEl = document.getElementById('current-score');
+        
+        const quizContainer = document.getElementById('quiz-container');
+        const resultsContainer = document.getElementById('results-container');
+        const progressBadge = document.getElementById('progress-badge');
+
+        totalQNumEl.textContent = questions.length;
+
+        function loadQuestion() {
+            const q = questions[currentIndex];
+            currentQNumEl.textContent = currentIndex + 1;
+            qCounterTag.textContent = `Question ${currentIndex + 1}`;
+            questionTextEl.textContent = q.question;
+            currentScoreEl.textContent = score;
+
+            optionsContainer.innerHTML = '';
+            explanationBox.classList.add('hidden');
+            nextBtn.disabled = true;
+            answeredCurrent = false;
+
+            if (currentIndex === questions.length - 1) {
+                nextBtnText.textContent = "Finish Quiz";
+            } else {
+                nextBtnText.textContent = "Next Question";
+            }
+
+            // Shuffle options for robustness
+            const shuffledOptions = [...q.options].sort(() => Math.random() - 0.5);
+
+            shuffledOptions.forEach((opt, idx) => {
+                const btn = document.createElement('button');
+                btn.className = "option-btn w-full text-left p-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 hover:border-indigo-500 dark:hover:border-indigo-500 text-xs sm:text-sm font-medium transition flex items-center justify-between";
+                
+                const spanText = document.createElement('span');
+                spanText.textContent = opt.text;
+                btn.appendChild(spanText);
+
+                const indicator = document.createElement('span');
+                indicator.className = "w-5 h-5 rounded-full border border-slate-300 dark:border-slate-600 flex items-center justify-center text-xs shrink-0 ml-2";
+                indicator.textContent = String.fromCharCode(65 + idx);
+                btn.appendChild(indicator);
+
+                btn.onclick = () => selectOption(opt, btn, shuffledOptions);
+                optionsContainer.appendChild(btn);
+            });
+        }
+
+        function selectOption(selectedOpt, selectedBtn, allShuffledOptions) {
+            if (answeredCurrent) return;
+            answeredCurrent = true;
+
+            userAnswers[currentIndex] = {
+                question: questions[currentIndex].question,
+                selected: selectedOpt.text,
+                correct: questions[currentIndex].options.find(o => o.isCorrect).text,
+                isCorrect: selectedOpt.isCorrect
+            };
+
+            const allButtons = optionsContainer.querySelectorAll('button');
+            allButtons.forEach(b => b.disabled = true);
+
+            if (selectedOpt.isCorrect) {
+                score++;
+                currentScoreEl.textContent = score;
+                selectedBtn.classList.remove('border-slate-200', 'dark:border-slate-700', 'bg-white', 'dark:bg-slate-800');
+                selectedBtn.classList.add('border-emerald-500', 'bg-emerald-50', 'dark:bg-emerald-950/40', 'text-emerald-900', 'dark:text-emerald-200');
+                
+                explanationBox.className = "mt-3 p-3.5 rounded-xl border text-xs sm:text-sm bg-emerald-50/80 dark:bg-emerald-950/30 border-emerald-200 dark:border-emerald-800 text-emerald-900 dark:text-emerald-200";
+                explanationTitle.className = "font-bold flex items-center mb-1 text-emerald-700 dark:text-emerald-400";
+                explanationHeader.textContent = "Correct!";
+            } else {
+                selectedBtn.classList.remove('border-slate-200', 'dark:border-slate-700', 'bg-white', 'dark:bg-slate-800');
+                selectedBtn.classList.add('border-rose-500', 'bg-rose-50', 'dark:bg-rose-950/40', 'text-rose-900', 'dark:text-rose-200');
+
+                // Highlight correct option
+                allButtons.forEach(b => {
+                    const txt = b.querySelector('span').textContent;
+                    const matchedOpt = allShuffledOptions.find(o => o.text === txt);
+                    if (matchedOpt && matchedOpt.isCorrect) {
+                        b.classList.remove('border-slate-200', 'dark:border-slate-700', 'bg-white', 'dark:bg-slate-800');
+                        b.classList.add('border-emerald-500', 'bg-emerald-50', 'dark:bg-emerald-950/40', 'text-emerald-900', 'dark:text-emerald-200');
+                    }
+                });
+
+                explanationBox.className = "mt-3 p-3.5 rounded-xl border text-xs sm:text-sm bg-rose-50/80 dark:bg-rose-950/30 border-rose-200 dark:border-rose-800 text-rose-900 dark:text-rose-200";
+                explanationTitle.className = "font-bold flex items-center mb-1 text-rose-700 dark:text-rose-400";
+                explanationHeader.textContent = "Incorrect";
+            }
+
+            explanationText.textContent = selectedOpt.rationale;
+            explanationBox.classList.remove('hidden');
+            nextBtn.disabled = false;
+        }
+
+        function handleNextQuestion() {
+            currentIndex++;
+            if (currentIndex < questions.length) {
+                loadQuestion();
+            } else {
+                showResults();
+            }
+        }
+
+        function showResults() {
+            quizContainer.classList.add('hidden');
+            progressBadge.classList.add('hidden');
+            resultsContainer.classList.remove('hidden');
+
+            const incorrectCount = questions.length - score;
+            const percentage = Math.round((score / questions.length) * 100);
+
+            document.getElementById('res-score').textContent = `${score}/${questions.length} (${percentage}%)`;
+            document.getElementById('res-correct').textContent = score;
+            document.getElementById('res-incorrect').textContent = incorrectCount;
+
+            const incorrectListEl = document.getElementById('incorrect-list');
+            incorrectListEl.innerHTML = '';
+
+            const incorrectItems = userAnswers.filter(ans => !ans.isCorrect);
+
+            if (incorrectItems.length === 0) {
+                incorrectListEl.innerHTML = `
+                    <div class="p-4 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 rounded-xl text-center text-emerald-800 dark:text-emerald-300 text-xs sm:text-sm font-medium">
+                        🎉 Outstanding! You answered every question correctly without a single mistake!
+                    </div>
+                `;
+            } else {
+                incorrectItems.forEach((item, idx) => {
+                    const card = document.createElement('div');
+                    card.className = "p-3 bg-slate-50 dark:bg-slate-700/50 border border-slate-200 dark:border-slate-600 rounded-xl text-xs space-y-1.5";
+                    card.innerHTML = `
+                        <div class="font-semibold text-slate-800 dark:text-slate-200">Q: ${item.question}</div>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-1 pt-1 border-t border-slate-200 dark:border-slate-600">
+                            <span class="text-rose-600 dark:text-rose-400 font-medium">Your Answer: ${item.selected}</span>
+                            <span class="text-emerald-600 dark:text-emerald-400 font-medium">Correct Answer: ${item.correct}</span>
+                        </div>
+                    `;
+                    incorrectListEl.appendChild(card);
+                });
+            }
+        }
+
+        function restartQuiz() {
+            currentIndex = 0;
+            score = 0;
+            userAnswers = new Array(questions.length).fill(null);
+            resultsContainer.classList.add('hidden');
+            quizContainer.classList.remove('hidden');
+            progressBadge.classList.remove('hidden');
+            loadQuestion();
+        }
+
+        function toggleDarkMode() {
+            const html = document.documentElement;
+            if (html.classList.contains('dark')) {
+                html.classList.remove('dark');
+                localStorage.setItem('theme', 'light');
+            } else {
+                html.classList.add('dark');
+                localStorage.setItem('theme', 'dark');
+            }
+        }
+
+        // Initialize theme preference
+        if (localStorage.getItem('theme') === 'dark' || (!localStorage.getItem('theme') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        }
+
+        // Initial load
+        loadQuestion();
+    </script>
+</body>
+</html>
