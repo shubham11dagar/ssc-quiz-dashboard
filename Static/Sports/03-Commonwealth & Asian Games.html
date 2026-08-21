@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Commonwealth & Asian Games Master Quiz</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#f0fdf4',
+                            100: '#dcfce7',
+                            500: '#22c55e',
+                            600: '#16a34a',
+                            700: '#15803d',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Inter Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            overflow: hidden; /* Enforce compact no-scroll layout */
+        }
+        /* Custom scrollbar for small areas if needed */
+        ::-webkit-scrollbar {
+            width: 4px;
+            height: 4px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        .dark ::-webkit-scrollbar-thumb {
+            background: #475569;
+        }
+    </style>
+</head>
+<body class="h-full bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-100 transition-colors duration-200 flex flex-col justify-between select-none">
+
+    <header class="w-full bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 px-4 py-3 flex items-center justify-between shrink-0 shadow-sm">
+        <div class="flex items-center space-x-3">
+            <div class="bg-brand-500 text-white p-2 rounded-xl font-bold flex items-center justify-center w-9 h-9 shadow-md">
+                🏆
+            </div>
+            <div>
+                <h1 class="font-bold text-base md:text-lg leading-tight">CWG & Asian Games Master Quiz</h1>
+                <p class="text-xs text-slate-500 dark:text-slate-400">Exam Preparation Suite</p>
+            </div>
+        </div>
+        <div class="flex items-center space-x-3">
+            <!-- Timer / Progress info -->
+            <div id="header-stats" class="hidden sm:flex items-center space-x-2 text-xs font-semibold bg-slate-100 dark:bg-slate-700 px-3 py-1.5 rounded-full">
+                <span id="stat-current">Q 1/27</span>
+            </div>
+            <!-- Dark / Light Mode Toggle -->
+            <button id="theme-toggle" class="p-2 rounded-xl bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 transition-colors" title="Toggle Theme">
+                <svg id="theme-icon-dark" class="w-5 h-5 hidden dark:block text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+                <svg id="theme-icon-light" class="w-5 h-5 block dark:hidden text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
+            </button>
+        </div>
+    </header>
+
+    <main class="flex-1 max-w-3xl w-full mx-auto p-3 md:p-4 flex flex-col justify-center overflow-hidden">
+        
+        <!-- Welcome Screen -->
+        <div id="welcome-screen" class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-6 md:p-8 shadow-xl text-center space-y-5">
+            <div class="inline-flex bg-brand-100 dark:bg-brand-900/40 text-brand-600 dark:text-brand-400 p-4 rounded-full text-3xl shadow-inner">
+                🏅
+            </div>
+            <div class="space-y-2">
+                <h2 class="text-xl md:text-2xl font-bold tracking-tight">Test Your Knowledge</h2>
+                <p class="text-sm text-slate-500 dark:text-slate-400 max-w-md mx-auto">
+                    Take this comprehensive 27-question assessment covering historical facts, host cities, iconic medalists, and milestones of the Commonwealth and Asian Games.
+                </p>
+            </div>
+            <div class="grid grid-cols-2 gap-3 max-w-xs mx-auto text-xs font-medium text-slate-600 dark:text-slate-300 bg-slate-50 dark:bg-slate-700/50 p-3 rounded-xl border border-slate-100 dark:border-slate-700">
+                <div>📌 Total Questions: <span class="font-bold text-slate-800 dark:text-white">27</span></div>
+                <div>⚡ Instant Feedback: <span class="font-bold text-slate-800 dark:text-white">Enabled</span></div>
+            </div>
+            <button id="start-btn" class="w-full sm:w-auto px-8 py-3 bg-brand-600 hover:bg-brand-700 text-white font-semibold rounded-xl shadow-lg shadow-brand-600/30 transition-all transform active:scale-95">
+                Start Quiz Now
+            </button>
+        </div>
+
+        <!-- Quiz Container (Hidden Initially) -->
+        <div id="quiz-screen" class="hidden flex flex-col h-full bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-xl overflow-hidden">
+            <!-- Progress Bar -->
+            <div class="w-full bg-slate-100 dark:bg-slate-700 h-2 shrink-0">
+                <div id="progress-bar" class="bg-brand-500 h-2 transition-all duration-300" style="width: 0%;"></div>
+            </div>
+
+            <!-- Card Content Area -->
+            <div class="flex-1 p-4 md:p-6 overflow-y-auto flex flex-col justify-between space-y-4">
+                
+                <!-- Question Header & Text -->
+                <div class="space-y-3">
+                    <div class="flex items-center justify-between">
+                        <span id="question-badge" class="px-2.5 py-1 bg-brand-50 dark:bg-brand-900/30 text-brand-600 dark:text-brand-400 font-semibold text-xs rounded-lg uppercase tracking-wider">
+                            Question 1
+                        </span>
+                        <span id="score-counter" class="text-xs font-medium text-slate-400">Score: 0</span>
+                    </div>
+                    <h3 id="question-text" class="text-base md:text-lg font-semibold text-slate-900 dark:text-white leading-snug">
+                        <!-- Question text goes here -->
+                    </h3>
+                </div>
+
+                <!-- Options Grid -->
+                <div id="options-container" class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                    <!-- Option buttons populated by JS -->
+                </div>
+
+                <!-- Explanation Box (Initially Hidden) -->
+                <div id="explanation-box" class="hidden bg-slate-50 dark:bg-slate-700/50 border border-slate-200 dark:border-slate-600 rounded-xl p-3 text-xs md:text-sm animate-fadeIn">
+                    <span class="font-bold text-slate-700 dark:text-slate-200">Explanation: </span>
+                    <span id="explanation-text" class="text-slate-600 dark:text-slate-300"></span>
+                </div>
+            </div>
+
+            <!-- Footer Action Bar -->
+            <div class="p-3 md:p-4 bg-slate-50 dark:bg-slate-800/80 border-t border-slate-100 dark:border-slate-700 flex items-center justify-between shrink-0">
+                <div class="text-xs text-slate-400 font-medium">Select an option to proceed</div>
+                <button id="next-btn" class="px-6 py-2.5 bg-brand-600 hover:bg-brand-700 text-white font-semibold text-sm rounded-xl shadow-md transition-all opacity-50 cursor-not-allowed" disabled>
+                    Next Question →
+                </button>
+            </div>
+        </div>
+
+        <!-- Results Screen (Hidden Initially) -->
+        <div id="results-screen" class="hidden bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-5 md:p-6 shadow-xl flex flex-col h-full overflow-hidden">
+            <div class="text-center space-y-2 shrink-0 pb-3 border-b border-slate-100 dark:border-slate-700">
+                <div class="inline-flex bg-brand-100 dark:bg-brand-900/40 text-brand-600 dark:text-brand-400 p-3 rounded-full text-2xl shadow-inner">
+                    🎯
+                </div>
+                <h2 class="text-lg md:text-xl font-bold">Quiz Completed!</h2>
+                <div class="flex justify-center items-center space-x-6 text-sm">
+                    <div>Final Score: <span id="final-score" class="font-bold text-brand-600 dark:text-brand-400 text-base">0/27</span></div>
+                    <div>Percentage: <span id="final-percentage" class="font-bold text-slate-800 dark:text-white text-base">0%</span></div>
+                </div>
+            </div>
+
+            <!-- Breakdown List Header -->
+            <div class="py-2 flex items-center justify-between text-xs font-semibold text-slate-500 dark:text-slate-400 shrink-0">
+                <span>Incorrect Questions Breakdown</span>
+                <span id="incorrect-count-badge" class="bg-red-100 dark:bg-red-900/40 text-red-600 dark:text-red-400 px-2 py-0.5 rounded-full">0 Incorrect</span>
+            </div>
+
+            <!-- Incorrect Breakdown Scrollable Area -->
+            <div id="breakdown-container" class="flex-1 overflow-y-auto space-y-2.5 pr-1">
+                <!-- Dynamically populated incorrect questions -->
+            </div>
+
+            <!-- Restart Action -->
+            <div class="pt-3 border-t border-slate-100 dark:border-slate-700 shrink-0 text-center">
+                <button id="restart-btn" class="w-full sm:w-auto px-8 py-2.5 bg-brand-600 hover:bg-brand-700 text-white font-semibold text-sm rounded-xl shadow-lg shadow-brand-600/30 transition-all">
+                    Restart Quiz
+                </button>
+            </div>
+        </div>
+
+    </main>
+
+    <footer class="w-full py-2 text-center text-xs text-slate-400 dark:text-slate-500 shrink-0">
+        Commonwealth & Asian Games Expert Prep • Optimized for Exam Success
+    </footer>
+
+    <script>
+        // Quiz Data Source
+        const quizData = [
+            {
+                question: "In which year and city were the Commonwealth Games first held?",
+                options: ["A) 1930, Hamilton, Canada", "B) 1934, London, Britain", "C) 1950, Auckland, New Zealand", "D) 1942, Sydney, Australia"],
+                answer: 0,
+                explanation: "The Commonwealth Games were first held in 1930 in Hamilton, Canada."
+            },
+            {
+                question: "Due to which historical event were the Commonwealth Games not held in the years 1942 and 1946?",
+                options: ["A) World War I", "B) World War II", "C) Great Depression", "D) Cold War"],
+                answer: 1,
+                explanation: "The Commonwealth Games were not held in 1942 and 1946 due to World War II (WWII)."
+            },
+            {
+                question: "What was the Commonwealth Games previously called between the years 1930 and 1950?",
+                options: ["A) Empire Sports Meet", "B) British Commonwealth Federation", "C) British Empire Games", "D) Commonwealth Sovereign Games"],
+                answer: 2,
+                explanation: "The games were previously called the British Empire Games from 1930 to 1950."
+            },
+            {
+                question: "Who is the current Head of the Commonwealth?",
+                options: ["A) Queen Elizabeth II", "B) King Charles III", "C) Prime Minister of Britain", "D) Donald Rukare"],
+                answer: 1,
+                explanation: "The source states that King Charles III is the current Head."
+            },
+            {
+                question: "Which country has hosted the Commonwealth Games the most number of times (5 times)?",
+                options: ["A) India", "B) Canada", "C) England", "D) Australia"],
+                answer: 3,
+                explanation: "Australia has hosted the Commonwealth Games the most, with a total of 5 times."
+            },
+            {
+                question: "In which year did India host the Commonwealth Games, and what was India's final finish position?",
+                options: ["A) 2006, 3rd place", "B) 2010, 2nd place", "C) 2018, 4th place", "D) 2022, 1st place"],
+                answer: 1,
+                explanation: "India hosted the Commonwealth Games in New Delhi in 2010 and finished in 2nd place."
+            },
+            {
+                question: "What was India's finish rank and total medal count at the 2022 Birmingham Commonwealth Games?",
+                options: ["A) 2nd with 101 medals", "B) 4th with 39 medals", "C) 4th with 61 medals", "D) 3rd with 75 medals"],
+                answer: 2,
+                explanation: "At the 2022 Birmingham CWG, India finished 4th with 61 medals, which included 22 gold medals."
+            },
+            {
+                question: "Which city is scheduled to host the 2026 Commonwealth Games?",
+                options: ["A) Birmingham, England", "B) Glasgow, Scotland", "C) New Delhi, India", "D) Gold Coast, Australia"],
+                answer: 1,
+                explanation: "Glasgow (Scotland) is set to host the 2026 Commonwealth Games (with the original host having been Austria)."
+            },
+            {
+                question: "In which month and year was the Commonwealth ratification finalized?",
+                options: ["A) April 1948", "B) May 1949", "C) January 1950", "D) August 1947"],
+                answer: 1,
+                explanation: "Commonwealth ratification took place in May 1949."
+            },
+            {
+                question: "How many countries are members of the Commonwealth Nations?",
+                options: ["A) 50 countries", "B) 54 countries", "C) 56 countries", "D) 60 countries"],
+                answer: 2,
+                explanation: "There are 56 Commonwealth countries, including India, Australia, Canada, South Africa, and Britain."
+            },
+            {
+                question: "Who won India's first gold medal in athletics at the Commonwealth Games (Cardiff, 1958)?",
+                options: ["A) Neeraj Chopra", "B) Milkha Singh", "C) Prakash Padukone", "D) Sachin Nag"],
+                answer: 1,
+                explanation: "Milkha Singh won the gold medal in athletics at the 1958 Cardiff Commonwealth Games, marking India's first athletics gold."
+            },
+            {
+                question: "Who secured India's first badminton gold medal at the Commonwealth Games in 1978?",
+                options: ["A) P.V. Sindhu", "B) Prakash Padukone", "C) Kidambi Srikanth", "D) Syed Modi"],
+                answer: 1,
+                explanation: "Prakash Padukone won the gold medal in 1978, becoming the first badminton gold medalist for India in the Commonwealth Games."
+            },
+            {
+                question: "What was the official motto of the 2010 Commonwealth Games held in New Delhi?",
+                options: ["A) Ever Onward", "B) Come out & play", "C) Humanity, Equality, Destiny", "D) Spirit of Sport"],
+                answer: 1,
+                explanation: "The motto for the 2010 Delhi Commonwealth Games was \"Come out & play\"."
+            },
+            {
+                question: "At the 2018 Gold Coast Commonwealth Games, which Indian athlete threw 86.47m to win the gold medal in javelin?",
+                options: ["A) Kishore Jena", "B) Devendra Jhajharia", "C) Neeraj Chopra", "D) Shivpal Singh"],
+                answer: 2,
+                explanation: "Neeraj Chopra won gold with a throw of 86.47m at the 2018 Commonwealth Games in Queensland, Australia."
+            },
+            {
+                question: "Who was India's youngest competitor (at 15 years old) at the 2018 Commonwealth Games who competed in the 25m rapid fire pistol event?",
+                options: ["A) Manu Bhaker", "B) Anish Bhanwala", "C) Saurabh Chaudhary", "D) Sarabjot Singh"],
+                answer: 1,
+                explanation: "Anish Bhanwala was the youngest participant at 15 years old, competing in the 25m pistol event."
+            },
+            {
+                question: "Who opened India's medal count at the 2022 Birmingham Commonwealth Games by winning a silver medal in weightlifting?",
+                options: ["A) Mirabai Chanu", "B) Sanket Sargar", "C) Jeremy Lalrinnunga", "D) Achinta Sheuli"],
+                answer: 1,
+                explanation: "Sanket Sargar opened India's medal count at the 2022 CWG with a silver in weightlifting."
+            },
+            {
+                question: "Which Indian athlete won a gold medal in the triple jump at the 2022 Birmingham Commonwealth Games?",
+                options: ["A) Eldhose Paul", "B) Avinash Sable", "C) Praveen Chithravel", "D) Abdulla Aboobacker"],
+                answer: 0,
+                explanation: "Eldhose Paul won the gold medal in the triple jump at the 2022 Birmingham Commonwealth Games."
+            },
+            {
+                question: "What was Mary Kom's achievement regarding the World Championships, and in which year did she win a Commonwealth Games gold?",
+                options: ["A) 4-time world champion; 2010 CWG gold", "B) 5-time world champion; 2014 CWG gold", "C) 6-time world champion; 2018 CWG gold", "D) 7-time world champion; 2022 CWG gold"],
+                answer: 2,
+                explanation: "Mary Kom is a 6-time world champion and won her Commonwealth gold in 2018."
+            },
+            {
+                question: "When was the Asian Games Federation established, and what is another name for the Asian Games?",
+                options: ["A) 1950, Asiad", "B) 1949, Asiad", "C) 1951, Asiad", "D) 1948, Olympic-Asia"],
+                answer: 1,
+                explanation: "The Asian Games Federation was formed in 1949, and the games are also known as Asiad."
+            },
+            {
+                question: "Which organization is responsible for organizing the Asian Games?",
+                options: ["A) International Olympic Committee", "B) Commonwealth Games Federation", "C) Olympic Council of Asia", "D) Asian Sports Council"],
+                answer: 2,
+                explanation: "The Asian Games are organized by the Olympic Council of Asia."
+            },
+            {
+                question: "Where and when were the first Asian Games held?",
+                options: ["A) 1951, New Delhi, India", "B) 1954, Manila, Philippines", "C) 1958, Tokyo, Japan", "D) 1982, New Delhi, India"],
+                answer: 0,
+                explanation: "The first Asian Games took place in 1951 at the National Stadium in New Delhi, India."
+            },
+            {
+                question: "Which countries have hosted the Asian Games the most times (4 times and 3 times respectively)?",
+                options: ["A) China and Japan", "B) Thailand and South Korea", "C) India and Indonesia", "D) Qatar and Saudi Arabia"],
+                answer: 1,
+                explanation: "Thailand has hosted 4 times and South Korea 3 times."
+            },
+            {
+                question: "What are the host locations for the Asian Games in the years 2022 and 2026 respectively?",
+                options: ["A) Doha (Qatar) and Riyadh (Saudi Arabia)", "B) Hangzhou (China) and Nagoya (Japan)", "C) Jakarta (Indonesia) and Nagoya (Japan)", "D) Incheon (South Korea) and Hangzhou (China)"],
+                answer: 1,
+                explanation: "The 2022 Asian Games were hosted in Hangzhou, China, and the 2026 Games are scheduled for Nagoya, Japan."
+            },
+            {
+                question: "Who won India's first-ever gold medal in the Asian Games (at the 1951 New Delhi edition in the 100m freestyle swimming event)?",
+                options: ["A) Virdhawal Khade", "B) Sachin Nag", "C) Sajan Prakash", "D) Nataraj Naren"],
+                answer: 1,
+                explanation: "Sachin Nag won the 100m freestyle swimming gold, which was India's 1st gold medal at the Asian Games."
+            },
+            {
+                question: "What was India's historic medal tally achievement at the 2023 Asian Games?",
+                options: ["A) 101 medals", "B) 61 medals", "C) 107 medals", "D) 70 medals"],
+                answer: 2,
+                explanation: "India recorded its best performance at the Asian Games in 2023 with 107 medals (28 Gold, 38 Silver, 41 Bronze) and finished 4th."
+            },
+            {
+                question: "Who secured India's first-ever badminton gold medal in the history of the Asian Games by winning the doubles event in 2022/2023?",
+                options: ["A) P. Gopichand and Saina Nehwal", "B) Satwiksairaj Rankireddy and Chirag Shetty", "C) Kidambi Srikanth and Lakshya Sen", "D) Jwala Gutta and Ashwini Ponnappa"],
+                answer: 1,
+                explanation: "Satwiksairaj Rankireddy and Chirag Shetty won the first badminton gold for India at the Asian Games."
+            },
+            {
+                question: "Which long-distance runner broke a 30-year-old national record in the men's 5000m event at the 2nd National Open Athletics Championship 2024?",
+                options: ["A) Avinash Sable", "B) Bahadur Singh", "C) Gulveer Singh", "D) Kartik Kumar"],
+                answer: 2,
+                explanation: "Gulveer Singh broke the 30-year-old record with a timing of 13 minutes 54 seconds 70 milliseconds."
+            }
+        ];
+
+        // State variables
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let userAnswers = [];
+        let answeredCurrent = false;
+
+        // DOM Elements
+        const themeToggle = document.getElementById('theme-toggle');
+        const welcomeScreen = document.getElementById('welcome-screen');
+        const quizScreen = document.getElementById('quiz-screen');
+        const resultsScreen = document.getElementById('results-screen');
+        const startBtn = document.getElementById('start-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const restartBtn = document.getElementById('restart-btn');
+        
+        const questionBadge = document.getElementById('question-badge');
+        const scoreCounter = document.getElementById('score-counter');
+        const questionText = document.getElementById('question-text');
+        const optionsContainer = document.getElementById('options-container');
+        const explanationBox = document.getElementById('explanation-box');
+        const explanationText = document.getElementById('explanation-text');
+        const progressBar = document.getElementById('progress-bar');
+        const statCurrent = document.getElementById('stat-current');
+
+        const finalScore = document.getElementById('final-score');
+        const finalPercentage = document.getElementById('final-percentage');
+        const incorrectCountBadge = document.getElementById('incorrect-count-badge');
+        const breakdownContainer = document.getElementById('breakdown-container');
+
+        // Theme Toggle Logic
+        themeToggle.addEventListener('click', () => {
+            document.documentElement.classList.toggle('dark');
+        });
+
+        // Start Quiz
+        startBtn.addEventListener('click', () => {
+            welcomeScreen.classList.add('hidden');
+            quizScreen.classList.remove('hidden');
+            loadQuestion();
+        });
+
+        // Load Question Function
+        function loadQuestion() {
+            answeredCurrent = false;
+            nextBtn.disabled = true;
+            nextBtn.classList.add('opacity-50', 'cursor-not-allowed');
+            explanationBox.classList.add('hidden');
+
+            const q = quizData[currentQuestionIndex];
+            questionBadge.textContent = `Question ${currentQuestionIndex + 1} of ${quizData.length}`;
+            statCurrent.textContent = `Q ${currentQuestionIndex + 1}/${quizData.length}`;
+            scoreCounter.textContent = `Score: ${score}`;
+            questionText.textContent = q.question;
+
+            // Update Progress Bar
+            const progressPercent = ((currentQuestionIndex) / quizData.length) * 100;
+            progressBar.style.width = `${progressPercent}%`;
+
+            // Populate Options
+            optionsContainer.innerHTML = '';
+            q.options.forEach((opt, idx) => {
+                const btn = document.createElement('button');
+                btn.className = 'w-full text-left p-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-700/50 hover:bg-slate-50 dark:hover:bg-slate-700 font-medium text-xs md:text-sm transition-all flex items-center justify-between group';
+                btn.innerHTML = `<span>${opt}</span><span class="w-5 h-5 rounded-full border border-slate-300 dark:border-slate-500 flex items-center justify-center text-xs text-transparent group-hover:border-brand-500">✓</span>`;
+                btn.addEventListener('click', () => selectOption(idx, btn));
+                optionsContainer.appendChild(btn);
+            });
+        }
+
+        // Option Selection & Instant Feedback
+        function selectOption(selectedIndex, selectedBtn) {
+            if (answeredCurrent) return;
+            answeredCurrent = true;
+
+            const q = quizData[currentQuestionIndex];
+            const optionButtons = optionsContainer.querySelectorAll('button');
+
+            // Disable all option buttons
+            optionButtons.forEach(b => {
+                b.disabled = true;
+                b.classList.remove('hover:bg-slate-50', 'dark:hover:bg-slate-700');
+            });
+
+            // Store user answer
+            userAnswers[currentQuestionIndex] = {
+                question: q.question,
+                options: q.options,
+                selected: selectedIndex,
+                correct: q.answer,
+                explanation: q.explanation
+            };
+
+            if (selectedIndex === q.answer) {
+                score++;
+                scoreCounter.textContent = `Score: ${score}`;
+                selectedBtn.className = 'w-full text-left p-3 rounded-xl border border-emerald-500 bg-emerald-50 dark:bg-emerald-950/40 text-emerald-900 dark:text-emerald-200 font-semibold text-xs md:text-sm flex items-center justify-between shadow-sm';
+                selectedBtn.querySelector('span:last-child').className = 'w-5 h-5 rounded-full bg-emerald-500 text-white flex items-center justify-center text-xs font-bold';
+            } else {
+                selectedBtn.className = 'w-full text-left p-3 rounded-xl border border-red-500 bg-red-50 dark:bg-red-950/40 text-red-900 dark:text-red-200 font-semibold text-xs md:text-sm flex items-center justify-between shadow-sm';
+                selectedBtn.querySelector('span:last-child').className = 'w-5 h-5 rounded-full bg-red-500 text-white flex items-center justify-center text-xs font-bold';
+                
+                // Highlight correct button
+                const correctBtn = optionButtons[q.answer];
+                correctBtn.className = 'w-full text-left p-3 rounded-xl border border-emerald-500 bg-emerald-50 dark:bg-emerald-950/40 text-emerald-900 dark:text-emerald-200 font-semibold text-xs md:text-sm flex items-center justify-between shadow-sm';
+                correctBtn.querySelector('span:last-child').className = 'w-5 h-5 rounded-full bg-emerald-500 text-white flex items-center justify-center text-xs font-bold';
+            }
+
+            // Show Explanation Box
+            explanationText.textContent = q.explanation;
+            explanationBox.classList.remove('hidden');
+
+            // Enable Next Button
+            nextBtn.disabled = false;
+            nextBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+
+            // If last question, change next button text
+            if (currentQuestionIndex === quizData.length - 1) {
+                nextBtn.textContent = 'View Results 🏁';
+            }
+        }
+
+        // Next Question Handler
+        nextBtn.addEventListener('click', () => {
+            if (!answeredCurrent) return;
+            currentQuestionIndex++;
+            if (currentQuestionIndex < quizData.length) {
+                loadQuestion();
+            } else {
+                showResults();
+            }
+        });
+
+        // Show Results Screen
+        function showResults() {
+            quizScreen.classList.add('hidden');
+            resultsScreen.classList.remove('hidden');
+
+            const percentage = Math.round((score / quizData.length) * 100);
+            finalScore.textContent = `${score}/${quizData.length}`;
+            finalPercentage.textContent = `${percentage}%`;
+
+            const incorrectItems = userAnswers.filter(item => item.selected !== item.correct);
+            incorrectCountBadge.textContent = `${incorrectItems.length} Incorrect`;
+
+            breakdownContainer.innerHTML = '';
+
+            if (incorrectItems.length === 0) {
+                breakdownContainer.innerHTML = `
+                    <div class="text-center py-8 space-y-2">
+                        <div class="text-3xl">🎉</div>
+                        <p class="font-bold text-sm text-slate-700 dark:text-slate-200">Flawless Performance!</p>
+                        <p class="text-xs text-slate-500">You answered every single question correctly.</p>
+                    </div>
+                `;
+            } else {
+                userAnswers.forEach((item, index) => {
+                    if (item.selected !== item.correct) {
+                        const div = document.createElement('div');
+                        div.className = 'p-3 bg-slate-50 dark:bg-slate-700/40 border border-slate-200 dark:border-slate-600 rounded-xl space-y-1.5 text-xs';
+                        div.innerHTML = `
+                            <div class="font-bold text-slate-800 dark:text-slate-200">Q${index + 1}: ${item.question}</div>
+                            <div class="text-red-600 dark:text-red-400 font-medium">Your Answer: ${item.options[item.selected]}</div>
+                            <div class="text-emerald-600 dark:text-emerald-400 font-medium">Correct Answer: ${item.options[item.correct]}</div>
+                            <div class="text-slate-500 dark:text-slate-400 italic pt-0.5 border-t border-slate-200 dark:border-slate-600/50">${item.explanation}</div>
+                        `;
+                        breakdownContainer.appendChild(div);
+                    }
+                });
+            }
+        }
+
+        // Restart Quiz
+        restartBtn.addEventListener('click', () => {
+            currentQuestionIndex = 0;
+            score = 0;
+            userAnswers = [];
+            nextBtn.textContent = 'Next Question →';
+            resultsScreen.classList.add('hidden');
+            quizScreen.classList.remove('hidden');
+            loadQuestion();
+        });
+    </script>
+</body>
+</html>
