@@ -1,0 +1,1303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Indian Dignitaries & Appointments Exam Prep Quiz</title>
+  <style>
+    :root {
+      --bg-primary: #f8fafc;
+      --bg-card: #ffffff;
+      --bg-secondary: #f1f5f9;
+      --text-main: #0f172a;
+      --text-muted: #475569;
+      --border-color: #cbd5e1;
+      --accent-color: #2563eb;
+      --accent-hover: #1d4ed8;
+      
+      --correct-bg: #f0fdf4;
+      --correct-border: #22c55e;
+      --correct-text: #15803d;
+      
+      --incorrect-bg: #fef2f2;
+      --incorrect-border: #ef4444;
+      --incorrect-text: #b91c1c;
+
+      --badge-statement: #8b5cf6;
+      --badge-match: #06b6d4;
+      --badge-standard: #3b82f6;
+
+      --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+      --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    }
+
+    [data-theme="dark"] {
+      --bg-primary: #0f172a;
+      --bg-card: #1e293b;
+      --bg-secondary: #334155;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --border-color: #334155;
+      --accent-color: #3b82f6;
+      --accent-hover: #60a5fa;
+
+      --correct-bg: #064e3b;
+      --correct-border: #10b981;
+      --correct-text: #a7f3d0;
+
+      --incorrect-bg: #7f1d1d;
+      --incorrect-border: #f87171;
+      --incorrect-text: #fca5a5;
+
+      --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+      --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+    }
+
+    body {
+      background-color: var(--bg-primary);
+      color: var(--text-main);
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    /* HEADER STYLES */
+    header {
+      background-color: var(--bg-card);
+      border-bottom: 1px solid var(--border-color);
+      padding: 8px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 52px;
+      flex-shrink: 0;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .brand-title {
+      font-size: 0.95rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .brand-badge {
+      background: var(--accent-color);
+      color: #ffffff;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .theme-toggle-btn {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      padding: 5px 10px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.8rem;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .theme-toggle-btn:hover {
+      opacity: 0.9;
+    }
+
+    /* PROGRESS BAR */
+    .progress-container {
+      height: 4px;
+      background-color: var(--bg-secondary);
+      width: 100%;
+      flex-shrink: 0;
+    }
+
+    .progress-bar {
+      height: 100%;
+      background-color: var(--accent-color);
+      width: 0%;
+      transition: width 0.3s ease;
+    }
+
+    /* MAIN CONTAINER - VIEWPORT OPTIMIZED */
+    main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      max-width: 900px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 10px 16px;
+      overflow: hidden;
+      justify-content: space-between;
+    }
+
+    /* TOP STATS BAR */
+    .stats-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+      flex-shrink: 0;
+    }
+
+    .q-badge {
+      padding: 2px 8px;
+      border-radius: 12px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: #fff;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .badge-standard { background-color: var(--badge-standard); }
+    .badge-statement { background-color: var(--badge-statement); }
+    .badge-match { background-color: var(--badge-match); }
+
+    .score-tracker {
+      display: flex;
+      gap: 12px;
+      font-weight: 600;
+    }
+
+    .score-tracker .correct-val { color: var(--correct-border); }
+    .score-tracker .incorrect-val { color: var(--incorrect-border); }
+
+    /* QUESTION CARD */
+    .question-card {
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 12px 16px;
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      max-height: calc(100vh - 210px);
+      overflow-y: auto;
+      flex: 1;
+    }
+
+    .question-text {
+      font-size: 0.95rem;
+      font-weight: 600;
+      line-height: 1.35;
+      color: var(--text-main);
+    }
+
+    /* STATEMENT BOX FORMATTING */
+    .statement-box {
+      background-color: var(--bg-secondary);
+      border-left: 3px solid var(--badge-statement);
+      padding: 8px 12px;
+      border-radius: 4px;
+      font-size: 0.85rem;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      margin: 4px 0;
+    }
+
+    .statement-item {
+      display: flex;
+      gap: 8px;
+      line-height: 1.3;
+      font-family: inherit;
+    }
+
+    .statement-num {
+      font-weight: 700;
+      color: var(--accent-color);
+      min-width: 18px;
+    }
+
+    /* MATCH THE FOLLOWING TABLE FORMATTING */
+    .match-table-wrapper {
+      margin: 4px 0;
+      overflow-x: auto;
+    }
+
+    .match-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.82rem;
+      background-color: var(--bg-secondary);
+      border-radius: 6px;
+      overflow: hidden;
+    }
+
+    .match-table th, .match-table td {
+      padding: 6px 10px;
+      border: 1px solid var(--border-color);
+      text-align: left;
+      vertical-align: top;
+      line-height: 1.25;
+    }
+
+    .match-table th {
+      background-color: var(--border-color);
+      color: var(--text-main);
+      font-weight: 700;
+      font-size: 0.78rem;
+      text-transform: uppercase;
+    }
+
+    /* OPTIONS GRID */
+    .options-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 8px;
+      margin-top: 4px;
+    }
+
+    @media (max-width: 640px) {
+      .options-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .option-btn {
+      background-color: var(--bg-card);
+      border: 1.5px solid var(--border-color);
+      color: var(--text-main);
+      padding: 8px 12px;
+      border-radius: 6px;
+      text-align: left;
+      font-size: 0.85rem;
+      font-weight: 500;
+      cursor: pointer;
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      line-height: 1.25;
+      position: relative;
+    }
+
+    .option-btn:hover:not(:disabled) {
+      border-color: var(--accent-color);
+      background-color: var(--bg-secondary);
+    }
+
+    .option-prefix {
+      font-weight: 700;
+      color: var(--accent-color);
+      flex-shrink: 0;
+    }
+
+    .option-btn.selected-correct {
+      background-color: var(--correct-bg) !important;
+      border-color: var(--correct-border) !important;
+      color: var(--correct-text) !important;
+      font-weight: 600;
+    }
+
+    .option-btn.selected-correct .option-prefix {
+      color: var(--correct-text);
+    }
+
+    .option-btn.selected-incorrect {
+      background-color: var(--incorrect-bg) !important;
+      border-color: var(--incorrect-border) !important;
+      color: var(--incorrect-text) !important;
+    }
+
+    .option-btn.selected-incorrect .option-prefix {
+      color: var(--incorrect-text);
+    }
+
+    .option-btn.reveal-correct {
+      border-color: var(--correct-border) !important;
+      background-color: var(--correct-bg) !important;
+      color: var(--correct-text) !important;
+    }
+
+    .option-btn:disabled {
+      cursor: default;
+    }
+
+    /* EXPLANATION BOX */
+    .explanation-box {
+      background-color: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      padding: 8px 12px;
+      font-size: 0.82rem;
+      line-height: 1.35;
+      display: none;
+      animation: fadeIn 0.2s ease-in-out;
+      margin-top: 4px;
+    }
+
+    .explanation-box.visible {
+      display: block;
+    }
+
+    .explanation-title {
+      font-weight: 700;
+      margin-bottom: 2px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    /* BOTTOM CONTROLS */
+    .bottom-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 0 0 0;
+      border-top: 1px solid var(--border-color);
+      margin-top: 6px;
+      flex-shrink: 0;
+    }
+
+    .status-msg {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    .btn-next {
+      background-color: var(--accent-color);
+      color: #ffffff;
+      border: none;
+      padding: 8px 18px;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .btn-next:hover:not(:disabled) {
+      background-color: var(--accent-hover);
+    }
+
+    .btn-next:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    /* RESULTS SCREEN */
+    .results-screen {
+      display: none;
+      flex-direction: column;
+      height: 100%;
+      overflow-y: auto;
+      padding: 10px 0;
+      gap: 16px;
+    }
+
+    .results-card {
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      padding: 20px;
+      text-align: center;
+      box-shadow: var(--shadow-md);
+    }
+
+    .results-title {
+      font-size: 1.4rem;
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+
+    .score-circle {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      background: var(--bg-secondary);
+      border: 4px solid var(--accent-color);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      margin: 12px auto;
+    }
+
+    .score-pct {
+      font-size: 1.4rem;
+      font-weight: 800;
+      color: var(--accent-color);
+    }
+
+    .score-sub {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+    }
+
+    .results-summary-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin: 14px 0;
+    }
+
+    .summary-item {
+      background: var(--bg-secondary);
+      padding: 8px;
+      border-radius: 6px;
+    }
+
+    .summary-val {
+      font-size: 1.1rem;
+      font-weight: 700;
+    }
+
+    .summary-label {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+    }
+
+    .incorrect-list-title {
+      font-size: 1rem;
+      font-weight: 700;
+      text-align: left;
+      margin-bottom: 8px;
+    }
+
+    .incorrect-item {
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-left: 4px solid var(--incorrect-border);
+      border-radius: 6px;
+      padding: 10px;
+      margin-bottom: 8px;
+      text-align: left;
+      font-size: 0.82rem;
+    }
+
+    .incorrect-q-text {
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .incorrect-ans-row {
+      display: flex;
+      gap: 12px;
+      margin: 4px 0;
+      font-size: 0.78rem;
+    }
+
+    .user-ans {
+      color: var(--incorrect-border);
+      font-weight: 600;
+    }
+
+    .correct-ans {
+      color: var(--correct-border);
+      font-weight: 600;
+    }
+
+    .incorrect-exp {
+      background-color: var(--bg-secondary);
+      padding: 6px;
+      border-radius: 4px;
+      margin-top: 4px;
+      color: var(--text-muted);
+      font-size: 0.75rem;
+    }
+
+    .btn-restart {
+      background-color: var(--accent-color);
+      color: #fff;
+      border: none;
+      padding: 10px 24px;
+      border-radius: 6px;
+      font-weight: 700;
+      font-size: 0.9rem;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+
+    .btn-restart:hover {
+      background-color: var(--accent-hover);
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(2px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body data-theme="light">
+
+  <header>
+    <div class="brand-title">
+      <span>🏛️ UPSC & Competitive Exams</span>
+      <span class="brand-badge">2026 Edition</span>
+    </div>
+    <div class="header-actions">
+      <button class="theme-toggle-btn" id="themeToggleBtn">
+        <span id="themeIcon">🌙</span>
+        <span id="themeLabel">Dark Mode</span>
+      </button>
+    </div>
+  </header>
+
+  <div class="progress-container">
+    <div class="progress-bar" id="progressBar"></div>
+  </div>
+
+  <main>
+    <!-- ACTIVE QUIZ SCREEN -->
+    <div id="quizScreen" style="display: flex; flex-direction: column; height: 100%; justify-content: space-between;">
+      
+      <div class="stats-bar">
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <span style="font-weight: 700;" id="qCounter">Question 1 / 52</span>
+          <span class="q-badge badge-standard" id="qTypeBadge">Standard</span>
+        </div>
+        <div class="score-tracker">
+          <span>Correct: <span class="correct-val" id="correctScore">0</span></span>
+          <span>Wrong: <span class="incorrect-val" id="wrongScore">0</span></span>
+        </div>
+      </div>
+
+      <!-- MAIN CARD CONTAINER -->
+      <div class="question-card" id="qCard">
+        <div class="question-text" id="qText">Loading question...</div>
+
+        <!-- STYLED CONTAINER FOR STATEMENTS OR MATCH TABLES -->
+        <div id="customContentArea"></div>
+
+        <!-- OPTIONS GRID -->
+        <div class="options-grid" id="optionsGrid"></div>
+
+        <!-- EXPLANATION BOX -->
+        <div class="explanation-box" id="expBox">
+          <div class="explanation-title">💡 Explanation</div>
+          <div id="expText"></div>
+        </div>
+      </div>
+
+      <!-- BOTTOM NAVIGATION BAR -->
+      <div class="bottom-bar">
+        <div class="status-msg" id="statusMsg">Select an option to lock your answer.</div>
+        <button class="btn-next" id="nextBtn" disabled>
+          <span>Next</span>
+          <span>➔</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- END-SCREEN RESULTS -->
+    <div class="results-screen" id="resultsScreen">
+      <div class="results-card">
+        <div class="results-title">Quiz Completed! 🎉</div>
+        <p style="color: var(--text-muted); font-size: 0.85rem;">Appointments & Constitutional Dignitaries</p>
+        
+        <div class="score-circle">
+          <div class="score-pct" id="resPct">0%</div>
+          <div class="score-sub" id="resScoreText">0 / 52</div>
+        </div>
+
+        <div class="results-summary-grid">
+          <div class="summary-item">
+            <div class="summary-val" style="color: var(--accent-color);" id="resTotal">52</div>
+            <div class="summary-label">Total Questions</div>
+          </div>
+          <div class="summary-item">
+            <div class="summary-val" style="color: var(--correct-border);" id="resCorrect">0</div>
+            <div class="summary-label">Correct</div>
+          </div>
+          <div class="summary-item">
+            <div class="summary-val" style="color: var(--incorrect-border);" id="resWrong">0</div>
+            <div class="summary-label">Incorrect</div>
+          </div>
+        </div>
+
+        <button class="btn-restart" id="restartBtn">🔄 Practice Again</button>
+      </div>
+
+      <div id="incorrectBreakdownSection">
+        <div class="incorrect-list-title">Review Incorrect Questions (<span id="incCount">0</span>)</div>
+        <div id="incorrectList"></div>
+      </div>
+    </div>
+
+  </main>
+
+  <script>
+    const questionsData = [
+      {
+        id: 1, type: "standard",
+        q: "Who among the following has been appointed as the Chairman of the Union Public Service Commission (UPSC)?",
+        opts: [{k:"A", t:"Gyanesh Kumar"}, {k:"B", t:"Dr. Ajay Kumar"}, {k:"C", t:"Raj Kumar Goyal"}, {k:"D", t:"K. Sanjay Murty"}],
+        ans: "B",
+        exp: "According to the provided document, Dr. Ajay Kumar is designated as the Chairman of UPSC."
+      },
+      {
+        id: 2, type: "standard",
+        q: "Who is the 26th Chief Election Commissioner of India?",
+        opts: [{k:"A", t:"Sanjay Malhotra"}, {k:"B", t:"Praveen Kumar Srivastava"}, {k:"C", t:"Gyanesh Kumar"}, {k:"D", t:"Alok Joshi"}],
+        ans: "C",
+        exp: "Gyanesh Kumar holds the designation of the 26th Chief Election Commissioner of India."
+      },
+      {
+        id: 3, type: "standard",
+        q: "Who has been appointed as the Comptroller and Auditor General of India (CAG)?",
+        opts: [{k:"A", t:"K. Sanjay Murty"}, {k:"B", t:"T. V. Somanathan"}, {k:"C", t:"R. Venkataramani"}, {k:"D", t:"Saurabh Vijay"}],
+        ans: "A",
+        exp: "K. Sanjay Murty is listed as the CAG (Comptroller and Auditor General of India)."
+      },
+      {
+        id: 4, type: "standard",
+        q: "Who holds the position of Chief Information Commissioner (CIC)?",
+        opts: [{k:"A", t:"Raj Kumar Goyal"}, {k:"B", t:"Amit Garg"}, {k:"C", t:"Kishor Makwana"}, {k:"D", t:"Antar Singh Arya"}],
+        ans: "A",
+        exp: "The Chief Information Commissioner (CIC) is Raj Kumar Goyal."
+      },
+      {
+        id: 5, type: "standard",
+        q: "Who is the Chairperson of the National Human Rights Commission (NHRC)?",
+        opts: [{k:"A", t:"Justice Prakash Shrivastava"}, {k:"B", t:"V. Ramasubramanian"}, {k:"C", t:"Justice Surya Kant"}, {k:"D", t:"Justice (Retd.) Dinesh Maheshwari"}],
+        ans: "B",
+        exp: "V. Ramasubramanian is designated as the Chairperson of the National Human Rights Commission."
+      },
+      {
+        id: 6, type: "match",
+        q: "Match the following National Commissions with their respective Chairpersons:",
+        matchPairs: [
+          {a: "1. National Commission for Women (NCW)", b: "a. Sadhvi Niranjan Jyoti"},
+          {a: "2. National Commission for Scheduled Tribes (NCST)", b: "b. Antar Singh Arya"},
+          {a: "3. National Commission for Scheduled Castes (NCSC)", b: "c. Vijaya Rahatkar"},
+          {a: "4. National Commission for Backward Classes (NCBC)", b: "d. Kishor Makwana"}
+        ],
+        opts: [{k:"A", t:"1-c, 2-b, 3-d, 4-a"}, {k:"B", t:"1-b, 2-c, 3-a, 4-d"}, {k:"C", t:"1-c, 2-d, 3-b, 4-a"}, {k:"D", t:"1-a, 2-b, 3-d, 4-c"}],
+        ans: "A",
+        exp: "NCW – Vijaya Rahatkar (1-c), NCST – Antar Singh Arya (2-b), NCSC – Kishor Makwana (3-d), NCBC – Sadhvi Niranjan Jyoti (4-a)."
+      },
+      {
+        id: 7, type: "standard",
+        q: "Who serves as the Chairperson of the National Green Tribunal (NGT)?",
+        opts: [{k:"A", t:"Justice Surya Kant"}, {k:"B", t:"Justice Prakash Shrivastava"}, {k:"C", t:"Justice (Retd.) Sanjaya Kumar Mishra"}, {k:"D", t:"Justice (Retd.) Dinesh Maheshwari"}],
+        ans: "B",
+        exp: "Justice Prakash Shrivastava is the Chairperson of the National Green Tribunal (NGT)."
+      },
+      {
+        id: 8, type: "standard",
+        q: "Who is the Central Vigilance Commissioner (CVC) of India?",
+        opts: [{k:"A", t:"Praveen Kumar Srivastava"}, {k:"B", t:"Praveen Sood"}, {k:"C", t:"Rakesh Aggarwal"}, {k:"D", t:"Mahesh Dixit"}],
+        ans: "A",
+        exp: "Praveen Kumar Srivastava is listed as the Central Vigilance Commissioner (CVC)."
+      },
+      {
+        id: 9, type: "standard",
+        q: "Who has been appointed as the Chairman of the 16th Finance Commission of India?",
+        opts: [{k:"A", t:"Dr. Arvind Panagariya"}, {k:"B", t:"Sanjay Malhotra"}, {k:"C", t:"Tuhin Kanta Pandey"}, {k:"D", t:"Dr. V. Narayanan"}],
+        ans: "A",
+        exp: "Dr. Arvind Panagariya is the Chairman of the 16th Finance Commission of India."
+      },
+      {
+        id: 10, type: "standard",
+        q: "Who is designated as the 53rd Chief Justice of India (CJI)?",
+        opts: [{k:"A", t:"Justice Surya Kant"}, {k:"B", t:"Justice (Retd.) Dinesh Maheshwari"}, {k:"C", t:"Justice Prakash Shrivastava"}, {k:"D", t:"Justice (Retd.) Sanjaya Kumar Mishra"}],
+        ans: "A",
+        exp: "Justice Surya Kant is listed as the 53rd Chief Justice of India (CJI)."
+      },
+      {
+        id: 11, type: "standard",
+        q: "Who is the Chairman of the 23rd Law Commission?",
+        opts: [{k:"A", t:"Justice Surya Kant"}, {k:"B", t:"Justice (Retd.) Dinesh Maheshwari"}, {k:"C", t:"R. Venkataramani"}, {k:"D", t:"Tushar Mehta"}],
+        ans: "B",
+        exp: "Justice (Retd.) Dinesh Maheshwari serves as the Chairman of the 23rd Law Commission."
+      },
+      {
+        id: 12, type: "standard",
+        q: "Who is the President of the Goods and Services Tax Appellate Tribunal (GSTAT)?",
+        opts: [{k:"A", t:"Justice (Retd.) Sanjaya Kumar Mishra"}, {k:"B", t:"Lisa Gill"}, {k:"C", t:"T. Meena Kumari"}, {k:"D", t:"Thanya C Nathan"}],
+        ans: "A",
+        exp: "Justice (Retd.) Sanjaya Kumar Mishra is the President of the GSTAT."
+      },
+      {
+        id: 13, type: "standard",
+        q: "Who is the 16th Attorney General of India and who serves as the Solicitor General of India respectively?",
+        opts: [{k:"A", t:"Tushar Mehta and R. Venkataramani"}, {k:"B", t:"R. Venkataramani and Tushar Mehta"}, {k:"C", t:"Harivansh Narayan Singh and T. V. Somanathan"}, {k:"D", t:"Tushar Mehta and Alok Joshi"}],
+        ans: "B",
+        exp: "R. Venkataramani is the 16th Attorney General of India and Tushar Mehta is the Solicitor General of India."
+      },
+      {
+        id: 14, type: "statement",
+        q: "Consider the following statements regarding judicial appointments:",
+        statements: [
+          "T. Meena Kumari was appointed as the First Chief Justice of Meghalaya High Court.",
+          "Lisa Gill is the First Woman Chief Justice of Andhra Pradesh High Court.",
+          "Thanya C Nathan is the First Visually Impaired Judge of Kerala."
+        ],
+        subQ: "Which of the statements given above are correct?",
+        opts: [{k:"A", t:"1 and 2 only"}, {k:"B", t:"2 and 3 only"}, {k:"C", t:"1 and 3 only"}, {k:"D", t:"1, 2, and 3"}],
+        ans: "D",
+        exp: "All three statements are directly mentioned in the judicial appointments section."
+      },
+      {
+        id: 15, type: "standard",
+        q: "Who has been appointed as the 3rd Chief of Defence Staff (CDS) of India?",
+        opts: [{k:"A", t:"General Dhiraj Seth"}, {k:"B", t:"NS Raja Subramani"}, {k:"C", t:"Admiral Krishna Swaminathan"}, {k:"D", t:"Air Chief Marshal Amar Preet Singh"}],
+        ans: "B",
+        exp: "NS Raja Subramani is the 3rd Chief of Defence Staff (CDS)."
+      },
+      {
+        id: 16, type: "standard",
+        q: "Who holds the position of the 31st Chief of Army Staff?",
+        opts: [{k:"A", t:"General Dhiraj Seth"}, {k:"B", t:"NS Raja Subramani"}, {k:"C", t:"Lt. General Abhijit S. Pendharkar"}, {k:"D", t:"Vice Admiral Vineet McCarty"}],
+        ans: "A",
+        exp: "General Dhiraj Seth is the 31st Chief of Army Staff."
+      },
+      {
+        id: 17, type: "standard",
+        q: "Who are the 27th Chief of the Naval Staff (CNS) and the 28th Chief of the Air Staff (CAS) respectively?",
+        opts: [{k:"A", t:"Admiral Krishna Swaminathan and Air Chief Marshal Amar Preet Singh"}, {k:"B", t:"Vice Admiral Vineet McCarty and Air Chief Marshal Amar Preet Singh"}, {k:"C", t:"Admiral Krishna Swaminathan and Vice Admiral Arti Sarin"}, {k:"D", t:"Paramesh Sivamani and Admiral Krishna Swaminathan"}],
+        ans: "A",
+        exp: "Admiral Krishna Swaminathan is the 27th CNS and Air Chief Marshal Amar Preet Singh is the 28th CAS."
+      },
+      {
+        id: 18, type: "standard",
+        q: "Who is the 20th Commander-in-Chief of the Andaman and Nicobar Command?",
+        opts: [{k:"A", t:"Paramesh Sivamani"}, {k:"B", t:"Vice Admiral Vineet McCarty"}, {k:"C", t:"Lt. General Abhijit S. Pendharkar"}, {k:"D", t:"Vice Admiral Arti Sarin"}],
+        ans: "B",
+        exp: "Vice Admiral Vineet McCarty is the 20th Commander-in-Chief of Andaman and Nicobar Command."
+      },
+      {
+        id: 19, type: "standard",
+        q: "Who holds the post of Director General of the Armed Forces Medical Services (AFMS)?",
+        opts: [{k:"A", t:"Paramesh Sivamani"}, {k:"B", t:"Vice Admiral Arti Sarin"}, {k:"C", t:"Lt. General Abhijit S. Pendharkar"}, {k:"D", t:"Sonali Mishra"}],
+        ans: "B",
+        exp: "Vice Admiral Arti Sarin is the DG of Armed Forces Medical Services (AFMS)."
+      },
+      {
+        id: 20, type: "standard",
+        q: "Who among the following is the Director General of Military Operations (DGMO)?",
+        opts: [{k:"A", t:"Paramesh Sivamani"}, {k:"B", t:"Lt. General Abhijit S. Pendharkar"}, {k:"C", t:"NS Raja Subramani"}, {k:"D", t:"Anugraha Narayan Das"}],
+        ans: "B",
+        exp: "Lt. General Abhijit S. Pendharkar is designated as the DGMO."
+      },
+      {
+        id: 21, type: "standard",
+        q: "Who is the Director General of the Indian Coast Guard (DG ICG)?",
+        opts: [{k:"A", t:"Paramesh Sivamani"}, {k:"B", t:"Anurag Garg"}, {k:"C", t:"Rahul Navin"}, {k:"D", t:"Rakesh Aggarwal"}],
+        ans: "A",
+        exp: "Paramesh Sivamani is the Director General, Indian Coast Guard (DG ICG)."
+      },
+      {
+        id: 22, type: "standard",
+        q: "Who among the following are appointed as Deputy National Security Advisors (NSA)?",
+        opts: [{k:"A", t:"Anish Dayal Singh, Pavan Kapoor, TV Ravichandran"}, {k:"B", t:"Parag Jain, Mahesh Dixit, Praveen Sood"}, {k:"C", t:"Rakesh Aggarwal, Anurag Garg, Rahul Navin"}, {k:"D", t:"Alok Joshi, Amit Garg, Saurabh Vijay"}],
+        ans: "A",
+        exp: "Anish Dayal Singh, Pavan Kapoor, and TV Ravichandran are listed as Deputy NSAs."
+      },
+      {
+        id: 23, type: "standard",
+        q: "Who is the Chief of the Research & Analysis Wing (RAW)?",
+        opts: [{k:"A", t:"Mahesh Dixit"}, {k:"B", t:"Parag Jain"}, {k:"C", t:"Alok Joshi"}, {k:"D", t:"Praveen Sood"}],
+        ans: "B",
+        exp: "Parag Jain is the Chief of Research & Analysis Wing (RAW)."
+      },
+      {
+        id: 24, type: "standard",
+        q: "Who holds the position of Director of the Intelligence Bureau (IB)?",
+        opts: [{k:"A", t:"Parag Jain"}, {k:"B", t:"Mahesh Dixit"}, {k:"C", t:"Rakesh Aggarwal"}, {k:"D", t:"Amit Garg"}],
+        ans: "B",
+        exp: "Mahesh Dixit is the Director of the Intelligence Bureau (IB)."
+      },
+      {
+        id: 25, type: "match",
+        q: "Match the following Security & Intelligence heads with their organizations:",
+        matchPairs: [
+          {a: "1. National Investigation Agency (NIA)", b: "a. Anurag Garg"},
+          {a: "2. Narcotics Control Bureau (NCB)", b: "b. Praveen Sood"},
+          {a: "3. Central Bureau of Investigation (CBI)", b: "c. Sonali Mishra"},
+          {a: "4. Railway Protection Force (RPF)", b: "d. Rakesh Aggarwal"}
+        ],
+        opts: [{k:"A", t:"1-d, 2-a, 3-b, 4-c"}, {k:"B", t:"1-a, 2-d, 3-c, 4-b"}, {k:"C", t:"1-d, 2-b, 3-a, 4-c"}, {k:"D", t:"1-b, 2-a, 3-d, 4-c"}],
+        ans: "A",
+        exp: "DG NIA – Rakesh Aggarwal (1-d), DG NCB – Anurag Garg (2-a), Director CBI – Praveen Sood (3-b), DG RPF – Sonali Mishra (4-c)."
+      },
+      {
+        id: 26, type: "standard",
+        q: "Who is the Director of the Enforcement Directorate (ED)?",
+        opts: [{k:"A", t:"Rahul Navin"}, {k:"B", t:"Amit Garg"}, {k:"C", t:"Anugraha Narayan Das"}, {k:"D", t:"Alok Joshi"}],
+        ans: "A",
+        exp: "Rahul Navin is the Director of the Enforcement Directorate (ED)."
+      },
+      {
+        id: 27, type: "standard",
+        q: "Who holds the position of Controller General of Defence Accounts?",
+        opts: [{k:"A", t:"Anugraha Narayan Das"}, {k:"B", t:"Amit Garg"}, {k:"C", t:"Alok Joshi"}, {k:"D", t:"Saurabh Vijay"}],
+        ans: "A",
+        exp: "Anugraha Narayan Das is the Controller General of Defence Accounts."
+      },
+      {
+        id: 28, type: "standard",
+        q: "Who is the Director of the National Crime Records Bureau (NCRB)?",
+        opts: [{k:"A", t:"Amit Garg"}, {k:"B", t:"Alok Joshi"}, {k:"C", t:"Mahesh Dixit"}, {k:"D", t:"Parag Jain"}],
+        ans: "A",
+        exp: "Amit Garg is the Director of the NCRB."
+      },
+      {
+        id: 29, type: "standard",
+        q: "Who has been appointed as the Chairman of the National Security Advisory Board (NSAB)?",
+        opts: [{k:"A", t:"Alok Joshi"}, {k:"B", t:"Praveen Sood"}, {k:"C", t:"NS Raja Subramani"}, {k:"D", t:"T. V. Somanathan"}],
+        ans: "A",
+        exp: "Alok Joshi is the Chairman of the National Security Advisory Board (NSAB)."
+      },
+      {
+        id: 30, type: "standard",
+        q: "Who are the Chairmen of ISRO and DRDO respectively?",
+        opts: [{k:"A", t:"Dr. V. Narayanan and Rajesh Kumar Singh"}, {k:"B", t:"Rajesh Kumar Singh and Dr. V. Narayanan"}, {k:"C", t:"AK Balasubrahmaniam and Saurabh Vijay"}, {k:"D", t:"Saurabh Vijay and Dr. V. Narayanan"}],
+        ans: "A",
+        exp: "Dr. V. Narayanan is the Chairman of ISRO and Rajesh Kumar Singh is the Chairman of DRDO."
+      },
+      {
+        id: 31, type: "standard",
+        q: "Who is the Chairman of the Atomic Energy Regulatory Board?",
+        opts: [{k:"A", t:"AK Balasubrahmaniam"}, {k:"B", t:"Saurabh Vijay"}, {k:"C", t:"Dr. V. Narayanan"}, {k:"D", t:"Rajesh Kumar Singh"}],
+        ans: "A",
+        exp: "AK Balasubrahmaniam is the Chairman of the Atomic Energy Regulatory Board."
+      },
+      {
+        id: 32, type: "standard",
+        q: "Who has been appointed as the Chief Executive Officer of UIDAI and IndiaAI Mission?",
+        opts: [{k:"A", t:"Saurabh Vijay"}, {k:"B", t:"AK Balasubrahmaniam"}, {k:"C", t:"Tuhin Kanta Pandey"}, {k:"D", t:"Ajay Seth"}],
+        ans: "A",
+        exp: "Saurabh Vijay is the CEO of UIDAI and IndiaAI Mission."
+      },
+      {
+        id: 33, type: "standard",
+        q: "Who is the 26th Governor of the Reserve Bank of India (RBI)?",
+        opts: [{k:"A", t:"Sanjay Malhotra"}, {k:"B", t:"Tuhin Kanta Pandey"}, {k:"C", t:"Challa Sreenivasulu Setty"}, {k:"D", t:"Ajay Seth"}],
+        ans: "A",
+        exp: "Sanjay Malhotra is the 26th Governor of RBI."
+      },
+      {
+        id: 34, type: "standard",
+        q: "Which of the following persons are listed as Deputy Governors of the Reserve Bank of India (RBI)?",
+        opts: [{k:"A", t:"Swaminathan J, Poonam Gupta, Shirish Chandra Murmu, Rohit Jain"}, {k:"B", t:"Gunveer Singh, Ravi Shankar, Sanjay Malhotra, Tuhin Kanta Pandey"}, {k:"C", t:"Swaminathan J, Challa Sreenivasulu Setty, Ajay Seth, Rohit Jain"}, {k:"D", t:"Poonam Gupta, Saurabh Vijay, Gunveer Singh, Shirish Chandra Murmu"}],
+        ans: "A",
+        exp: "The Deputy Governors of RBI are Swaminathan J, Poonam Gupta, Shirish Chandra Murmu, and Rohit Jain."
+      },
+      {
+        id: 35, type: "standard",
+        q: "Who are designated as the Executive Directors of the Reserve Bank of India (RBI)?",
+        opts: [{k:"A", t:"Gunveer Singh / Ravi Shankar"}, {k:"B", t:"Rohit Jain / Swaminathan J"}, {k:"C", t:"Poonam Gupta / Shirish Chandra Murmu"}, {k:"D", t:"Tuhin Kanta Pandey / Ajay Seth"}],
+        ans: "A",
+        exp: "Gunveer Singh and Ravi Shankar are listed as Executive Directors of RBI."
+      },
+      {
+        id: 36, type: "standard",
+        q: "Who is the Chairman of the Securities and Exchange Board of India (SEBI)?",
+        opts: [{k:"A", t:"Tuhin Kanta Pandey"}, {k:"B", t:"Ajay Seth"}, {k:"C", t:"Challa Sreenivasulu Setty"}, {k:"D", t:"Sanjay Malhotra"}],
+        ans: "A",
+        exp: "Tuhin Kanta Pandey is the Chairman of SEBI."
+      },
+      {
+        id: 37, type: "standard",
+        q: "Who serves as the Chairman of the Insurance Regulatory and Development Authority of India (IRDAI)?",
+        opts: [{k:"A", t:"Ajay Seth"}, {k:"B", t:"Tuhin Kanta Pandey"}, {k:"C", t:"Challa Sreenivasulu Setty"}, {k:"D", t:"Saurabh Vijay"}],
+        ans: "A",
+        exp: "Ajay Seth is the Chairman of IRDAI."
+      },
+      {
+        id: 38, type: "standard",
+        q: "Who has been appointed as the Chairman of the State Bank of India (SBI)?",
+        opts: [{k:"A", t:"Challa Sreenivasulu Setty"}, {k:"B", t:"Sanjay Malhotra"}, {k:"C", t:"Swaminathan J"}, {k:"D", t:"Ajay Seth"}],
+        ans: "A",
+        exp: "Challa Sreenivasulu Setty is the Chairman of SBI."
+      },
+      {
+        id: 39, type: "standard",
+        q: "Who is the 15th Vice-President of India?",
+        opts: [{k:"A", t:"C.P. Radhakrishnan"}, {k:"B", t:"Harivansh Narayan Singh"}, {k:"C", t:"T. V. Somanathan"}, {k:"D", t:"Samrat Choudhary"}],
+        ans: "A",
+        exp: "C.P. Radhakrishnan is the 15th Vice-President of India."
+      },
+      {
+        id: 40, type: "standard",
+        q: "Who holds the post of Cabinet Secretary of India?",
+        opts: [{k:"A", t:"T. V. Somanathan"}, {k:"B", t:"C.P. Radhakrishnan"}, {k:"C", t:"Harivansh Narayan Singh"}, {k:"D", t:"Rajesh Kumar Singh"}],
+        ans: "A",
+        exp: "T. V. Somanathan is the Cabinet Secretary of India."
+      },
+      {
+        id: 41, type: "standard",
+        q: "Who is the Deputy Chairman of the Rajya Sabha?",
+        opts: [{k:"A", t:"Harivansh Narayan Singh"}, {k:"B", t:"C.P. Radhakrishnan"}, {k:"C", t:"T. V. Somanathan"}, {k:"D", t:"Suvendu Adhikari"}],
+        ans: "A",
+        exp: "Harivansh Narayan Singh is the Deputy Chairman of the Rajya Sabha."
+      },
+      {
+        id: 42, type: "standard",
+        q: "Who is the 37th President of the Board of Control for Cricket in India (BCCI)?",
+        opts: [{k:"A", t:"Mithun Manhas"}, {k:"B", t:"Sanjog Gupta"}, {k:"C", t:"Ajay Singh"}, {k:"D", t:"Rohit Rajpal"}],
+        ans: "A",
+        exp: "Mithun Manhas is the 37th President of BCCI."
+      },
+      {
+        id: 43, type: "standard",
+        q: "Who has been appointed as the Chief Executive Officer (CEO) of the International Cricket Council (ICC)?",
+        opts: [{k:"A", t:"Sanjog Gupta"}, {k:"B", t:"Mithun Manhas"}, {k:"C", t:"Ajay Singh"}, {k:"D", t:"Rohit Rajpal"}],
+        ans: "A",
+        exp: "Sanjog Gupta is the CEO of the ICC."
+      },
+      {
+        id: 44, type: "standard",
+        q: "Who is the Chairperson of the Athletics Federation of India's Athletes Commission?",
+        opts: [{k:"A", t:"Anju Bobby George"}, {k:"B", t:"Kirsty Coventry"}, {k:"C", t:"Lisa Gill"}, {k:"D", t:"Sonali Mishra"}],
+        ans: "A",
+        exp: "Anju Bobby George is the Chairperson of the AFI's Athletes Commission."
+      },
+      {
+        id: 45, type: "standard",
+        q: "Who is the (New) Vice President of the International Olympic Committee (IOC)?",
+        opts: [{k:"A", t:"Juan Antonio Samaranch Salisachs"}, {k:"B", t:"Kirsty Coventry"}, {k:"C", t:"Crispin Chettri"}, {k:"D", t:"Rohit Rajpal"}],
+        ans: "A",
+        exp: "Juan Antonio Samaranch Salisachs is listed as the Vice President of the IOC."
+      },
+      {
+        id: 46, type: "standard",
+        q: "Who has become the First Female and First African President of the International Olympic Committee (IOC)?",
+        opts: [{k:"A", t:"Kirsty Coventry"}, {k:"B", t:"Anju Bobby George"}, {k:"C", t:"Vijaya Rahatkar"}, {k:"D", t:"Lisa Gill"}],
+        ans: "A",
+        exp: "Kirsty Coventry is designated as the First Female and First African President of the IOC."
+      },
+      {
+        id: 47, type: "standard",
+        q: "Who is the Head Coach of the Indian Women's Football Team?",
+        opts: [{k:"A", t:"Crispin Chettri"}, {k:"B", t:"Rohit Rajpal"}, {k:"C", t:"Mithun Manhas"}, {k:"D", t:"Ajay Singh"}],
+        ans: "A",
+        exp: "Crispin Chettri is the Head Coach of the Indian Women's Football Team."
+      },
+      {
+        id: 48, type: "standard",
+        q: "Who holds the position of President of the Boxing Federation of India (BFI)?",
+        opts: [{k:"A", t:"Ajay Singh"}, {k:"B", t:"Rohit Rajpal"}, {k:"C", t:"Mithun Manhas"}, {k:"D", t:"Sanjog Gupta"}],
+        ans: "A",
+        exp: "Ajay Singh is the President of the Boxing Federation of India (BFI)."
+      },
+      {
+        id: 49, type: "standard",
+        q: "Who has been appointed as the Chef de Mission of the Indian Team for the Commonwealth Games 2026?",
+        opts: [{k:"A", t:"Rohit Rajpal (Tennis)"}, {k:"B", t:"Shreyas Iyer"}, {k:"C", t:"MS Dhoni"}, {k:"D", t:"Mithun Manhas"}],
+        ans: "A",
+        exp: "Rohit Rajpal (Tennis) is the Chef de Mission for the Indian Team at the Commonwealth Games 2026."
+      },
+      {
+        id: 50, type: "standard",
+        q: "Who are appointed as the Brand Ambassador of F1 Sim Racing India Open 2026 and the Goodwill Ambassador of Pune Grand Tour respectively?",
+        opts: [{k:"A", t:"Shreyas Iyer and MS Dhoni"}, {k:"B", t:"MS Dhoni and Shreyas Iyer"}, {k:"C", t:"Rohit Rajpal and Crispin Chettri"}, {k:"D", t:"Mithun Manhas and MS Dhoni"}],
+        ans: "A",
+        exp: "Shreyas Iyer is the Brand Ambassador for F1 Sim Racing India Open 2026, and MS Dhoni is the Goodwill Ambassador of Pune Grand Tour."
+      },
+      {
+        id: 51, type: "match",
+        q: "Match the newly appointed Chief Ministers with their respective States/UTs:",
+        matchPairs: [
+          {a: "1. West Bengal", b: "a. Samrat Choudhary"},
+          {a: "2. Tamil Nadu", b: "b. Suvendu Adhikari"},
+          {a: "3. Bihar", b: "c. Yumnam Khemchand Singh"},
+          {a: "4. Manipur", b: "d. C. Joseph Vijay"}
+        ],
+        opts: [{k:"A", t:"1-b, 2-d, 3-a, 4-c"}, {k:"B", t:"1-b, 2-a, 3-d, 4-c"}, {k:"C", t:"1-d, 2-b, 3-a, 4-c"}, {k:"D", t:"1-a, 2-d, 3-b, 4-c"}],
+        ans: "A",
+        exp: "West Bengal – Suvendu Adhikari (1-b), Tamil Nadu – C. Joseph Vijay (2-d), Bihar – Samrat Choudhary (3-a), Manipur – Yumnam Khemchand Singh (4-c)."
+      },
+      {
+        id: 52, type: "match",
+        q: "Match the newly appointed Chief Ministers with their respective States/UTs:",
+        matchPairs: [
+          {a: "1. Keralam", b: "a. DK Sivakumar"},
+          {a: "2. Puducherry", b: "b. Hemant Biswa Sarma"},
+          {a: "3. Assam", b: "c. N. Rangaswamy"},
+          {a: "4. Karnataka", b: "d. V. D. Satheesan"}
+        ],
+        opts: [{k:"A", t:"1-d, 2-c, 3-b, 4-a"}, {k:"B", t:"1-c, 2-d, 3-a, 4-b"}, {k:"C", t:"1-d, 2-a, 3-b, 4-c"}, {k:"D", t:"1-b, 2-c, 3-d, 4-a"}],
+        ans: "A",
+        exp: "Keralam – V. D. Satheesan (1-d), Puducherry – N. Rangaswamy (2-c), Assam – Hemant Biswa Sarma (3-b), Karnataka – DK Sivakumar (4-a)."
+      }
+    ];
+
+    // STATE VARIABLES
+    let currentIndex = 0;
+    let scoreCorrect = 0;
+    let scoreWrong = 0;
+    let userAnswers = []; // stores { questionId, selectedKey, isCorrect }
+
+    // DOM ELEMENTS
+    const themeToggleBtn = document.getElementById('themeToggleBtn');
+    const themeIcon = document.getElementById('themeIcon');
+    const themeLabel = document.getElementById('themeLabel');
+    const progressBar = document.getElementById('progressBar');
+    
+    const quizScreen = document.getElementById('quizScreen');
+    const resultsScreen = document.getElementById('resultsScreen');
+
+    const qCounter = document.getElementById('qCounter');
+    const qTypeBadge = document.getElementById('qTypeBadge');
+    const correctScoreEl = document.getElementById('correctScore');
+    const wrongScoreEl = document.getElementById('wrongScore');
+
+    const qText = document.getElementById('qText');
+    const customContentArea = document.getElementById('customContentArea');
+    const optionsGrid = document.getElementById('optionsGrid');
+    const expBox = document.getElementById('expBox');
+    const expText = document.getElementById('expText');
+
+    const statusMsg = document.getElementById('statusMsg');
+    const nextBtn = document.getElementById('nextBtn');
+
+    // THEME TOGGLE
+    themeToggleBtn.addEventListener('click', () => {
+      const currentTheme = document.body.getAttribute('data-theme');
+      if (currentTheme === 'light') {
+        document.body.setAttribute('data-theme', 'dark');
+        themeIcon.textContent = '☀️';
+        themeLabel.textContent = 'Light Mode';
+      } else {
+        document.body.setAttribute('data-theme', 'light');
+        themeIcon.textContent = '🌙';
+        themeLabel.textContent = 'Dark Mode';
+      }
+    });
+
+    // INIT QUIZ
+    function loadQuestion(index) {
+      const item = questionsData[index];
+      
+      // Update progress & counts
+      const progressPct = ((index) / questionsData.length) * 100;
+      progressBar.style.width = `${progressPct}%`;
+      qCounter.textContent = `Question ${index + 1} / ${questionsData.length}`;
+      
+      // Update badge
+      if (item.type === 'statement') {
+        qTypeBadge.textContent = 'Statement-Based';
+        qTypeBadge.className = 'q-badge badge-statement';
+      } else if (item.type === 'match') {
+        qTypeBadge.textContent = 'Match Column';
+        qTypeBadge.className = 'q-badge badge-match';
+      } else {
+        qTypeBadge.textContent = 'Multiple Choice';
+        qTypeBadge.className = 'q-badge badge-standard';
+      }
+
+      // Reset card state
+      qText.textContent = item.q;
+      customContentArea.innerHTML = '';
+      optionsGrid.innerHTML = '';
+      expBox.classList.remove('visible');
+      expText.textContent = '';
+      nextBtn.disabled = true;
+      statusMsg.textContent = 'Select an option to lock your answer.';
+
+      // Render complex layout if needed
+      if (item.type === 'statement') {
+        const stmtBox = document.createElement('div');
+        stmtBox.className = 'statement-box';
+        item.statements.forEach((stmt, idx) => {
+          const stmtDiv = document.createElement('div');
+          stmtDiv.className = 'statement-item';
+          stmtDiv.innerHTML = `<span class="statement-num">${idx + 1}.</span> <span>${stmt}</span>`;
+          stmtBox.appendChild(stmtDiv);
+        });
+        customContentArea.appendChild(stmtBox);
+
+        if (item.subQ) {
+          const subQDiv = document.createElement('div');
+          subQDiv.style.fontWeight = '600';
+          subQDiv.style.fontSize = '0.85rem';
+          subQDiv.style.marginTop = '4px';
+          subQDiv.textContent = item.subQ;
+          customContentArea.appendChild(subQDiv);
+        }
+      } else if (item.type === 'match') {
+        const tableWrapper = document.createElement('div');
+        tableWrapper.className = 'match-table-wrapper';
+        
+        let tableHTML = `
+          <table class="match-table">
+            <thead>
+              <tr>
+                <th>List I (Entity / Post)</th>
+                <th>List II (Person / Position)</th>
+              </tr>
+            </thead>
+            <tbody>
+        `;
+        
+        item.matchPairs.forEach(pair => {
+          tableHTML += `
+            <tr>
+              <td>${pair.a}</td>
+              <td>${pair.b}</td>
+            </tr>
+          `;
+        });
+        
+        tableHTML += `</tbody></table>`;
+        tableWrapper.innerHTML = tableHTML;
+        customContentArea.appendChild(tableWrapper);
+      }
+
+      // Render Options
+      item.opts.forEach(opt => {
+        const btn = document.createElement('button');
+        btn.className = 'option-btn';
+        btn.setAttribute('data-key', opt.k);
+        btn.innerHTML = `<span class="option-prefix">(${opt.k})</span> <span>${opt.t}</span>`;
+        btn.addEventListener('click', () => selectAnswer(opt.k, item));
+        optionsGrid.appendChild(btn);
+      });
+    }
+
+    function selectAnswer(selectedKey, item) {
+      const buttons = optionsGrid.querySelectorAll('.option-btn');
+      
+      // Disable all buttons immediately
+      buttons.forEach(btn => btn.disabled = true);
+
+      const isCorrect = (selectedKey === item.ans);
+
+      if (isCorrect) {
+        scoreCorrect++;
+        correctScoreEl.textContent = scoreCorrect;
+        statusMsg.textContent = '✨ Correct Answer!';
+      } else {
+        scoreWrong++;
+        wrongScoreEl.textContent = scoreWrong;
+        statusMsg.textContent = '❌ Incorrect. Review explanation below.';
+      }
+
+      // Highlight selected and reveal correct
+      buttons.forEach(btn => {
+        const key = btn.getAttribute('data-key');
+        if (key === selectedKey) {
+          if (isCorrect) {
+            btn.classList.add('selected-correct');
+          } else {
+            btn.classList.add('selected-incorrect');
+          }
+        } else if (key === item.ans && !isCorrect) {
+          btn.classList.add('reveal-correct');
+        }
+      });
+
+      // Show explanation
+      expText.textContent = item.exp;
+      expBox.classList.add('visible');
+
+      // Store response
+      userAnswers.push({
+        questionId: item.id,
+        selectedKey: selectedKey,
+        isCorrect: isCorrect
+      });
+
+      // Enable next button
+      nextBtn.disabled = false;
+      if (currentIndex === questionsData.length - 1) {
+        nextBtn.innerHTML = `<span>Show Results</span> <span>🏆</span>`;
+      }
+    }
+
+    nextBtn.addEventListener('click', () => {
+      if (currentIndex < questionsData.length - 1) {
+        currentIndex++;
+        loadQuestion(currentIndex);
+      } else {
+        showResults();
+      }
+    });
+
+    function showResults() {
+      progressBar.style.width = '100%';
+      quizScreen.style.display = 'none';
+      resultsScreen.style.display = 'flex';
+
+      const total = questionsData.length;
+      const pct = Math.round((scoreCorrect / total) * 100);
+
+      document.getElementById('resPct').textContent = `${pct}%`;
+      document.getElementById('resScoreText').textContent = `${scoreCorrect} / ${total}`;
+      document.getElementById('resTotal').textContent = total;
+      document.getElementById('resCorrect').textContent = scoreCorrect;
+      document.getElementById('resWrong').textContent = scoreWrong;
+
+      // Filter incorrect questions
+      const incorrectListEl = document.getElementById('incorrectList');
+      incorrectListEl.innerHTML = '';
+
+      const incorrectEntries = userAnswers.filter(a => !a.isCorrect);
+      document.getElementById('incCount').textContent = incorrectEntries.length;
+
+      if (incorrectEntries.length === 0) {
+        incorrectListEl.innerHTML = `<div style="text-align: center; font-weight: 600; color: var(--correct-border); padding: 12px;">🌟 Perfect Score! Excellent job!</div>`;
+      } else {
+        incorrectEntries.forEach(entry => {
+          const qObj = questionsData.find(q => q.id === entry.questionId);
+          const userOpt = qObj.opts.find(o => o.k === entry.selectedKey);
+          const correctOpt = qObj.opts.find(o => o.k === qObj.ans);
+
+          const itemDiv = document.createElement('div');
+          itemDiv.className = 'incorrect-item';
+          itemDiv.innerHTML = `
+            <div class="incorrect-q-text">Q${qObj.id}. ${qObj.q}</div>
+            <div class="incorrect-ans-row">
+              <span class="user-ans">Your Answer: (${userOpt ? userOpt.k : 'None'}) ${userOpt ? userOpt.t : ''}</span>
+            </div>
+            <div class="incorrect-ans-row">
+              <span class="correct-ans">Correct Answer: (${correctOpt.k}) ${correctOpt.t}</span>
+            </div>
+            <div class="incorrect-exp"><b>Explanation:</b> ${qObj.exp}</div>
+          `;
+          incorrectListEl.appendChild(itemDiv);
+        });
+      }
+    }
+
+    document.getElementById('restartBtn').addEventListener('click', () => {
+      currentIndex = 0;
+      scoreCorrect = 0;
+      scoreWrong = 0;
+      userAnswers = [];
+
+      correctScoreEl.textContent = '0';
+      wrongScoreEl.textContent = '0';
+      nextBtn.innerHTML = `<span>Next</span> <span>➔</span>`;
+
+      resultsScreen.style.display = 'none';
+      quizScreen.style.display = 'flex';
+
+      loadQuestion(0);
+    });
+
+    // Start App
+    loadQuestion(0);
+  </script>
+</body>
+</html>
