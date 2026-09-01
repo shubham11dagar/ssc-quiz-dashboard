@@ -1,0 +1,1475 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cricket Exam Prep Quiz Master</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-primary: #f4f6fb;
+      --bg-surface: #ffffff;
+      --bg-surface-elevated: #f8fafc;
+      --text-main: #0f172a;
+      --text-secondary: #475569;
+      --text-muted: #94a3b8;
+      --border: #e2e8f0;
+      --border-subtle: #f1f5f9;
+      
+      --accent-primary: #2563eb;
+      --accent-hover: #1d4ed8;
+      --accent-subtle: #eff6ff;
+      --accent-border: #bfdbfe;
+
+      --correct-bg: #ecfdf5;
+      --correct-border: #10b981;
+      --correct-text: #065f46;
+      --correct-badge: #059669;
+
+      --wrong-bg: #fef2f2;
+      --wrong-border: #ef4444;
+      --wrong-text: #991b1b;
+      --wrong-badge: #dc2626;
+
+      --card-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.06), 0 8px 10px -6px rgba(15, 23, 42, 0.04);
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 16px;
+    }
+
+    [data-theme="dark"] {
+      --bg-primary: #090d16;
+      --bg-surface: #111827;
+      --bg-surface-elevated: #1e293b;
+      --text-main: #f8fafc;
+      --text-secondary: #cbd5e1;
+      --text-muted: #64748b;
+      --border: #334155;
+      --border-subtle: #1e293b;
+
+      --accent-primary: #3b82f6;
+      --accent-hover: #60a5fa;
+      --accent-subtle: rgba(59, 130, 246, 0.15);
+      --accent-border: #2563eb;
+
+      --correct-bg: rgba(16, 185, 129, 0.15);
+      --correct-border: #10b981;
+      --correct-text: #6ee7b7;
+      --correct-badge: #10b981;
+
+      --wrong-bg: rgba(239, 68, 68, 0.15);
+      --wrong-border: #ef4444;
+      --wrong-text: #fca5a5;
+      --wrong-badge: #ef4444;
+
+      --card-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+    }
+
+    body {
+      background-color: var(--bg-primary);
+      color: var(--text-main);
+      min-height: 100dvh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 12px;
+      overflow-x: hidden;
+      transition: background-color 0.25s ease, color 0.25s ease;
+    }
+
+    /* Main Container with Viewport Constraint */
+    .app-shell {
+      width: 100%;
+      max-width: 820px;
+      height: 94dvh;
+      max-height: 840px;
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--card-shadow);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* Header */
+    .app-header {
+      padding: 12px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--border);
+      background: var(--bg-surface);
+      z-index: 10;
+      flex-shrink: 0;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .brand-icon {
+      width: 32px;
+      height: 32px;
+      background: linear-gradient(135deg, #f97316, #ea580c);
+      color: #fff;
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      font-weight: 800;
+      box-shadow: 0 2px 6px rgba(234, 88, 12, 0.3);
+    }
+
+    .brand-title {
+      font-size: 1rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+
+    .brand-subtitle {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .stat-pill {
+      font-size: 0.8rem;
+      font-family: 'JetBrains Mono', monospace;
+      background: var(--bg-surface-elevated);
+      border: 1px solid var(--border);
+      padding: 4px 10px;
+      border-radius: 20px;
+      color: var(--text-secondary);
+      font-weight: 600;
+    }
+
+    .theme-toggle-btn {
+      background: var(--bg-surface-elevated);
+      border: 1px solid var(--border);
+      color: var(--text-main);
+      width: 34px;
+      height: 34px;
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 14px;
+      transition: all 0.2s;
+    }
+
+    .theme-toggle-btn:hover {
+      background: var(--accent-subtle);
+      border-color: var(--accent-border);
+    }
+
+    /* Progress Bar */
+    .progress-track {
+      width: 100%;
+      height: 4px;
+      background: var(--border-subtle);
+      position: relative;
+      flex-shrink: 0;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #2563eb, #3b82f6);
+      width: 0%;
+      transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* Content Area */
+    .quiz-body {
+      flex: 1;
+      padding: 16px 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      overflow-y: auto;
+      scrollbar-width: thin;
+      scrollbar-color: var(--border) transparent;
+    }
+
+    .quiz-body::-webkit-scrollbar {
+      width: 4px;
+    }
+    .quiz-body::-webkit-scrollbar-thumb {
+      background: var(--border);
+      border-radius: 4px;
+    }
+
+    /* Question Block */
+    .question-section {
+      margin-bottom: 12px;
+      flex-shrink: 0;
+    }
+
+    .question-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 6px;
+    }
+
+    .q-number {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-weight: 700;
+      color: var(--accent-primary);
+    }
+
+    .q-points {
+      font-size: 0.72rem;
+      background: var(--accent-subtle);
+      color: var(--accent-primary);
+      padding: 2px 8px;
+      border-radius: 12px;
+      font-weight: 600;
+    }
+
+    .question-text {
+      font-size: 1.05rem;
+      font-weight: 600;
+      line-height: 1.45;
+      color: var(--text-main);
+    }
+
+    /* Formatted Inserts for Complex Question Types */
+    .statement-box, .match-table-box {
+      margin-top: 8px;
+      background: var(--bg-surface-elevated);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--accent-primary);
+      padding: 8px 12px;
+      border-radius: var(--radius-sm);
+      font-size: 0.85rem;
+      line-height: 1.4;
+    }
+
+    .statement-item {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 4px;
+    }
+    .statement-item:last-child {
+      margin-bottom: 0;
+    }
+
+    .statement-num {
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 700;
+      color: var(--accent-primary);
+    }
+
+    /* Options Grid Layout */
+    .options-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 8px;
+      flex-shrink: 0;
+    }
+
+    @media (max-width: 640px) {
+      .options-grid {
+        grid-template-columns: 1fr;
+        gap: 8px;
+      }
+      .app-shell {
+        height: 98dvh;
+        border-radius: var(--radius-md);
+      }
+      .question-text {
+        font-size: 0.95rem;
+      }
+    }
+
+    .option-btn {
+      background: var(--bg-surface);
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 10px 14px;
+      text-align: left;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      transition: all 0.18s ease;
+      position: relative;
+      outline: none;
+      min-height: 48px;
+    }
+
+    .option-btn:hover:not(:disabled) {
+      border-color: var(--accent-primary);
+      background: var(--accent-subtle);
+      transform: translateY(-1px);
+    }
+
+    .option-key {
+      width: 26px;
+      height: 26px;
+      min-width: 26px;
+      border-radius: 6px;
+      background: var(--bg-surface-elevated);
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 0.78rem;
+      color: var(--text-secondary);
+      font-family: 'JetBrains Mono', monospace;
+      transition: all 0.2s;
+    }
+
+    .option-text {
+      font-size: 0.88rem;
+      font-weight: 500;
+      line-height: 1.35;
+      color: var(--text-main);
+      user-select: text;
+    }
+
+    /* Instant Feedback States */
+    .option-btn.correct {
+      background: var(--correct-bg) !important;
+      border-color: var(--correct-border) !important;
+      color: var(--correct-text) !important;
+    }
+
+    .option-btn.correct .option-key {
+      background: var(--correct-badge);
+      color: #ffffff;
+      border-color: var(--correct-badge);
+    }
+
+    .option-btn.wrong {
+      background: var(--wrong-bg) !important;
+      border-color: var(--wrong-border) !important;
+      color: var(--wrong-text) !important;
+    }
+
+    .option-btn.wrong .option-key {
+      background: var(--wrong-badge);
+      color: #ffffff;
+      border-color: var(--wrong-badge);
+    }
+
+    .option-btn:disabled {
+      cursor: default;
+      opacity: 0.95;
+    }
+
+    /* Explanation Area */
+    .explanation-card {
+      margin-top: 10px;
+      padding: 10px 14px;
+      border-radius: var(--radius-md);
+      background: var(--bg-surface-elevated);
+      border: 1px solid var(--border);
+      display: none;
+      animation: fadeIn 0.2s ease-in-out;
+      font-size: 0.84rem;
+      line-height: 1.4;
+      flex-shrink: 0;
+    }
+
+    .explanation-card.active {
+      display: block;
+    }
+
+    .explanation-title {
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 2px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .exp-correct {
+      color: #059669;
+    }
+
+    .exp-wrong {
+      color: #dc2626;
+    }
+
+    .explanation-text {
+      color: var(--text-secondary);
+      user-select: text;
+    }
+
+    /* Sticky Footer */
+    .app-footer {
+      padding: 12px 20px;
+      background: var(--bg-surface);
+      border-top: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-shrink: 0;
+      gap: 10px;
+    }
+
+    .score-tracker {
+      display: flex;
+      gap: 14px;
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+
+    .score-badge {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .badge-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+    }
+
+    .dot-green { background-color: #10b981; }
+    .dot-red { background-color: #ef4444; }
+
+    .primary-btn {
+      background: var(--accent-primary);
+      color: #ffffff;
+      border: none;
+      border-radius: var(--radius-md);
+      padding: 9px 20px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s ease;
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
+    }
+
+    .primary-btn:hover:not(:disabled) {
+      background: var(--accent-hover);
+      transform: translateY(-1px);
+    }
+
+    .primary-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      box-shadow: none;
+    }
+
+    /* Results Screen */
+    .results-screen {
+      display: none;
+      flex-direction: column;
+      height: 100%;
+      overflow-y: auto;
+      padding: 24px;
+      scrollbar-width: thin;
+      scrollbar-color: var(--border) transparent;
+    }
+
+    .results-screen.active {
+      display: flex;
+    }
+
+    .results-header-card {
+      text-align: center;
+      background: var(--bg-surface-elevated);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 20px;
+      margin-bottom: 20px;
+      position: relative;
+    }
+
+    .score-circle {
+      width: 90px;
+      height: 90px;
+      border-radius: 50%;
+      margin: 0 auto 12px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, var(--accent-primary), #6366f1);
+      color: #fff;
+      font-weight: 800;
+      box-shadow: 0 6px 16px rgba(37, 99, 235, 0.3);
+    }
+
+    .score-circle .score-val {
+      font-size: 1.6rem;
+      line-height: 1;
+    }
+    .score-circle .score-pct {
+      font-size: 0.72rem;
+      opacity: 0.85;
+      font-weight: 600;
+    }
+
+    .results-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .results-subtitle {
+      font-size: 0.84rem;
+      color: var(--text-secondary);
+    }
+
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-top: 14px;
+    }
+
+    .stat-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      padding: 10px;
+      border-radius: var(--radius-md);
+      text-align: center;
+    }
+
+    .stat-card .label {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+
+    .stat-card .value {
+      font-size: 1.2rem;
+      font-weight: 700;
+      margin-top: 2px;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .breakdown-title {
+      font-size: 0.95rem;
+      font-weight: 700;
+      margin: 14px 0 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--text-main);
+    }
+
+    .breakdown-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .breakdown-card {
+      background: var(--bg-surface-elevated);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 14px;
+      font-size: 0.86rem;
+    }
+
+    .breakdown-q-title {
+      font-weight: 600;
+      margin-bottom: 8px;
+      color: var(--text-main);
+    }
+
+    .answer-comparison {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-bottom: 8px;
+      font-size: 0.8rem;
+    }
+
+    .badge-marked, .badge-correct {
+      padding: 4px 8px;
+      border-radius: 6px;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .badge-marked {
+      background: var(--wrong-bg);
+      color: var(--wrong-text);
+      border: 1px solid var(--wrong-border);
+    }
+
+    .badge-correct {
+      background: var(--correct-bg);
+      color: var(--correct-text);
+      border: 1px solid var(--correct-border);
+    }
+
+    .breakdown-exp {
+      font-size: 0.78rem;
+      color: var(--text-secondary);
+      background: var(--bg-surface);
+      padding: 8px 10px;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      margin-top: 6px;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="app-shell">
+    <!-- Header -->
+    <header class="app-header">
+      <div class="brand">
+        <div class="brand-icon">🏏</div>
+        <div>
+          <h1 class="brand-title">Cricket Master Exam</h1>
+          <p class="brand-subtitle">Complete Official Question Bank</p>
+        </div>
+      </div>
+      <div class="header-actions">
+        <div class="stat-pill" id="questionCounter">Q 1/40</div>
+        <button class="theme-toggle-btn" id="themeToggle" title="Toggle Theme" aria-label="Toggle Theme">🌙</button>
+      </div>
+    </header>
+
+    <!-- Progress Tracker -->
+    <div class="progress-track">
+      <div class="progress-fill" id="progressFill"></div>
+    </div>
+
+    <!-- Active Quiz View -->
+    <main class="quiz-body" id="quizContainer">
+      <div class="question-section">
+        <div class="question-meta">
+          <span class="q-number" id="qCategoryBadge">Official Examination Question</span>
+          <span class="q-points">1.0 Mark</span>
+        </div>
+        <div class="question-text" id="questionText">Loading Question...</div>
+        <div id="statementInsert" style="display:none;"></div>
+      </div>
+
+      <!-- Options Grid -->
+      <div class="options-grid" id="optionsContainer">
+        <!-- Injected via JavaScript -->
+      </div>
+
+      <!-- Explanation Box -->
+      <div class="explanation-card" id="explanationBox">
+        <div class="explanation-title" id="explanationStatus"></div>
+        <div class="explanation-text" id="explanationText"></div>
+      </div>
+    </main>
+
+    <!-- Footer Action Bar -->
+    <footer class="app-footer" id="quizFooter">
+      <div class="score-tracker">
+        <div class="score-badge">
+          <span class="badge-dot dot-green"></span>
+          <span id="correctScore">0</span> Correct
+        </div>
+        <div class="score-badge">
+          <span class="badge-dot dot-red"></span>
+          <span id="wrongScore">0</span> Wrong
+        </div>
+      </div>
+      <button class="primary-btn" id="nextBtn" disabled>
+        <span>Next Question</span>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </button>
+    </footer>
+
+    <!-- Results View -->
+    <div class="results-screen" id="resultsContainer">
+      <div class="results-header-card">
+        <div class="score-circle">
+          <span class="score-val" id="finalScoreDisplay">0/40</span>
+          <span class="score-pct" id="finalPctDisplay">0%</span>
+        </div>
+        <h2 class="results-title" id="resultsTitle">Exam Completed!</h2>
+        <p class="results-subtitle" id="resultsTagline">Here is your comprehensive performance summary.</p>
+        
+        <div class="stats-row">
+          <div class="stat-card">
+            <div class="label">Total Questions</div>
+            <div class="value" id="statTotal">40</div>
+          </div>
+          <div class="stat-card">
+            <div class="label" style="color:#10b981;">Correct</div>
+            <div class="value" style="color:#10b981;" id="statCorrect">0</div>
+          </div>
+          <div class="stat-card">
+            <div class="label" style="color:#ef4444;">Incorrect</div>
+            <div class="value" style="color:#ef4444;" id="statWrong">0</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="breakdown-title" id="breakdownHeading">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+        <span>Review of Incorrect Responses</span>
+      </div>
+
+      <div class="breakdown-list" id="incorrectList">
+        <!-- Injected via JavaScript -->
+      </div>
+
+      <button class="primary-btn" id="restartBtn" style="align-self: center; margin-top: auto; padding: 12px 28px;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M8 16H3v5"/></svg>
+        <span>Retake Examination</span>
+      </button>
+    </div>
+  </div>
+
+  <script>
+    // Quiz Data Set
+    const quizData = [
+      {
+        id: 1,
+        question: "Which organization serves as the international governing body for cricket, and when was it originally established as the Imperial Cricket Conference?",
+        options: {
+          A: "Board of Control for Cricket in India (BCCI), established in 1928",
+          B: "International Cricket Council (ICC), established in 1909",
+          C: "Sports Authority of India (SAI), established in 1984",
+          D: "Marylebone Cricket Club (MCC), established in 1787"
+        },
+        correct: "B",
+        explanation: "The international governing body for cricket is the International Cricket Council (ICC), which was established as the Imperial Cricket Conference in 1909 and later became the ICC in 1989."
+      },
+      {
+        id: 2,
+        question: "Where is the headquarters of the Board of Control for Cricket in India (BCCI) located?",
+        options: {
+          A: "New Delhi",
+          B: "Dubai",
+          C: "Mumbai",
+          D: "Kolkata"
+        },
+        correct: "C",
+        explanation: "The headquarters of the Board of Control for Cricket in India (BCCI) is located in Mumbai."
+      },
+      {
+        id: 3,
+        question: "In which year was the first ever ODI (One Day International) match played, and between which two teams was it contested?",
+        options: {
+          A: "1877, Australia vs England",
+          B: "1971, Australia vs England",
+          C: "1975, West Indies vs Australia",
+          D: "1983, India vs West Indies"
+        },
+        correct: "B",
+        explanation: "The first ODI match was played in 1971 between Australia and England at the Melbourne Cricket Ground (MCG)."
+      },
+      {
+        id: 4,
+        question: "Who won the first Men's Cricket World Cup held in 1975, which consisted of 60 overs per side?",
+        options: {
+          A: "India",
+          B: "Australia",
+          C: "England",
+          D: "West Indies"
+        },
+        correct: "D",
+        explanation: "The first Men's Cricket World Cup was held in 1975 in England, featuring 60 overs, and was won by the West Indies."
+      },
+      {
+        id: 5,
+        question: "Under whose captaincy did India win its first Men's Cricket World Cup in 1983 by defeating the West Indies?",
+        options: {
+          A: "MS Dhoni",
+          B: "Kapil Dev",
+          C: "Sunil Gavaskar",
+          D: "Lala Amarnath"
+        },
+        correct: "B",
+        explanation: "India won its first Cricket World Cup in 1983 under the captaincy of Kapil Dev by defeating the West Indies."
+      },
+      {
+        id: 6,
+        question: "Which country won the 2023 ICC Men's Cricket World Cup held in India by defeating the host nation, securing their 6th title?",
+        options: {
+          A: "England",
+          B: "Australia",
+          C: "Pakistan",
+          D: "South Africa"
+        },
+        correct: "B",
+        explanation: "Australia won the 2023 Cricket World Cup held in India by defeating India, holding the record for the most ICC Men's Cricket World Cup titles (6th title)."
+      },
+      {
+        id: 7,
+        question: "What was the official mascot of the 2011 ICC Men's Cricket World Cup, which was jointly hosted by India, Sri Lanka, and Bangladesh?",
+        options: {
+          A: "Stumpy the elephant",
+          B: "Blaze the leopard",
+          C: "TorCCy the tiger",
+          D: "Peggys the lion"
+        },
+        correct: "A",
+        explanation: "\"Stumpy\" the elephant was the official mascot of the 2011 ICC Men's Cricket World Cup."
+      },
+      {
+        id: 8,
+        question: "According to the provided schedule, which countries are slated to co-host the 2027 ICC Men's Cricket World Cup?",
+        options: {
+          A: "India and Sri Lanka",
+          B: "Australia and New Zealand",
+          C: "South Africa, Zimbabwe, and Namibia",
+          D: "USA and West Indies"
+        },
+        correct: "C",
+        explanation: "The 2027 World Cup will be hosted by South Africa, Zimbabwe, and Namibia."
+      },
+      {
+        id: 9,
+        question: "Which country won the inaugural edition of the T20 Cricket World Cup held in South Africa in 2007?",
+        options: {
+          A: "Australia",
+          B: "Pakistan",
+          C: "India",
+          D: "England"
+        },
+        correct: "C",
+        explanation: "The first edition of the T20 Cricket World Cup in 2007 was held in South Africa and won by India."
+      },
+      {
+        id: 10,
+        question: "Who won the ICC Champions Trophy in the year 2025, maintaining the status of current champion as per the text?",
+        options: {
+          A: "Australia",
+          B: "Bangladesh",
+          C: "India",
+          D: "Pakistan"
+        },
+        correct: "C",
+        explanation: "India is the current champion of the Champions Trophy (2025), holding 3 titles in total alongside Australia's 2."
+      },
+      {
+        id: 11,
+        question: "How many times has India won the Asia Cup since its inception in 1984?",
+        options: {
+          A: "5 times",
+          B: "6 times",
+          C: "7 times",
+          D: "8 times"
+        },
+        correct: "D",
+        explanation: "The Asia Cup, first held in 1984 in Sharjah, UAE, has been won the most times by India (8 times)."
+      },
+      {
+        id: 12,
+        question: "What is the standard weight range of a cricket ball as specified in the text?",
+        options: {
+          A: "140-150 g",
+          B: "156-163 g",
+          C: "165-170 g",
+          D: "150-155 g"
+        },
+        correct: "B",
+        explanation: "The weight of a cricket ball is specified as 156-163 g (or 160 plus-minus 3 g)."
+      },
+      {
+        id: 13,
+        question: "What is the height of a cricket wicket (stump) in inches?",
+        options: {
+          A: "24 inches",
+          B: "26 inches",
+          C: "28 inches",
+          D: "30 inches"
+        },
+        correct: "C",
+        explanation: "The wicket (stump) height is 28 inches."
+      },
+      {
+        id: 14,
+        question: "What is the maximum number of overs a single bowler can bowl in a One Day International (ODI) match?",
+        options: {
+          A: "4 overs",
+          B: "8 overs",
+          C: "10 overs",
+          D: "20 overs"
+        },
+        correct: "C",
+        explanation: "In One Day Internationals (ODIs), a bowler can bowl a maximum of 10 overs, whereas in T20 matches the maximum is 4 overs."
+      },
+      {
+        id: 15,
+        question: "After how many overs is a ball change allowed during a standard limited-overs match according to the text?",
+        options: {
+          A: "After 20 overs",
+          B: "After 50 overs",
+          C: "After 75 overs",
+          D: "After 80 overs"
+        },
+        correct: "D",
+        explanation: "Ball change is allowed only after 80 overs."
+      },
+      {
+        id: 16,
+        question: "What formula is used to calculate the strike rate of a batter in cricket?",
+        options: {
+          A: "(Total runs scored / Total matches played) x 100",
+          B: "(Total runs scored / Total balls faced) x 100",
+          C: "(Total boundaries / Total balls faced) x 100",
+          D: "(Total runs scored / Total innings) x 100"
+        },
+        correct: "B",
+        explanation: "Strike rate calculation is given by the formula: (Total runs scored / Total balls faced) x 100."
+      },
+      {
+        id: 17,
+        question: "In cricket, what does it signify when an umpire raises an index finger above the head?",
+        options: {
+          A: "Wide ball",
+          B: "No ball",
+          C: "Batsman is out",
+          D: "Free hit"
+        },
+        correct: "C",
+        explanation: "If the umpire raises an index finger above the head, it means the batsman is out."
+      },
+      {
+        id: 18,
+        question: "What does an umpire signal by extending both hands horizontally?",
+        options: {
+          A: "Boundary four",
+          B: "Six runs",
+          C: "Dead ball",
+          D: "Wide ball"
+        },
+        correct: "D",
+        explanation: "In cricket, if the umpire extends both hands horizontally, it means a wide ball."
+      },
+      {
+        id: 19,
+        question: "Where is the first slip fielding position located relative to the batsman?",
+        options: {
+          A: "In front of the batsman on the off-side",
+          B: "Behind the batsman",
+          C: "Square to the pitch on the leg-side",
+          D: "Extremely close near the batter's feet"
+        },
+        correct: "B",
+        explanation: "The first slip fielding position is behind the batsman."
+      },
+      {
+        id: 20,
+        question: "What does the cricketing term \"Chinaman\" refer to?",
+        options: {
+          A: "An off-spin delivery bowled by a right-arm bowler",
+          B: "A short-pitched bouncer aimed at the head",
+          C: "A leg-spin delivery by a left-arm bowler",
+          D: "A delivery that swings in the opposite direction of conventional swing"
+        },
+        correct: "C",
+        explanation: "The term \"Chinaman\" in cricket refers to a leg-spin delivery by a left-arm bowler."
+      },
+      {
+        id: 21,
+        question: "Who was the first Indian cricketer to serve as President of the Board of Control for Cricket in India (BCCI)?",
+        options: {
+          A: "Kapil Dev",
+          B: "Lala Amarnath",
+          C: "The Maharaja of Vizianagaram",
+          D: "Sachin Tendulkar"
+        },
+        correct: "C",
+        explanation: "The Maharaja of Vizianagaram was the first Indian cricketer to serve as President of the BCCI."
+      },
+      {
+        id: 22,
+        question: "In which match did Sachin Tendulkar score his very first ODI century?",
+        options: {
+          A: "In his 50th match",
+          B: "In his 79th match",
+          C: "In his 100th match",
+          D: "In his debut match"
+        },
+        correct: "B",
+        explanation: "Sachin Tendulkar scored his first ODI century in his 79th match."
+      },
+      {
+        id: 23,
+        question: "Who was the first Test cricket captain of an independent Indian team?",
+        options: {
+          A: "CK Nayudu",
+          B: "Vijay Hazare",
+          C: "Lala Amarnath",
+          D: "Kapil Dev"
+        },
+        correct: "C",
+        explanation: "Lala Amarnath was the first Test cricket captain of an independent Indian team."
+      },
+      {
+        id: 24,
+        question: "Where is the Narendra Modi Cricket Stadium, recognized as the largest cricket stadium in the world, located?",
+        options: {
+          A: "Mumbai",
+          B: "Kolkata",
+          C: "Ahmedabad",
+          D: "Chennai"
+        },
+        correct: "C",
+        explanation: "Narendra Modi Cricket Stadium is the largest cricket stadium in the world located at Ahmedabad, India."
+      },
+      {
+        id: 25,
+        question: "Who is noted as the youngest recipient of the Bharat Ratna and the only cricketer to receive this honor?",
+        options: {
+          A: "Kapil Dev",
+          B: "MS Dhoni",
+          C: "Sunil Gavaskar",
+          D: "Sachin Tendulkar"
+        },
+        correct: "D",
+        explanation: "Sachin Tendulkar is the youngest recipient of the Bharat Ratna and the only cricketer to have received it (in 2014)."
+      },
+      {
+        id: 26,
+        question: "What method is used in cricket for the calculation and adjustment of matches shortened by rain, involving remaining overs and wickets in hand?",
+        options: {
+          A: "VJD Method",
+          B: "Duckworth-Lewis-Stern (DLS) method",
+          C: "Net Run Rate (NRR) method",
+          D: "Super Over calculation"
+        },
+        correct: "B",
+        explanation: "The Duckworth-Lewis-Stern (DLS) method is used for the calculation of matches shortened by rain based on overs remaining and wickets in hand."
+      },
+      {
+        id: 27,
+        question: "Who holds the distinction of being the only captain to win all three major ICC limited-overs tournament trophies?",
+        options: {
+          A: "Ricky Ponting",
+          B: "MS Dhoni",
+          C: "Virat Kohli",
+          D: "Kapil Dev"
+        },
+        correct: "B",
+        explanation: "MS Dhoni is noted as the only captain to win all major ICC tournament trophies."
+      },
+      {
+        id: 28,
+        question: "Who was the first woman in the world to score 6000 plus ODI runs and served as the longest-serving captain?",
+        options: {
+          A: "Shanta Rangaswamy",
+          B: "Jhulan Goswami",
+          C: "Mithali Raj",
+          D: "Shafali Varma"
+        },
+        correct: "C",
+        explanation: "Mithali Raj is the longest serving captain and the first woman in the world to score 6000+ ODI runs."
+      },
+      {
+        id: 29,
+        question: "Who holds the record as the highest wicket-taker in women's cricket mentioned in the text?",
+        options: {
+          A: "Deepti Sharma",
+          B: "Jhulan Goswami",
+          C: "Shanta Rangaswamy",
+          D: "Smriti Mandhana"
+        },
+        correct: "B",
+        explanation: "Jhulan Goswami is noted as the highest wicket-taker in women's cricket."
+      },
+      {
+        id: 30,
+        question: "Name the oldest gold cup tournament in Hyderabad mentioned in the text.",
+        options: {
+          A: "Ranji Trophy",
+          B: "Moin-ud-dowlah gold cup",
+          C: "Duleep Trophy",
+          D: "Vijay Hazare Trophy"
+        },
+        correct: "B",
+        explanation: "The Moin-ud-dowlah gold cup in Hyderabad is noted as the oldest."
+      },
+      {
+        id: 31,
+        question: "After whom is the prestigious Ranji Trophy named, which is organized by the BCCI?",
+        options: {
+          A: "Maharaja of Vizianagaram",
+          B: "KS Ranjitsinhji",
+          C: "Duleepsinhji",
+          D: "C.K. Nayudu"
+        },
+        correct: "B",
+        explanation: "The Ranji Trophy is named after KS Ranjitsinhji and is organized by the BCCI."
+      },
+      {
+        id: 32,
+        question: "Which domestic team is the most successful in the history of the Ranji Trophy with 42 titles?",
+        options: {
+          A: "Karnataka",
+          B: "Delhi",
+          C: "Mumbai",
+          D: "Saurashtra"
+        },
+        correct: "C",
+        explanation: "Mumbai is the most successful team in the Ranji Trophy with 42 titles."
+      },
+      {
+        id: 33,
+        question: "What is the standard speed range for fast-paced bowling in cricket?",
+        options: {
+          A: "70-100 km/hr",
+          B: "100-120 km/hr",
+          C: "130-160 km/hr",
+          D: "160-180 km/hr"
+        },
+        correct: "C",
+        explanation: "Bowling fast pace ranges between 130-160 km/hr, while spin ranges between 70-100 km/hr."
+      },
+      {
+        id: 34,
+        question: "In cricket terminology, what is a delivery called that is pitched at the batsman's feet making it very hard to play?",
+        options: {
+          A: "Bouncer",
+          B: "Yorker",
+          C: "Beamer",
+          D: "Googly"
+        },
+        correct: "B",
+        explanation: "A yorker is a ball pitched at the batsman's feet, making it very hard to play."
+      },
+      {
+        id: 35,
+        question: "What does a \"Googly\" represent in cricket terminology?",
+        options: {
+          A: "An off-spinner's ball that turns away from a right-handed batsman",
+          B: "A leg-spinner's ball that turns opposite to normal leg-break",
+          C: "A short-pitched ball rising to head height",
+          D: "An old ball swinging late in the opposite direction"
+        },
+        correct: "B",
+        explanation: "A googly is a leg-spinner's ball that turns opposite to normal leg-break."
+      },
+      {
+        id: 36,
+        question: "What is the consequence for a batsman on the delivery immediately following a \"No-Ball\" (Free Hit)?",
+        options: {
+          A: "The batsman can be dismissed in any standard dismissal mode.",
+          B: "The batsman cannot be dismissed except via run-out.",
+          C: "The batsman is automatically awarded six runs.",
+          D: "The batsman must change his batting end."
+        },
+        correct: "B",
+        explanation: "A Free Hit is the next delivery after a no-ball where the batsman cannot be dismissed except by run-out."
+      },
+      {
+        id: 37,
+        question: "What is the specific role of a \"Night Watchman\" in Test cricket?",
+        options: {
+          A: "A fast bowler brought in to bowl the final overs of the day.",
+          B: "A lower-order batsman sent to bat to protect top batsmen at the end of the day.",
+          C: "A specialized fielder stationed behind the wicket during night sessions.",
+          D: "An extra umpire overseeing bad light conditions."
+        },
+        correct: "B",
+        explanation: "A night watchman is a lower-order batsman sent to bat to protect top batsmen at the end of the day in Test matches."
+      },
+      {
+        id: 38,
+        question: "What fielding position is described as being located between the slip and the point?",
+        options: {
+          A: "Gully",
+          B: "Square Leg",
+          C: "Silly Point",
+          D: "Third Man"
+        },
+        correct: "A",
+        explanation: "Gully is the field position located between the slip and the point."
+      },
+      {
+        id: 39,
+        question: "What term defines a dismissal where a batter is out without scoring any runs (0 runs)?",
+        options: {
+          A: "Golden Duck",
+          B: "Edge",
+          C: "Duck",
+          D: "Maiden"
+        },
+        correct: "C",
+        explanation: "A duck refers to a player being out without scoring (0 runs)."
+      },
+      {
+        id: 40,
+        question: "Whose trademark power-finishing shot is known as the \"Helicopter Shot\"?",
+        options: {
+          A: "Sachin Tendulkar",
+          B: "Rohit Sharma",
+          C: "MS Dhoni",
+          D: "Virat Kohli"
+        },
+        correct: "C",
+        explanation: "The helicopter shot is MS Dhoni's trademark power-finishing flick shot."
+      }
+    ];
+
+    // State Variables
+    let currentIndex = 0;
+    let correctCount = 0;
+    let wrongCount = 0;
+    let userAnswers = []; // Records: { questionIndex, selectedKey, isCorrect }
+
+    // DOM Elements
+    const questionCounter = document.getElementById("questionCounter");
+    const progressFill = document.getElementById("progressFill");
+    const questionText = document.getElementById("questionText");
+    const statementInsert = document.getElementById("statementInsert");
+    const optionsContainer = document.getElementById("optionsContainer");
+    const explanationBox = document.getElementById("explanationBox");
+    const explanationStatus = document.getElementById("explanationStatus");
+    const explanationText = document.getElementById("explanationText");
+    const correctScore = document.getElementById("correctScore");
+    const wrongScore = document.getElementById("wrongScore");
+    const nextBtn = document.getElementById("nextBtn");
+    const themeToggle = document.getElementById("themeToggle");
+    const quizContainer = document.getElementById("quizContainer");
+    const quizFooter = document.getElementById("quizFooter");
+    const resultsContainer = document.getElementById("resultsContainer");
+    const restartBtn = document.getElementById("restartBtn");
+
+    // Theme Management
+    let isDark = false;
+    themeToggle.addEventListener("click", () => {
+      isDark = !isDark;
+      document.documentElement.setAttribute("data-theme", isDark ? "dark" : "light");
+      themeToggle.textContent = isDark ? "☀️" : "🌙";
+    });
+
+    // Load and Render Current Question
+    function loadQuestion(index) {
+      const q = quizData[index];
+      const total = quizData.length;
+
+      // Update Header & Progress
+      questionCounter.textContent = `Q ${index + 1}/${total}`;
+      const progressPct = ((index) / total) * 100;
+      progressFill.style.width = `${progressPct}%`;
+
+      // Set Question text
+      questionText.textContent = q.question;
+
+      // Check if statement-based / match type (Extensible parser)
+      statementInsert.style.display = "none";
+      statementInsert.innerHTML = "";
+
+      // Reset Explanations & Next Button
+      explanationBox.className = "explanation-card";
+      explanationBox.style.display = "none";
+      nextBtn.disabled = true;
+
+      // Render Options
+      optionsContainer.innerHTML = "";
+      Object.keys(q.options).forEach(key => {
+        const optionBtn = document.createElement("button");
+        optionBtn.className = "option-btn";
+        optionBtn.dataset.key = key;
+        optionBtn.innerHTML = `
+          <div class="option-key">${key}</div>
+          <div class="option-text">${q.options[key]}</div>
+        `;
+        optionBtn.addEventListener("click", () => handleSelectOption(key, optionBtn));
+        optionsContainer.appendChild(optionBtn);
+      });
+
+      // Update button text if last question
+      if (index === total - 1) {
+        nextBtn.innerHTML = `
+          <span>Finish Quiz</span>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+        `;
+      } else {
+        nextBtn.innerHTML = `
+          <span>Next Question</span>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        `;
+      }
+    }
+
+    // Handle Option Selection with Immediate Visual Feedback
+    function handleSelectOption(selectedKey, selectedBtn) {
+      const currentQ = quizData[currentIndex];
+      const isCorrect = selectedKey === currentQ.correct;
+
+      // Disable all options immediately
+      const allButtons = optionsContainer.querySelectorAll(".option-btn");
+      allButtons.forEach(btn => {
+        btn.disabled = true;
+        if (btn.dataset.key === currentQ.correct) {
+          btn.classList.add("correct");
+        }
+      });
+
+      if (isCorrect) {
+        correctCount++;
+        correctScore.textContent = correctCount;
+        selectedBtn.classList.add("correct");
+        explanationStatus.className = "explanation-title exp-correct";
+        explanationStatus.innerHTML = `
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+          Correct Answer
+        `;
+      } else {
+        wrongCount++;
+        wrongScore.textContent = wrongCount;
+        selectedBtn.classList.add("wrong");
+        explanationStatus.className = "explanation-title exp-wrong";
+        explanationStatus.innerHTML = `
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+          Incorrect (Option ${currentQ.correct} is Correct)
+        `;
+      }
+
+      // Record Answer for Review
+      userAnswers.push({
+        questionIndex: currentIndex,
+        selectedKey: selectedKey,
+        isCorrect: isCorrect
+      });
+
+      // Show Explanation Box
+      explanationText.textContent = currentQ.explanation;
+      explanationBox.style.display = "block";
+      explanationBox.classList.add("active");
+
+      // Enable Next Button
+      nextBtn.disabled = false;
+    }
+
+    // Navigation
+    nextBtn.addEventListener("click", () => {
+      if (currentIndex < quizData.length - 1) {
+        currentIndex++;
+        loadQuestion(currentIndex);
+      } else {
+        showResults();
+      }
+    });
+
+    // Display Results View
+    function showResults() {
+      progressFill.style.width = "100%";
+      quizContainer.style.display = "none";
+      quizFooter.style.display = "none";
+      resultsContainer.classList.add("active");
+
+      const total = quizData.length;
+      const percentage = Math.round((correctCount / total) * 100);
+
+      document.getElementById("finalScoreDisplay").textContent = `${correctCount}/${total}`;
+      document.getElementById("finalPctDisplay").textContent = `${percentage}%`;
+      document.getElementById("statTotal").textContent = total;
+      document.getElementById("statCorrect").textContent = correctCount;
+      document.getElementById("statWrong").textContent = wrongCount;
+
+      const resultsTitle = document.getElementById("resultsTitle");
+      const resultsTagline = document.getElementById("resultsTagline");
+
+      if (percentage >= 80) {
+        resultsTitle.textContent = "🏆 Outstanding Performance!";
+        resultsTagline.textContent = "You have demonstrated mastery over competitive cricket knowledge.";
+      } else if (percentage >= 50) {
+        resultsTitle.textContent = "👍 Good Attempt!";
+        resultsTagline.textContent = "Solid foundation, but reviewing the missed questions will help you ace it.";
+      } else {
+        resultsTitle.textContent = "📚 Keep Practicing!";
+        resultsTagline.textContent = "Review the incorrect answers below to build your core knowledge.";
+      }
+
+      // Breakdown List
+      const incorrectList = document.getElementById("incorrectList");
+      const breakdownHeading = document.getElementById("breakdownHeading");
+      incorrectList.innerHTML = "";
+
+      const incorrectAnswers = userAnswers.filter(a => !a.isCorrect);
+
+      if (incorrectAnswers.length === 0) {
+        breakdownHeading.style.display = "none";
+        incorrectList.innerHTML = `
+          <div style="text-align:center; padding: 20px; color: var(--correct-badge); font-weight:600;">
+            🎉 Perfect score! No incorrect answers to review.
+          </div>
+        `;
+      } else {
+        breakdownHeading.style.display = "flex";
+        incorrectAnswers.forEach(item => {
+          const q = quizData[item.questionIndex];
+          const card = document.createElement("div");
+          card.className = "breakdown-card";
+          card.innerHTML = `
+            <div class="breakdown-q-title">Q${q.id}. ${q.question}</div>
+            <div class="answer-comparison">
+              <div><span class="badge-marked">Your Answer: ${item.selectedKey}) ${q.options[item.selectedKey]}</span></div>
+              <div><span class="badge-correct">Correct Answer: ${q.correct}) ${q.options[q.correct]}</span></div>
+            </div>
+            <div class="breakdown-exp"><strong>Explanation:</strong> ${q.explanation}</div>
+          `;
+          incorrectList.appendChild(card);
+        });
+      }
+    }
+
+    // Restart Quiz Handler
+    restartBtn.addEventListener("click", () => {
+      currentIndex = 0;
+      correctCount = 0;
+      wrongCount = 0;
+      userAnswers = [];
+      correctScore.textContent = "0";
+      wrongScore.textContent = "0";
+
+      resultsContainer.classList.remove("active");
+      quizContainer.style.display = "flex";
+      quizFooter.style.display = "flex";
+      loadQuestion(0);
+    });
+
+    // Initialize Quiz on DOM Load
+    window.addEventListener("DOMContentLoaded", () => {
+      loadQuestion(0);
+    });
+  </script>
+</body>
+</html>
