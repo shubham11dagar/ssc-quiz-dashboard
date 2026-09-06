@@ -1,0 +1,1032 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sports GK Exam Prep: Football & Hockey</title>
+  <!-- Tailwind CSS via CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#eef2ff',
+              100: '#e0e7ff',
+              500: '#6366f1',
+              600: '#4f46e5',
+              700: '#4338ca',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    /* Viewport-locked strict sizing */
+    html, body {
+      height: 100vh;
+      overflow: hidden;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+    }
+    .custom-scroll::-webkit-scrollbar {
+      width: 4px;
+    }
+    .custom-scroll::-webkit-scrollbar-thumb {
+      background: rgba(156, 163, 175, 0.4);
+      border-radius: 9999px;
+    }
+    .option-btn {
+      transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .option-btn:hover:not(:disabled) {
+      transform: translateY(-1px);
+    }
+    .fade-in {
+      animation: fadeIn 0.2s ease-in-out forwards;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body class="bg-slate-100 text-slate-900 dark:bg-slate-950 dark:text-slate-100 flex flex-col transition-colors duration-200">
+
+  <!-- TOP APP BAR (Compact) -->
+  <header class="h-14 flex-none border-b border-slate-200 dark:border-slate-800 bg-white/80 dark:bg-slate-900/80 backdrop-blur px-4 sm:px-6 flex items-center justify-between">
+    <div class="flex items-center space-x-3">
+      <div class="w-8 h-8 rounded-lg bg-indigo-600 text-white flex items-center justify-center font-bold text-sm shadow-sm">
+        GK
+      </div>
+      <div>
+        <h1 class="text-xs sm:text-sm font-semibold tracking-tight leading-none text-slate-800 dark:text-slate-100">
+          Sports Exam Preparation
+        </h1>
+        <p class="text-[10px] text-slate-500 dark:text-slate-400 mt-0.5">Football & Field Hockey Mastery</p>
+      </div>
+    </div>
+
+    <!-- Quick Stats & Dark Mode Toggle -->
+    <div class="flex items-center space-x-3">
+      <div id="badge-tracker" class="hidden sm:flex items-center space-x-2 text-xs font-mono bg-slate-100 dark:bg-slate-800 px-2.5 py-1 rounded-md border border-slate-200 dark:border-slate-700">
+        <span class="text-emerald-600 dark:text-emerald-400 font-semibold" id="top-correct-count">✓ 0</span>
+        <span class="text-slate-300 dark:text-slate-600">|</span>
+        <span class="text-rose-600 dark:text-rose-400 font-semibold" id="top-incorrect-count">✗ 0</span>
+      </div>
+
+      <button id="theme-toggle" class="p-1.5 rounded-lg border border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-300" title="Toggle Theme" aria-label="Toggle Dark Mode">
+        <svg id="sun-icon" class="w-4 h-4 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" /></svg>
+        <svg id="moon-icon" class="w-4 h-4 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" /></svg>
+      </button>
+    </div>
+  </header>
+
+  <!-- PROGRESS BAR (Thin, minimal) -->
+  <div class="h-1 bg-slate-200 dark:bg-slate-800 w-full">
+    <div id="progress-bar" class="h-full bg-indigo-600 transition-all duration-300" style="width: 0%;"></div>
+  </div>
+
+  <!-- MAIN VIEWPORT-LOCKED CONTENT AREA -->
+  <main class="flex-1 flex flex-col justify-center items-center p-2.5 sm:p-4 overflow-hidden relative">
+    
+    <!-- QUIZ CARD CONTAINER -->
+    <div id="quiz-screen" class="w-full max-w-3xl h-full max-h-[calc(100vh-4.8rem)] flex flex-col bg-white dark:bg-slate-900 rounded-xl shadow-lg border border-slate-200 dark:border-slate-800 overflow-hidden">
+      
+      <!-- Card Sub-header: Question Index, Category tag, Timer/Status -->
+      <div class="px-4 py-2 bg-slate-50 dark:bg-slate-850/60 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between flex-none">
+        <div class="flex items-center space-x-2">
+          <span class="text-xs font-mono font-bold text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-950/70 border border-indigo-200 dark:border-indigo-900 px-2 py-0.5 rounded">
+            Q <span id="current-q-index">1</span> / <span id="total-q-count">34</span>
+          </span>
+          <span id="topic-tag" class="text-[11px] font-medium uppercase tracking-wider text-slate-500 dark:text-slate-400">
+            Football / Hockey
+          </span>
+        </div>
+        <div class="text-[11px] font-medium text-slate-500 dark:text-slate-400">
+          Single Choice Exam Mode
+        </div>
+      </div>
+
+      <!-- Question Content Area (Scrollable only if screen is tiny) -->
+      <div class="flex-1 overflow-y-auto custom-scroll p-4 sm:p-5 flex flex-col justify-between">
+        
+        <div>
+          <!-- Question text -->
+          <div id="question-text" class="text-sm sm:text-base font-semibold text-slate-900 dark:text-slate-100 leading-snug tracking-tight">
+            <!-- Dynamic Question Text -->
+          </div>
+
+          <!-- Complex formatting container (Statements or Match tables) -->
+          <div id="complex-content" class="hidden mt-2.5">
+            <!-- Dynamic complex format content -->
+          </div>
+
+          <!-- 4 Options Grid (2x2 on desktop, single column on small screens) -->
+          <div id="options-container" class="grid grid-cols-1 sm:grid-cols-2 gap-2 mt-3.5">
+            <!-- Dynamic Option Buttons -->
+          </div>
+        </div>
+
+        <!-- Inline Explanation & Feedback Container (Compact, dynamic height) -->
+        <div id="explanation-container" class="hidden mt-3 p-3 rounded-lg border fade-in flex-none">
+          <div class="flex items-start justify-between gap-2">
+            <div class="flex items-center gap-2">
+              <span id="feedback-icon" class="text-base leading-none"></span>
+              <span id="feedback-title" class="text-xs font-bold uppercase tracking-wider"></span>
+            </div>
+            <span class="text-[11px] text-slate-500 dark:text-slate-400 font-mono">Instant Review</span>
+          </div>
+          <p id="explanation-text" class="text-xs text-slate-700 dark:text-slate-300 mt-1 leading-relaxed">
+            <!-- Explanation injected here -->
+          </p>
+        </div>
+
+      </div>
+
+      <!-- Footer Control Bar (Always visible bottom action area) -->
+      <div class="h-14 px-4 sm:px-6 bg-slate-50 dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between flex-none">
+        <div class="text-[11px] sm:text-xs text-slate-500 dark:text-slate-400 truncate">
+          Select an option to view answer verification
+        </div>
+        
+        <button id="next-btn" class="inline-flex items-center justify-center space-x-1 px-4 py-2 text-xs font-semibold text-white bg-indigo-600 hover:bg-indigo-700 disabled:opacity-40 disabled:cursor-not-allowed rounded-lg shadow-sm transition-all focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2" disabled>
+          <span id="next-btn-text">Next Question</span>
+          <svg class="w-3.5 h-3.5 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+          </svg>
+        </button>
+      </div>
+
+    </div>
+
+    <!-- RESULT SUMMARY SCREEN (Replaces card on completion, fits screen) -->
+    <div id="result-screen" class="hidden w-full max-w-3xl h-full max-h-[calc(100vh-4.8rem)] flex flex-col bg-white dark:bg-slate-900 rounded-xl shadow-lg border border-slate-200 dark:border-slate-800 overflow-hidden fade-in">
+      
+      <!-- Result Top stats -->
+      <div class="p-4 sm:p-5 border-b border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-850/60 flex flex-wrap items-center justify-between gap-3 flex-none">
+        <div>
+          <h2 class="text-base sm:text-lg font-bold text-slate-900 dark:text-slate-100">Performance Assessment</h2>
+          <p class="text-xs text-slate-500 dark:text-slate-400">Review your final score and mistakes below</p>
+        </div>
+        
+        <div class="flex items-center space-x-3">
+          <div class="text-right">
+            <div class="text-lg sm:text-xl font-mono font-extrabold text-indigo-600 dark:text-indigo-400" id="final-percentage">0%</div>
+            <div class="text-[10px] uppercase font-bold text-slate-400">Aggregate</div>
+          </div>
+          <div class="h-8 w-px bg-slate-300 dark:bg-slate-700"></div>
+          <div class="flex space-x-2 text-xs font-mono">
+            <div class="bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800 px-2.5 py-1 rounded-md text-center">
+              <span class="block font-bold text-sm" id="result-correct">0</span>
+              <span class="text-[9px] uppercase">Correct</span>
+            </div>
+            <div class="bg-rose-50 dark:bg-rose-950/60 text-rose-700 dark:text-rose-300 border border-rose-200 dark:border-rose-800 px-2.5 py-1 rounded-md text-center">
+              <span class="block font-bold text-sm" id="result-incorrect">0</span>
+              <span class="text-[9px] uppercase">Wrong</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Incorrect Questions Review List (Scrollable internally) -->
+      <div class="flex-1 overflow-y-auto custom-scroll p-4 space-y-3">
+        <div class="flex items-center justify-between">
+          <h3 class="text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-300" id="review-header">
+            Review Questions
+          </h3>
+          <span class="text-[11px] text-slate-400" id="mistake-count-label"></span>
+        </div>
+
+        <div id="mistakes-container" class="space-y-2.5">
+          <!-- Populated dynamically with incorrect question breakdowns -->
+        </div>
+      </div>
+
+      <!-- Result Footer -->
+      <div class="h-14 px-4 sm:px-6 bg-slate-50 dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between flex-none">
+        <span class="text-xs text-slate-500 dark:text-slate-400 font-medium">Want to aim for 100%?</span>
+        <button id="restart-btn" class="inline-flex items-center justify-center px-4 py-2 text-xs font-semibold text-white bg-indigo-600 hover:bg-indigo-700 rounded-lg shadow-sm transition-all focus:outline-none focus:ring-2 focus:ring-indigo-500">
+          <svg class="w-3.5 h-3.5 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+          </svg>
+          Restart Quiz
+        </button>
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- DATA & LOGIC -->
+  <script>
+    // Quiz Questions Data Collection
+    const quizData = [
+      {
+        id: 1,
+        question: "Where is the headquarters of the Fédération Internationale de Football Association (FIFA) located?",
+        type: "standard",
+        options: [
+          { key: "A", text: "Paris, France" },
+          { key: "B", text: "Zurich, Switzerland" },
+          { key: "C", text: "Lausanne, Switzerland" },
+          { key: "D", text: "Geneva, Switzerland" }
+        ],
+        answer: "B",
+        explanation: "The headquarters of FIFA is located in Zurich, Switzerland."
+      },
+      {
+        id: 2,
+        question: "Which two teams played the first FIFA match in the year 1872?",
+        type: "standard",
+        options: [
+          { key: "A", text: "England vs France" },
+          { key: "B", text: "Scotland vs Germany" },
+          { key: "C", text: "England vs Scotland" },
+          { key: "D", text: "Uruguay vs Argentina" }
+        ],
+        answer: "C",
+        explanation: "The first FIFA match was played in 1872 between England and Scotland."
+      },
+      {
+        id: 3,
+        question: "Which country hosted and won the first FIFA World Cup in 1930?",
+        type: "standard",
+        options: [
+          { key: "A", text: "Brazil" },
+          { key: "B", text: "Uruguay" },
+          { key: "C", text: "Argentina" },
+          { key: "D", text: "Spain" }
+        ],
+        answer: "B",
+        explanation: "The first FIFA World Cup was held in 1930 at Uruguay, and the winner was Uruguay."
+      },
+      {
+        id: 4,
+        question: "Which country has won the FIFA Men's World Cup the most number of times (5 times)?",
+        type: "standard",
+        options: [
+          { key: "A", text: "Germany" },
+          { key: "B", text: "Italy" },
+          { key: "C", text: "Argentina" },
+          { key: "D", text: "Brazil" }
+        ],
+        answer: "D",
+        explanation: "Brazil holds the record for the most World Cup wins, having won it 5 times."
+      },
+      {
+        id: 5,
+        question: "Which team won the 2022 FIFA World Cup held in Qatar?",
+        type: "standard",
+        options: [
+          { key: "A", text: "France" },
+          { key: "B", text: "Spain" },
+          { key: "C", text: "Argentina" },
+          { key: "D", text: "Portugal" }
+        ],
+        answer: "C",
+        explanation: "The 2022 FIFA World Cup held in Qatar was won by Argentina."
+      },
+      {
+        id: 6,
+        question: "Which countries are scheduled to co-host the 2026 FIFA World Cup?",
+        type: "standard",
+        options: [
+          { key: "A", text: "Morocco, Portugal, and Spain" },
+          { key: "B", text: "Canada, Mexico, and USA" },
+          { key: "C", text: "USA, Mexico, and Argentina" },
+          { key: "D", text: "Canada, USA, and Brazil" }
+        ],
+        answer: "B",
+        explanation: "The hosts for the 2026 FIFA World Cup are Canada, Mexico, and USA."
+      },
+      {
+        id: 7,
+        question: "Which nations are slated to host the 2030 FIFA World Cup?",
+        type: "standard",
+        options: [
+          { key: "A", text: "Canada, Mexico, and USA" },
+          { key: "B", text: "Argentina, Uruguay, and Paraguay" },
+          { key: "C", text: "Morocco, Portugal, and Spain" },
+          { key: "D", text: "England, Scotland, and Wales" }
+        ],
+        answer: "C",
+        explanation: "The 2030 World Cup hosts listed in the text are Morocco, Portugal, and Spain."
+      },
+      {
+        id: 8,
+        question: "What is the standard circumference and weight range of a football?",
+        type: "standard",
+        options: [
+          { key: "A", text: "65–68 cm and 380–420 gm" },
+          { key: "B", text: "68–70 cm and 410–460 gm" },
+          { key: "C", text: "70–72 cm and 450–500 gm" },
+          { key: "D", text: "66–69 cm and 400–450 gm" }
+        ],
+        answer: "B",
+        explanation: "The circumference of the football is 68–70 cm, and its weight is 410–460 gm."
+      },
+      {
+        id: 9,
+        question: "What is the minimum number of players required on a team to start a football game?",
+        type: "standard",
+        options: [
+          { key: "A", text: "6" },
+          { key: "B", text: "7" },
+          { key: "C", text: "8" },
+          { key: "D", text: "9" }
+        ],
+        answer: "B",
+        explanation: "The minimum number of players required to start a football game is 7."
+      },
+      {
+        id: 10,
+        question: "In which year was the Indian Football Association (IFA) established?",
+        type: "standard",
+        options: [
+          { key: "A", text: "1888" },
+          { key: "B", text: "1891" },
+          { key: "C", text: "1893" },
+          { key: "D", text: "1930" }
+        ],
+        answer: "C",
+        explanation: "The Indian Football Association was established in the year 1893."
+      },
+      {
+        id: 11,
+        question: "Which team won the first edition of the Indian Super League (ISL)?",
+        type: "standard",
+        options: [
+          { key: "A", text: "Kerala Blasters" },
+          { key: "B", text: "Bengaluru FC" },
+          { key: "C", text: "Atletico de Kolkata" },
+          { key: "D", text: "Mumbai City FC" }
+        ],
+        answer: "C",
+        explanation: "The 1st edition of the Indian Super League (ISL) was won by Atletico de Kolkata."
+      },
+      {
+        id: 12,
+        question: "Which city is referred to as the 'Mecca' of Indian football?",
+        type: "standard",
+        options: [
+          { key: "A", text: "Mumbai" },
+          { key: "B", text: "Goa" },
+          { key: "C", text: "Kolkata" },
+          { key: "D", text: "Bengaluru" }
+        ],
+        answer: "C",
+        explanation: "The handwritten note specifies Kolkata as the 'Mecca' of Indian football."
+      },
+      {
+        id: 13,
+        question: "What is the standard duration of a football match and its tie-breaker extra time?",
+        type: "standard",
+        options: [
+          { key: "A", text: "80 minutes (two 40-min halves); 20 minutes tie-breaker" },
+          { key: "B", text: "90 minutes (two 45-min halves); 30 minutes tie-breaker" },
+          { key: "C", text: "60 minutes (four 15-min quarters); 15 minutes tie-breaker" },
+          { key: "D", text: "70 minutes (two 35-min halves); 30 minutes tie-breaker" }
+        ],
+        answer: "B",
+        explanation: "Game duration is 90 minutes (divided into two 45 mins halves), and the tie-breaker is 30 minutes (followed by a penalty shootout if needed)."
+      },
+      {
+        id: 14,
+        question: "What is the standard length and width of a football field?",
+        type: "standard",
+        options: [
+          { key: "A", text: "Length: 100 m; Width: 60 m" },
+          { key: "B", text: "Length: 105 m; Width: 68 m" },
+          { key: "C", text: "Length: 110 m; Width: 75 m" },
+          { key: "D", text: "Length: 91.44 m; Width: 55 m" }
+        ],
+        answer: "B",
+        explanation: "The standard dimensions mentioned are Length: 105 m (within 91–120 m range) and Width: 68 m (within 45–91 m range)."
+      },
+      {
+        id: 15,
+        question: "What is the distance between the penalty mark and the midpoint of the goal post in football?",
+        type: "standard",
+        options: [
+          { key: "A", text: "9.15 m" },
+          { key: "B", text: "10 m" },
+          { key: "C", text: "11 m" },
+          { key: "D", text: "12 m" }
+        ],
+        answer: "C",
+        explanation: "The distance between the penalty mark from the midpoint of the goal post is 11 m."
+      },
+      {
+        id: 16,
+        question: "What are the dimensions (width and height) of a football goalpost?",
+        type: "standard",
+        options: [
+          { key: "A", text: "Width: 7.32 m (24 ft); Height: 2.44 m (8 ft)" },
+          { key: "B", text: "Width: 3.66 m (12 ft); Height: 2.14 m (7 ft)" },
+          { key: "C", text: "Width: 7.00 m; Height: 2.50 m" },
+          { key: "D", text: "Width: 6.50 m; Height: 2.20 m" }
+        ],
+        answer: "A",
+        explanation: "Goal post dimensions are Width: 24 ft (7.32 m) and Height: 8 ft (2.44 m)."
+      },
+      {
+        id: 17,
+        question: "Which is the oldest football tournament in India, founded in 1888 in Shimla?",
+        type: "standard",
+        options: [
+          { key: "A", text: "Santosh Trophy" },
+          { key: "B", text: "Rovers Cup" },
+          { key: "C", text: "Durand Cup" },
+          { key: "D", text: "Beighton Cup" }
+        ],
+        answer: "C",
+        explanation: "The Durand Cup was founded in 1888 in Shimla and is the oldest football tournament in India."
+      },
+      {
+        id: 18,
+        question: "Which of the following tournaments is NOT associated with football?",
+        type: "standard",
+        options: [
+          { key: "A", text: "Santosh Trophy" },
+          { key: "B", text: "Merdeka Cup" },
+          { key: "C", text: "Scissors Cup" },
+          { key: "D", text: "Rangaswamy Cup" }
+        ],
+        answer: "D",
+        explanation: "Rangaswamy Cup is associated with hockey, while Santosh Trophy, Merdeka Cup, and Scissors Cup are football tournaments."
+      },
+      {
+        id: 19,
+        question: "Who was the first player from the Indian subcontinent to play for a European football club (Celtic FC)?",
+        type: "standard",
+        options: [
+          { key: "A", text: "Sunil Chhetri" },
+          { key: "B", text: "Bhaichung Bhutia" },
+          { key: "C", text: "P.K. Banerjee" },
+          { key: "D", text: "Mohammed Salim" }
+        ],
+        answer: "D",
+        explanation: "Mohammed Salim was the first player from the Indian subcontinent to play for a European football club (Celtic FC)."
+      },
+      {
+        id: 20,
+        question: "Who is the first Indian female football player to play in the UEFA Women's Champions League?",
+        type: "standard",
+        options: [
+          { key: "A", text: "Bala Devi" },
+          { key: "B", text: "Manisha Kalyan" },
+          { key: "C", text: "Rani Rampal" },
+          { key: "D", text: "Aditi Chauhan" }
+        ],
+        answer: "B",
+        explanation: "Manisha Kalyan is the first Indian female football player to play in the Union of European Football Associations (UEFA)'s Women's Champions League."
+      },
+      {
+        id: 21,
+        question: "In football terminology, what does the term 'Brace' refer to?",
+        type: "standard",
+        options: [
+          { key: "A", text: "Scoring 3 goals by a single player in a match" },
+          { key: "B", text: "Scoring 2 goals by a single player in a match" },
+          { key: "C", text: "Two consecutive yellow cards" },
+          { key: "D", text: "Winning two consecutive league titles" }
+        ],
+        answer: "B",
+        explanation: "A handwritten note explicitly defines 'Brace' as '2 goal by single player in a match'."
+      },
+      {
+        id: 22,
+        question: "What are the official field dimensions (length and width) for Hockey?",
+        type: "standard",
+        options: [
+          { key: "A", text: "Length: 105 m; Width: 68 m" },
+          { key: "B", text: "Length: 91.44 m; Width: 55 m" },
+          { key: "C", text: "Length: 90 m; Width: 50 m" },
+          { key: "D", text: "Length: 100 m; Width: 64 m" }
+        ],
+        answer: "B",
+        explanation: "The dimensions for a hockey field are Length: 91.44 m and Width: 55 m."
+      },
+      {
+        id: 23,
+        question: "What is the standard weight range of a hockey ball?",
+        type: "standard",
+        options: [
+          { key: "A", text: "140–150 gm" },
+          { key: "B", text: "156–163 gm" },
+          { key: "C", text: "165–175 gm" },
+          { key: "D", text: "410–460 gm" }
+        ],
+        answer: "B",
+        explanation: "The weight of a hockey ball is 156–163 gm."
+      },
+      {
+        id: 24,
+        question: "What is the height and width of a Hockey goalpost?",
+        type: "standard",
+        options: [
+          { key: "A", text: "Height: 2.14 m; Width: 3.66 m" },
+          { key: "B", text: "Height: 2.44 m; Width: 7.32 m" },
+          { key: "C", text: "Height: 1.80 m; Width: 3.00 m" },
+          { key: "D", text: "Height: 2.00 m; Width: 3.50 m" }
+        ],
+        answer: "A",
+        explanation: "The hockey goalpost dimensions are Height: 2.14 m and Width: 3.66 m."
+      },
+      {
+        id: 25,
+        question: "What is the modern match duration of a Hockey game?",
+        type: "standard",
+        options: [
+          { key: "A", text: "70 minutes (two 35-minute halves)" },
+          { key: "B", text: "90 minutes (two 45-minute halves)" },
+          { key: "C", text: "60 minutes (divided into 15-minute quarters)" },
+          { key: "D", text: "80 minutes (four 20-minute quarters)" }
+        ],
+        answer: "C",
+        explanation: "Hockey game duration is 60 minutes (divided into 15 mins quarters); earlier it was a 70-minute format with two 30-minute halves."
+      },
+      {
+        id: 26,
+        question: "Consider the discipline rules in Hockey regarding cards and penalties:",
+        type: "statement",
+        statements: [
+          "Statement I: A Green Card awards an official warning with no suspension.",
+          "Statement II: A Yellow Card represents a temporary time penalty of 10 minutes.",
+          "Statement III: A Red Card indicates permanent expulsion from the match."
+        ],
+        prompt: "Based on the text rules, which of the following statements is correctly matched with its specific duration?",
+        options: [
+          { key: "A", text: "Only Statement I is correct" },
+          { key: "B", text: "Both Statement I & Statement II are correct" },
+          { key: "C", text: "Statement II specifies a 10-minute time penalty" },
+          { key: "D", text: "Statements I, II, and III are completely incorrect" }
+        ],
+        answer: "C",
+        explanation: "In hockey, a Green Card represents a 5-minute penalty, a Yellow Card represents a 10-minute penalty, and a Red Card indicates permanent expulsion."
+      },
+      {
+        id: 27,
+        question: "Which country won the inaugural Men's Hockey World Cup in 1971 and has won the most titles (4 times)?",
+        type: "standard",
+        options: [
+          { key: "A", text: "India" },
+          { key: "B", text: "Netherlands" },
+          { key: "C", text: "Pakistan" },
+          { key: "D", text: "Australia" }
+        ],
+        answer: "C",
+        explanation: "The first Hockey World Cup in 1971 was won by Pakistan, which also holds the record for most titles won (4 times)."
+      },
+      {
+        id: 28,
+        question: "In which year did India win its sole Men's Hockey World Cup title?",
+        type: "standard",
+        options: [
+          { key: "A", text: "1971" },
+          { key: "B", text: "1975" },
+          { key: "C", text: "1980" },
+          { key: "D", text: "1982" }
+        ],
+        answer: "B",
+        explanation: "India won the Hockey World Cup once, in 1975."
+      },
+      {
+        id: 29,
+        question: "Which country won both the Men's and Women's titles at the first FIH Hockey5s World Cup held in 2024 at Muscat, Oman?",
+        type: "standard",
+        options: [
+          { key: "A", text: "India" },
+          { key: "B", text: "Germany" },
+          { key: "C", text: "Netherlands" },
+          { key: "D", text: "Belgium" }
+        ],
+        answer: "C",
+        explanation: "The first FIH Hockey5s World Cup (2024, Muscat, Oman) was won by the Netherlands in both Men's and Women's categories."
+      },
+      {
+        id: 30,
+        question: "Which is the oldest hockey tournament in India, established in 1895?",
+        type: "standard",
+        options: [
+          { key: "A", text: "Aga Khan Cup" },
+          { key: "B", text: "Beighton Cup" },
+          { key: "C", text: "Nehru Trophy" },
+          { key: "D", text: "Murugappa Gold Cup" }
+        ],
+        answer: "B",
+        explanation: "Beighton Cup is the oldest Hockey tournament in India, established in 1895."
+      },
+      {
+        id: 31,
+        question: "The Birsa Munda International Hockey Stadium, recognized as the largest hockey stadium in India, is situated in which city?",
+        type: "standard",
+        options: [
+          { key: "A", text: "Bhubaneswar, Odisha" },
+          { key: "B", text: "Rourkela, Odisha" },
+          { key: "C", text: "Ranchi, Jharkhand" },
+          { key: "D", text: "Chandigarh, Punjab" }
+        ],
+        answer: "B",
+        explanation: "The Birsa Munda International Hockey Stadium is located in Rourkela, Odisha."
+      },
+      {
+        id: 32,
+        question: "Who among the following was the first woman hockey player to receive the Rajiv Gandhi Khel Ratna Award?",
+        type: "standard",
+        options: [
+          { key: "A", text: "Vandana Katariya" },
+          { key: "B", text: "Savita Punia" },
+          { key: "C", text: "Rani Rampal" },
+          { key: "D", text: "Gurjit Kaur" }
+        ],
+        answer: "C",
+        explanation: "Rani Rampal is the first woman hockey player to receive the Rajiv Gandhi Khel Ratna Award."
+      },
+      {
+        id: 33,
+        question: "How many players per team are on the ice during normal play in Ice Hockey?",
+        type: "standard",
+        options: [
+          { key: "A", text: "5" },
+          { key: "B", text: "6" },
+          { key: "C", text: "7" },
+          { key: "D", text: "11" }
+        ],
+        answer: "B",
+        explanation: "During normal play in ice hockey, there are 6 players on the ice for each team at any one time."
+      },
+      {
+        id: 34,
+        question: "Match the following sports terminology with their respective games:",
+        type: "match",
+        matchData: {
+          col1Title: "List I (Term)",
+          col2Title: "List II (Association)",
+          rows: [
+            { a: "1. Brace", b: "A. Common to Football, Hockey & Basketball" },
+            { a: "2. Dribble", b: "B. 2 goals by single player in a match" },
+            { a: "3. Rangaswamy Cup", b: "C. National Hockey Championship" },
+            { a: "4. Durand Cup", b: "D. Oldest Football tournament in India" }
+          ]
+        },
+        prompt: "Which term is universally common across Football, Hockey, and Basketball?",
+        options: [
+          { key: "A", text: "Scoop" },
+          { key: "B", text: "Dribble" },
+          { key: "C", text: "Backstick" },
+          { key: "D", text: "Banana Kick" }
+        ],
+        answer: "B",
+        explanation: "'Dribble' is a common term across football, hockey, and basketball."
+      }
+    ];
+
+    // State Management
+    let currentIndex = 0;
+    let selectedOption = null;
+    let correctCount = 0;
+    let incorrectCount = 0;
+    let userResponses = []; // Stores { question, markedKey, correctKey, isCorrect, explanation }
+
+    // DOM Elements
+    const qScreen = document.getElementById("quiz-screen");
+    const rScreen = document.getElementById("result-screen");
+    const currentQEl = document.getElementById("current-q-index");
+    const totalQEl = document.getElementById("total-q-count");
+    const topicTag = document.getElementById("topic-tag");
+    const qTextEl = document.getElementById("question-text");
+    const complexContent = document.getElementById("complex-content");
+    const optionsContainer = document.getElementById("options-container");
+    const explanationContainer = document.getElementById("explanation-container");
+    const feedbackIcon = document.getElementById("feedback-icon");
+    const feedbackTitle = document.getElementById("feedback-title");
+    const explanationText = document.getElementById("explanation-text");
+    const nextBtn = document.getElementById("next-btn");
+    const nextBtnText = document.getElementById("next-btn-text");
+    const progressBar = document.getElementById("progress-bar");
+    const topCorrectEl = document.getElementById("top-correct-count");
+    const topIncorrectEl = document.getElementById("top-incorrect-count");
+    
+    // Result Screen Elements
+    const finalPercentage = document.getElementById("final-percentage");
+    const resultCorrect = document.getElementById("result-correct");
+    const resultIncorrect = document.getElementById("result-incorrect");
+    const mistakesContainer = document.getElementById("mistakes-container");
+    const restartBtn = document.getElementById("restart-btn");
+    const mistakeCountLabel = document.getElementById("mistake-count-label");
+
+    // Initialize Quiz
+    function initQuiz() {
+      totalQEl.textContent = quizData.length;
+      currentIndex = 0;
+      correctCount = 0;
+      incorrectCount = 0;
+      userResponses = [];
+      updateTopTracker();
+      renderQuestion(currentIndex);
+      
+      qScreen.classList.remove("hidden");
+      rScreen.classList.add("hidden");
+    }
+
+    // Render single question
+    function renderQuestion(index) {
+      const q = quizData[index];
+      currentQEl.textContent = index + 1;
+      
+      // Update Progress Bar
+      const progressPct = ((index) / quizData.length) * 100;
+      progressBar.style.width = `${progressPct}%`;
+
+      // Set Category Tag
+      if (q.id <= 21) {
+        topicTag.textContent = "Football Section";
+      } else {
+        topicTag.textContent = "Hockey Section";
+      }
+
+      // Base question text
+      qTextEl.textContent = `${q.id}. ${q.question}`;
+
+      // Reset and hide complex content initially
+      complexContent.innerHTML = "";
+      complexContent.classList.add("hidden");
+
+      // Handle Statement-Based Question Type
+      if (q.type === "statement" && q.statements) {
+        complexContent.classList.remove("hidden");
+        let html = `
+          <div class="bg-amber-50/70 dark:bg-amber-950/25 border-l-4 border-amber-500 p-2.5 rounded-r-md text-xs space-y-1 my-2">
+            <div class="font-semibold text-amber-900 dark:text-amber-200 uppercase tracking-wider text-[10px]">Reference Statements:</div>
+        `;
+        q.statements.forEach(stmt => {
+          html += `<div class="font-mono text-slate-800 dark:text-slate-200 text-[11px] leading-relaxed">${stmt}</div>`;
+        });
+        if (q.prompt) {
+          html += `<div class="font-medium text-slate-700 dark:text-slate-300 pt-1 border-t border-amber-200 dark:border-amber-900/50 mt-1">${q.prompt}</div>`;
+        }
+        html += `</div>`;
+        complexContent.innerHTML = html;
+      }
+
+      // Handle Match the Following Question Type
+      if (q.type === "match" && q.matchData) {
+        complexContent.classList.remove("hidden");
+        const m = q.matchData;
+        let html = `
+          <div class="border border-slate-200 dark:border-slate-700 rounded-lg overflow-hidden my-2 text-xs">
+            <table class="w-full text-left border-collapse">
+              <thead>
+                <tr class="bg-slate-100 dark:bg-slate-800 text-[11px] font-bold text-slate-700 dark:text-slate-200 border-b border-slate-200 dark:border-slate-700">
+                  <th class="py-1.5 px-3 w-1/2">${m.col1Title}</th>
+                  <th class="py-1.5 px-3 w-1/2 border-l border-slate-200 dark:border-slate-700">${m.col2Title}</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-200 dark:divide-slate-800 font-mono text-[11px]">
+        `;
+        m.rows.forEach(r => {
+          html += `
+            <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/50">
+              <td class="py-1 px-3 text-slate-800 dark:text-slate-300">${r.a}</td>
+              <td class="py-1 px-3 border-l border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-300">${r.b}</td>
+            </tr>
+          `;
+        });
+        html += `
+              </tbody>
+            </table>
+          </div>
+        `;
+        if (q.prompt) {
+          html += `<div class="text-xs font-semibold text-slate-800 dark:text-slate-200 mt-1">${q.prompt}</div>`;
+        }
+        complexContent.innerHTML = html;
+      }
+
+      // Render Options
+      optionsContainer.innerHTML = "";
+      q.options.forEach(opt => {
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "option-btn flex items-center w-full text-left p-2.5 rounded-lg border border-slate-200 dark:border-slate-700/80 bg-white dark:bg-slate-850 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-800 dark:text-slate-200 text-xs sm:text-[13px] font-medium transition-colors shadow-sm focus:outline-none";
+        btn.dataset.key = opt.key;
+        btn.innerHTML = `
+          <span class="w-6 h-6 flex-none rounded-md bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-600 flex items-center justify-center font-bold text-slate-600 dark:text-slate-300 text-xs mr-2.5">
+            ${opt.key}
+          </span>
+          <span class="flex-1 leading-tight">${opt.text}</span>
+          <span class="indicator-icon ml-1.5 hidden font-bold text-xs"></span>
+        `;
+        btn.addEventListener("click", () => handleOptionSelection(opt.key, q));
+        optionsContainer.appendChild(btn);
+      });
+
+      // Reset controls & feedback box
+      explanationContainer.classList.add("hidden");
+      explanationContainer.className = "hidden mt-3 p-3 rounded-lg border fade-in flex-none";
+      nextBtn.disabled = true;
+      selectedOption = null;
+
+      // Update button text on last question
+      if (index === quizData.length - 1) {
+        nextBtnText.textContent = "Finish & See Score";
+      } else {
+        nextBtnText.textContent = "Next Question";
+      }
+    }
+
+    // Handle User Clicking an Option
+    function handleOptionSelection(selectedKey, q) {
+      if (selectedOption !== null) return; // Prevent multiple answers
+      selectedOption = selectedKey;
+
+      const isCorrect = (selectedKey === q.answer);
+      if (isCorrect) {
+        correctCount++;
+      } else {
+        incorrectCount++;
+      }
+      updateTopTracker();
+
+      // Record for summary
+      userResponses.push({
+        id: q.id,
+        question: q.question,
+        prompt: q.prompt || "",
+        type: q.type,
+        markedKey: selectedKey,
+        correctKey: q.answer,
+        isCorrect: isCorrect,
+        explanation: q.explanation,
+        options: q.options
+      });
+
+      // Style all options
+      const buttons = optionsContainer.querySelectorAll(".option-btn");
+      buttons.forEach(btn => {
+        btn.disabled = true;
+        const key = btn.dataset.key;
+        const iconSpan = btn.querySelector(".indicator-icon");
+
+        if (key === q.answer) {
+          // Correct option style
+          btn.classList.remove("border-slate-200", "dark:border-slate-700/80", "bg-white", "dark:bg-slate-850");
+          btn.classList.add("bg-emerald-50", "dark:bg-emerald-950/60", "border-emerald-500", "text-emerald-900", "dark:text-emerald-200", "font-semibold");
+          iconSpan.classList.remove("hidden");
+          iconSpan.innerHTML = `<span class="text-emerald-600 dark:text-emerald-400">✓ Correct</span>`;
+        } else if (key === selectedKey && !isCorrect) {
+          // Chosen incorrect option style
+          btn.classList.remove("border-slate-200", "dark:border-slate-700/80", "bg-white", "dark:bg-slate-850");
+          btn.classList.add("bg-rose-50", "dark:bg-rose-950/60", "border-rose-500", "text-rose-900", "dark:text-rose-200");
+          iconSpan.classList.remove("hidden");
+          iconSpan.innerHTML = `<span class="text-rose-600 dark:text-rose-400">✗ Wrong</span>`;
+        } else {
+          btn.classList.add("opacity-60");
+        }
+      });
+
+      // Show Explanation Box
+      explanationContainer.classList.remove("hidden");
+      if (isCorrect) {
+        explanationContainer.classList.add("bg-emerald-50/80", "dark:bg-emerald-950/40", "border-emerald-200", "dark:border-emerald-900/60");
+        feedbackIcon.textContent = "✓";
+        feedbackIcon.className = "text-emerald-600 dark:text-emerald-400 font-bold";
+        feedbackTitle.textContent = "Correct Answer";
+        feedbackTitle.className = "text-xs font-bold uppercase tracking-wider text-emerald-800 dark:text-emerald-300";
+      } else {
+        explanationContainer.classList.add("bg-rose-50/80", "dark:bg-rose-950/40", "border-rose-200", "dark:border-rose-900/60");
+        feedbackIcon.textContent = "✗";
+        feedbackIcon.className = "text-rose-600 dark:text-rose-400 font-bold";
+        feedbackTitle.textContent = `Incorrect (Right Answer is: Option ${q.answer})`;
+        feedbackTitle.className = "text-xs font-bold uppercase tracking-wider text-rose-800 dark:text-rose-300";
+      }
+
+      explanationText.textContent = q.explanation;
+      nextBtn.disabled = false;
+      nextBtn.focus();
+    }
+
+    // Top Tracker Update
+    function updateTopTracker() {
+      topCorrectEl.textContent = `✓ ${correctCount}`;
+      topIncorrectEl.textContent = `✗ ${incorrectCount}`;
+    }
+
+    // Next Button Trigger
+    nextBtn.addEventListener("click", () => {
+      if (currentIndex < quizData.length - 1) {
+        currentIndex++;
+        renderQuestion(currentIndex);
+      } else {
+        // Complete Quiz and show detailed breakdown
+        progressBar.style.width = "100%";
+        showResults();
+      }
+    });
+
+    // Render End Screen Results
+    function showResults() {
+      qScreen.classList.add("hidden");
+      rScreen.classList.remove("hidden");
+
+      const percentage = Math.round((correctCount / quizData.length) * 100);
+      finalPercentage.textContent = `${percentage}%`;
+      resultCorrect.textContent = correctCount;
+      resultIncorrect.textContent = incorrectCount;
+
+      mistakesContainer.innerHTML = "";
+
+      const incorrectList = userResponses.filter(r => !r.isCorrect);
+
+      if (incorrectList.length === 0) {
+        mistakeCountLabel.textContent = "Perfect Score!";
+        mistakesContainer.innerHTML = `
+          <div class="p-6 text-center rounded-lg border border-emerald-200 dark:border-emerald-900/60 bg-emerald-50 dark:bg-emerald-950/30">
+            <div class="text-3xl mb-1">🎉</div>
+            <h4 class="text-sm font-bold text-emerald-800 dark:text-emerald-300">Flawless Attempt!</h4>
+            <p class="text-xs text-emerald-700 dark:text-emerald-400 mt-1">You answered all 34 football and hockey exam questions correctly.</p>
+          </div>
+        `;
+      } else {
+        mistakeCountLabel.textContent = `${incorrectList.length} Mistakes to review`;
+        incorrectList.forEach((item, idx) => {
+          const userOptObj = item.options.find(o => o.key === item.markedKey);
+          const correctOptObj = item.options.find(o => o.key === item.correctKey);
+
+          const card = document.createElement("div");
+          card.className = "p-3 rounded-lg border border-slate-200 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-850/60 space-y-1.5 text-xs";
+          
+          card.innerHTML = `
+            <div class="flex items-start justify-between gap-2">
+              <span class="font-bold text-slate-800 dark:text-slate-200 leading-snug">
+                Q${item.id}. ${item.question}
+              </span>
+              <span class="flex-none px-1.5 py-0.5 text-[10px] font-bold rounded bg-rose-100 text-rose-700 dark:bg-rose-950 dark:text-rose-300 uppercase">Wrong</span>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-1.5 pt-1 text-[11px] font-mono">
+              <div class="p-1.5 rounded bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-900/60 text-rose-800 dark:text-rose-300">
+                <span class="font-bold text-rose-600">Your Choice:</span> (${item.markedKey}) ${userOptObj ? userOptObj.text : ''}
+              </div>
+              <div class="p-1.5 rounded bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-900/60 text-emerald-800 dark:text-emerald-300">
+                <span class="font-bold text-emerald-600">Correct:</span> (${item.correctKey}) ${correctOptObj ? correctOptObj.text : ''}
+              </div>
+            </div>
+
+            <div class="text-[11px] text-slate-600 dark:text-slate-400 italic pt-1 border-t border-slate-200 dark:border-slate-800">
+              💡 ${item.explanation}
+            </div>
+          `;
+          mistakesContainer.appendChild(card);
+        });
+      }
+    }
+
+    // Restart Quiz Handler
+    restartBtn.addEventListener("click", () => {
+      initQuiz();
+    });
+
+    // Dark / Light Mode Handling
+    const themeToggleBtn = document.getElementById("theme-toggle");
+    const sunIcon = document.getElementById("sun-icon");
+    const moonIcon = document.getElementById("moon-icon");
+
+    function applyTheme(isDark) {
+      if (isDark) {
+        document.documentElement.classList.add("dark");
+        sunIcon.classList.remove("hidden");
+        moonIcon.classList.add("hidden");
+        localStorage.setItem("theme_pref", "dark");
+      } else {
+        document.documentElement.classList.remove("dark");
+        sunIcon.classList.add("hidden");
+        moonIcon.classList.remove("hidden");
+        localStorage.setItem("theme_pref", "light");
+      }
+    }
+
+    // Check preferred or stored theme
+    const savedTheme = localStorage.getItem("theme_pref");
+    if (savedTheme === "dark" || (!savedTheme && window.matchMedia("(prefers-color-scheme: dark)").matches)) {
+      applyTheme(true);
+    } else {
+      applyTheme(false);
+    }
+
+    themeToggleBtn.addEventListener("click", () => {
+      const isDark = document.documentElement.classList.contains("dark");
+      applyTheme(!isDark);
+    });
+
+    // Start App on DOM Ready
+    window.addEventListener("DOMContentLoaded", () => {
+      initQuiz();
+    });
+  </script>
+</body>
+</html>
