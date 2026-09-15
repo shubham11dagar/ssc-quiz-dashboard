@@ -1,827 +1,1095 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="light">
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Advanced SSC Spelling & Vocabulary Exam Prep</title>
-    <style>
-        :root {
-            --bg-color: #f8fafc;
-            --card-bg: #ffffff;
-            --text-main: #1e293b;
-            --text-muted: #64748b;
-            --border-color: #e2e8f0;
-            --primary: #3b82f6;
-            --primary-hover: #2563eb;
-            --success: #22c55e;
-            --success-bg: #f0fdf4;
-            --success-border: #bbf7d0;
-            --error: #ef4444;
-            --error-bg: #fef2f2;
-            --error-border: #fecaca;
-            --option-bg: #f8fafc;
-            --option-hover: #f1f5f9;
-            --shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -4px rgba(0, 0, 0, 0.05);
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SSC English Spelling Mastery Quiz</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0b1120;
+      --card-bg: #131d31;
+      --card-border: #24324f;
+      --text-main: #f1f5f9;
+      --text-sub: #94a3b8;
+      --accent: #38bdf8;
+      --accent-glow: rgba(56, 189, 248, 0.15);
+      --correct: #10b981;
+      --correct-bg: rgba(16, 185, 129, 0.12);
+      --correct-border: rgba(16, 185, 129, 0.4);
+      --wrong: #f43f5e;
+      --wrong-bg: rgba(244, 63, 94, 0.12);
+      --wrong-border: rgba(244, 63, 94, 0.4);
+      --btn-bg: #1c2942;
+      --btn-hover: #26385a;
+      --btn-border: #31446b;
+      --tip-bg: #1e293b;
+      --tip-border: #38bdf844;
+      --tip-text: #7dd3fc;
+      --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.4);
+    }
 
-        [data-theme="dark"] {
-            --bg-color: #0f172a;
-            --card-bg: #1e293b;
-            --text-main: #f8fafc;
-            --text-muted: #94a3b8;
-            --border-color: #334155;
-            --primary: #60a5fa;
-            --primary-hover: #3b82f6;
-            --success: #4ade80;
-            --success-bg: #064e3b;
-            --success-border: #065f46;
-            --error: #f87171;
-            --error-bg: #7f1d1d;
-            --error-border: #991b1b;
-            --option-bg: #273548;
-            --option-hover: #334155;
-            --shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -4px rgba(0, 0, 0, 0.3);
-        }
+    [data-theme="light"] {
+      --bg: #f8fafc;
+      --card-bg: #ffffff;
+      --card-border: #e2e8f0;
+      --text-main: #0f172a;
+      --text-sub: #64748b;
+      --accent: #0284c7;
+      --accent-glow: rgba(2, 132, 199, 0.12);
+      --correct: #059669;
+      --correct-bg: rgba(5, 150, 105, 0.1);
+      --correct-border: rgba(5, 150, 105, 0.4);
+      --wrong: #e11d48;
+      --wrong-bg: rgba(225, 29, 72, 0.08);
+      --wrong-border: rgba(225, 29, 72, 0.35);
+      --btn-bg: #f1f5f9;
+      --btn-hover: #e2e8f0;
+      --btn-border: #cbd5e1;
+      --tip-bg: #f0f9ff;
+      --tip-border: #bae6fd;
+      --tip-text: #0369a1;
+      --shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.08);
+    }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
-        }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
 
-        body {
-            background-color: var(--bg-color);
-            color: var(--text-main);
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            padding: 12px;
-            overflow: hidden; /* Prevents whole-page scrolling */
-        }
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: var(--bg);
+      color: var(--text-main);
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      transition: background-color 0.25s ease, color 0.25s ease;
+      padding: 12px;
+    }
 
-        .app-container {
-            width: 100%;
-            max-width: 750px;
-            height: 94vh;
-            max-height: 650px;
-            background-color: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 16px;
-            box-shadow: var(--shadow);
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-            position: relative;
-        }
+    .app-container {
+      width: 100%;
+      max-width: 780px;
+      height: 100%;
+      max-height: 96vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
 
-        /* Header Section */
-        header {
-            padding: 12px 20px;
-            border-bottom: 1px solid var(--border-color);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background-color: var(--card-bg);
-            z-index: 10;
-        }
+    /* Top Navigation Header */
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 6px 12px;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      margin-bottom: 8px;
+      box-shadow: var(--shadow);
+    }
 
-        .header-title {
-            font-size: 1rem;
-            font-weight: 700;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.88rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
 
-        .header-controls {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
+    .brand-badge {
+      background: var(--accent);
+      color: #fff;
+      font-size: 0.68rem;
+      padding: 2px 7px;
+      border-radius: 6px;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
 
-        .theme-toggle {
-            background: none;
-            border: 1px solid var(--border-color);
-            color: var(--text-main);
-            padding: 6px 10px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 0.85rem;
-            font-weight: 600;
-        }
-        .theme-toggle:hover {
-            background-color: var(--option-hover);
-        }
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
 
-        .progress-indicator {
-            font-size: 0.85rem;
-            color: var(--text-muted);
-            font-weight: 600;
-        }
+    .theme-toggle-btn {
+      background: var(--btn-bg);
+      border: 1px solid var(--btn-border);
+      color: var(--text-main);
+      padding: 5px 10px;
+      border-radius: 8px;
+      font-size: 0.78rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-weight: 600;
+      transition: 0.2s;
+    }
 
-        /* Main Content Box */
-        .content-area {
-            flex: 1;
-            padding: 16px 20px;
-            overflow-y: auto; /* Internal scroll only if content exceeds card height */
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
+    .theme-toggle-btn:hover {
+      background: var(--btn-hover);
+    }
 
-        .question-text {
-            font-size: 1.05rem;
-            font-weight: 600;
-            line-height: 1.4;
-            color: var(--text-main);
-        }
+    /* Progress Stats Bar */
+    .progress-bar-container {
+      background: var(--card-border);
+      height: 6px;
+      border-radius: 999px;
+      overflow: hidden;
+      margin-bottom: 8px;
+    }
 
-        /* Options Grid */
-        .options-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 8px;
-        }
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #38bdf8, #6366f1);
+      width: 0%;
+      transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
 
-        @media (max-width: 600px) {
-            .options-grid {
-                grid-template-columns: 1fr;
-            }
-        }
+    /* Main Quiz Viewport Card */
+    .quiz-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      padding: 14px 18px;
+      box-shadow: var(--shadow);
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      min-height: 0;
+      position: relative;
+    }
 
-        .option-btn {
-            background-color: var(--option-bg);
-            border: 1px solid var(--border-color);
-            color: var(--text-main);
-            padding: 10px 14px;
-            border-radius: 8px;
-            text-align: left;
-            cursor: pointer;
-            font-size: 0.9rem;
-            font-weight: 500;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
+    .question-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 6px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--text-sub);
+    }
 
-        .option-btn:hover:not(:disabled) {
-            background-color: var(--option-hover);
-            border-color: var(--primary);
-        }
+    .q-number-tag {
+      background: var(--accent-glow);
+      color: var(--accent);
+      border: 1px solid var(--tip-border);
+      padding: 2px 8px;
+      border-radius: 6px;
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 700;
+      font-size: 0.75rem;
+    }
 
-        .option-btn.correct {
-            background-color: var(--success-bg) !important;
-            border-color: var(--success) !important;
-            color: var(--success) !important;
-        }
+    .question-title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      line-height: 1.35;
+      color: var(--text-main);
+      margin-bottom: 10px;
+    }
 
-        .option-btn.incorrect {
-            background-color: var(--error-bg) !important;
-            border-color: var(--error) !important;
-            color: var(--error) !important;
-        }
+    /* Options 2x2 Grid for Maximum Compactness */
+    .options-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
 
-        .option-btn:disabled {
-            cursor: default;
-        }
+    @media (max-width: 580px) {
+      .options-grid {
+        grid-template-columns: 1fr;
+        gap: 6px;
+      }
+      .question-title {
+        font-size: 0.96rem;
+      }
+      .quiz-card {
+        padding: 10px 12px;
+      }
+    }
 
-        .option-badge {
-            display: inline-flex;
-            justify-content: center;
-            align-items: center;
-            width: 22px;
-            height: 22px;
-            border-radius: 50%;
-            background: var(--border-color);
-            font-size: 0.75rem;
-            font-weight: 700;
-            flex-shrink: 0;
-        }
+    .option-btn {
+      background: var(--btn-bg);
+      border: 1px solid var(--btn-border);
+      border-radius: 10px;
+      padding: 10px 12px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: var(--text-main);
+      text-align: left;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      transition: all 0.15s ease-in-out;
+      user-select: none;
+    }
 
-        /* Explanation Box */
-        .explanation-box {
-            margin-top: 4px;
-            padding: 10px 14px;
-            border-radius: 8px;
-            font-size: 0.85rem;
-            line-height: 1.4;
-            display: none;
-            border: 1px solid transparent;
-        }
+    .option-btn:hover:not(:disabled) {
+      background: var(--btn-hover);
+      border-color: var(--accent);
+      transform: translateY(-1px);
+    }
 
-        .explanation-box.show {
-            display: block;
-        }
+    .option-btn:disabled {
+      cursor: default;
+    }
 
-        .explanation-box.correct-exp {
-            background-color: var(--success-bg);
-            border-color: var(--success-border);
-            color: var(--text-main);
-        }
+    .option-btn .opt-key {
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 700;
+      margin-right: 8px;
+      opacity: 0.6;
+      font-size: 0.8rem;
+    }
 
-        .explanation-box.incorrect-exp {
-            background-color: var(--error-bg);
-            border-color: var(--error-border);
-            color: var(--text-main);
-        }
+    .option-btn.correct {
+      background: var(--correct-bg) !important;
+      border-color: var(--correct) !important;
+      color: var(--correct) !important;
+      font-weight: 700;
+    }
 
-        .explanation-title {
-            font-weight: 700;
-            margin-bottom: 2px;
-            font-size: 0.8rem;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
+    .option-btn.wrong {
+      background: var(--wrong-bg) !important;
+      border-color: var(--wrong) !important;
+      color: var(--wrong) !important;
+    }
 
-        /* Footer / Navigation Action */
-        footer {
-            padding: 12px 20px;
-            border-top: 1px solid var(--border-color);
-            display: flex;
-            justify-content: flex-end;
-            background-color: var(--card-bg);
-        }
+    /* Explanation and SSC Exam Tip Box */
+    .feedback-box {
+      background: var(--tip-bg);
+      border-left: 4px solid var(--accent);
+      border-radius: 8px;
+      padding: 8px 12px;
+      font-size: 0.8rem;
+      line-height: 1.38;
+      display: none;
+      animation: fadeIn 0.2s ease-out;
+      margin-top: 4px;
+      flex-shrink: 1;
+      overflow-y: auto;
+      max-height: 110px;
+    }
 
-        .action-btn {
-            background-color: var(--primary);
-            color: white;
-            border: none;
-            padding: 8px 18px;
-            border-radius: 8px;
-            font-size: 0.9rem;
-            font-weight: 600;
-            cursor: pointer;
-            display: none;
-        }
+    .feedback-box.active {
+      display: block;
+    }
 
-        .action-btn:hover {
-            background-color: var(--primary-hover);
-        }
+    .feedback-header {
+      font-weight: 700;
+      margin-bottom: 2px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
 
-        /* Results Screen */
-        .results-screen {
-            display: none;
-            flex-direction: column;
-            height: 100%;
-            overflow-y: auto;
-            padding: 20px;
-            gap: 16px;
-        }
+    .feedback-header.success {
+      color: var(--correct);
+    }
 
-        .results-header {
-            text-align: center;
-        }
+    .feedback-header.fail {
+      color: var(--wrong);
+    }
 
-        .results-header h2 {
-            font-size: 1.4rem;
-            margin-bottom: 4px;
-        }
+    .ssc-tip {
+      margin-top: 4px;
+      padding-top: 4px;
+      border-top: 1px dashed var(--btn-border);
+      color: var(--tip-text);
+      font-size: 0.74rem;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
 
-        .score-cards {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
-        }
+    .ssc-tag {
+      background: var(--accent);
+      color: #ffffff;
+      font-size: 0.62rem;
+      font-weight: 800;
+      padding: 1px 5px;
+      border-radius: 4px;
+      text-transform: uppercase;
+      margin-right: 4px;
+      letter-spacing: 0.03em;
+    }
 
-        .score-card {
-            background: var(--option-bg);
-            border: 1px solid var(--border-color);
-            padding: 10px;
-            border-radius: 8px;
-            text-align: center;
-        }
+    /* Bottom Control Bar */
+    .footer-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 8px;
+      padding-top: 6px;
+    }
 
-        .score-card .val {
-            font-size: 1.2rem;
-            font-weight: 700;
-        }
+    .live-score {
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--text-sub);
+    }
 
-        .score-card .lbl {
-            font-size: 0.75rem;
-            color: var(--text-muted);
-            text-transform: uppercase;
-        }
+    .next-btn {
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      padding: 8px 20px;
+      border-radius: 9px;
+      font-size: 0.84rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: opacity 0.2s, transform 0.15s;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
 
-        .breakdown-section h3 {
-            font-size: 1rem;
-            margin-bottom: 8px;
-            border-bottom: 1px solid var(--border-color);
-            padding-bottom: 4px;
-        }
+    .next-btn:hover {
+      opacity: 0.92;
+      transform: translateY(-1px);
+    }
 
-        .breakdown-list {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
+    .next-btn:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+      transform: none;
+    }
 
-        .breakdown-item {
-            background: var(--option-bg);
-            border: 1px solid var(--border-color);
-            padding: 10px;
-            border-radius: 8px;
-            font-size: 0.85rem;
-        }
+    /* Results Screen */
+    .results-screen {
+      display: none;
+      height: 100%;
+      flex-direction: column;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      padding: 16px 20px;
+      box-shadow: var(--shadow);
+      min-height: 0;
+    }
 
-        .breakdown-item .q-title {
-            font-weight: 600;
-            margin-bottom: 4px;
-        }
+    .results-header {
+      text-align: center;
+      margin-bottom: 12px;
+      flex-shrink: 0;
+    }
 
-        .breakdown-item .ans-row {
-            display: flex;
-            gap: 12px;
-            font-size: 0.8rem;
-            color: var(--text-muted);
-        }
+    .results-title {
+      font-size: 1.3rem;
+      font-weight: 800;
+      margin-bottom: 4px;
+    }
 
-        .breakdown-item .user-ans { color: var(--error); font-weight: 600; }
-        .breakdown-item .correct-ans { color: var(--success); font-weight: 600; }
+    .results-summary-cards {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin-bottom: 12px;
+      flex-shrink: 0;
+    }
 
-        .restart-btn {
-            background-color: var(--primary);
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 8px;
-            font-size: 0.95rem;
-            font-weight: 600;
-            cursor: pointer;
-            width: 100%;
-            margin-top: 10px;
-        }
-    </style>
+    .metric-card {
+      background: var(--btn-bg);
+      border: 1px solid var(--btn-border);
+      border-radius: 8px;
+      padding: 8px;
+      text-align: center;
+    }
+
+    .metric-val {
+      font-size: 1.25rem;
+      font-weight: 800;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .metric-val.score { color: var(--accent); }
+    .metric-val.correct { color: var(--correct); }
+    .metric-val.wrong { color: var(--wrong); }
+
+    .metric-lbl {
+      font-size: 0.7rem;
+      color: var(--text-sub);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .mistakes-container {
+      flex: 1;
+      min-height: 0;
+      overflow-y: auto;
+      padding-right: 4px;
+      margin-bottom: 12px;
+      border: 1px solid var(--card-border);
+      border-radius: 8px;
+      background: var(--bg);
+      padding: 8px;
+    }
+
+    .mistakes-container::-webkit-scrollbar {
+      width: 5px;
+    }
+    .mistakes-container::-webkit-scrollbar-thumb {
+      background: var(--btn-border);
+      border-radius: 4px;
+    }
+
+    .mistake-item {
+      padding: 8px;
+      border-bottom: 1px solid var(--card-border);
+      font-size: 0.78rem;
+    }
+
+    .mistake-item:last-child {
+      border-bottom: none;
+    }
+
+    .mistake-q {
+      font-weight: 700;
+      color: var(--text-main);
+      margin-bottom: 3px;
+    }
+
+    .mistake-answers {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      font-size: 0.74rem;
+    }
+
+    .user-ans {
+      color: var(--wrong);
+      font-weight: 600;
+    }
+
+    .correct-ans {
+      color: var(--correct);
+      font-weight: 700;
+    }
+
+    .restart-btn {
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 9px;
+      font-size: 0.88rem;
+      font-weight: 700;
+      cursor: pointer;
+      width: 100%;
+      flex-shrink: 0;
+      transition: opacity 0.2s;
+    }
+
+    .restart-btn:hover {
+      opacity: 0.9;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
 </head>
-<body>
+<body data-theme="dark">
 
-    <div class="app-container">
-        <!-- Header -->
-        <header>
-            <div class="header-title">
-                <span>🎯</span> SSC Exam Vocabulary Practice
-            </div>
-            <div class="header-controls">
-                <span class="progress-indicator" id="progressIndicator">Q 1 of 40</span>
-                <button class="theme-toggle" id="themeToggleBtn" onclick="toggleTheme()">🌙 Dark</button>
-            </div>
-        </header>
+  <div class="app-container">
+    <!-- Top Header -->
+    <header>
+      <div class="brand">
+        <span class="brand-badge">SSC CGL/CHSL</span>
+        <span>Spelling Mastery Test</span>
+      </div>
+      <div class="header-actions">
+        <button id="themeToggle" class="theme-toggle-btn" aria-label="Toggle Theme">
+          <span id="themeIcon">☀️</span> <span id="themeText">Light</span>
+        </button>
+      </div>
+    </header>
 
-        <!-- Main Question Container -->
-        <div class="content-area" id="quizContent">
-            <div class="question-text" id="questionText">Loading question...</div>
-            <div class="options-grid" id="optionsGrid"></div>
-            <div class="explanation-box" id="explanationBox">
-                <div class="explanation-title" id="explanationTitle">Explanation</div>
-                <div id="explanationText"></div>
-            </div>
-        </div>
-
-        <!-- Results Screen Container -->
-        <div class="results-screen" id="resultsScreen">
-            <div class="results-header">
-                <h2>Exam Performance Summary</h2>
-                <p style="color: var(--text-muted); font-size: 0.85rem;">Review your performance and concise expert takeaways.</p>
-            </div>
-            <div class="score-cards">
-                <div class="score-card">
-                    <div class="val" id="finalScoreVal">0/40</div>
-                    <div class="lbl">Score</div>
-                </div>
-                <div class="score-card">
-                    <div class="val" id="finalPercentageVal" style="color: var(--primary);">0%</div>
-                    <div class="lbl">Accuracy</div>
-                </div>
-                <div class="score-card">
-                    <div class="val" id="finalIncorrectVal" style="color: var(--error);">0</div>
-                    <div class="lbl">Incorrect</div>
-                </div>
-            </div>
-            <div class="breakdown-section">
-                <h3>Incorrect Questions Breakdown</h3>
-                <div class="breakdown-list" id="breakdownList">
-                    <!-- Dynamic Incorrect List -->
-                </div>
-            </div>
-            <button class="restart-btn" onclick="restartQuiz()">Restart Practice Exam</button>
-        </div>
-
-        <!-- Footer / Next Button -->
-        <footer id="quizFooter">
-            <button class="action-btn" id="nextBtn" onclick="handleNext()">Next Question ➔</button>
-        </footer>
+    <!-- Progress Indicator -->
+    <div class="progress-bar-container">
+      <div id="progressFill" class="progress-fill"></div>
     </div>
 
-    <script>
-        const quizData = [
-            {
-                q: "Q.1. Identify the misspelt word",
-                options: ["Sesquipedalian", "Anachronism", "Syzygy", "Kakishtocracy"],
-                answer: 3,
-                explanation: "Correct spelling is 'Kakistocracy' (government by the worst people). Option (d) has an extra 'h'."
-            },
-            {
-                q: "Q.2. Spot the correct spelling of a word referring to the surgical removal of an appendix.",
-                options: ["Appendicectomy", "Appendectomy", "Appendecectomy", "Appendicetomy"],
-                answer: 1,
-                explanation: "Option (b) 'Appendectomy' is the standard medical term. (Note: Appendicectomy is also used in British English, but Appendectomy is globally standard)."
-            },
-            {
-                q: "Q.3. Identify the misspelt word",
-                options: ["Bureaucracy", "Acknowledge", "Privilege", "Seperate"],
-                answer: 3,
-                explanation: "Correct spelling is 'Separate' (ends with -rate, not -rate with an 'e' in the middle as 'seperate')."
-            },
-            {
-                q: "Q.4. Spot the correct spelling of a word referring to the fear of long words.",
-                options: [
-                    "Hippopotomonstrosesquipedaliophobia", 
-                    "Hippopotomonstrousequipedaliophobia", 
-                    "Hippopotamustrosesquippedaliophobia", 
-                    "Hippopotomonstrosesquiphedaliophobia"
-                ],
-                answer: 0,
-                explanation: "Memorize roots: 'Hippopoto-' + 'monstro-' + 'sesquipedalian' (long words) + '-phobia'."
-            },
-            {
-                q: "Q.5. Select the correct spelling of the medical term for “inflammation of the liver.”",
-                options: ["Hepatitus", "Hepatitis", "Heptatitis", "Hepattitis"],
-                answer: 1,
-                explanation: "Medical suffix '-itis' signifies inflammation. Root 'hepato-' refers to the liver."
-            },
-            {
-                q: "Q.6. Identify the misspelt word",
-                options: ["Porphyroblastic", "Querulous", "Salubrius", "Inadvertent"],
-                answer: 2,
-                explanation: "Correct spelling is 'Salubrious' (health-giving; healthy), ending in '-ious' not '-ius'."
-            },
-            {
-                q: "Q.7. Spot the correct spelling of a word referring to the formation of blood cells.",
-                options: ["Haematopoiesis", "Haemotopoiesis", "Haematopoesis", "Hematopoyesis"],
-                answer: 0,
-                explanation: "'Haemato-' (blood) + '-poiesis' (production/formation)."
-            },
-            {
-                q: "Q.8. Identify the misspelt word",
-                options: ["Acquiesce", "Desiccate", "Bourgeoisie", "Recalcitrantt"],
-                answer: 3,
-                explanation: "Correct spelling is 'Recalcitrant' (having a obstinately uncooperative attitude), ending with a single 't'."
-            },
-            {
-                q: "Q.9. Spot the correct spelling of a neurotransmitter crucial for mood regulation.",
-                options: ["Serotonin", "Seratonin", "Sereotonin", "Seretonin"],
-                answer: 0,
-                explanation: "'Serotonin' is derived from serum + tonic. Root contains 'oto'."
-            },
-            {
-                q: "Q.10. Select the correct spelling of a word which means the study of the structure of materials.",
-                options: ["Crytallography", "Cristalography", "Crystallographi", "Crystallography"],
-                answer: 3,
-                explanation: "'Crystallography' combines crystal + graphy with double 'l' and double 's'."
-            },
-            {
-                q: "Q.11. Select the INCORRECTLY spelt word.",
-                options: ["Accommodate", "Occurrence", "Supercede", "Millennium"],
-                answer: 2,
-                explanation: "Correct spelling is 'Supersede' (spelled with an 's', not 'c')."
-            },
-            {
-                q: "Q.12. Spot the correct spelling of the rare mineral used in making heat-resistant glass.",
-                options: ["Borosillicate", "Borosilicate", "Borosyllicate", "Borosillicatte"],
-                answer: 1,
-                explanation: "'Borosilicate' uses single 'l' elements: Boro + silicate."
-            },
-            {
-                q: "Q.13. Spot the correct spelling of the condition characterized by the formation of stones in the kidney.",
-                options: ["Nephrolithiasis", "Nephrolythiasis", "Nephrolitheasis", "Nepherolithiasis"],
-                answer: 0,
-                explanation: "'Nephro-' (kidney) + 'lith' (stone) + '-iasis' (medical condition)."
-            },
-            {
-                q: "Q.14. Select the correct spelling of a word that means the formation of a protein's specific structure.",
-                options: ["Conformation", "Confermashun", "Conformassion", "Conformasion"],
-                answer: 0,
-                explanation: "'Conformation' refers to spatial arrangement/shape of molecules."
-            },
-            {
-                q: "Q.15. Identify the incorrectly spelt word",
-                options: ["Psithurism", "Vellichor", "Clinomania", "Saccharrine"],
-                answer: 3,
-                explanation: "Correct spelling is 'Saccharine' (excessively sweet or sentimental) with one 'r'."
-            },
-            {
-                q: "Q.16. Identify the misspelt word",
-                options: ["Obfuscate", "Recalcitrant", "Parapharnalia", "Vicissitude"],
-                answer: 2,
-                explanation: "Correct spelling is 'Paraphernalia' (miscellaneous articles; equipment), spelled with 'e' before 'rnalia'."
-            },
-            {
-                q: "Q.17. Select the correct spelling of the medical adjective meaning ‘relating to the brain and spinal cord’.",
-                options: ["Neuroal", "Neuraxial", "Neuraxel", "Neurexial"],
-                answer: 1,
-                explanation: "'Neuraxial' pertains to the central nervous system (brain and spinal axis)."
-            },
-            {
-                q: "Q.18. Which is the correct spelling for a word meaning ‘a person who takes care of a museum or collection’?",
-                options: ["Curater", "Curator", "Currator", "Curetor"],
-                answer: 1,
-                explanation: "'Curator' ends in '-or'."
-            },
-            {
-                q: "Q.19. Select the correct spelling of a word meaning a disease involving the inflammation of the membranes surrounding the brain and spinal cord.",
-                options: ["Meningitis", "Meningetis", "Meningetous", "Meninjitis"],
-                answer: 0,
-                explanation: "'Meninges' + '-itis' (inflammation) = Meningitis."
-            },
-            {
-                q: "Q.20. Select the correct spelling of a noun describing an existing or inborn condition.",
-                options: ["Congenital", "Congenitalle", "Congenetial", "Congenetall"],
-                answer: 0,
-                explanation: "'Congenital' refers to a condition present from birth."
-            },
-            {
-                q: "Q.21. Identify the misspelt word.",
-                options: ["Amnesiac", "Idiosyncrasy", "Vicissitude", "Superindentent"],
-                answer: 3,
-                explanation: "Correct spelling is 'Superintendent' (not superindentent)."
-            },
-            {
-                q: "Q.22. Spot the correct spelling of the word meaning “the study of earthquakes.”",
-                options: ["Seismology", "Sesmology", "Siesmology", "Sisemology"],
-                answer: 0,
-                explanation: "'Seismo-' is the standard Greek root for earthquake."
-            },
-            {
-                q: "Q.23. Which is the correct spelling of a word meaning 'the quality of being honest and having strong moral principles'?",
-                options: ["Integraty", "Intigrity", "Integrity", "Integrety"],
-                answer: 2,
-                explanation: "'Integrity' comes from integer; root spelling uses '-ity'."
-            },
-            {
-                q: "Q.24. Select the correct spelling of a word meaning the rhythmic contraction and relaxation of muscles that propels food through the digestive tract.",
-                options: ["Peristalsis", "Peristalses", "Peristalsys", "Peristalisis"],
-                answer: 0,
-                explanation: "'Peristalsis' ends with '-sis'."
-            },
-            {
-                q: "Q.25. Select the correct spelling of the word meaning inflammation of the appendix.",
-                options: ["Apindixitis", "Appandicitis", "Appendicitis", "Apendicitis"],
-                answer: 2,
-                explanation: "'Appendix' changes to 'appendic-' before adding suffix '-itis' -> Appendicitis."
-            },
-            {
-                q: "Q.26. Choose the correct spelling of a word meaning ‘the practice of using long, complex words’.",
-                options: ["Sesquipedalianism", "Sesquipidalianism", "Sesquepedalianism", "Sesquapadalianism"],
-                answer: 0,
-                explanation: "'Sesquipedalianism' derives from Latin 'sesquipedalis' (measuring a foot and a half long)."
-            },
-            {
-                q: "Q.27. Find the word that is spelled correctly and means the ability to understand something instinctively without the need for conscious reasoning.",
-                options: ["Intuission", "Intuition", "Intuetion", "Intuitian"],
-                answer: 1,
-                explanation: "'Intuition' uses '-ition' suffix."
-            },
-            {
-                q: "Q.28. Select the correct spelling of a word referring to the sensation of dizziness and loss of balance.",
-                options: ["Vertigo", "Vertiggo", "Vertigoes", "Vartego"],
-                answer: 0,
-                explanation: "'Vertigo' is standard singular spelling."
-            },
-            {
-                q: "Q.29. Which is the correct spelling for ‘an official order or command’?",
-                options: ["Decree", "Dicree", "Dekree", "Diecree"],
-                answer: 0,
-                explanation: "'Decree' means an official order issued by a legal authority."
-            },
-            {
-                q: "Q.30. Find the correctly spelled word meaning easily bent or influenced.",
-                options: ["Malleable", "Malliable", "Maleable", "Malleble"],
-                answer: 0,
-                explanation: "'Malleable' (from malleus - hammer, able to be hammered or shaped)."
-            },
-            {
-                q: "Q.31. Choose the correct spelling of a word meaning 'a long, aggressive speech'.",
-                options: ["Harrengue", "Harangue", "Haranggue", "Harrangue"],
-                answer: 1,
-                explanation: "'Harangue' is spelled with 'a' and 'ue' at the end."
-            },
-            {
-                q: "Q.32. Choose the correct spelling of a word meaning 'a person who believes that war and violence are unjustifiable'.",
-                options: ["Pacifict", "Pasifist", "Pacifist", "Pasificit"],
-                answer: 2,
-                explanation: "'Pacifist' comes from 'peace' root (pax/pacific)."
-            },
-            {
-                q: "Q.33. Choose the correctly spelt word for a person who believes that all people are equal and deserve equal rights and opportunities.",
-                options: ["Egalatarian", "Egalitarian", "Egaliterian", "Egallitarian"],
-                answer: 1,
-                explanation: "'Egalitarian' is derived from 'égal' (equal)."
-            },
-            {
-                q: "Q.34. Select the correct spelling of a word meaning 'the ability to understand and share the feelings of another'.",
-                options: ["Empethy", "Empath", "Empathy", "Empathise"],
-                answer: 2,
-                explanation: "'Empathy' noun form ends in '-y'."
-            },
-            {
-                q: "Q.35. Select the correct spelling of a word meaning ‘a person who talks too much’.",
-                options: ["Garrulous", "Garulous", "Garrolous", "Garullous"],
-                answer: 0,
-                explanation: "'Garrulous' contains double 'r'."
-            },
-            {
-                q: "Q.36. Which of these is the correct spelling of a word meaning “a long and complicated academic argument or written discourse”?",
-                options: ["Disquisition", "Disquasition", "Disquisision", "Disquisitian"],
-                answer: 0,
-                explanation: "'Disquisition' uses prefix 'dis-' + 'quisit' + '-ion'."
-            },
-            {
-                q: "Q.37. Select the correct spelling for a word meaning 'a strong and very unpleasant smell'.",
-                options: ["Mallodour", "Malodour", "Maloder", "Malodur"],
-                answer: 1,
-                explanation: "'Malodour' uses prefix 'mal-' (bad) + 'odour'."
-            },
-            {
-                q: "Q.38. Find the correctly spelled word meaning a person who loves books.",
-                options: ["Bibliophile", "Biblophile", "Bibliophille", "Bibliphile"],
-                answer: 0,
-                explanation: "'Biblio-' (book) + '-phile' (lover)."
-            },
-            {
-                q: "Q.39. Choose the correct spelling of a word meaning ‘to make something worse or more severe’.",
-                options: ["Exacerbate", "Exagcerbate", "Execerbate", "Exascerbate"],
-                answer: 0,
-                explanation: "'Exacerbate' uses 'ex-' + 'acer' (harsh/bitter) + '-bate'."
-            },
-            {
-                q: "Q.40. Select the correct spelling of a word meaning 'occurring at irregular intervals or only in some places; infrequent'.",
-                options: ["Sporadic", "Sporaddic", "Sporedic", "Sporadicc"],
-                answer: 0,
-                explanation: "'Sporadic' is spelled with single 'd'."
-            }
-        ];
+    <!-- Active Quiz Card -->
+    <main id="quizCard" class="quiz-card">
+      <div class="question-meta">
+        <span id="questionNumberTag" class="q-number-tag">Q. 01 / 40</span>
+        <span id="questionCategory" style="font-size: 0.72rem; color: var(--text-sub);">Vocabulary & Orthography</span>
+      </div>
 
-        let currentIdx = 0;
-        let score = 0;
-        let incorrectCount = 0;
-        let userAnswers = new Array(quizData.length).fill(null);
-        let answeredCurrent = false;
+      <h2 id="questionPrompt" class="question-title">Loading question...</h2>
 
-        function loadQuestion() {
-            answeredCurrent = false;
-            const qObj = quizData[currentIdx];
-            
-            // Update progress
-            document.getElementById('progressIndicator').innerText = `Q ${currentIdx + 1} of ${quizData.length}`;
-            document.getElementById('questionText').innerText = qObj.q;
-            
-            const optionsGrid = document.getElementById('optionsGrid');
-            optionsGrid.innerHTML = '';
+      <!-- 2x2 Options Grid -->
+      <div id="optionsContainer" class="options-grid"></div>
 
-            qObj.options.forEach((opt, index) => {
-                const btn = document.createElement('button');
-                btn.className = 'option-btn';
-                const badgeLetters = ['A', 'B', 'C', 'D'];
-                btn.innerHTML = `<span class="option-badge">${badgeLetters[index]}</span> ${opt}`;
-                btn.onclick = () => selectOption(index);
-                optionsGrid.appendChild(btn);
-            });
+      <!-- Feedback & SSC Exam Tip Box -->
+      <div id="feedbackBox" class="feedback-box">
+        <div id="feedbackHeader" class="feedback-header"></div>
+        <div id="feedbackExplanation" style="color: var(--text-main);"></div>
+        <div id="feedbackTip" class="ssc-tip"></div>
+      </div>
 
-            // Hide explanation & next button initially
-            const expBox = document.getElementById('explanationBox');
-            expBox.className = 'explanation-box';
-            document.getElementById('nextBtn').style.display = 'none';
-        }
+      <!-- Footer action bar -->
+      <div class="footer-bar">
+        <div id="scoreBadge" class="live-score">Score: 0 | Remaining: 40</div>
+        <button id="nextBtn" class="next-btn" disabled>
+          <span>Next</span>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+        </button>
+      </div>
+    </main>
 
-        function selectOption(selectedIndex) {
-            if (answeredCurrent) return;
-            answeredCurrent = true;
+    <!-- Results Screen -->
+    <section id="resultsScreen" class="results-screen">
+      <div class="results-header">
+        <h2 class="results-title">Diagnostic Performance</h2>
+        <p style="font-size: 0.8rem; color: var(--text-sub);">SSC Tier-I / Tier-II Orthography Evaluation</p>
+      </div>
 
-            const qObj = quizData[currentIdx];
-            userAnswers[currentIdx] = selectedIndex;
-            const optionButtons = document.querySelectorAll('.option-btn');
+      <div class="results-summary-cards">
+        <div class="metric-card">
+          <div id="resultAccuracy" class="metric-val score">0%</div>
+          <div class="metric-lbl">Accuracy</div>
+        </div>
+        <div class="metric-card">
+          <div id="resultCorrect" class="metric-val correct">0</div>
+          <div class="metric-lbl">Correct</div>
+        </div>
+        <div class="metric-card">
+          <div id="resultIncorrect" class="metric-val wrong">0</div>
+          <div class="metric-lbl">Incorrect</div>
+        </div>
+      </div>
 
-            const isCorrect = selectedIndex === qObj.answer;
-            if (isCorrect) {
-                score++;
-                optionButtons[selectedIndex].classList.add('correct');
-            } else {
-                incorrectCount++;
-                optionButtons[selectedIndex].classList.add('incorrect');
-                optionButtons[qObj.answer].classList.add('correct');
-            }
+      <div style="font-size: 0.75rem; font-weight: 700; color: var(--text-sub); margin-bottom: 4px;">
+        REVIEW OF INCORRECT ATTEMPTS
+      </div>
+      <div id="mistakesContainer" class="mistakes-container"></div>
 
-            // Disable all options after selection
-            optionButtons.forEach(btn => btn.disabled = true);
+      <button id="restartBtn" class="restart-btn">Restart Full Test</button>
+    </section>
+  </div>
 
-            // Show concise explanation box
-            const expBox = document.getElementById('explanationBox');
-            const expTitle = document.getElementById('explanationTitle');
-            const expText = document.getElementById('explanationText');
+  <script>
+    const questionsData = [
+      {
+        id: 1,
+        question: "Identify the misspelt word.",
+        options: ["Sesquipedalian", "Anachronism", "Syzygy", "Kakishtocracy"],
+        correctIndex: 3,
+        explanation: "The correct spelling is 'Kakistocracy' (governance by the least suitable or worst citizens). The extra 'h' makes it invalid.",
+        sscTip: "Frequent SSC pattern: Greek-rooted governance words ending in '-cracy' (Autocracy, Plutocracy, Ochlocracy, Aristocracy)."
+      },
+      {
+        id: 2,
+        question: "Spot the correct spelling of a word referring to the surgical removal of an appendix.",
+        options: ["Appendicectomy", "Appendectomy", "Appendecectomy", "Appendicetomy"],
+        correctIndex: 0,
+        explanation: "'Appendicectomy' is standard British English (frequently preferred in SSC answer keys), though 'appendectomy' is used in US English.",
+        sscTip: "Medical suffix rule: '-ectomy' denotes surgical excision (Tonsillectomy, Mastectomy). Note the 'ice' vs 'ec' root retention."
+      },
+      {
+        id: 3,
+        question: "Identify the misspelt word.",
+        options: ["Bureaucracy", "Acknowledge", "Privilege", "Seperate"],
+        correctIndex: 3,
+        explanation: "The correct spelling is 'Separate'. It contains 'par', never 'per'.",
+        sscTip: "High Repeat SSC Trap: Remember the mnemonic: 'There is A RAT in sep-a-rat-e'."
+      },
+      {
+        id: 4,
+        question: "Spot the correct spelling of a word referring to the fear of long words.",
+        options: [
+          "Hippopotomonstrosesquipedaliophobia",
+          "Hippopotomonstrousequipedaliophobia",
+          "Hippopotamustrosesquippedaliophobia",
+          "Hippopotomonstrosesquiphedaliophobia"
+        ],
+        correctIndex: 0,
+        explanation: "'Hippopotomonstrosesquipedaliophobia' is spelled with 'sesqui-' (one and a half) and single 'p' in 'pedalio'.",
+        sscTip: "The root 'sesquipedalian' means using words one and a half feet long (from Latin 'sesqui-' + 'ped-')."
+      },
+      {
+        id: 5,
+        question: "Select the correct spelling of the medical term for “inflammation of the liver.”",
+        options: ["Hepatitus", "Hepatitis", "Heptatitis", "Hepattitis"],
+        correctIndex: 1,
+        explanation: "The correct spelling is 'Hepatitis'. The suffix for inflammation is '-itis'.",
+        sscTip: "Suffix '-itis': Bronchitis, Arthritis, Dermatitis, Gastritis. Note single 't' in hepat- + -itis."
+      },
+      {
+        id: 6,
+        question: "Identify the misspelt word.",
+        options: ["Porphyroblastic", "Querulous", "Salubrius", "Inadvertent"],
+        correctIndex: 2,
+        explanation: "The correct spelling is 'Salubrious' (health-giving or wholesome). It requires '-ious', not '-us'.",
+        sscTip: "Opposite: 'Lugubrious' (mournful). SSC frequently pairs 'Salubrious' with antonym 'Insalubrious' or 'Noxious'."
+      },
+      {
+        id: 7,
+        question: "Spot the correct spelling of a word referring to the formation of blood cells.",
+        options: ["Haematopoiesis", "Haemotopoiesis", "Haematopoesis", "Hematopoyesis"],
+        correctIndex: 0,
+        explanation: "The correct British spelling is 'Haematopoiesis' (from Greek 'haemato-' [blood] + 'poiesis' [making]).",
+        sscTip: "British vs US: British retains 'ae' (Haematology, Paediatrics), while US drops 'a' (Hematology, Pediatrics)."
+      },
+      {
+        id: 8,
+        question: "Identify the misspelt word.",
+        options: ["Acquiesce", "Desiccate", "Bourgeoisie", "Recalcitrantt"],
+        correctIndex: 3,
+        explanation: "The correct spelling is 'Recalcitrant' (uncooperative/defiant) with a single final 't'.",
+        sscTip: "Double-consonant watchlist: 'Desiccate' has ONE 's' and DOUBLE 'c' (often tested in SSC CGL Tier 1/2)."
+      },
+      {
+        id: 9,
+        question: "Spot the correct spelling of a neurotransmitter crucial for mood regulation.",
+        options: ["Serotonin", "Seratonin", "Sereotonin", "Seretonin"],
+        correctIndex: 0,
+        explanation: "'Serotonin' is spelled with 'sero-' (from serum) and '-tonin' (giving tone/pressure).",
+        sscTip: "Common trap: Examiners replace 'o' with 'a' (Seratonin) or 'e' (Seretonin). Keep vowels in order: e - o - o - i."
+      },
+      {
+        id: 10,
+        question: "Select the correct spelling of a word which means the study of the structure of materials.",
+        options: ["Crytallography", "Cristalography", "Crystallographi", "Crystallography"],
+        correctIndex: 3,
+        explanation: "The correct spelling is 'Crystallography' (double 'l' from crystal, plus suffix '-ography').",
+        sscTip: "Derived from 'Crystal': Remember that when adding '-ography', the double 'l' is preserved: Crystal -> Crystallography."
+      },
+      {
+        id: 11,
+        question: "Select the INCORRECTLY spelt word.",
+        options: ["Accommodate", "Occurrence", "Supercede", "Millennium"],
+        correctIndex: 2,
+        explanation: "The correct spelling is 'Supersede' (with an 's', from Latin 'supersedere'). It is the only English word ending in '-sede'.",
+        sscTip: "Golden Rule for SSC: All other similar sound words end in '-cede' (Precede, Concede, Recede) or '-ceed' (Exceed, Proceed, Succeed)."
+      },
+      {
+        id: 12,
+        question: "Spot the correct spelling of the rare mineral used in making heat-resistant glass.",
+        options: ["Borosillicate", "Borosilicate", "Borosyllicate", "Borosillicatte"],
+        correctIndex: 1,
+        explanation: "'Borosilicate' is formed from 'boro-' (boron) and 'silicate' (single 'l', single 't').",
+        sscTip: "Look out for unnecessary doubling of 'l' and 't' in scientific compound names in SSC general English sections."
+      },
+      {
+        id: 13,
+        question: "Spot the correct spelling of the condition characterized by the formation of stones in the kidney.",
+        options: ["Nephrolithiasis", "Nephrolythiasis", "Nephrolitheasis", "Nephreolithiasis"],
+        correctIndex: 0,
+        explanation: "'Nephrolithiasis' is derived from 'nephro-' (kidney) + 'lithos' (stone) + '-iasis' (morbid condition).",
+        sscTip: "Root breakdown: 'Nephro' (Kidney) + 'Lith' (Stone). Compare with 'Cholelithiasis' (gallstones)."
+      },
+      {
+        id: 14,
+        question: "Select the correct spelling of a word that means the formation of a protein's specific structure.",
+        options: ["Conformation", "Confermashun", "Conformassion", "Conformasion"],
+        correctIndex: 0,
+        explanation: "'Conformation' means the structural arrangement. Do not confuse with 'Confirmation' (validating/verification).",
+        sscTip: "SSC Homophone alert: 'Conform' (yield/adapt to rules) vs 'Confirm' (substantiate/verify)."
+      },
+      {
+        id: 15,
+        question: "Identify the incorrectly spelt word.",
+        options: ["Psithurism", "Vellichor", "Clinomania", "Saccharrine"],
+        correctIndex: 3,
+        explanation: "The correct spelling is 'Saccharine' (double 'c', single 'r').",
+        sscTip: "SSC Pattern: Doubling the wrong letter. Remember: DOUBLE 'C' (cch), SINGLE 'R' (r)."
+      },
+      {
+        id: 16,
+        question: "Identify the misspelt word.",
+        options: ["Obfuscate", "Recalcitrant", "Parapharnalia", "Vicissitude"],
+        correctIndex: 2,
+        explanation: "The correct spelling is 'Paraphernalia' (contains 'er', not 'ar' in the 3rd syllable: par-a-pher-na-li-a).",
+        sscTip: "SSC Repeat Star: Paraphernalia originates from property a bride owned besides her dowry; note '-pher-'."
+      },
+      {
+        id: 17,
+        question: "Select the correct spelling of the medical adjective meaning ‘relating to the brain and spinal cord’.",
+        options: ["Neuroal", "Neuraxial", "Neuraxel", "Neurexial"],
+        correctIndex: 1,
+        explanation: "The correct spelling is 'Neuraxial' (combining 'neur-' with 'axial').",
+        sscTip: "Anatomical terminology in SSC exams relies on Latin stem + '-al' / '-ar' adjectival endings."
+      },
+      {
+        id: 18,
+        question: "Which is the correct spelling for a word meaning ‘a person who takes care of a museum or collection’?",
+        options: ["Curater", "Curator", "Currator", "Curetor"],
+        correctIndex: 1,
+        explanation: "'Curator' ends in '-or' (like Director, Mentor, Doctor, Inspector), not '-er'.",
+        sscTip: "Agent nouns: One-word substitution question favourite: 'A custodian of a museum' = Curator."
+      },
+      {
+        id: 19,
+        question: "Select the correct spelling of a word meaning inflammation of the membranes surrounding the brain and spinal cord.",
+        options: ["Meningitis", "Meningetis", "Meningetous", "Meninjitis"],
+        correctIndex: 0,
+        explanation: "'Meningitis' stems from 'meninges' (membranes) + '-itis' (inflammation).",
+        sscTip: "Pronounced with a soft 'g', but spelled with the letter 'g' (never 'j')."
+      },
+      {
+        id: 20,
+        question: "Select the correct spelling of a noun/adjective describing an existing or inborn condition.",
+        options: ["Congenital", "Congenitalle", "Congenetial", "Congenetall"],
+        correctIndex: 0,
+        explanation: "'Congenital' (present from birth) is spelled with 'genit', from Latin 'genitus' (born).",
+        sscTip: "Contrast with 'Genial' (friendly) and 'Congenial' (pleasant/compatible)."
+      },
+      {
+        id: 21,
+        question: "Identify the misspelt word.",
+        options: ["Amnesiac", "Idiosyncrasy", "Vicissitude", "Superindentent"],
+        correctIndex: 3,
+        explanation: "The correct spelling is 'Superintendent' (contains '-tend-', not '-tend-ent' with an extra 'n': su-per-in-ten-dent).",
+        sscTip: "Also note 'Idiosyncrasy': ends in '-crasy' (with an 's'), NOT '-cracy'!"
+      },
+      {
+        id: 22,
+        question: "Spot the correct spelling of the word meaning “the study of earthquakes.”",
+        options: ["Seismology", "Sesmology", "Siesmology", "Sisemology"],
+        correctIndex: 0,
+        explanation: "'Seismology' begins with 'seis-', derived from Greek 'seismos' (earthquake/shock).",
+        sscTip: "Rule 'I before E except after C' has frequent Greek exceptions: 'Seismic', 'Seize', 'Weird'."
+      },
+      {
+        id: 23,
+        question: "Which is the correct spelling of a word meaning 'the quality of being honest and having strong moral principles'?",
+        options: ["Integraty", "Intigrity", "Integrity", "Integrety"],
+        correctIndex: 2,
+        explanation: "'Integrity' comes from Latin 'integritas' (whole, complete, intact).",
+        sscTip: "Root: 'Integer' (whole number/untouched entity). In-teg-ri-ty."
+      },
+      {
+        id: 24,
+        question: "Select the correct spelling of a word meaning the rhythmic contraction and relaxation of muscles that propels food.",
+        options: ["Peristalsis", "Peristalses", "Peristalsys", "Peristalisis"],
+        correctIndex: 0,
+        explanation: "'Peristalsis' is formed from 'peri-' (around) + 'stalsis' (constriction). Plural is 'peristalses'.",
+        sscTip: "Singular ends in '-is', plural in '-es' (Crisis/Crises, Hypothesis/Hypotheses, Peristalsis/Peristalses)."
+      },
+      {
+        id: 25,
+        question: "Select the correct spelling of the word meaning inflammation of the appendix.",
+        options: ["Apindixitis", "Appandicitis", "Appendicitis", "Apendicitis"],
+        correctIndex: 2,
+        explanation: "'Appendicitis' has double 'p', single 'd', followed by '-icitis'.",
+        sscTip: "Notice the spelling difference: 'Appendix' (with 'x') becomes 'Appendic-' before suffixes starting with vowels."
+      },
+      {
+        id: 26,
+        question: "Choose the correct spelling of a word meaning ‘the practice of using long, complex words’.",
+        options: ["Sesquipedalianism", "Sesquipidalianism", "Sesquepedalianism", "Sesquapadalianism"],
+        correctIndex: 0,
+        explanation: "'Sesquipedalianism': 'sesqui-' (one and a half) + 'pedal-' (foot) + '-ian' + '-ism'.",
+        sscTip: "Often asked in Tier 2 One-Word Substitutions: 'A person given to using long words' = Sesquipedalian."
+      },
+      {
+        id: 27,
+        question: "Find the word that is spelled correctly and means the ability to understand something instinctively.",
+        options: ["Intuission", "Intuition", "Intuetion", "Intuitian"],
+        correctIndex: 1,
+        explanation: "'Intuition' is spelled with '-tion', derived from 'intuit'.",
+        sscTip: "Common phonetic distractor: converting standard '-tion' into '-ssion' or '-tian'."
+      },
+      {
+        id: 28,
+        question: "Select the correct spelling of a word referring to the sensation of dizziness and loss of balance.",
+        options: ["Vertigo", "Vertiggo", "Vertigoes", "Vartego"],
+        correctIndex: 0,
+        explanation: "'Vertigo' has single 't', single 'g', starting with 'ver-'.",
+        sscTip: "Root: 'Vertere' (Latin for 'to turn'). Connected to 'revert', 'divert', 'introvert'."
+      },
+      {
+        id: 29,
+        question: "Which is the correct spelling for ‘an official order or command’?",
+        options: ["Decree", "Dicree", "Dekree", "Diecree"],
+        correctIndex: 0,
+        explanation: "'Decree' is spelled with 'de-' and double 'e' at the end.",
+        sscTip: "Legal vocabulary in SSC: Decree (judicial decision), Discretion, De facto, De jure."
+      },
+      {
+        id: 30,
+        question: "Find the correctly spelled word meaning easily bent or influenced.",
+        options: ["Malleable", "Malliable", "Maleable", "Malleble"],
+        correctIndex: 0,
+        explanation: "'Malleable' has double 'l' and '-eable' (from Latin 'malleus', hammer).",
+        sscTip: "Science + English overlap: Metals are 'malleable' (can be hammered) and 'ductile' (drawn into wires)."
+      },
+      {
+        id: 31,
+        question: "Select the correct spelling of a word meaning 'a long, aggressive speech'.",
+        options: ["Harrengue", "Harangue", "Haranggue", "Harrangue"],
+        correctIndex: 1,
+        explanation: "'Harangue' is spelled with a single 'r', single 'n', ending with '-gue'.",
+        sscTip: "Exam trap: Candidates mistakenly double the 'r'. Remember: single 'r', silent 'ue' ending."
+      },
+      {
+        id: 32,
+        question: "Choose the correct spelling of a word meaning 'a person who believes that war and violence are unjustifiable'.",
+        options: ["Pacifict", "Pasifist", "Pacifist", "Pasificit"],
+        correctIndex: 2,
+        explanation: "'Pacifist' comes from 'pacify' (Latin 'pax' = peace) + suffix '-ist'.",
+        sscTip: "Key roots: 'Pac-' / 'Plac-' = calm/peace (Pacify, Placate, Placid, Pacifism)."
+      },
+      {
+        id: 33,
+        question: "Choose the correctly spelt word for a person who believes that all people are equal.",
+        options: ["Egalatarian", "Egalitarian", "Egaliterian", "Egallitarian"],
+        correctIndex: 1,
+        explanation: "'Egalitarian' comes from the French 'égal' (equal); it uses 'i' in the second syllable: e-gal-i-tar-i-an.",
+        sscTip: "Notice the single 'l' and triple 'i' rhythm: E - G - A - L - I - T - A - R - I - A - N."
+      },
+      {
+        id: 34,
+        question: "Select the correct spelling of a word meaning 'the ability to understand and share the feelings of another'.",
+        options: ["Empethy", "Empath", "Empathy", "Empathise"],
+        correctIndex: 2,
+        explanation: "'Empathy' has root '-pathy' (feeling/suffering). 'Empathise' is a verb, while question asks for the noun.",
+        sscTip: "SSC Vocabulary Quartet: Sympathy (pity), Empathy (shared feeling), Apathy (lack of interest), Antipathy (dislike)."
+      },
+      {
+        id: 35,
+        question: "Select the correct spelling of a word meaning ‘a person who talks too much’.",
+        options: ["Garrulous", "Garulous", "Garrolous", "Garullous"],
+        correctIndex: 0,
+        explanation: "'Garrulous' features double 'r', single 'l', and ends in '-ous'.",
+        sscTip: "Synonyms tested in SSC: Loquacious, Voluble, Talkative. Antonym: Reticent, Taciturn, Laconic."
+      },
+      {
+        id: 36,
+        question: "Which of these is the correct spelling of a word meaning “a long and complicated academic argument or written discourse”?",
+        options: ["Disquisition", "Disquasition", "Disquisision", "Disquisitian"],
+        correctIndex: 0,
+        explanation: "'Disquisition' is spelled 'dis-' + 'quisit' (from quaerere, to seek) + '-ion'.",
+        sscTip: "Shares the root with 'Inquisition' and 'Acquisition'. Keep the '-isition' structure intact."
+      },
+      {
+        id: 37,
+        question: "Select the correct spelling for a word meaning 'a strong and very unpleasant smell'.",
+        options: ["Mallodour", "Malodour", "Maloder", "Malodur"],
+        correctIndex: 1,
+        explanation: "'Malodour' combines prefix 'mal-' (bad/ill, single 'l') with 'odour' (British spelling).",
+        sscTip: "Prefix 'Mal-': Malfunction, Malpractice, Malevolent, Malicious. Always single 'l'."
+      },
+      {
+        id: 38,
+        question: "Find the correctly spelled word meaning a person who loves books.",
+        options: ["Bibliophile", "Biblophile", "Bibliophille", "Bibliphile"],
+        correctIndex: 0,
+        explanation: "'Bibliophile' derives from Greek 'biblion' (book) + 'philos' (loving).",
+        sscTip: "Root: 'Biblio' = Book (Bibliography, Bibliophobia, Biblioklept - someone who steals books!)."
+      },
+      {
+        id: 39,
+        question: "Choose the correct spelling of a word meaning ‘to make something worse or more severe’.",
+        options: ["Exacerbate", "Exagcerbate", "Execerbate", "Exascerbate"],
+        correctIndex: 0,
+        explanation: "'Exacerbate' is spelled with 'x' followed directly by 'ac' (from 'acer' = sharp/bitter).",
+        sscTip: "SSC Antonym trap: The antonym of 'Exacerbate' is 'Ameliorate' (to improve/make better)."
+      },
+      {
+        id: 40,
+        question: "Select the correct spelling of a word meaning 'occurring at irregular intervals or only in some places; infrequent'.",
+        options: ["Sporadic", "Sporaddic", "Sporedic", "Sporadicc"],
+        correctIndex: 0,
+        explanation: "'Sporadic' has single 'r', single 'd', and single 'c'.",
+        sscTip: "Frequent SSC Synonyms: Intermittent, Fitful, Spasmodic. Antonym: Continuous, Perpetual."
+      }
+    ];
 
-            if (isCorrect) {
-                expBox.className = 'explanation-box show correct-exp';
-                expTitle.innerText = 'Correct! Key Takeaway:';
-            } else {
-                expBox.className = 'explanation-box show incorrect-exp';
-                expTitle.innerText = `Incorrect. Correct Option was (${['A','B','C','D'][qObj.answer]}):`;
-            }
-            expText.innerText = qObj.explanation;
+    let currentQIndex = 0;
+    let score = 0;
+    let userAttempts = []; // Stores { question, selected, correct, isCorrect }
 
-            // Show next button
-            const nextBtn = document.getElementById('nextBtn');
-            nextBtn.style.display = 'block';
-            if (currentIdx === quizData.length - 1) {
-                nextBtn.innerText = 'View Results ➔';
-            } else {
-                nextBtn.innerText = 'Next Question ➔';
-            }
-        }
+    // DOM Elements
+    const questionPrompt = document.getElementById("questionPrompt");
+    const questionNumberTag = document.getElementById("questionNumberTag");
+    const optionsContainer = document.getElementById("optionsContainer");
+    const feedbackBox = document.getElementById("feedbackBox");
+    const feedbackHeader = document.getElementById("feedbackHeader");
+    const feedbackExplanation = document.getElementById("feedbackExplanation");
+    const feedbackTip = document.getElementById("feedbackTip");
+    const nextBtn = document.getElementById("nextBtn");
+    const scoreBadge = document.getElementById("scoreBadge");
+    const progressFill = document.getElementById("progressFill");
 
-        function handleNext() {
-            currentIdx++;
-            if (currentIdx < quizData.length) {
-                loadQuestion();
-            } else {
-                showResults();
-            }
-        }
+    const quizCard = document.getElementById("quizCard");
+    const resultsScreen = document.getElementById("resultsScreen");
+    const resultAccuracy = document.getElementById("resultAccuracy");
+    const resultCorrect = document.getElementById("resultCorrect");
+    const resultIncorrect = document.getElementById("resultIncorrect");
+    const mistakesContainer = document.getElementById("mistakesContainer");
+    const restartBtn = document.getElementById("restartBtn");
 
-        function showResults() {
-            document.getElementById('quizContent').style.display = 'none';
-            document.getElementById('quizFooter').style.display = 'none';
-            document.getElementById('progressIndicator').style.display = 'none';
+    const themeToggle = document.getElementById("themeToggle");
+    const themeIcon = document.getElementById("themeIcon");
+    const themeText = document.getElementById("themeText");
 
-            const resultsScreen = document.getElementById('resultsScreen');
-            resultsScreen.style.display = 'flex';
+    // Theme Switcher
+    themeToggle.addEventListener("click", () => {
+      const currentTheme = document.body.getAttribute("data-theme");
+      const nextTheme = currentTheme === "dark" ? "light" : "dark";
+      document.body.setAttribute("data-theme", nextTheme);
+      themeIcon.textContent = nextTheme === "dark" ? "☀️" : "🌙";
+      themeText.textContent = nextTheme === "dark" ? "Light" : "Dark";
+    });
 
-            const percentage = Math.round((score / quizData.length) * 100);
-            document.getElementById('finalScoreVal').innerText = `${score}/${quizData.length}`;
-            document.getElementById('finalPercentageVal').innerText = `${percentage}%`;
-            document.getElementById('finalIncorrectVal').innerText = `${incorrectCount}`;
+    // Load Question
+    function loadQuestion(index) {
+      const q = questionsData[index];
+      const qNumFormatted = String(index + 1).padStart(2, '0');
+      questionNumberTag.textContent = `Q. ${qNumFormatted} / 40`;
+      questionPrompt.textContent = q.question;
 
-            // Build Incorrect Breakdown List
-            const breakdownList = document.getElementById('breakdownList');
-            breakdownList.innerHTML = '';
+      // Update progress
+      const progressPercent = ((index) / questionsData.length) * 100;
+      progressFill.style.width = `${progressPercent}%`;
 
-            let hasIncorrects = false;
-            quizData.forEach((qObj, index) => {
-                const userAnsIdx = userAnswers[index];
-                if (userAnsIdx !== qObj.answer) {
-                    hasIncorrects = true;
-                    const letters = ['A', 'B', 'C', 'D'];
-                    const userMarked = userAnsIdx !== null ? `${letters[userAnsIdx]}. ${qObj.options[userAnsIdx]}` : 'Not Answered';
-                    const correctMarked = `${letters[qObj.answer]}. ${qObj.options[qObj.answer]}`;
+      // Reset feedback and Next button
+      feedbackBox.classList.remove("active");
+      nextBtn.disabled = true;
+      optionsContainer.innerHTML = "";
 
-                    const item = document.createElement('div');
-                    item.className = 'breakdown-item';
-                    item.innerHTML = `
-                        <div class="q-title">${qObj.q}</div>
-                        <div class="ans-row">
-                            <div>Your Answer: <span class="user-ans">${userMarked}</span></div>
-                            <div>Correct: <span class="correct-ans">${correctMarked}</span></div>
-                        </div>
-                    `;
-                    breakdownList.appendChild(item);
-                }
-            });
+      const keys = ["(a)", "(b)", "(c)", "(d)"];
 
-            if (!hasIncorrects) {
-                breakdownList.innerHTML = `<div style="text-align: center; color: var(--success); font-weight: 600; padding: 10px;">Fantastic! You got all questions correct with 100% accuracy! 🎉</div>`;
-            }
-        }
+      q.options.forEach((optText, optIdx) => {
+        const btn = document.createElement("button");
+        btn.className = "option-btn";
+        btn.innerHTML = `<span><span class="opt-key">${keys[optIdx]}</span> ${optText}</span>`;
+        btn.addEventListener("click", () => handleSelectOption(optIdx));
+        optionsContainer.appendChild(btn);
+      });
 
-        function restartQuiz() {
-            currentIdx = 0;
-            score = 0;
-            incorrectCount = 0;
-            userAnswers = new Array(quizData.length).fill(null);
-            
-            document.getElementById('resultsScreen').style.display = 'none';
-            document.getElementById('quizContent').style.display = 'flex';
-            document.getElementById('quizFooter').style.display = 'flex';
-            document.getElementById('progressIndicator').style.display = 'block';
+      updateFooter();
+    }
 
-            loadQuestion();
-        }
+    // Handle Option Selection
+    function handleSelectOption(selectedIndex) {
+      const q = questionsData[currentQIndex];
+      const allBtns = optionsContainer.querySelectorAll(".option-btn");
 
-        function toggleTheme() {
-            const html = document.documentElement;
-            const themeBtn = document.getElementById('themeToggleBtn');
-            if (html.getAttribute('data-theme') === 'light') {
-                html.setAttribute('data-theme', 'dark');
-                themeBtn.innerText = '☀️ Light';
-            } else {
-                html.setAttribute('data-theme', 'light');
-                themeBtn.innerText = '🌙 Dark';
-            }
-        }
+      // Disable all buttons immediately
+      allBtns.forEach(btn => btn.disabled = true);
 
-        // Initialize first question on load
-        window.onload = loadQuestion;
-    </script>
+      const isCorrect = selectedIndex === q.correctIndex;
+      if (isCorrect) {
+        score++;
+        allBtns[selectedIndex].classList.add("correct");
+        feedbackHeader.className = "feedback-header success";
+        feedbackHeader.innerHTML = "✓ Correct Answer";
+      } else {
+        allBtns[selectedIndex].classList.add("wrong");
+        allBtns[q.correctIndex].classList.add("correct");
+        feedbackHeader.className = "feedback-header fail";
+        feedbackHeader.innerHTML = "✕ Incorrect Option Selected";
+      }
+
+      // Record for End Screen
+      userAttempts.push({
+        qNumber: currentQIndex + 1,
+        questionText: q.question,
+        selectedOption: q.options[selectedIndex],
+        correctOption: q.options[q.correctIndex],
+        isCorrect: isCorrect,
+        tip: q.sscTip
+      });
+
+      // Show Feedback Box
+      feedbackExplanation.textContent = q.explanation;
+      feedbackTip.innerHTML = `<span class="ssc-tag">SSC Exam Trend</span> ${q.sscTip}`;
+      feedbackBox.classList.add("active");
+
+      // Enable Next
+      nextBtn.disabled = false;
+      updateFooter();
+    }
+
+    function updateFooter() {
+      const remaining = questionsData.length - currentQIndex;
+      scoreBadge.textContent = `Score: ${score} | Left: ${remaining}`;
+    }
+
+    // Next Question or Show Results
+    nextBtn.addEventListener("click", () => {
+      if (currentQIndex < questionsData.length - 1) {
+        currentQIndex++;
+        loadQuestion(currentQIndex);
+      } else {
+        showResults();
+      }
+    });
+
+    // Show Results Screen
+    function showResults() {
+      progressFill.style.width = "100%";
+      quizCard.style.display = "none";
+      resultsScreen.style.display = "flex";
+
+      const total = questionsData.length;
+      const incorrectCount = total - score;
+      const accuracyRate = Math.round((score / total) * 100);
+
+      resultAccuracy.textContent = `${accuracyRate}%`;
+      resultCorrect.textContent = score;
+      resultIncorrect.textContent = incorrectCount;
+
+      mistakesContainer.innerHTML = "";
+
+      const mistakes = userAttempts.filter(a => !a.isCorrect);
+
+      if (mistakes.length === 0) {
+        mistakesContainer.innerHTML = `
+          <div style="text-align: center; padding: 24px; color: var(--correct); font-weight: 700;">
+            🏆 Outstanding Performance! You achieved 100% accuracy on all 40 SSC spelling questions!
+          </div>`;
+      } else {
+        mistakes.forEach(item => {
+          const div = document.createElement("div");
+          div.className = "mistake-item";
+          div.innerHTML = `
+            <div class="mistake-q">Q.${item.qNumber}: ${item.questionText}</div>
+            <div class="mistake-answers">
+              <span class="user-ans">Your Answer: ${item.selectedOption}</span>
+              <span class="correct-ans">Correct: ${item.correctOption}</span>
+            </div>
+            <div style="font-size: 0.7rem; color: var(--text-sub); margin-top: 3px;">
+              <strong style="color: var(--accent);">SSC Note:</strong> ${item.tip}
+            </div>
+          `;
+          mistakesContainer.appendChild(div);
+        });
+      }
+    }
+
+    // Restart Quiz
+    restartBtn.addEventListener("click", () => {
+      currentQIndex = 0;
+      score = 0;
+      userAttempts = [];
+      resultsScreen.style.display = "none";
+      quizCard.style.display = "flex";
+      loadQuestion(0);
+    });
+
+    // Initialize Quiz
+    loadQuestion(0);
+  </script>
 </body>
 </html>
