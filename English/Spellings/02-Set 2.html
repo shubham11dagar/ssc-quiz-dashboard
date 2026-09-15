@@ -1,0 +1,1074 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>English Vocabulary & Spelling Quiz</title>
+  <style>
+    :root {
+      --bg: #f3f4f6;
+      --card-bg: #ffffff;
+      --text-main: #111827;
+      --text-muted: #6b7280;
+      --border: #e5e7eb;
+      --primary: #4f46e5;
+      --primary-hover: #4338ca;
+      --success-bg: #ecfdf5;
+      --success-border: #10b981;
+      --success-text: #065f46;
+      --error-bg: #fef2f2;
+      --error-border: #ef4444;
+      --error-text: #991b1b;
+      --opt-bg: #f9fafb;
+      --opt-hover: #f3f4f6;
+      --opt-border: #d1d5db;
+      --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    }
+
+    [data-theme="dark"] {
+      --bg: #0f172a;
+      --card-bg: #1e293b;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --border: #334155;
+      --primary: #6366f1;
+      --primary-hover: #4f46e5;
+      --success-bg: #064e3b;
+      --success-border: #34d399;
+      --success-text: #a7f3d0;
+      --error-bg: #7f1d1d;
+      --error-border: #f87171;
+      --error-text: #fecaca;
+      --opt-bg: #334155;
+      --opt-hover: #475569;
+      --opt-border: #475569;
+      --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.5);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+      transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background-color: var(--bg);
+      color: var(--text-main);
+    }
+
+    .app-container {
+      display: flex;
+      flex-direction: column;
+      height: 100dvh;
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 12px 16px;
+      justify-content: space-between;
+    }
+
+    /* Header Bar */
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+
+    .brand-title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .header-controls {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .theme-toggle-btn {
+      background: none;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 6px 10px;
+      font-size: 0.85rem;
+      cursor: pointer;
+      color: var(--text-main);
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .theme-toggle-btn:hover {
+      background-color: var(--opt-hover);
+    }
+
+    /* Progress & Stats Bar */
+    .progress-section {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      margin: 8px 0;
+      flex-shrink: 0;
+    }
+
+    .stats-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    .progress-bar-bg {
+      width: 100%;
+      height: 6px;
+      background-color: var(--border);
+      border-radius: 9999px;
+      overflow: hidden;
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      width: 0%;
+      background-color: var(--primary);
+      border-radius: 9999px;
+      transition: width 0.3s ease;
+    }
+
+    /* Main Card Layout (Fits viewport without scrolling) */
+    .quiz-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      box-shadow: var(--shadow);
+      padding: 16px 20px;
+      display: flex;
+      flex-direction: column;
+      flex: 1 1 auto;
+      max-height: calc(100dvh - 130px);
+      overflow: hidden;
+      justify-content: space-between;
+    }
+
+    .card-top-content {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      overflow-y: auto;
+      padding-right: 2px;
+    }
+
+    /* Question Prompt */
+    .question-badge {
+      display: inline-block;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: var(--primary);
+      letter-spacing: 0.05em;
+    }
+
+    .question-text {
+      font-size: 1.05rem;
+      font-weight: 600;
+      line-height: 1.35;
+      color: var(--text-main);
+    }
+
+    /* Structured Callouts (For Statement & Match Questions) */
+    .callout-box {
+      background: var(--opt-bg);
+      border-left: 4px solid var(--primary);
+      border-radius: 6px;
+      padding: 8px 12px;
+      font-size: 0.88rem;
+      line-height: 1.4;
+      margin: 4px 0;
+    }
+
+    .callout-item {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 4px;
+    }
+
+    .callout-item:last-child {
+      margin-bottom: 0;
+    }
+
+    .callout-label {
+      font-family: monospace;
+      font-weight: bold;
+      color: var(--primary);
+      min-width: 24px;
+    }
+
+    /* Options Grid (Compact 2x2 or 4x1) */
+    .options-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    @media (max-width: 600px) {
+      .options-grid {
+        grid-template-columns: 1fr;
+        gap: 6px;
+      }
+      .quiz-card {
+        padding: 12px 14px;
+      }
+      .question-text {
+        font-size: 0.95rem;
+      }
+    }
+
+    .option-btn {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 14px;
+      border: 1.5px solid var(--opt-border);
+      border-radius: 9px;
+      background: var(--opt-bg);
+      color: var(--text-main);
+      font-size: 0.92rem;
+      font-weight: 500;
+      cursor: pointer;
+      text-align: left;
+      user-select: none;
+      transition: border-color 0.15s, background-color 0.15s, transform 0.05s;
+    }
+
+    .option-btn:hover:not(:disabled) {
+      background-color: var(--opt-hover);
+      border-color: var(--primary);
+    }
+
+    .option-btn:active:not(:disabled) {
+      transform: scale(0.99);
+    }
+
+    .option-letter {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 24px;
+      height: 24px;
+      border-radius: 6px;
+      background: var(--border);
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--text-main);
+      flex-shrink: 0;
+    }
+
+    /* States */
+    .option-btn.correct {
+      background-color: var(--success-bg) !important;
+      border-color: var(--success-border) !important;
+      color: var(--success-text) !important;
+    }
+    .option-btn.correct .option-letter {
+      background-color: var(--success-border);
+      color: #fff;
+    }
+
+    .option-btn.incorrect {
+      background-color: var(--error-bg) !important;
+      border-color: var(--error-border) !important;
+      color: var(--error-text) !important;
+    }
+    .option-btn.incorrect .option-letter {
+      background-color: var(--error-border);
+      color: #fff;
+    }
+
+    .option-btn:disabled {
+      cursor: default;
+    }
+
+    /* Feedback & Action Footer */
+    .card-bottom-actions {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-top: 10px;
+      padding-top: 8px;
+      border-top: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+
+    .feedback-message {
+      font-size: 0.86rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      min-height: 24px;
+    }
+
+    .feedback-message.correct {
+      color: var(--success-border);
+    }
+
+    .feedback-message.incorrect {
+      color: var(--error-border);
+    }
+
+    .next-btn {
+      background: var(--primary);
+      color: #ffffff;
+      border: none;
+      padding: 9px 20px;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-left: auto;
+    }
+
+    .next-btn:hover {
+      background: var(--primary-hover);
+    }
+
+    .next-btn:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+
+    /* Results Screen */
+    .results-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      box-shadow: var(--shadow);
+      padding: 18px 22px;
+      display: flex;
+      flex-direction: column;
+      height: calc(100dvh - 100px);
+      overflow: hidden;
+    }
+
+    .results-summary-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin: 12px 0;
+      flex-shrink: 0;
+    }
+
+    .result-stat-box {
+      background: var(--opt-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 10px;
+      text-align: center;
+    }
+
+    .result-stat-val {
+      font-size: 1.3rem;
+      font-weight: 800;
+    }
+
+    .result-stat-label {
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    .review-list-title {
+      font-size: 0.92rem;
+      font-weight: 700;
+      margin: 8px 0 4px;
+      color: var(--text-main);
+      flex-shrink: 0;
+    }
+
+    .review-scroll-area {
+      flex: 1 1 auto;
+      overflow-y: auto;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 10px;
+      background: var(--opt-bg);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .review-item {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 7px;
+      padding: 10px 12px;
+      font-size: 0.84rem;
+    }
+
+    .review-q-title {
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+
+    .review-answer-pill {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-weight: 600;
+      font-size: 0.78rem;
+      margin-right: 6px;
+    }
+
+    .review-answer-pill.user {
+      background-color: var(--error-bg);
+      color: var(--error-text);
+      border: 1px solid var(--error-border);
+    }
+
+    .review-answer-pill.correct {
+      background-color: var(--success-bg);
+      color: var(--success-text);
+      border: 1px solid var(--success-border);
+    }
+
+    .restart-btn {
+      background: var(--primary);
+      color: #fff;
+      border: none;
+      padding: 10px 24px;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      font-weight: 700;
+      cursor: pointer;
+      margin-top: 10px;
+      align-self: center;
+      flex-shrink: 0;
+    }
+
+    .restart-btn:hover {
+      background: var(--primary-hover);
+    }
+  </style>
+</head>
+<body>
+  <div class="app-container">
+    <!-- Header -->
+    <header>
+      <div class="brand-title">
+        <span>📖</span>
+        <span>Spelling & Vocabulary Mastery</span>
+      </div>
+      <div class="header-controls">
+        <button id="themeToggle" class="theme-toggle-btn" aria-label="Toggle Theme">
+          <span id="themeIcon">🌙</span>
+          <span id="themeLabel">Dark</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- Quiz View -->
+    <main id="quizScreen" style="display: flex; flex-direction: column; flex: 1; justify-content: space-between;">
+      <!-- Progress Bar -->
+      <section class="progress-section">
+        <div class="stats-row">
+          <span id="questionCounter">Question 1 of 40</span>
+          <span id="scoreCounter">Score: 0 / 0 (0%)</span>
+        </div>
+        <div class="progress-bar-bg">
+          <div id="progressBarFill" class="progress-bar-fill"></div>
+        </div>
+      </section>
+
+      <!-- Question Card -->
+      <section class="quiz-card">
+        <div class="card-top-content">
+          <div>
+            <span class="question-badge" id="questionBadge">QUESTION 41</span>
+            <h1 class="question-text" id="questionPrompt">Select the correct spelling...</h1>
+          </div>
+
+          <div id="calloutInsert" style="display: none;"></div>
+
+          <div class="options-grid" id="optionsContainer">
+            <!-- Options rendered dynamically -->
+          </div>
+        </div>
+
+        <!-- Card Footer -->
+        <div class="card-bottom-actions">
+          <div id="feedbackText" class="feedback-message"></div>
+          <button id="nextBtn" class="next-btn" disabled>Next Question &rarr;</button>
+        </div>
+      </section>
+    </main>
+
+    <!-- Result View (Hidden by default) -->
+    <section id="resultsScreen" class="results-card" style="display: none;">
+      <h2 style="font-size: 1.3rem; font-weight: 800; text-align: center;">Quiz Completed! 🎉</h2>
+      
+      <div class="results-summary-grid">
+        <div class="result-stat-box">
+          <div class="result-stat-val" id="finalScoreVal" style="color: var(--primary);">0/40</div>
+          <div class="result-stat-label">Total Score</div>
+        </div>
+        <div class="result-stat-box">
+          <div class="result-stat-val" id="finalAccuracyVal" style="color: var(--success-border);">0%</div>
+          <div class="result-stat-label">Accuracy</div>
+        </div>
+        <div class="result-stat-box">
+          <div class="result-stat-val" id="finalIncorrectVal" style="color: var(--error-border);">0</div>
+          <div class="result-stat-label">Incorrect</div>
+        </div>
+      </div>
+
+      <div class="review-list-title" id="reviewTitle">Questions To Review:</div>
+      
+      <div class="review-scroll-area" id="reviewListContainer">
+        <!-- Review Items -->
+      </div>
+
+      <button id="restartBtn" class="restart-btn">Restart Quiz ↻</button>
+    </section>
+  </div>
+
+  <script>
+    // Complete Dataset of Questions (Q.41 to Q.80)
+    const quizData = [
+      {
+        id: "Q.41",
+        prompt: "Select the correct spelling of a word meaning 'advanced or highly developed'.",
+        options: ["Sophisticated", "Sophisicated", "Sophysticated", "Sofisticated"],
+        correctIndex: 0,
+        explanation: "‘Sophisticated’ is the correct spelling."
+      },
+      {
+        id: "Q.42",
+        prompt: "Find the correct spelling for a term meaning showing excessive admiration or flattery.",
+        options: ["Obsequious", "Obsequeous", "Obsequiouse", "Obcequious"],
+        correctIndex: 0,
+        explanation: "“Obsequious” is the correct spelling."
+      },
+      {
+        id: "Q.43",
+        prompt: "Select the correct spelling for a word meaning 'a fixed or firm belief'.",
+        options: ["Convicteon", "Convistion", "Convictionn", "Conviction"],
+        correctIndex: 3,
+        explanation: "“Conviction” is the correct spelling."
+      },
+      {
+        id: "Q.44",
+        prompt: "Select the correct spelling for a word meaning 'a person who takes part in crime'.",
+        options: ["Accomplice", "Acomplise", "Acomplice", "Accomplicee"],
+        correctIndex: 0,
+        explanation: "“Accomplice” is the correct spelling."
+      },
+      {
+        id: "Q.45",
+        prompt: "Select the correct spelling for a word meaning 'impossible to correct or reform'.",
+        options: ["Incorrigible", "Incorregible", "Incorrigieble", "Incorriggble"],
+        correctIndex: 0,
+        explanation: "“Incorrigible” is the correct spelling."
+      },
+      {
+        id: "Q.46",
+        prompt: "Select the most appropriate option to fill in the blank:\nThe artist’s work received widespread ______ from critics and audiences alike.",
+        options: ["apreciation", "appriciation", "appreciation", "apprecciation"],
+        correctIndex: 2,
+        explanation: "“Appreciation” is the correct spelling."
+      },
+      {
+        id: "Q.47",
+        prompt: "Select the correct spelling for a word meaning 'a temporary stay'.",
+        options: ["Sojourn", "Sojurn", "Sowjurn", "Sojourne"],
+        correctIndex: 0,
+        explanation: "‘Sojourn’ is the correct spelling."
+      },
+      {
+        id: "Q.48",
+        prompt: "Select the correct spelling to fill in the blank:\nThe old house had a ______ appearance, making it seem spooky.",
+        options: ["dilappidated", "delapidated", "dilapidated", "dillapidated"],
+        correctIndex: 2,
+        explanation: "‘Dilapidated’ is the correct spelling."
+      },
+      {
+        id: "Q.49",
+        prompt: "Select the correct spelling of a word meaning 'a strong inner feeling or voice regarded as acting as a guide to the rightness or wrongness of one's behaviour'.",
+        options: ["Conscience", "Consciense", "Consience", "Consciense"],
+        correctIndex: 0,
+        explanation: "‘Conscience’ is the correct spelling."
+      },
+      {
+        id: "Q.50",
+        prompt: "Select the correct spelling of a word meaning 'a person who loves mankind'.",
+        options: ["Philanthropist", "Philantropist", "Phylanthropist", "Phylantropist"],
+        correctIndex: 0,
+        explanation: "“Philanthropist” is the correct spelling."
+      },
+      {
+        id: "Q.51",
+        prompt: "Choose the correct spelling of a word meaning 'personal peculiarity or habit'.",
+        options: ["Idiosyncracy", "Idiosyncrasy", "Idiosyncresy", "Idiosyncrosy"],
+        correctIndex: 1,
+        explanation: "“Idiosyncrasy” (ending with -asy) is the correct spelling."
+      },
+      {
+        id: "Q.52",
+        prompt: "Select the correct spelling to fill in the blank:\nThe _____ of the ecosystem was severely impacted by the invasive species.",
+        options: ["Ballistic", "Balistick", "Ballstick", "Bellistic"],
+        correctIndex: 0,
+        explanation: "‘Ballistic’ is the correct spelling."
+      },
+      {
+        id: "Q.53",
+        prompt: "Select the correct spelling of a word referring to an argument that appears logical but is based on a false premise.",
+        options: ["Fallacyy", "Fallasy", "Fallacy", "Fallacie"],
+        correctIndex: 2,
+        explanation: "‘Fallacy’ is the correct spelling."
+      },
+      {
+        id: "Q.54",
+        prompt: "Select the correct spelling of a word meaning 'to destroy or eliminate completely'.",
+        options: ["Obliterate", "Oblittarate", "Oblitterate", "Oblieterate"],
+        correctIndex: 0,
+        explanation: "‘Obliterate’ is the correct spelling."
+      },
+      {
+        id: "Q.55",
+        prompt: "Select the correct spelling of a word meaning 'a state of temporary disuse or suspension'.",
+        options: ["Abeyance", "Abayance", "Abeyence", "Abeyaance"],
+        correctIndex: 0,
+        explanation: "“Abeyance” is the correct spelling."
+      },
+      {
+        id: "Q.56",
+        prompt: "Select the correct spelling of a word meaning 'the act of speaking or behaving as if one were morally superior to others'.",
+        options: ["Sanctimoneousness", "Sanctimonusness", "Sanctimoniousness", "Sanctimoniousnes"],
+        correctIndex: 2,
+        explanation: "“Sanctimoniousness” is the correct spelling."
+      },
+      {
+        id: "Q.57",
+        prompt: "Select the correct spelling to fill in the blanks:\nThe politician was known for his _____ rhetoric, often inciting strong emotions among his supporters.",
+        options: ["inflamatory", "inflammetory", "inflammatory", "inflamatary"],
+        correctIndex: 2,
+        explanation: "‘Inflammatory’ is the correct spelling."
+      },
+      {
+        id: "Q.58",
+        prompt: "Select the correct spelling of a word meaning 'a subtle difference in or shade of meaning, expression, or sound'.",
+        options: ["Nuannce", "Nuance", "Nuaance", "Nuanse"],
+        correctIndex: 1,
+        explanation: "‘Nuance’ is the correct spelling."
+      },
+      {
+        id: "Q.59",
+        prompt: "Select the correct spelling of a word meaning 'an indirect, usually derogatory, implication in a statement or question'.",
+        options: ["Innsinuation", "Insinuaton", "Insinuashion", "Insinuation"],
+        correctIndex: 3,
+        explanation: "‘Insinuation’ is the correct spelling."
+      },
+      {
+        id: "Q.60",
+        prompt: "Which spelling is correct for a word meaning 'relating to a city or town'?",
+        options: ["Urben", "Urban", "Urbin", "Urbun"],
+        correctIndex: 1,
+        explanation: "“Urban” is the correct spelling."
+      },
+      {
+        id: "Q.61",
+        prompt: "Select the correct spelling of a word meaning 'the jelly-like substance inside a cell'.",
+        options: ["Cytoplasam", "Cytoplazm", "Cytoplasm", "Cytoplassm"],
+        correctIndex: 2,
+        explanation: "“Cytoplasm” is the correct spelling."
+      },
+      {
+        id: "Q.62",
+        prompt: "Select the correct spelling for a word meaning 'a person who can be easily fooled'.",
+        options: ["Gullible", "Gullibel", "Gulible", "Gullable"],
+        correctIndex: 0,
+        explanation: "‘Gullible’ is the correct spelling."
+      },
+      {
+        id: "Q.63",
+        prompt: "Which of these is the correct spelling of a term meaning the study of knowledge, its nature, and validity?",
+        options: ["Epistamollogical", "Epistemological", "Epistemollogical", "Epistomological"],
+        correctIndex: 1,
+        explanation: "“Epistemological” is the correct spelling."
+      },
+      {
+        id: "Q.64",
+        prompt: "Spot the correct spelling of a word meaning the quality of being brief and clear in expression.",
+        options: ["Conciseness", "Conciceness", "Concisenes", "Consciseness"],
+        correctIndex: 0,
+        explanation: "“Conciseness” is the correct spelling."
+      },
+      {
+        id: "Q.65",
+        prompt: "Fill in the blank with the correctly spelt word:\nThe politician’s speech was highly ______, appealing to the emotions of the audience.",
+        options: ["rhetorikal", "rhetoricel", "rhetorical", "rhetoricle"],
+        correctIndex: 2,
+        explanation: "“Rhetorical” is the correct spelling."
+      },
+      {
+        id: "Q.66",
+        prompt: "Fill in the blank with the correctly spelt word:\nThe scientist emphasized the importance of ______ calibration in the experiment.",
+        options: ["spectroskopic", "spectroscopick", "spectroscopic", "spectroscopik"],
+        correctIndex: 2,
+        explanation: "“Spectroscopic” is the correct spelling."
+      },
+      {
+        id: "Q.67",
+        prompt: "Select the correct spelling for a word meaning 'a formal disagreement or quarrel'.",
+        options: ["Discord", "Dischord", "Diskord", "Discorde"],
+        correctIndex: 0,
+        explanation: "“Discord” is the correct spelling."
+      },
+      {
+        id: "Q.68",
+        prompt: "Select the correct spelling to fill in the blanks:\nThe lawyer presented a _____ argument supported by evidence and logic.",
+        options: ["perswasive", "pursuasive", "persuasive", "persuasiv"],
+        correctIndex: 2,
+        explanation: "‘Persuasive’ is the correct spelling."
+      },
+      {
+        id: "Q.69",
+        prompt: "Select the correct spelling of a word meaning a person who studies the origin and development of human societies.",
+        options: ["Anthropologest", "Anthropologist", "Anthropolist", "Anthrapologist"],
+        correctIndex: 1,
+        explanation: "‘Anthropologist’ is the correct spelling."
+      },
+      {
+        id: "Q.70",
+        prompt: "Select the correct spelling of a word meaning the repetition of the same consonant sounds at the beginning of neighbouring words.",
+        options: ["Allitiration", "Aliteration", "Alliterasion", "Alliteration"],
+        correctIndex: 3,
+        explanation: "‘Alliteration’ is the correct spelling."
+      },
+      {
+        id: "Q.71",
+        prompt: "Fill in the blank with the correctly spelt word:\nThe committee appreciated her ______ in handling complex negotiations.",
+        options: ["proficieny", "proficiency", "proficency", "proficiencey"],
+        correctIndex: 1,
+        explanation: "“Proficiency” is the correct spelling."
+      },
+      {
+        id: "Q.72",
+        prompt: "Choose the correct spelling of the word meaning 'difficult to understand'.",
+        options: ["Abstruse", "Abstruss", "Abstruce", "Abstrus"],
+        correctIndex: 0,
+        explanation: "“Abstruse” is the correct spelling."
+      },
+      {
+        id: "Q.73",
+        prompt: "Select the correct spelling of a word meaning a short, witty saying expressing a general truth or observation.",
+        options: ["Aphorism", "Apherism", "Aphoresm", "Aphorasm"],
+        correctIndex: 0,
+        explanation: "‘Aphorism’ is the correct spelling."
+      },
+      {
+        id: "Q.74",
+        prompt: "Select the correct spelling to fill in the blanks:\nHer ______ wit often left her opponents speechless.",
+        options: ["trenchent", "trenchantt", "trenchant", "trenchaunt"],
+        correctIndex: 2,
+        explanation: "‘Trenchant’ is the correct spelling."
+      },
+      {
+        id: "Q.75",
+        prompt: "Select the correct spelling of a word meaning state of being concerned and anxious.",
+        options: ["Soulessitude", "Soulissitude", "Solescitude", "Solicitude"],
+        correctIndex: 3,
+        explanation: "‘Solicitude’ is the correct spelling."
+      },
+      {
+        id: "Q.76",
+        prompt: "Select the correct spelling to fill in the blank:\nThe country witnessed an ______ rise in renewable energy investments over the past decade.",
+        options: ["unprecidented", "unprecedented", "unpresidented", "unpressedented"],
+        correctIndex: 1,
+        explanation: "‘Unprecedented’ is the correct spelling."
+      },
+      {
+        id: "Q.77",
+        prompt: "Select the correct spelling of a word meaning 'inconsistent or logically incompatible.'",
+        options: ["Incongruous", "Incongroous", "Incongerous", "Incongruos"],
+        correctIndex: 0,
+        explanation: "‘Incongruous’ is the correct spelling."
+      },
+      {
+        id: "Q.78",
+        prompt: "Fill in the blank with the correctly spelt word:\nThe _______ of the novel was appreciated by critics and readers alike.",
+        options: ["narrative", "narative", "nerritive", "naritivve"],
+        correctIndex: 0,
+        explanation: "“Narrative” is the correct spelling."
+      },
+      {
+        id: "Q.79",
+        prompt: "Select the correct spelling of a word meaning 'extremely large or great'.",
+        options: ["Enormous", "Enourmous", "Enormuos", "Enarmous"],
+        correctIndex: 0,
+        explanation: "“Enormous” is the correct spelling."
+      },
+      {
+        id: "Q.80",
+        prompt: "Spot the correct spelling of the term meaning 'extremely old or ancient'.",
+        options: ["Antediluvian", "Antediluvien", "Antedilvuian", "Antediluvyan"],
+        correctIndex: 0,
+        explanation: "“Antediluvian” is the correct spelling."
+      }
+    ];
+
+    // State
+    let currentIndex = 0;
+    let score = 0;
+    let answersLogged = []; // { qIndex, selectedIndex, isCorrect }
+    let answered = false;
+
+    // DOM Elements
+    const questionBadge = document.getElementById("questionBadge");
+    const questionPrompt = document.getElementById("questionPrompt");
+    const optionsContainer = document.getElementById("optionsContainer");
+    const feedbackText = document.getElementById("feedbackText");
+    const nextBtn = document.getElementById("nextBtn");
+    const questionCounter = document.getElementById("questionCounter");
+    const scoreCounter = document.getElementById("scoreCounter");
+    const progressBarFill = document.getElementById("progressBarFill");
+
+    const quizScreen = document.getElementById("quizScreen");
+    const resultsScreen = document.getElementById("resultsScreen");
+    const finalScoreVal = document.getElementById("finalScoreVal");
+    const finalAccuracyVal = document.getElementById("finalAccuracyVal");
+    const finalIncorrectVal = document.getElementById("finalIncorrectVal");
+    const reviewListContainer = document.getElementById("reviewListContainer");
+    const reviewTitle = document.getElementById("reviewTitle");
+    const restartBtn = document.getElementById("restartBtn");
+
+    const themeToggle = document.getElementById("themeToggle");
+    const themeIcon = document.getElementById("themeIcon");
+    const themeLabel = document.getElementById("themeLabel");
+
+    // Initialize Theme
+    function initTheme() {
+      const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+      const savedTheme = localStorage.getItem("quiz_theme");
+      if (savedTheme === "dark" || (!savedTheme && prefersDark)) {
+        setTheme("dark");
+      } else {
+        setTheme("light");
+      }
+    }
+
+    function setTheme(theme) {
+      if (theme === "dark") {
+        document.documentElement.setAttribute("data-theme", "dark");
+        themeIcon.textContent = "☀️";
+        themeLabel.textContent = "Light";
+        localStorage.setItem("quiz_theme", "dark");
+      } else {
+        document.documentElement.removeAttribute("data-theme");
+        themeIcon.textContent = "🌙";
+        themeLabel.textContent = "Dark";
+        localStorage.setItem("quiz_theme", "light");
+      }
+    }
+
+    themeToggle.addEventListener("click", () => {
+      const isDark = document.documentElement.getAttribute("data-theme") === "dark";
+      setTheme(isDark ? "light" : "dark");
+    });
+
+    // Render Question
+    function loadQuestion(index) {
+      answered = false;
+      nextBtn.disabled = true;
+      feedbackText.textContent = "";
+      feedbackText.className = "feedback-message";
+
+      const currentQ = quizData[index];
+      questionBadge.textContent = `${currentQ.id || 'QUESTION ' + (index + 1)}`;
+      questionPrompt.textContent = currentQ.prompt;
+
+      // Update counters & progress
+      questionCounter.textContent = `Question ${index + 1} of ${quizData.length}`;
+      const accuracy = index > 0 ? Math.round((score / index) * 100) : 0;
+      scoreCounter.textContent = `Score: ${score}/${index} (${accuracy}%)`;
+      progressBarFill.style.width = `${((index) / quizData.length) * 100}%`;
+
+      // Render Options
+      optionsContainer.innerHTML = "";
+      const letters = ["A", "B", "C", "D"];
+
+      currentQ.options.forEach((optText, optIdx) => {
+        const btn = document.createElement("button");
+        btn.className = "option-btn";
+        btn.innerHTML = `
+          <span class="option-letter">${letters[optIdx]}</span>
+          <span>${optText}</span>
+        `;
+        btn.addEventListener("click", () => selectOption(optIdx));
+        optionsContainer.appendChild(btn);
+      });
+
+      // Update Next button label on last question
+      if (index === quizData.length - 1) {
+        nextBtn.innerHTML = "Finish & See Results &rarr;";
+      } else {
+        nextBtn.innerHTML = "Next Question &rarr;";
+      }
+    }
+
+    // Handle Option Selection
+    function selectOption(selectedIdx) {
+      if (answered) return;
+      answered = true;
+
+      const currentQ = quizData[currentIndex];
+      const isCorrect = selectedIdx === currentQ.correctIndex;
+      const allButtons = optionsContainer.querySelectorAll(".option-btn");
+
+      // Disable all options
+      allButtons.forEach(btn => btn.disabled = true);
+
+      // Highlight selected & correct
+      if (isCorrect) {
+        allButtons[selectedIdx].classList.add("correct");
+        feedbackText.className = "feedback-message correct";
+        feedbackText.innerHTML = `✓ Correct! ${currentQ.explanation}`;
+        score++;
+      } else {
+        allButtons[selectedIdx].classList.add("incorrect");
+        allButtons[currentQ.correctIndex].classList.add("correct");
+        feedbackText.className = "feedback-message incorrect";
+        feedbackText.innerHTML = `✗ Incorrect. ${currentQ.explanation}`;
+      }
+
+      answersLogged.push({
+        qIndex: currentIndex,
+        selectedIdx: selectedIdx,
+        isCorrect: isCorrect
+      });
+
+      // Enable Next Button
+      nextBtn.disabled = false;
+
+      // Update live score counter
+      const answeredCount = currentIndex + 1;
+      const livePct = Math.round((score / answeredCount) * 100);
+      scoreCounter.textContent = `Score: ${score}/${answeredCount} (${livePct}%)`;
+      progressBarFill.style.width = `${(answeredCount / quizData.length) * 100}%`;
+    }
+
+    // Next Question Button Handler
+    nextBtn.addEventListener("click", () => {
+      if (!answered) return;
+
+      if (currentIndex < quizData.length - 1) {
+        currentIndex++;
+        loadQuestion(currentIndex);
+      } else {
+        showResults();
+      }
+    });
+
+    // Keyboard Shortcuts (1-4, A-D for options, Enter/Space for Next)
+    window.addEventListener("keydown", (e) => {
+      if (resultsScreen.style.display === "flex") {
+        if (e.key === "Enter") restartQuiz();
+        return;
+      }
+
+      if (!answered) {
+        if (e.key === "1" || e.key.toLowerCase() === "a") selectOption(0);
+        if (e.key === "2" || e.key.toLowerCase() === "b") selectOption(1);
+        if (e.key === "3" || e.key.toLowerCase() === "c") selectOption(2);
+        if (e.key === "4" || e.key.toLowerCase() === "d") selectOption(3);
+      } else {
+        if (e.key === "Enter" || e.key === " " || e.key.toLowerCase() === "n") {
+          e.preventDefault();
+          nextBtn.click();
+        }
+      }
+    });
+
+    // Show Results Summary
+    function showResults() {
+      quizScreen.style.display = "none";
+      resultsScreen.style.display = "flex";
+
+      const total = quizData.length;
+      const accuracy = Math.round((score / total) * 100);
+      const incorrectCount = total - score;
+
+      finalScoreVal.textContent = `${score} / ${total}`;
+      finalAccuracyVal.textContent = `${accuracy}%`;
+      finalIncorrectVal.textContent = incorrectCount;
+
+      reviewListContainer.innerHTML = "";
+
+      const incorrectEntries = answersLogged.filter(item => !item.isCorrect);
+
+      if (incorrectEntries.length === 0) {
+        reviewTitle.textContent = "Flawless Performance!";
+        reviewListContainer.innerHTML = `
+          <div style="text-align:center; padding: 24px 10px; color: var(--success-border); font-weight: 700;">
+            🌟 Perfect 100% Score! You spelled every single word correctly.
+          </div>
+        `;
+      } else {
+        reviewTitle.textContent = `Review Incorrect Questions (${incorrectEntries.length}):`;
+        incorrectEntries.forEach(entry => {
+          const q = quizData[entry.qIndex];
+          const userChoice = q.options[entry.selectedIdx];
+          const correctChoice = q.options[q.correctIndex];
+
+          const itemEl = document.createElement("div");
+          itemEl.className = "review-item";
+          itemEl.innerHTML = `
+            <div class="review-q-title"><strong>${q.id}:</strong> ${q.prompt.replace(/\n/g, ' ')}</div>
+            <div style="margin-top: 4px;">
+              <span class="review-answer-pill user">Your Answer: ${userChoice}</span>
+              <span class="review-answer-pill correct">Correct: ${correctChoice}</span>
+            </div>
+            <div style="margin-top: 6px; font-size: 0.8rem; color: var(--text-muted);">${q.explanation}</div>
+          `;
+          reviewListContainer.appendChild(itemEl);
+        });
+      }
+    }
+
+    // Restart Quiz
+    function restartQuiz() {
+      currentIndex = 0;
+      score = 0;
+      answersLogged = [];
+      answered = false;
+
+      resultsScreen.style.display = "none";
+      quizScreen.style.display = "flex";
+      loadQuestion(0);
+    }
+
+    restartBtn.addEventListener("click", restartQuiz);
+
+    // Initialize App
+    initTheme();
+    loadQuestion(0);
+  </script>
+</body>
+</html>
