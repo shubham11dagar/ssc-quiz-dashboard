@@ -1,0 +1,956 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>English Vocabulary & Spelling Mastery Test</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
+            mono: ['JetBrains Mono', 'Fira Code', 'monospace']
+          },
+          colors: {
+            brand: {
+              50: '#eef2ff',
+              100: '#e0e7ff',
+              500: '#6366f1',
+              600: '#4f46e5',
+              700: '#4338ca',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    /* Viewport lock to guarantee zero vertical scrolling on quiz screen */
+    html, body {
+      height: 100%;
+      height: 100dvh;
+      overflow: hidden;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+    
+    /* Subtle custom scrollbar only for modal/results review */
+    .custom-scroll::-webkit-scrollbar {
+      width: 6px;
+    }
+    .custom-scroll::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    .custom-scroll::-webkit-scrollbar-thumb {
+      background: rgba(156, 163, 175, 0.4);
+      border-radius: 9999px;
+    }
+    .custom-scroll::-webkit-scrollbar-thumb:hover {
+      background: rgba(156, 163, 175, 0.7);
+    }
+
+    @keyframes pulseSuccess {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.015); }
+    }
+    @keyframes shakeError {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-4px); }
+      75% { transform: translateX(4px); }
+    }
+    .anim-correct {
+      animation: pulseSuccess 0.28s ease-out;
+    }
+    .anim-wrong {
+      animation: shakeError 0.28s ease-out;
+    }
+  </style>
+</head>
+<body class="h-full bg-slate-100 text-slate-800 dark:bg-slate-950 dark:text-slate-100 transition-colors duration-200 antialiased flex flex-col font-sans">
+
+  <!-- Top Navigation & Stats Bar (Height Constrained) -->
+  <header class="h-14 flex-shrink-0 bg-white/95 dark:bg-slate-900/95 backdrop-blur border-b border-slate-200 dark:border-slate-800 px-3 sm:px-6 flex items-center justify-between z-20">
+    <div class="flex items-center space-x-2 sm:space-x-3">
+      <div class="w-8 h-8 rounded-lg bg-indigo-600 text-white flex items-center justify-center font-bold text-sm shadow-sm">
+        SSC
+      </div>
+      <div>
+        <h1 class="text-xs sm:text-sm font-bold tracking-tight text-slate-900 dark:text-slate-100 leading-tight">
+          English Vocab & Spelling Master
+        </h1>
+        <p class="text-[10px] text-slate-500 dark:text-slate-400 font-medium">
+          40 Questions • Q.81 to Q.120
+        </p>
+      </div>
+    </div>
+
+    <!-- Center Tracker -->
+    <div class="flex items-center space-x-2 sm:space-x-4">
+      <div class="flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300">
+        <span class="text-indigo-600 dark:text-indigo-400" id="currentQIndex">1</span>
+        <span class="text-slate-400">/</span>
+        <span id="totalQCount">40</span>
+      </div>
+
+      <!-- Compact Score Tracker -->
+      <div class="hidden sm:flex items-center gap-2 text-xs font-mono">
+        <span class="text-emerald-600 dark:text-emerald-400 font-bold flex items-center gap-1">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path></svg>
+          <span id="headerCorrectCount">0</span>
+        </span>
+        <span class="text-rose-600 dark:text-rose-400 font-bold flex items-center gap-1">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"></path></svg>
+          <span id="headerWrongCount">0</span>
+        </span>
+      </div>
+    </div>
+
+    <!-- Theme & Quick Actions -->
+    <div class="flex items-center space-x-2">
+      <!-- Dark/Light Theme Toggle -->
+      <button id="themeToggleBtn" aria-label="Toggle Theme" class="p-1.5 sm:p-2 rounded-lg text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 transition">
+        <svg id="sunIcon" class="w-4 h-4 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 9h-1m15.364-6.364l-.707.707M6.343 17.657l-.707.707m12.728 0l-.707-.707M6.343 6.343l-.707-.707M12 8a4 4 0 100 8 4 4 0 000-8z"/></svg>
+        <svg id="moonIcon" class="w-4 h-4 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
+      </button>
+
+      <!-- Restart Shortcut -->
+      <button id="quickRestartBtn" title="Reset Quiz" class="p-1.5 sm:p-2 rounded-lg text-slate-500 hover:text-rose-600 dark:text-slate-400 dark:hover:text-rose-400 bg-slate-100 dark:bg-slate-800 transition">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <!-- Thin Progress Bar Indicator -->
+  <div class="w-full bg-slate-200 dark:bg-slate-800 h-1 flex-shrink-0">
+    <div id="progressBar" class="bg-indigo-600 h-1 transition-all duration-300 ease-out" style="width: 2.5%"></div>
+  </div>
+
+  <!-- Main Viewport-Locked Card Wrapper -->
+  <main class="flex-1 flex flex-col items-center justify-between p-2.5 sm:p-4 md:p-6 overflow-hidden max-w-4xl mx-auto w-full">
+    
+    <!-- Active Question Card -->
+    <div id="questionCard" class="w-full flex-1 flex flex-col justify-between bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 rounded-2xl shadow-sm p-3.5 sm:p-5 md:p-6 transition-all duration-200 overflow-hidden">
+      
+      <!-- Top Section: Question Number Badge & Type Badge -->
+      <div class="flex-shrink-0">
+        <div class="flex items-center justify-between mb-2">
+          <div class="flex items-center space-x-2">
+            <span id="qBadgeNumber" class="text-xs font-mono font-bold bg-indigo-50 text-indigo-700 dark:bg-indigo-950/60 dark:text-indigo-300 px-2 py-0.5 rounded-md border border-indigo-200 dark:border-indigo-800/60">
+              Q.81
+            </span>
+            <span id="qBadgeCategory" class="text-[11px] font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
+              Spelling & Vocabulary
+            </span>
+          </div>
+          <span class="text-[10px] text-slate-400 font-mono hidden sm:inline-block">
+            Keyboard: [1-4] or [A-D] • Enter for Next
+          </span>
+        </div>
+
+        <!-- Question Prompt / Statement Callout -->
+        <div id="questionPromptContainer" class="text-slate-800 dark:text-slate-100 font-medium text-sm sm:text-base leading-snug">
+          <!-- Populated by JS -->
+        </div>
+
+        <!-- Complex Statement / Sentence Box (Conditional Render) -->
+        <div id="statementBox" class="hidden mt-2 p-2.5 sm:p-3 rounded-xl bg-slate-50 dark:bg-slate-800/70 border border-slate-200/90 dark:border-slate-700/60 font-sans text-xs sm:text-sm text-slate-700 dark:text-slate-200 shadow-inner">
+          <!-- Populated by JS for fill in the blanks or complex statements -->
+        </div>
+      </div>
+
+      <!-- Options Container (2x2 grid on screens >= sm, 4-row compact on tiny screens) -->
+      <div class="my-2 sm:my-3 flex-shrink-0">
+        <div id="optionsGrid" class="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-2.5">
+          <!-- Populated dynamically with 4 options -->
+        </div>
+      </div>
+
+      <!-- Bottom Section: Feedback Box + Next Question CTA -->
+      <div class="flex-shrink-0 pt-2 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between gap-3 min-h-[52px]">
+        <!-- Instant Feedback Box -->
+        <div id="feedbackContainer" class="flex-1 opacity-0 pointer-events-none transition-opacity duration-200 overflow-hidden pr-2">
+          <div id="feedbackBox" class="flex items-center gap-2 text-xs sm:text-sm font-medium py-1 px-2.5 rounded-lg">
+            <span id="feedbackIcon" class="flex-shrink-0"></span>
+            <span id="feedbackText" class="truncate font-medium"></span>
+          </div>
+        </div>
+
+        <!-- Next Question / Submit Button -->
+        <button id="nextBtn" disabled class="flex-shrink-0 inline-flex items-center justify-center gap-1.5 px-4 sm:px-5 py-2 text-xs sm:text-sm font-bold text-white bg-indigo-600 hover:bg-indigo-700 disabled:bg-slate-300 dark:disabled:bg-slate-800 disabled:text-slate-400 dark:disabled:text-slate-600 disabled:cursor-not-allowed rounded-xl shadow-sm transition-all focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-1 dark:focus:ring-offset-slate-900">
+          <span id="nextBtnText">Next</span>
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg>
+        </button>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- End-Screen Results Summary Modal -->
+  <div id="resultsModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-3 sm:p-6 overflow-hidden">
+    <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-2xl max-w-2xl w-full max-h-[92vh] flex flex-col overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+      
+      <!-- Modal Header -->
+      <div class="p-4 sm:p-5 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between flex-shrink-0">
+        <div>
+          <h2 class="text-lg sm:text-xl font-bold text-slate-900 dark:text-slate-100">Quiz Completed! 🎉</h2>
+          <p class="text-xs text-slate-500 dark:text-slate-400">Exam Performance Summary & Detailed Review</p>
+        </div>
+        <div id="scoreBadge" class="text-xs font-mono font-bold px-3 py-1 rounded-full bg-indigo-50 text-indigo-700 dark:bg-indigo-950 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-800">
+          Score: <span id="finalPercent">0%</span>
+        </div>
+      </div>
+
+      <!-- Score Stat Cards -->
+      <div class="p-4 sm:p-5 grid grid-cols-3 gap-2.5 sm:gap-4 flex-shrink-0 bg-slate-50 dark:bg-slate-900/50 border-b border-slate-100 dark:border-slate-800 text-center">
+        <div class="p-2.5 sm:p-3 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-sm">
+          <div class="text-[11px] font-semibold text-slate-500 dark:text-slate-400 uppercase">Score</div>
+          <div class="text-base sm:text-xl font-black text-indigo-600 dark:text-indigo-400 mt-0.5">
+            <span id="finalScoreVal">0</span> / 40
+          </div>
+        </div>
+        <div class="p-2.5 sm:p-3 rounded-xl bg-white dark:bg-slate-800 border border-emerald-200 dark:border-emerald-800/40 shadow-sm">
+          <div class="text-[11px] font-semibold text-emerald-600 dark:text-emerald-400 uppercase">Correct</div>
+          <div class="text-base sm:text-xl font-black text-emerald-600 dark:text-emerald-400 mt-0.5" id="finalCorrectCount">
+            0
+          </div>
+        </div>
+        <div class="p-2.5 sm:p-3 rounded-xl bg-white dark:bg-slate-800 border border-rose-200 dark:border-rose-800/40 shadow-sm">
+          <div class="text-[11px] font-semibold text-rose-600 dark:text-rose-400 uppercase">Incorrect</div>
+          <div class="text-base sm:text-xl font-black text-rose-600 dark:text-rose-400 mt-0.5" id="finalWrongCount">
+            0
+          </div>
+        </div>
+      </div>
+
+      <!-- Incorrect Review Breakdown (Scrollable) -->
+      <div class="flex-1 overflow-y-auto custom-scroll p-4 sm:p-5 space-y-3">
+        <div class="flex items-center justify-between pb-1">
+          <h3 class="text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-300" id="reviewSectionTitle">
+            Mistakes Breakdown
+          </h3>
+          <span class="text-[11px] text-slate-400" id="mistakesSubtitle">Review questions answered incorrectly</span>
+        </div>
+
+        <div id="incorrectListContainer" class="space-y-2.5">
+          <!-- Dynamic review cards or 100% correct celebration message -->
+        </div>
+      </div>
+
+      <!-- Modal Footer Actions -->
+      <div class="p-3.5 sm:p-4 border-t border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-900 flex items-center justify-end gap-2.5 flex-shrink-0">
+        <button id="retakeQuizBtn" class="px-5 py-2 text-xs sm:text-sm font-bold text-white bg-indigo-600 hover:bg-indigo-700 rounded-xl shadow transition focus:outline-none focus:ring-2 focus:ring-indigo-500">
+          Restart Quiz
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    /* Question Database (40 Questions: Q81 - Q120) */
+    const quizData = [
+      {
+        id: 81,
+        prompt: "Select the correct spelling of a word meaning 'proportionate' or 'corresponding in amount or degree':",
+        sentence: null,
+        options: ["Commensurate", "Commensuratte", "Commenserate", "Commensuret"],
+        correctIndex: 0,
+        explanation: "'Commensurate' is the correct spelling. It means corresponding in size or degree; proportionate."
+      },
+      {
+        id: 82,
+        prompt: "Select the correct spelling of a word meaning ‘the act of blocking or hindering progress’:",
+        sentence: null,
+        options: ["Obstrunction", "Obstruction", "Obstructtion", "Obstruktion"],
+        correctIndex: 1,
+        explanation: "'Obstruction' is the correct spelling. Meaning: an obstacle, hindrance, or blockage."
+      },
+      {
+        id: 83,
+        prompt: "Fill in the blank with the correctly spelt word:",
+        sentence: "The critic’s review was filled with _______ remarks that hurt the author deeply.",
+        options: ["scurrilous", "scurilous", "scurrillous", "scurrellous"],
+        correctIndex: 0,
+        explanation: "'Scurrilous' is the correct spelling. Meaning: humorously insulting, scandalous, or defamatory."
+      },
+      {
+        id: 84,
+        prompt: "Select the correct spelling of a word meaning ‘to weaken or reduce in force’:",
+        sentence: null,
+        options: ["Attenuate", "Atennuate", "Attanuate", "Atenuuate"],
+        correctIndex: 0,
+        explanation: "'Attenuate' is the correct spelling. Meaning: to reduce the force, value, or thickness of something."
+      },
+      {
+        id: 85,
+        prompt: "Spot the correct spelling of “a person who studies fossils”:",
+        sentence: null,
+        options: ["Paleantologist", "Paleontologist", "Paleontolagist", "Palaontologist"],
+        correctIndex: 1,
+        explanation: "'Paleontologist' is the correct spelling (from palaeontology/paleontology)."
+      },
+      {
+        id: 86,
+        prompt: "Select the correct spelling to fill in the blank:",
+        sentence: "The extreme desert heat led to the rapid ______ of the exposed plants.",
+        options: ["dessication", "desication", "desiccation", "desiccasion"],
+        correctIndex: 2,
+        explanation: "'Desiccation' is spelled with one 's' and two 'c's (de- + siccus = dry)."
+      },
+      {
+        id: 87,
+        prompt: "Select the correct spelling of a concept describing a universal or all-encompassing system of governance or interconnected hierarchies, often transcending national borders:",
+        sentence: null,
+        options: ["Panarchy", "Panarky", "Panaarchy", "Panarcky"],
+        correctIndex: 0,
+        explanation: "'Panarchy' is the correct spelling. It refers to universal governance encompassing all."
+      },
+      {
+        id: 88,
+        prompt: "Select the correct spelling of the noun form of the paroxysmal medical condition:",
+        sentence: null,
+        options: ["Paroxysmme", "Paroxysim", "Paroxysm", "Paroxysam"],
+        correctIndex: 2,
+        explanation: "'Paroxysm' is the correct spelling. It means a sudden outburst or seizure."
+      },
+      {
+        id: 89,
+        prompt: "Fill in the blank with the correctly spelt word:",
+        sentence: "The linguist specialized in the study of ______ phonetics.",
+        options: ["suprasegmental", "suprasegmentel", "supersegmental", "suprasemental"],
+        correctIndex: 0,
+        explanation: "'Suprasegmental' is the correct spelling (supra + segmental), referring to features like tone or stress."
+      },
+      {
+        id: 90,
+        prompt: "Which spelling is correct for a word meaning 'able to change shape easily; adaptable'?",
+        sentence: null,
+        options: ["Pliabel", "Plyable", "Pliable", "Pliabble"],
+        correctIndex: 2,
+        explanation: "'Pliable' is the correct spelling. Meaning: flexible, easily bent or influenced."
+      },
+      {
+        id: 91,
+        prompt: "Spot the correct spelling of the branch of medicine that deals with the immune system:",
+        sentence: null,
+        options: ["Immunology", "Immunolgy", "Immunollogy", "Imunnology"],
+        correctIndex: 0,
+        explanation: "'Immunology' is the correct spelling."
+      },
+      {
+        id: 92,
+        prompt: "Select the correct spelling to fill in the blank:",
+        sentence: "The country witnessed an ______ rise in renewable energy investments over the past decade.",
+        options: ["unprecidented", "unprecedented", "unpresidented", "unpressedented"],
+        correctIndex: 1,
+        explanation: "'Unprecedented' is the correct spelling. Meaning: never done or known before."
+      },
+      {
+        id: 93,
+        prompt: "Select the correct spelling for a word meaning 'a person who takes part in crime':",
+        sentence: null,
+        options: ["Accomplice", "Acomplise", "Acomplice", "Accomplicee"],
+        correctIndex: 0,
+        explanation: "'Accomplice' is the correct spelling (double 'c', ends in -ice)."
+      },
+      {
+        id: 94,
+        prompt: "Select the correct spelling to fill in the blank:",
+        sentence: "A ______ satellite orbits the Earth at the same rate as the Earth's rotation, appearing stationary from the ground.",
+        options: ["geosynchronous", "geosincronous", "geosynchronus", "geosyncronous"],
+        correctIndex: 0,
+        explanation: "'Geosynchronous' is the correct spelling (geo + synchronous)."
+      },
+      {
+        id: 95,
+        prompt: "Select the correct spelling of the surgical specialty dealing with the heart, chest, and blood vessels:",
+        sentence: null,
+        options: ["Cardiothorasicvascular", "Cardio-thoraco-vascular", "Cardiothoracovacular", "Cardiothoracovascular"],
+        correctIndex: 3,
+        explanation: "'Cardiothoracovascular' is the correct continuous medical term."
+      },
+      {
+        id: 96,
+        prompt: "Select the correct spelling of a word meaning 'in a way that shows readiness to conform or obey':",
+        sentence: null,
+        options: ["Compliantly", "Compleintly", "Compliently", "Complaiantly"],
+        correctIndex: 0,
+        explanation: "'Compliantly' is the correct adverbial spelling derived from 'compliant'."
+      },
+      {
+        id: 97,
+        prompt: "Select the correct spelling of a word meaning ‘personal peculiarity or habit’:",
+        sentence: null,
+        options: ["Idiosyncracy", "Idiosyncrasy", "Idiosyncresy", "Idiosyncrosy"],
+        correctIndex: 1,
+        explanation: "'Idiosyncrasy' is the correct spelling (note: ends with -crasy, not -cracy)."
+      },
+      {
+        id: 98,
+        prompt: "Select the correct spelling for a word meaning “a person who can be easily fooled”:",
+        sentence: null,
+        options: ["Gullible", "Gullibel", "Gulible", "Gullable"],
+        correctIndex: 0,
+        explanation: "'Gullible' is the correct spelling (double 'l', ends in -ible)."
+      },
+      {
+        id: 99,
+        prompt: "Pick the correctly spelled word:",
+        sentence: null,
+        options: ["Glamourous", "Glamaorous", "Glamourus", "Glamorous"],
+        correctIndex: 3,
+        explanation: "'Glamorous' loses the 'u' from 'glamour' when the suffix -ous is added."
+      },
+      {
+        id: 100,
+        prompt: "Which word is spelled correctly?",
+        sentence: null,
+        options: ["Ramuscule", "Ramuscul", "Ramascule", "Rammuscule"],
+        correctIndex: 0,
+        explanation: "'Ramuscule' is the correct spelling. Meaning: a small branch or ramification."
+      },
+      {
+        id: 101,
+        prompt: "Pick the correctly spelled word:",
+        sentence: null,
+        options: ["Sleight", "Sleigth", "Slieght", "Slaight"],
+        correctIndex: 0,
+        explanation: "'Sleight' (as in 'sleight of hand' meaning deceit or dexterity) is correct."
+      },
+      {
+        id: 102,
+        prompt: "Which word is spelled correctly?",
+        sentence: null,
+        options: ["Disparately", "Desparately", "Disperately", "Desperatily"],
+        correctIndex: 0,
+        explanation: "'Disparately' (meaning distinctly/fundamentally different) is correct."
+      },
+      {
+        id: 103,
+        prompt: "Pick the correctly spelled word:",
+        sentence: null,
+        options: ["Carcass", "Carcasss", "Carcas", "Carcassse"],
+        correctIndex: 0,
+        explanation: "'Carcass' (the dead body of an animal) is the correct spelling."
+      },
+      {
+        id: 104,
+        prompt: "Pick the correctly spelled word:",
+        sentence: null,
+        options: ["Counteanance", "Countanance", "Countinance", "Countenance"],
+        correctIndex: 3,
+        explanation: "'Countenance' (facial expression or support) is the correct spelling."
+      },
+      {
+        id: 105,
+        prompt: "Pick the correctly spelled word:",
+        sentence: null,
+        options: ["Stelth", "Staelth", "Stealth", "Stealthe"],
+        correctIndex: 2,
+        explanation: "'Stealth' (cautious and surreptitious action or movement) is correct."
+      },
+      {
+        id: 106,
+        prompt: "Which word is spelled correctly?",
+        sentence: null,
+        options: ["Inteligent", "Intelligent", "Intelligant", "Intellegent"],
+        correctIndex: 1,
+        explanation: "'Intelligent' is spelled with double 'l' and -ent ending."
+      },
+      {
+        id: 107,
+        prompt: "Which word is spelled correctly?",
+        sentence: null,
+        options: ["Hateful", "Hatefull", "Hatfull", "Heightful"],
+        correctIndex: 0,
+        explanation: "'Hateful' has a single 'l' suffix (-ful)."
+      },
+      {
+        id: 108,
+        prompt: "Which word is spelled correctly?",
+        sentence: null,
+        options: ["Accelerate", "Accelarate", "Acelerate", "Accellerate"],
+        correctIndex: 0,
+        explanation: "'Accelerate' has double 'c' and single 'l'."
+      },
+      {
+        id: 109,
+        prompt: "Pick the correctly spelled word:",
+        sentence: null,
+        options: ["Aggravate", "Agravate", "Aggeravate", "Aggrevate"],
+        correctIndex: 0,
+        explanation: "'Aggravate' (to make worse or annoy) is spelled with double 'g'."
+      },
+      {
+        id: 110,
+        prompt: "Pick the correctly spelled word:",
+        sentence: null,
+        options: ["Mississippi", "Missisippi", "Misissipi", "Mississipi"],
+        correctIndex: 0,
+        explanation: "'Mississippi' is spelled with 'M-i-s-s-i-s-s-i-p-p-i' (four 's's and two 'p's)."
+      },
+      {
+        id: 111,
+        prompt: "Pick the correctly spelled word:",
+        sentence: null,
+        options: ["Foretell", "Fortell", "Foretel", "Forretell"],
+        correctIndex: 0,
+        explanation: "'Foretell' (prefix 'fore-' + 'tell') is the correct spelling."
+      },
+      {
+        id: 112,
+        prompt: "Pick the correctly spelled word:",
+        sentence: null,
+        options: ["Managable", "Manageable", "Manageble", "Managible"],
+        correctIndex: 1,
+        explanation: "'Manageable' retains the silent 'e' to keep the soft 'g' sound."
+      },
+      {
+        id: 113,
+        prompt: "Pick the correctly spelled word:",
+        sentence: null,
+        options: ["Juvantious", "Juventuss", "Juventash", "Juventus"],
+        correctIndex: 3,
+        explanation: "'Juventus' is the correct spelling (Latin for youth)."
+      },
+      {
+        id: 114,
+        prompt: "Pick the correctly spelled word:",
+        sentence: null,
+        options: ["Eliptical", "Elliptical", "Ellipitical", "Elippical"],
+        correctIndex: 1,
+        explanation: "'Elliptical' is spelled with double 'l' and single 'p'."
+      },
+      {
+        id: 115,
+        prompt: "Pick the correctly spelled word:",
+        sentence: null,
+        options: ["Distinktive", "Distincttve", "Distinctive", "Disstinctive"],
+        correctIndex: 2,
+        explanation: "'Distinctive' is the correct spelling."
+      },
+      {
+        id: 116,
+        prompt: "Pick the correctly spelled word:",
+        sentence: null,
+        options: ["Grivous", "Greivous", "Grievious", "Grievous"],
+        correctIndex: 3,
+        explanation: "'Grievous' is spelled 'ie' followed by 'v-o-u-s' (there is no 'i' after 'v')."
+      },
+      {
+        id: 117,
+        prompt: "Pick the correctly spelled word:",
+        sentence: null,
+        options: ["Weight", "Weihgt", "Wheight", "Waight"],
+        correctIndex: 0,
+        explanation: "'Weight' follows the 'ei' rule sounding like /eɪ/."
+      },
+      {
+        id: 118,
+        prompt: "Which word is spelled correctly?",
+        sentence: null,
+        options: ["Spanaer", "Spaner", "Spanne", "Spanner"],
+        correctIndex: 3,
+        explanation: "'Spanner' (the wrench tool) is spelled with double 'n'."
+      },
+      {
+        id: 119,
+        prompt: "Pick the correctly spelled word:",
+        sentence: null,
+        options: ["Deference", "Differance", "Deferance", "Deferanse"],
+        correctIndex: 0,
+        explanation: "'Deference' (polite submission and respect) is spelled with 'e's and single 'f'."
+      },
+      {
+        id: 120,
+        prompt: "Pick the correctly spelled word:",
+        sentence: null,
+        options: ["Imperceptible", "Imperceptable", "Impeceptible", "Imperceptibal"],
+        correctIndex: 0,
+        explanation: "'Imperceptible' ends in '-ible', meaning impossible to perceive."
+      }
+    ];
+
+    let currentIndex = 0;
+    let userAnswers = new Array(quizData.length).fill(null); // records selected option index
+    let answeredCurrent = false;
+
+    // DOM Elements Cache
+    const currentQIndexEl = document.getElementById('currentQIndex');
+    const totalQCountEl = document.getElementById('totalQCount');
+    const headerCorrectCountEl = document.getElementById('headerCorrectCount');
+    const headerWrongCountEl = document.getElementById('headerWrongCount');
+    const progressBarEl = document.getElementById('progressBar');
+    
+    const qBadgeNumberEl = document.getElementById('qBadgeNumber');
+    const questionPromptEl = document.getElementById('questionPromptContainer');
+    const statementBoxEl = document.getElementById('statementBox');
+    const optionsGridEl = document.getElementById('optionsGrid');
+    
+    const feedbackContainerEl = document.getElementById('feedbackContainer');
+    const feedbackBoxEl = document.getElementById('feedbackBox');
+    const feedbackIconEl = document.getElementById('feedbackIcon');
+    const feedbackTextEl = document.getElementById('feedbackText');
+    const nextBtn = document.getElementById('nextBtn');
+    const nextBtnText = document.getElementById('nextBtnText');
+
+    const resultsModal = document.getElementById('resultsModal');
+    const finalPercentEl = document.getElementById('finalPercent');
+    const finalScoreValEl = document.getElementById('finalScoreVal');
+    const finalCorrectCountEl = document.getElementById('finalCorrectCount');
+    const finalWrongCountEl = document.getElementById('finalWrongCount');
+    const incorrectListContainer = document.getElementById('incorrectListContainer');
+    const reviewSectionTitle = document.getElementById('reviewSectionTitle');
+    const retakeQuizBtn = document.getElementById('retakeQuizBtn');
+    const quickRestartBtn = document.getElementById('quickRestartBtn');
+
+    // Theme Elements
+    const themeToggleBtn = document.getElementById('themeToggleBtn');
+    const sunIcon = document.getElementById('sunIcon');
+    const moonIcon = document.getElementById('moonIcon');
+
+    function initTheme() {
+      const savedTheme = localStorage.getItem('theme');
+      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
+        document.documentElement.classList.add('dark');
+        moonIcon.classList.add('hidden');
+        sunIcon.classList.remove('hidden');
+      } else {
+        document.documentElement.classList.remove('dark');
+        sunIcon.classList.add('hidden');
+        moonIcon.classList.remove('hidden');
+      }
+    }
+
+    themeToggleBtn.addEventListener('click', () => {
+      const isDark = document.documentElement.classList.toggle('dark');
+      localStorage.setItem('theme', isDark ? 'dark' : 'light');
+      if (isDark) {
+        moonIcon.classList.add('hidden');
+        sunIcon.classList.remove('hidden');
+      } else {
+        sunIcon.classList.add('hidden');
+        moonIcon.classList.remove('hidden');
+      }
+    });
+
+    function renderQuestion(index) {
+      const q = quizData[index];
+      answeredCurrent = (userAnswers[index] !== null);
+
+      // Header info
+      currentQIndexEl.textContent = index + 1;
+      totalQCountEl.textContent = quizData.length;
+      qBadgeNumberEl.textContent = `Q.${q.id}`;
+      progressBarEl.style.width = `${((index + 1) / quizData.length) * 100}%`;
+
+      // Prompt & Statement formatting
+      questionPromptEl.innerHTML = `<span class="text-slate-900 dark:text-slate-100 font-semibold">${q.prompt}</span>`;
+      
+      if (q.sentence) {
+        statementBoxEl.classList.remove('hidden');
+        // highlight blank area gracefully
+        const formattedSentence = q.sentence.replace(
+          '_______',
+          '<span class="inline-block px-3 py-0.5 mx-1 border-b-2 border-indigo-500 font-mono font-bold text-indigo-600 dark:text-indigo-400 bg-indigo-50/50 dark:bg-indigo-950/40 rounded">_______</span>'
+        );
+        statementBoxEl.innerHTML = `<div class="italic leading-relaxed text-slate-800 dark:text-slate-200">“${formattedSentence}”</div>`;
+      } else {
+        statementBoxEl.classList.add('hidden');
+        statementBoxEl.innerHTML = '';
+      }
+
+      // Options Rendering
+      optionsGridEl.innerHTML = '';
+      const letters = ['a', 'b', 'c', 'd'];
+
+      q.options.forEach((optText, optIdx) => {
+        const letter = letters[optIdx];
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.dataset.index = optIdx;
+        btn.className = `option-btn w-full text-left p-2.5 sm:p-3 rounded-xl border text-xs sm:text-sm font-medium transition-all duration-150 flex items-center gap-2.5 sm:gap-3 group focus:outline-none`;
+
+        // Baseline styling
+        if (!answeredCurrent) {
+          btn.className += ' bg-slate-50 hover:bg-slate-100/90 dark:bg-slate-800/80 dark:hover:bg-slate-800 border-slate-200 dark:border-slate-700/80 text-slate-800 dark:text-slate-200 cursor-pointer shadow-sm hover:border-indigo-300 dark:hover:border-indigo-600';
+        } else {
+          // Already answered: apply correct/wrong state
+          btn.disabled = true;
+          if (optIdx === q.correctIndex) {
+            btn.className += ' bg-emerald-50 dark:bg-emerald-950/50 border-emerald-500 dark:border-emerald-500 text-emerald-900 dark:text-emerald-100 font-bold';
+          } else if (optIdx === userAnswers[index]) {
+            btn.className += ' bg-rose-50 dark:bg-rose-950/50 border-rose-500 dark:border-rose-500 text-rose-900 dark:text-rose-100 font-semibold';
+          } else {
+            btn.className += ' bg-slate-50/50 dark:bg-slate-800/40 border-slate-200/60 dark:border-slate-800 text-slate-400 dark:text-slate-500 cursor-not-allowed opacity-70';
+          }
+        }
+
+        // Option Key indicator (A, B, C, D)
+        const badge = document.createElement('span');
+        badge.className = `w-6 h-6 sm:w-7 sm:h-7 rounded-lg flex items-center justify-center font-mono text-xs font-bold transition-colors flex-shrink-0`;
+        
+        if (!answeredCurrent) {
+          badge.className += ' bg-white dark:bg-slate-700 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-600 group-hover:border-indigo-400 group-hover:text-indigo-600';
+        } else if (optIdx === q.correctIndex) {
+          badge.className += ' bg-emerald-600 text-white';
+        } else if (optIdx === userAnswers[index]) {
+          badge.className += ' bg-rose-600 text-white';
+        } else {
+          badge.className += ' bg-slate-200/60 dark:bg-slate-800 text-slate-400';
+        }
+        badge.textContent = `(${letter})`;
+
+        const textSpan = document.createElement('span');
+        textSpan.className = 'flex-1 tracking-wide truncate';
+        textSpan.textContent = optText;
+
+        btn.appendChild(badge);
+        btn.appendChild(textSpan);
+
+        btn.addEventListener('click', () => handleOptionSelect(optIdx));
+        optionsGridEl.appendChild(btn);
+      });
+
+      // Update Feedback and Next Button status
+      if (answeredCurrent) {
+        showFeedback(userAnswers[index] === q.correctIndex, q.explanation);
+        nextBtn.disabled = false;
+      } else {
+        hideFeedback();
+        nextBtn.disabled = true;
+      }
+
+      // Update Next button label on final question
+      if (index === quizData.length - 1) {
+        nextBtnText.textContent = "Finish";
+      } else {
+        nextBtnText.textContent = "Next";
+      }
+
+      updateLiveCounters();
+    }
+
+    function handleOptionSelect(selectedIdx) {
+      if (answeredCurrent) return;
+
+      answeredCurrent = true;
+      userAnswers[currentIndex] = selectedIdx;
+      const q = quizData[currentIndex];
+      const isCorrect = (selectedIdx === q.correctIndex);
+
+      // Disable all options and highlight
+      const buttons = optionsGridEl.querySelectorAll('.option-btn');
+      buttons.forEach((btn, idx) => {
+        btn.disabled = true;
+        btn.classList.remove('hover:bg-slate-100/90', 'dark:hover:bg-slate-800', 'cursor-pointer', 'shadow-sm');
+
+        const badge = btn.querySelector('span:first-child');
+        badge.className = `w-6 h-6 sm:w-7 sm:h-7 rounded-lg flex items-center justify-center font-mono text-xs font-bold flex-shrink-0`;
+
+        if (idx === q.correctIndex) {
+          btn.classList.add('bg-emerald-50', 'dark:bg-emerald-950/60', 'border-emerald-500', 'dark:border-emerald-500', 'text-emerald-950', 'dark:text-emerald-100', 'font-bold');
+          badge.className += ' bg-emerald-600 text-white';
+          if (idx === selectedIdx) {
+            btn.classList.add('anim-correct');
+          }
+        } else if (idx === selectedIdx) {
+          btn.classList.add('bg-rose-50', 'dark:bg-rose-950/60', 'border-rose-500', 'dark:border-rose-500', 'text-rose-950', 'dark:text-rose-100', 'font-semibold', 'anim-wrong');
+          badge.className += ' bg-rose-600 text-white';
+        } else {
+          btn.classList.add('opacity-60', 'text-slate-400', 'dark:text-slate-500');
+          badge.className += ' bg-slate-200/70 dark:bg-slate-800 text-slate-400';
+        }
+      });
+
+      showFeedback(isCorrect, q.explanation);
+      nextBtn.disabled = false;
+      updateLiveCounters();
+      
+      // Auto-focus next button for instant keyboard/accessibility workflow
+      nextBtn.focus();
+    }
+
+    function showFeedback(isCorrect, explanation) {
+      feedbackContainerEl.classList.remove('opacity-0', 'pointer-events-none');
+      feedbackContainerEl.classList.add('opacity-100');
+
+      if (isCorrect) {
+        feedbackBoxEl.className = 'flex items-center gap-2 text-xs sm:text-sm font-medium py-1 px-3 rounded-lg bg-emerald-100/80 dark:bg-emerald-950/60 text-emerald-800 dark:text-emerald-300 border border-emerald-300/80 dark:border-emerald-800';
+        feedbackIconEl.innerHTML = `<svg class="w-4 h-4 text-emerald-600 dark:text-emerald-400 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>`;
+        feedbackTextEl.innerHTML = `<strong class="font-bold">Correct!</strong> ${explanation}`;
+      } else {
+        feedbackBoxEl.className = 'flex items-center gap-2 text-xs sm:text-sm font-medium py-1 px-3 rounded-lg bg-rose-100/80 dark:bg-rose-950/60 text-rose-800 dark:text-rose-300 border border-rose-300/80 dark:border-rose-800';
+        feedbackIconEl.innerHTML = `<svg class="w-4 h-4 text-rose-600 dark:text-rose-400 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/></svg>`;
+        feedbackTextEl.innerHTML = `<strong class="font-bold">Incorrect.</strong> ${explanation}`;
+      }
+    }
+
+    function hideFeedback() {
+      feedbackContainerEl.classList.remove('opacity-100');
+      feedbackContainerEl.classList.add('opacity-0', 'pointer-events-none');
+    }
+
+    function updateLiveCounters() {
+      let correct = 0;
+      let wrong = 0;
+      userAnswers.forEach((ans, idx) => {
+        if (ans !== null) {
+          if (ans === quizData[idx].correctIndex) correct++;
+          else wrong++;
+        }
+      });
+      headerCorrectCountEl.textContent = correct;
+      headerWrongCountEl.textContent = wrong;
+    }
+
+    function goToNextQuestion() {
+      if (currentIndex < quizData.length - 1) {
+        currentIndex++;
+        renderQuestion(currentIndex);
+      } else {
+        showResultsModal();
+      }
+    }
+
+    nextBtn.addEventListener('click', goToNextQuestion);
+
+    function showResultsModal() {
+      let correctCount = 0;
+      let wrongCount = 0;
+      const incorrectList = [];
+
+      userAnswers.forEach((ans, idx) => {
+        const q = quizData[idx];
+        if (ans === q.correctIndex) {
+          correctCount++;
+        } else {
+          wrongCount++;
+          incorrectList.push({
+            question: q,
+            userChoice: ans !== null ? q.options[ans] : "Not Attempted",
+            userChoiceIdx: ans,
+            correctChoice: q.options[q.correctIndex],
+            explanation: q.explanation
+          });
+        }
+      });
+
+      const percentage = Math.round((correctCount / quizData.length) * 100);
+      finalPercentEl.textContent = `${percentage}%`;
+      finalScoreValEl.textContent = correctCount;
+      finalCorrectCountEl.textContent = correctCount;
+      finalWrongCountEl.textContent = wrongCount;
+
+      incorrectListContainer.innerHTML = '';
+
+      if (incorrectList.length === 0) {
+        reviewSectionTitle.textContent = "Flawless Performance!";
+        incorrectListContainer.innerHTML = `
+          <div class="text-center py-8 px-4 bg-emerald-50 dark:bg-emerald-950/40 rounded-xl border border-emerald-200 dark:border-emerald-800">
+            <div class="text-3xl mb-2">🏆</div>
+            <div class="text-sm font-bold text-emerald-800 dark:text-emerald-200">Perfect 100%! All 40 questions answered correctly!</div>
+            <p class="text-xs text-emerald-600 dark:text-emerald-400 mt-1">Outstanding mastery of vocabulary and spelling patterns.</p>
+          </div>
+        `;
+      } else {
+        reviewSectionTitle.textContent = `Review Mistakes (${incorrectList.length})`;
+        incorrectList.forEach(item => {
+          const card = document.createElement('div');
+          card.className = "p-3 rounded-xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 text-xs space-y-1.5 shadow-sm";
+          
+          let sentenceSnippet = '';
+          if (item.question.sentence) {
+            sentenceSnippet = `<div class="italic text-slate-500 dark:text-slate-400 text-[11px] mb-1">“${item.question.sentence}”</div>`;
+          }
+
+          card.innerHTML = `
+            <div class="flex items-center justify-between font-mono font-bold text-[11px] text-slate-500 dark:text-slate-400">
+              <span>Q.${item.question.id}</span>
+              <span class="text-rose-600 dark:text-rose-400">Mistake</span>
+            </div>
+            <p class="font-medium text-slate-800 dark:text-slate-200">${item.question.prompt}</p>
+            ${sentenceSnippet}
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-1.5 pt-1">
+              <div class="p-1.5 rounded-lg bg-rose-50 dark:bg-rose-950/50 border border-rose-200 dark:border-rose-900 text-rose-800 dark:text-rose-300">
+                <span class="font-bold text-[10px] uppercase block text-rose-500">Your Answer:</span>
+                <span class="font-mono">${item.userChoice}</span>
+              </div>
+              <div class="p-1.5 rounded-lg bg-emerald-50 dark:bg-emerald-950/50 border border-emerald-200 dark:border-emerald-900 text-emerald-800 dark:text-emerald-300">
+                <span class="font-bold text-[10px] uppercase block text-emerald-500">Correct Answer:</span>
+                <span class="font-mono font-bold">${item.correctChoice}</span>
+              </div>
+            </div>
+            <div class="text-[11px] text-slate-600 dark:text-slate-400 pt-1 border-t border-slate-200/60 dark:border-slate-700/60">
+              💡 ${item.explanation}
+            </div>
+          `;
+          incorrectListContainer.appendChild(card);
+        });
+      }
+
+      resultsModal.classList.remove('hidden');
+    }
+
+    function restartQuiz() {
+      resultsModal.classList.add('hidden');
+      userAnswers = new Array(quizData.length).fill(null);
+      currentIndex = 0;
+      answeredCurrent = false;
+      renderQuestion(0);
+    }
+
+    retakeQuizBtn.addEventListener('click', restartQuiz);
+    quickRestartBtn.addEventListener('click', () => {
+      if (confirmRestartModal()) {
+        restartQuiz();
+      }
+    });
+
+    // Clean inline confirm dialog replacement
+    function confirmRestartModal() {
+      // If user hasn't started or only 1 question in, restart immediately
+      const answeredCount = userAnswers.filter(a => a !== null).length;
+      if (answeredCount <= 1) return true;
+      return window.confirm("Restart quiz from Question 81? Current progress will be cleared.");
+    }
+
+    document.addEventListener('keydown', (e) => {
+      // If results modal is active, Enter key triggers restart
+      if (!resultsModal.classList.contains('hidden')) {
+        if (e.key === 'Enter') restartQuiz();
+        return;
+      }
+
+      // 1-4 or A-D for option selection
+      const key = e.key.toLowerCase();
+      let optionToSelect = -1;
+      if (key === '1' || key === 'a') optionToSelect = 0;
+      else if (key === '2' || key === 'b') optionToSelect = 1;
+      else if (key === '3' || key === 'c') optionToSelect = 2;
+      else if (key === '4' || key === 'd') optionToSelect = 3;
+
+      if (optionToSelect !== -1 && !answeredCurrent) {
+        handleOptionSelect(optionToSelect);
+        return;
+      }
+
+      // Enter or Space for Next Question
+      if ((e.key === 'Enter' || e.key === ' ') && answeredCurrent) {
+        e.preventDefault();
+        goToNextQuestion();
+      }
+    });
+
+    window.addEventListener('DOMContentLoaded', () => {
+      initTheme();
+      renderQuestion(0);
+    });
+  </script>
+</body>
+</html>
