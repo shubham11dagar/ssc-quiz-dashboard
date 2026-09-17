@@ -1,0 +1,1149 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>English Spelling & Vocabulary Mastery</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              50: '#eef2ff',
+              100: '#e0e7ff',
+              500: '#6366f1',
+              600: '#4f46e5',
+              700: '#4338ca',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <!-- Google Fonts: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+    }
+    body {
+      font-family: 'Inter', sans-serif;
+    }
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 5px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: rgba(156, 163, 175, 0.4);
+      border-radius: 9999px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+      background: rgba(156, 163, 175, 0.6);
+    }
+    @keyframes slideInUp {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .animate-feedback {
+      animation: slideInUp 0.22s ease-out forwards;
+    }
+    .highlight-context {
+      letter-spacing: -0.01em;
+    }
+  </style>
+</head>
+
+<body class="h-full w-full bg-slate-100 text-slate-800 dark:bg-slate-950 dark:text-slate-100 transition-colors duration-200 antialiased overflow-hidden flex flex-col justify-between">
+
+  <!-- TOP HEADER (Compact bar) -->
+  <header class="w-full bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 shrink-0 px-3 py-2 sm:px-6 sm:py-2.5 z-20 shadow-xs">
+    <div class="max-w-4xl mx-auto flex items-center justify-between gap-3">
+      <!-- Title & Branding -->
+      <div class="flex items-center space-x-2.5">
+        <div class="w-8 h-8 rounded-lg bg-indigo-600 text-white flex items-center justify-center font-black text-sm shadow-sm">
+          A
+        </div>
+        <div>
+          <h1 class="text-xs sm:text-sm font-bold tracking-tight text-slate-900 dark:text-white flex items-center gap-1.5">
+            <span>Aman Sir English Series</span>
+            <span class="text-[10px] px-1.5 py-0.5 rounded-full font-semibold bg-indigo-100 text-indigo-700 dark:bg-indigo-900/60 dark:text-indigo-300">SSC CGL / CHSL</span>
+          </h1>
+          <p class="text-[10px] text-slate-500 dark:text-slate-400 hidden sm:block">Vocabulary & Spelling Competency Practice</p>
+        </div>
+      </div>
+
+      <!-- Center Progress Pills -->
+      <div class="flex items-center space-x-2">
+        <div class="text-right">
+          <div class="text-[11px] font-bold text-slate-700 dark:text-slate-200">
+            <span id="currentQNum">1</span><span class="text-slate-400 font-normal"> / </span><span id="totalQNum">40</span>
+          </div>
+          <div class="text-[9px] text-slate-400 dark:text-slate-500 font-medium">Q. <span id="actualQId">121</span></div>
+        </div>
+        <div class="w-20 sm:w-28 bg-slate-200 dark:bg-slate-800 h-2 rounded-full overflow-hidden">
+          <div id="progressBar" class="bg-indigo-600 dark:bg-indigo-500 h-full rounded-full transition-all duration-300 ease-out" style="width: 2.5%"></div>
+        </div>
+      </div>
+
+      <!-- Right Controls: Score Badge & Theme Toggle -->
+      <div class="flex items-center space-x-2">
+        <!-- Live Quick Score Counter -->
+        <div class="hidden xs:flex items-center gap-1.5 px-2 py-1 rounded-md bg-slate-100 dark:bg-slate-800 text-[11px] font-semibold border border-slate-200 dark:border-slate-700">
+          <span class="text-emerald-600 dark:text-emerald-400 font-bold" id="headerCorrectCount">✓ 0</span>
+          <span class="text-slate-300 dark:text-slate-600">|</span>
+          <span class="text-rose-600 dark:text-rose-400 font-bold" id="headerIncorrectCount">✗ 0</span>
+        </div>
+
+        <!-- Dark/Light Toggle -->
+        <button id="themeToggleBtn" aria-label="Toggle Theme" class="p-1.5 rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 transition-colors">
+          <!-- Moon Icon (for light mode) -->
+          <svg id="moonIcon" class="w-4 h-4 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
+          </svg>
+          <!-- Sun Icon (for dark mode) -->
+          <svg id="sunIcon" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 9h-1m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="flex-1 max-w-4xl w-full mx-auto p-2.5 sm:p-4 flex flex-col justify-center min-h-0">
+    
+    <!-- QUIZ ACTIVE VIEW (Strictly No-Scroll Viewport Card) -->
+    <div id="quizView" class="w-full bg-white dark:bg-slate-900 rounded-xl shadow-md border border-slate-200/80 dark:border-slate-800 flex flex-col h-full max-h-[calc(100vh-4.6rem)] overflow-hidden transition-all duration-200">
+      
+      <!-- Card Sub-header: Category & Instruction -->
+      <div class="px-3.5 py-2 sm:px-5 sm:py-2.5 bg-slate-50/90 dark:bg-slate-800/60 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between shrink-0">
+        <span class="inline-flex items-center gap-1 text-[11px] font-semibold text-indigo-600 dark:text-indigo-400 uppercase tracking-wider">
+          <span class="w-1.5 h-1.5 rounded-full bg-indigo-600 dark:bg-indigo-400"></span>
+          Spelling & Vocabulary
+        </span>
+        <span id="questionTag" class="text-[10px] sm:text-[11px] text-slate-500 dark:text-slate-400 font-medium italic">
+          Single Correct Answer
+        </span>
+      </div>
+
+      <!-- Question & Context Box (Compact, formatted for complex statements) -->
+      <div class="px-3.5 py-2.5 sm:px-5 sm:py-3.5 shrink-0 overflow-y-auto max-h-[38vh]">
+        <!-- Primary Prompt -->
+        <h2 id="questionPrompt" class="text-xs sm:text-sm md:text-base font-semibold text-slate-900 dark:text-slate-100 leading-snug">
+          <!-- Dynamic prompt injected -->
+        </h2>
+
+        <!-- Statement / Sentence Callout (if question has contextual sentence or statements) -->
+        <div id="contextBox" class="mt-2 p-2.5 sm:p-3 rounded-lg bg-indigo-50/70 dark:bg-indigo-950/40 border-l-4 border-indigo-500 dark:border-indigo-400 text-slate-700 dark:text-slate-300 text-xs sm:text-sm font-medium leading-relaxed hidden">
+          <p id="contextText" class="italic highlight-context"></p>
+        </div>
+      </div>
+
+      <!-- Options Container (Compact grid / stack) -->
+      <div class="px-3.5 py-1 sm:px-5 sm:py-2 flex-1 flex flex-col justify-center min-h-0">
+        <div id="optionsGrid" class="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-2.5">
+          <!-- Dynamic 2 to 4 Option Buttons generated by JS -->
+        </div>
+      </div>
+
+      <!-- Bottom Status / Explanation Bar + Sticky Next Action Button -->
+      <div class="mt-auto px-3.5 py-2.5 sm:px-5 sm:py-2.5 bg-slate-50 dark:bg-slate-800/80 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between gap-3 shrink-0">
+        <!-- Compact Explanation Banner -->
+        <div id="feedbackBanner" class="flex-1 min-w-0 pr-2 opacity-0 transition-opacity duration-200 pointer-events-none">
+          <div id="feedbackContent" class="flex items-center gap-2 text-xs sm:text-sm font-semibold truncate">
+            <span id="feedbackIcon" class="text-sm shrink-0"></span>
+            <span id="feedbackText" class="truncate"></span>
+          </div>
+        </div>
+
+        <!-- Next / Finish Sticky Button -->
+        <div class="shrink-0 flex items-center space-x-2">
+          <button id="nextBtn" disabled class="px-4 py-1.5 sm:px-5 sm:py-2 rounded-lg font-bold text-xs sm:text-sm shadow-sm transition-all duration-150 flex items-center gap-1.5 bg-slate-200 text-slate-400 dark:bg-slate-800 dark:text-slate-600 cursor-not-allowed">
+            <span id="nextBtnLabel">Next</span>
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- RESULTS VIEW (Hidden initially; scrolls smoothly for breakdown) -->
+    <div id="resultsView" class="w-full bg-white dark:bg-slate-900 rounded-xl shadow-lg border border-slate-200 dark:border-slate-800 flex flex-col h-full max-h-[calc(100vh-4.6rem)] overflow-hidden hidden animate-feedback">
+      <!-- Results Sticky Header -->
+      <div class="p-3 sm:p-4 bg-slate-50 dark:bg-slate-800/80 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between shrink-0">
+        <div>
+          <h2 class="text-sm sm:text-base font-bold text-slate-900 dark:text-white">Performance Scorecard</h2>
+          <p class="text-[11px] text-slate-500 dark:text-slate-400">Review your final score and detailed breakdown below</p>
+        </div>
+        <button id="restartQuizBtn" class="px-3.5 py-1.5 sm:px-4 sm:py-2 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-xs sm:text-sm shadow transition-colors flex items-center gap-1.5">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+          </svg>
+          <span>Retake Quiz</span>
+        </button>
+      </div>
+
+      <!-- Summary Stat Badges -->
+      <div class="p-3 sm:p-4 shrink-0 grid grid-cols-4 gap-2 sm:gap-3 bg-white dark:bg-slate-900 border-b border-slate-100 dark:border-slate-800">
+        <div class="p-2 sm:p-2.5 rounded-lg bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700/60 text-center">
+          <span class="text-[10px] sm:text-xs text-slate-500 font-medium">Accuracy</span>
+          <div id="resPercentage" class="text-base sm:text-xl font-black text-indigo-600 dark:text-indigo-400">0%</div>
+        </div>
+        <div class="p-2 sm:p-2.5 rounded-lg bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-800/60 text-center">
+          <span class="text-[10px] sm:text-xs text-emerald-600 dark:text-emerald-400 font-medium">Correct</span>
+          <div id="resCorrect" class="text-base sm:text-xl font-black text-emerald-600 dark:text-emerald-400">0</div>
+        </div>
+        <div class="p-2 sm:p-2.5 rounded-lg bg-rose-50 dark:bg-rose-950/30 border border-rose-200 dark:border-rose-800/60 text-center">
+          <span class="text-[10px] sm:text-xs text-rose-600 dark:text-rose-400 font-medium">Incorrect</span>
+          <div id="resIncorrect" class="text-base sm:text-xl font-black text-rose-600 dark:text-rose-400">0</div>
+        </div>
+        <div class="p-2 sm:p-2.5 rounded-lg bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700/60 text-center">
+          <span class="text-[10px] sm:text-xs text-slate-500 font-medium">Total Solved</span>
+          <div id="resTotal" class="text-base sm:text-xl font-black text-slate-800 dark:text-slate-200">40</div>
+        </div>
+      </div>
+
+      <!-- Incorrect Questions Review List (Scrollable Area) -->
+      <div class="flex-1 overflow-y-auto custom-scrollbar p-3 sm:p-4 space-y-2.5">
+        <div class="flex items-center justify-between">
+          <h3 class="text-xs sm:text-sm font-bold text-slate-800 dark:text-slate-200 flex items-center gap-1.5">
+            <span>Detailed Question Review</span>
+            <span id="reviewFilterNotice" class="text-[10px] font-normal text-slate-500"></span>
+          </h3>
+          <div class="flex gap-1 text-[10px]">
+            <button id="showAllBtn" class="px-2 py-0.5 rounded border border-indigo-500 bg-indigo-50 dark:bg-indigo-900/40 text-indigo-700 dark:text-indigo-300 font-semibold">All (40)</button>
+            <button id="showIncorrectBtn" class="px-2 py-0.5 rounded border border-slate-300 dark:border-slate-700 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800">Errors Only</button>
+          </div>
+        </div>
+
+        <div id="reviewItemsList" class="space-y-2.5">
+          <!-- Injected via JavaScript -->
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <script>
+    // Complete database of questions from Q.121 to Q.160
+    const quizData = [
+      {
+        id: 121,
+        prompt: "Select the incorrectly spelled word.",
+        context: null,
+        options: [
+          { key: "a", text: "Lieutenant" },
+          { key: "b", text: "Twelfth" },
+          { key: "c", text: "Connoissure" },
+          { key: "d", text: "Temerity" }
+        ],
+        correctKey: "c",
+        explanation: "‘Connoisseur’ is the correct spelling (meaning an expert judge in matters of taste)."
+      },
+      {
+        id: 122,
+        prompt: "Which word is spelled incorrectly?",
+        context: null,
+        options: [
+          { key: "a", text: "Amateur" },
+          { key: "b", text: "Saboteur" },
+          { key: "c", text: "Vancouvre" },
+          { key: "d", text: "Entrepreneur" }
+        ],
+        correctKey: "c",
+        explanation: "‘Vancouver’ is the correct spelling."
+      },
+      {
+        id: 123,
+        prompt: "Pick the correctly spelled word:",
+        context: null,
+        options: [
+          { key: "a", text: "Anaesthsia" },
+          { key: "b", text: "Anaestesia" },
+          { key: "c", text: "Anasthesia" },
+          { key: "d", text: "Anaesthesia" }
+        ],
+        correctKey: "d",
+        explanation: "‘Anaesthesia’ is the correct British English spelling."
+      },
+      {
+        id: 124,
+        prompt: "Which word is spelled correctly?",
+        context: null,
+        options: [
+          { key: "a", text: "Quiesense" },
+          { key: "b", text: "Quiescence" },
+          { key: "c", text: "Quiessence" },
+          { key: "d", text: "Quiescense" }
+        ],
+        correctKey: "b",
+        explanation: "‘Quiescence’ is the correct spelling (meaning a state or period of inactivity or dormancy)."
+      },
+      {
+        id: 125,
+        prompt: "Which word is incorrectly spelled in the given sentence?",
+        context: "The carefully preserved memento from her grandmother's youth, a delicate lace hankerchief, held profound sentimental value for the entire family.",
+        options: [
+          { key: "a", text: "hankerchief" },
+          { key: "b", text: "preserved" },
+          { key: "c", text: "delicate" },
+          { key: "d", text: "sentimental" }
+        ],
+        correctKey: "a",
+        explanation: "‘Handkerchief’ is the correct spelling (note the 'd')."
+      },
+      {
+        id: 126,
+        prompt: "Pick the correctly spelled word referring to the faculty or action of forming new ideas, or images or concepts of external objects not present to the senses.",
+        context: null,
+        options: [
+          { key: "a", text: "Imagination" },
+          { key: "b", text: "Immagination" },
+          { key: "c", text: "Imaginasion" },
+          { key: "d", text: "Imazinetion" }
+        ],
+        correctKey: "a",
+        explanation: "‘Imagination’ is the correct spelling."
+      },
+      {
+        id: 127,
+        prompt: "Pick the correctly spelled word referring to the action or process of identifying someone or something.",
+        context: null,
+        options: [
+          { key: "a", text: "Identification" },
+          { key: "b", text: "Identificasion" },
+          { key: "c", text: "Identiphication" },
+          { key: "d", text: "Idantification" }
+        ],
+        correctKey: "a",
+        explanation: "‘Identification’ is the correct spelling."
+      },
+      {
+        id: 128,
+        prompt: "Pick the correctly spelled word referring to cells that support and protect neurons in the central and peripheral nervous systems.",
+        context: null,
+        options: [
+          { key: "a", text: "Neuroglia" },
+          { key: "b", text: "Newroglia" },
+          { key: "c", text: "Nuroglia" },
+          { key: "d", text: "Neurologia" }
+        ],
+        correctKey: "a",
+        explanation: "‘Neuroglia’ is the correct biological spelling."
+      },
+      {
+        id: 129,
+        prompt: "Choose the option that completes the sentence using the correct spelling.",
+        context: "Exposure to direct sunlight can have a ______ effect on delicate plant seedlings.",
+        options: [
+          { key: "a", text: "Deletarious" },
+          { key: "b", text: "Deletirious" },
+          { key: "c", text: "Deliterious" },
+          { key: "d", text: "Deleterious" }
+        ],
+        correctKey: "d",
+        explanation: "‘Deleterious’ (causing harm or damage) is the correct spelling."
+      },
+      {
+        id: 130,
+        prompt: "Select the correctly spelled word referring to the state of being associated with a larger group or organisation.",
+        context: null,
+        options: [
+          { key: "a", text: "Affiliation" },
+          { key: "b", text: "Effiliation" }
+        ],
+        correctKey: "a",
+        explanation: "‘Affiliation’ is the correct spelling."
+      },
+      {
+        id: 131,
+        prompt: "Select the incorrectly spelled word from the underlined words in the given sentence:",
+        context: "The study found that airborn particulate matter, a significant pollutant, could exacerbate respiratory problems in urban populations.",
+        options: [
+          { key: "a", text: "airborn" },
+          { key: "b", text: "particulate" },
+          { key: "c", text: "exacerbate" },
+          { key: "d", text: "respiratory" }
+        ],
+        correctKey: "a",
+        explanation: "‘Airborne’ is the correct spelling (ending with 'e')."
+      },
+      {
+        id: 132,
+        prompt: "Choose the correctly spelled word to fill in the blank.",
+        context: "The historian meticulously established the ______ of events to understand the ancient civilisation's downfall.",
+        options: [
+          { key: "a", text: "Chronology" },
+          { key: "b", text: "Chronollogy" },
+          { key: "c", text: "Chronolgy" },
+          { key: "d", text: "Chronolagy" }
+        ],
+        correctKey: "a",
+        explanation: "‘Chronology’ is the correct spelling."
+      },
+      {
+        id: 133,
+        prompt: "Select the incorrectly spelt word.",
+        context: null,
+        options: [
+          { key: "a", text: "Prescious" },
+          { key: "b", text: "Exaggerate" },
+          { key: "c", text: "Omniscious" },
+          { key: "d", text: "Exhilarate" }
+        ],
+        correctKey: "a",
+        explanation: "‘Precious’ is the correct spelling (Prescious is incorrect)."
+      },
+      {
+        id: 134,
+        prompt: "Select the correct spelt biological term to fill in the blank.",
+        context: "The transport of nutrients and oxygen to different parts of the body takes place through the _______ system.",
+        options: [
+          { key: "a", text: "Respiratry" },
+          { key: "b", text: "Digastive" },
+          { key: "c", text: "Circulatory" },
+          { key: "d", text: "Excratery" }
+        ],
+        correctKey: "c",
+        explanation: "‘Circulatory’ is the correct spelling."
+      },
+      {
+        id: 135,
+        prompt: "Select the correct spelling of a word meaning 'the quality or state of being similar to something'.",
+        context: null,
+        options: [
+          { key: "a", text: "Similitude" },
+          { key: "b", text: "Similitiude" },
+          { key: "c", text: "Simillitude" },
+          { key: "d", text: "Similtude" }
+        ],
+        correctKey: "a",
+        explanation: "‘Similitude’ is the correct spelling."
+      },
+      {
+        id: 136,
+        prompt: "Select the correct spelling to fill in the blank.",
+        context: "Her perseverance through countless setbacks was truly ______, reminding everyone that quiet determination can achieve remarkable things.",
+        options: [
+          { key: "a", text: "Inspirational" },
+          { key: "b", text: "Inspirrational" },
+          { key: "c", text: "Inspiraitional" },
+          { key: "d", text: "Inspiritional" }
+        ],
+        correctKey: "a",
+        explanation: "‘Inspirational’ is the correct spelling."
+      },
+      {
+        id: 137,
+        prompt: "Which is the correct spelling of a punctuation mark?",
+        context: null,
+        options: [
+          { key: "a", text: "Parenthesis" },
+          { key: "b", text: "Paranthesis" },
+          { key: "c", text: "Parenthesys" },
+          { key: "d", text: "Parenthisis" }
+        ],
+        correctKey: "a",
+        explanation: "‘Parenthesis’ is the correct spelling."
+      },
+      {
+        id: 138,
+        prompt: "Select the incorrect spelling from the highlighted words.",
+        context: "The sudden migration of thousands of butterflies across the valley was such a breathtaking phenomenon that even seasoned naturalists paused their work to marvel at the delhicate, swirling patterns drifting across the morning sky.",
+        options: [
+          { key: "a", text: "migration" },
+          { key: "b", text: "butterflies" },
+          { key: "c", text: "naturalists" },
+          { key: "d", text: "delhicate" }
+        ],
+        correctKey: "d",
+        explanation: "‘Delicate’ is the correct spelling (no 'h')."
+      },
+      {
+        id: 139,
+        prompt: "Choose the option that completes the sentence using the correct spelling.",
+        context: "The ____ discussions laid the groundwork for the major treaty negotiations.",
+        options: [
+          { key: "a", text: "Preliminary" },
+          { key: "b", text: "Prelimenary" },
+          { key: "c", text: "Preleminary" },
+          { key: "d", text: "Prelimanary" }
+        ],
+        correctKey: "a",
+        explanation: "‘Preliminary’ is the correct spelling."
+      },
+      {
+        id: 140,
+        prompt: "Select the incorrect spelling from the highlighted words.",
+        context: "Faced with the dilemma of choosing between a secure path and an uncertain opportunity, she took a moment to wiegh her instincts against her fears.",
+        options: [
+          { key: "a", text: "choosing" },
+          { key: "b", text: "uncertain" },
+          { key: "c", text: "wiegh" },
+          { key: "d", text: "instincts" }
+        ],
+        correctKey: "c",
+        explanation: "‘Weigh’ is the correct spelling."
+      },
+      {
+        id: 141,
+        prompt: "Select the correct spelling to fill in the blank.",
+        context: "After months of ___waiting and repeated delays, the health centre announced that everyone in the district would at last have access to the much-needed vaccine.",
+        options: [
+          { key: "a", text: "Anxious" },
+          { key: "b", text: "Anxeous" },
+          { key: "c", text: "Anxcious" },
+          { key: "d", text: "Anxous" }
+        ],
+        correctKey: "a",
+        explanation: "‘Anxious’ is the correct spelling."
+      },
+      {
+        id: 142,
+        prompt: "Select the correct spelling to fill in the blank.",
+        context: "It seemed sensible to delay the project until a more feasible plan could be _____.",
+        options: [
+          { key: "a", text: "Developed" },
+          { key: "b", text: "Develpoed" },
+          { key: "c", text: "Develloped" },
+          { key: "d", text: "Developped" }
+        ],
+        correctKey: "a",
+        explanation: "‘Developed’ is the correct spelling."
+      },
+      {
+        id: 143,
+        prompt: "Identify the sentence that contains a spelling error.",
+        context: null,
+        options: [
+          { key: "a", text: "The committee requested a comprehensive review of the draft policy." },
+          { key: "b", text: "The researchers conducted a comparative study across several regions." },
+          { key: "c", text: "The professor specialised in epistemology, exploring how humans distinguish truth from belief." },
+          { key: "d", text: "The archaeologists examined several artifects recovered from the ancient site." }
+        ],
+        correctKey: "d",
+        explanation: "‘Artifacts’ (or Artefacts) is the correct spelling; 'artifects' is wrong."
+      },
+      {
+        id: 144,
+        prompt: "Identify the sentence that contains a spelling error.",
+        context: null,
+        options: [
+          { key: "a", text: "The lake looked calm in the early morning light." },
+          { key: "b", text: "The report was based on reliable data." },
+          { key: "c", text: "The museum received several ancient manuscipts." },
+          { key: "d", text: "She perceived a change in his voice." }
+        ],
+        correctKey: "c",
+        explanation: "‘Manuscripts’ is the correct spelling (missing 'r' in manuscipts)."
+      },
+      {
+        id: 145,
+        prompt: "Identify the sentence that contains a spelling error.",
+        context: null,
+        options: [
+          { key: "a", text: "The company's financial statements provided a clear overview of its economic health." },
+          { key: "b", text: "Raising funds for a business venture by selling equity or debt instruments is also known as capitalization." },
+          { key: "c", text: "The subjenctive mood is used for expressions of wishes, recommendations, or hypothetical situations." },
+          { key: "d", text: "A gerund functions as a noun, typically ending in -ing, like 'swimming' or 'reading'." }
+        ],
+        correctKey: "c",
+        explanation: "‘Subjunctive’ is the correct spelling (subjenctive is incorrect)."
+      },
+      {
+        id: 146,
+        prompt: "Select the correct spelling of the highlighted word in the given sentence.",
+        context: "She pursued her studies with remarkable debtermenation, even though she was increasingly impecunious toward the end of the year.",
+        options: [
+          { key: "a", text: "Dietermination" },
+          { key: "b", text: "determination" },
+          { key: "c", text: "determanation" },
+          { key: "d", text: "debtermination" }
+        ],
+        correctKey: "b",
+        explanation: "‘Determination’ is the correct spelling."
+      },
+      {
+        id: 147,
+        prompt: "Identify the sentence that contains a spelling error.",
+        context: null,
+        options: [
+          { key: "a", text: "Her response was unequivocal, leaving no room for doubt." },
+          { key: "b", text: "The team prepared a detailed programme for the event." },
+          { key: "c", text: "The witness gave a clear and coherrent account of the incident." },
+          { key: "d", text: "The hall echoed with soft music during the evening." }
+        ],
+        correctKey: "c",
+        explanation: "‘Coherent’ is the correct spelling (coherrent has an extra 'r')."
+      },
+      {
+        id: 148,
+        prompt: "Select the incorrectly spelt word.",
+        context: null,
+        options: [
+          { key: "a", text: "Psychology" },
+          { key: "b", text: "Triumphant" },
+          { key: "c", text: "Physiological" },
+          { key: "d", text: "Syberitic" }
+        ],
+        correctKey: "d",
+        explanation: "‘Sybaritic’ is the correct spelling (referring to fondness for sensuous luxury)."
+      },
+      {
+        id: 149,
+        prompt: "Identify the misspelt word:",
+        context: null,
+        options: [
+          { key: "a", text: "Demagogy" },
+          { key: "b", text: "Anthropology" },
+          { key: "c", text: "Angiography" },
+          { key: "d", text: "Angeography" }
+        ],
+        correctKey: "d",
+        explanation: "‘Angiography’ is the correct spelling; 'Angeography' is misspelled."
+      },
+      {
+        id: 150,
+        prompt: "Which of the following is incorrectly spelled?",
+        context: null,
+        options: [
+          { key: "a", text: "iniquitous" },
+          { key: "b", text: "bourbonism" },
+          { key: "c", text: "deliquesence" },
+          { key: "d", text: "oligopoly" }
+        ],
+        correctKey: "c",
+        explanation: "‘Deliquescence’ is the correct spelling (requires 'scence')."
+      },
+      {
+        id: 151,
+        prompt: "Select the correctly spelt word meaning ‘a person inclined to question or doubt accepted opinions.’",
+        context: null,
+        options: [
+          { key: "a", text: "Prosthatic" },
+          { key: "b", text: "Sceptic" },
+          { key: "c", text: "Anaestesia" },
+          { key: "d", text: "Athletik" }
+        ],
+        correctKey: "b",
+        explanation: "‘Sceptic’ (or skeptic) is the correctly spelt word."
+      },
+      {
+        id: 152,
+        prompt: "Identify the misspelt word:",
+        context: null,
+        options: [
+          { key: "a", text: "Rheumatics" },
+          { key: "b", text: "Tautomerisim" },
+          { key: "c", text: "Imperialism" },
+          { key: "d", text: "Conviction" }
+        ],
+        correctKey: "b",
+        explanation: "‘Tautomerism’ is the correct spelling (no extra 'i' before 'sm')."
+      },
+      {
+        id: 153,
+        prompt: "Select the option which contains an incorrect spelling.",
+        context: null,
+        options: [
+          { key: "a", text: "Darwinism" },
+          { key: "b", text: "Fluoresence" },
+          { key: "c", text: "Monopoly" },
+          { key: "d", text: "Iniquitous" }
+        ],
+        correctKey: "b",
+        explanation: "‘Fluorescence’ is the correct spelling."
+      },
+      {
+        id: 154,
+        prompt: "Select the correctly spelt word to fill in the blank.",
+        context: "He adopted an ascetic lifestyle, choosing simple meals and quiet ______ to focus on inner discipline.",
+        options: [
+          { key: "a", text: "Solitude" },
+          { key: "b", text: "Solidtube" },
+          { key: "c", text: "Solotude" },
+          { key: "d", text: "Solutide" }
+        ],
+        correctKey: "a",
+        explanation: "‘Solitude’ is the correct spelling."
+      },
+      {
+        id: 155,
+        prompt: "Select the correct spelling to fill in the blank.",
+        context: "Her approach to community work reflected strong allocentrism, as she consistently prioritised the needs and ______ of those around her.",
+        options: [
+          { key: "a", text: "viewpoints" },
+          { key: "b", text: "viapoints" },
+          { key: "c", text: "weyoupoints" },
+          { key: "d", text: "voyapants" }
+        ],
+        correctKey: "a",
+        explanation: "‘Viewpoints’ is the correct spelling."
+      },
+      {
+        id: 156,
+        prompt: "Select the incorrectly spelt word.",
+        context: null,
+        options: [
+          { key: "a", text: "Hedonist" },
+          { key: "b", text: "Convalescence" },
+          { key: "c", text: "Anaphylaxis" },
+          { key: "d", text: "Wanquish" }
+        ],
+        correctKey: "d",
+        explanation: "‘Vanquish’ is the correct spelling (spelled with 'V', not 'W')."
+      },
+      {
+        id: 157,
+        prompt: "Select the correctly spelt word meaning 'a person who secretly penetrates a group or organisation, especially in order to obtain information'.",
+        context: null,
+        options: [
+          { key: "a", text: "Infiltrator" },
+          { key: "b", text: "Infiltraitor" },
+          { key: "c", text: "Infilltrator" },
+          { key: "d", text: "Infiltrater" }
+        ],
+        correctKey: "a",
+        explanation: "‘Infiltrator’ is the correct spelling."
+      },
+      {
+        id: 158,
+        prompt: "Identify the misspelt word:",
+        context: null,
+        options: [
+          { key: "a", text: "Vicissitude" },
+          { key: "b", text: "Colonialism" },
+          { key: "c", text: "Enantiosamy" },
+          { key: "d", text: "Conceptuality" }
+        ],
+        correctKey: "c",
+        explanation: "‘Enantiosemy’ is the correct spelling (spelled with 'semsy', meaning words with contradictory meanings)."
+      },
+      {
+        id: 159,
+        prompt: "Select the incorrectly spelt word from the underlined words.",
+        context: "Her assesment of the proposal appeared balanced at first, but a closer look revealed a distinctly partisan tone favouring one side.",
+        options: [
+          { key: "a", text: "assesment" },
+          { key: "b", text: "proposal" },
+          { key: "c", text: "revealed" },
+          { key: "d", text: "partisan" }
+        ],
+        correctKey: "a",
+        explanation: "‘Assessment’ is the correct spelling (requires double 'ss' twice)."
+      },
+      {
+        id: 160,
+        prompt: "Choose the correctly spelled word to fill in the blank.",
+        context: "The old lighthouse keeper chose to ______ himself from the bustling town.",
+        options: [
+          { key: "a", text: "seclude" },
+          { key: "b", text: "seclued" },
+          { key: "c", text: "seclud" },
+          { key: "d", text: "secclude" }
+        ],
+        correctKey: "a",
+        explanation: "‘Seclude’ is the correct spelling."
+      }
+    ];
+
+    let currentIndex = 0;
+    let userAnswers = {}; // map of index -> { selectedKey, isCorrect }
+    let currentFilter = 'all';
+
+    // DOM Elements
+    const currentQNumEl = document.getElementById("currentQNum");
+    const totalQNumEl = document.getElementById("totalQNum");
+    const actualQIdEl = document.getElementById("actualQId");
+    const progressBarEl = document.getElementById("progressBar");
+    const headerCorrectEl = document.getElementById("headerCorrectCount");
+    const headerIncorrectEl = document.getElementById("headerIncorrectCount");
+
+    const quizViewEl = document.getElementById("quizView");
+    const resultsViewEl = document.getElementById("resultsView");
+    const questionPromptEl = document.getElementById("questionPrompt");
+    const contextBoxEl = document.getElementById("contextBox");
+    const contextTextEl = document.getElementById("contextText");
+    const optionsGridEl = document.getElementById("optionsGrid");
+
+    const feedbackBannerEl = document.getElementById("feedbackBanner");
+    const feedbackContentEl = document.getElementById("feedbackContent");
+    const feedbackIconEl = document.getElementById("feedbackIcon");
+    const feedbackTextEl = document.getElementById("feedbackText");
+    const nextBtnEl = document.getElementById("nextBtn");
+    const nextBtnLabelEl = document.getElementById("nextBtnLabel");
+
+    const restartQuizBtnEl = document.getElementById("restartQuizBtn");
+    const resPercentageEl = document.getElementById("resPercentage");
+    const resCorrectEl = document.getElementById("resCorrect");
+    const resIncorrectEl = document.getElementById("resIncorrect");
+    const resTotalEl = document.getElementById("resTotal");
+    const reviewItemsListEl = document.getElementById("reviewItemsList");
+    const reviewFilterNoticeEl = document.getElementById("reviewFilterNotice");
+    const showAllBtn = document.getElementById("showAllBtn");
+    const showIncorrectBtn = document.getElementById("showIncorrectBtn");
+
+    const themeToggleBtn = document.getElementById("themeToggleBtn");
+    const sunIcon = document.getElementById("sunIcon");
+    const moonIcon = document.getElementById("moonIcon");
+
+    function applyTheme(isDark) {
+      if (isDark) {
+        document.documentElement.classList.add('dark');
+        sunIcon.classList.remove('hidden');
+        moonIcon.classList.add('hidden');
+      } else {
+        document.documentElement.classList.remove('dark');
+        sunIcon.classList.add('hidden');
+        moonIcon.classList.remove('opacity-0', 'hidden');
+      }
+    }
+
+    // Default to dark or user system preference
+    const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    applyTheme(prefersDark);
+
+    themeToggleBtn.addEventListener("click", () => {
+      const isCurrentlyDark = document.documentElement.classList.contains("dark");
+      applyTheme(!isCurrentlyDark);
+    });
+
+    function loadQuestion(index) {
+      const q = quizData[index];
+      const isAnswered = userAnswers.hasOwnProperty(index);
+
+      // Top progress indicators
+      currentQNumEl.textContent = index + 1;
+      totalQNumEl.textContent = quizData.length;
+      actualQIdEl.textContent = q.id;
+      const progressPercent = ((index + 1) / quizData.length) * 100;
+      progressBarEl.style.width = `${progressPercent}%`;
+
+      // Question prompt & context
+      questionPromptEl.textContent = `Q.${q.id}. ${q.prompt}`;
+      
+      if (q.context) {
+        contextBoxEl.classList.remove("hidden");
+        contextTextEl.textContent = `"${q.context}"`;
+      } else {
+        contextBoxEl.classList.add("hidden");
+      }
+
+      // Reset feedback and action button
+      feedbackBannerEl.classList.remove("opacity-100");
+      feedbackBannerEl.classList.add("opacity-0");
+
+      if (index === quizData.length - 1) {
+        nextBtnLabelEl.textContent = "Finish Quiz";
+      } else {
+        nextBtnLabelEl.textContent = "Next";
+      }
+
+      // Reset Next button state
+      if (!isAnswered) {
+        nextBtnEl.disabled = true;
+        nextBtnEl.className = "px-4 py-1.5 sm:px-5 sm:py-2 rounded-lg font-bold text-xs sm:text-sm shadow-sm transition-all duration-150 flex items-center gap-1.5 bg-slate-200 text-slate-400 dark:bg-slate-800 dark:text-slate-600 cursor-not-allowed";
+      } else {
+        enableNextButton();
+      }
+
+      // Render Options
+      optionsGridEl.innerHTML = "";
+      
+      // Auto-layout: 2 options (like Q130) or 4 options
+      if (q.options.length <= 2) {
+        optionsGridEl.className = "grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3 max-w-lg mx-auto w-full";
+      } else {
+        optionsGridEl.className = "grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-2.5";
+      }
+
+      q.options.forEach(opt => {
+        const btn = document.createElement("button");
+        btn.dataset.key = opt.key;
+        btn.className = "group relative flex items-center gap-2.5 p-2 sm:p-2.5 rounded-lg border text-left text-xs sm:text-sm transition-all duration-150 outline-none bg-white dark:bg-slate-850 hover:bg-slate-50 dark:hover:bg-slate-800 border-slate-200 dark:border-slate-700/80 shadow-2xs";
+
+        const badge = document.createElement("span");
+        badge.className = "w-5 h-5 sm:w-6 sm:h-6 rounded-md font-bold text-[10px] sm:text-xs flex items-center justify-center shrink-0 uppercase bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700 transition-colors";
+        badge.textContent = opt.key;
+
+        const textSpan = document.createElement("span");
+        textSpan.className = "font-medium text-slate-800 dark:text-slate-200 leading-snug break-words flex-1";
+        textSpan.textContent = opt.text;
+
+        btn.appendChild(badge);
+        btn.appendChild(textSpan);
+
+        // If already answered previously
+        if (isAnswered) {
+          applyOptionStyle(btn, opt.key, q.correctKey, userAnswers[index].selectedKey);
+          btn.disabled = true;
+        } else {
+          btn.addEventListener("click", () => handleSelectOption(opt.key));
+        }
+
+        optionsGridEl.appendChild(btn);
+      });
+
+      // If already answered, show feedback right away
+      if (isAnswered) {
+        showFeedback(userAnswers[index].isCorrect, q.explanation);
+      }
+    }
+
+    function handleSelectOption(selectedKey) {
+      const q = quizData[currentIndex];
+      const isCorrect = (selectedKey === q.correctKey);
+
+      // Save user response
+      userAnswers[currentIndex] = {
+        selectedKey: selectedKey,
+        isCorrect: isCorrect
+      };
+
+      // Update Header Live Counters
+      updateLiveCounts();
+
+      // Style all option buttons
+      const buttons = optionsGridEl.querySelectorAll("button");
+      buttons.forEach(btn => {
+        btn.disabled = true;
+        applyOptionStyle(btn, btn.dataset.key, q.correctKey, selectedKey);
+      });
+
+      // Reveal explanation banner
+      showFeedback(isCorrect, q.explanation);
+
+      // Activate Next Button
+      enableNextButton();
+    }
+
+    function applyOptionStyle(btn, optKey, correctKey, selectedKey) {
+      const badge = btn.querySelector("span:first-child");
+      
+      if (optKey === correctKey) {
+        // Correct Option: Vibrant Green
+        btn.className = "group relative flex items-center gap-2.5 p-2 sm:p-2.5 rounded-lg border text-left text-xs sm:text-sm transition-all duration-150 outline-none bg-emerald-500/10 dark:bg-emerald-950/40 border-emerald-500 text-emerald-900 dark:text-emerald-200 font-semibold shadow-xs";
+        badge.className = "w-5 h-5 sm:w-6 sm:h-6 rounded-md font-bold text-[10px] sm:text-xs flex items-center justify-center shrink-0 uppercase bg-emerald-600 text-white border-transparent";
+        badge.innerHTML = "✓";
+      } else if (optKey === selectedKey && selectedKey !== correctKey) {
+        // Incorrectly Selected Option: Red
+        btn.className = "group relative flex items-center gap-2.5 p-2 sm:p-2.5 rounded-lg border text-left text-xs sm:text-sm transition-all duration-150 outline-none bg-rose-500/10 dark:bg-rose-950/40 border-rose-500 text-rose-900 dark:text-rose-200 font-semibold shadow-xs";
+        badge.className = "w-5 h-5 sm:w-6 sm:h-6 rounded-md font-bold text-[10px] sm:text-xs flex items-center justify-center shrink-0 uppercase bg-rose-600 text-white border-transparent";
+        badge.innerHTML = "✗";
+      } else {
+        // Neutral unselected options
+        btn.className = "group relative flex items-center gap-2.5 p-2 sm:p-2.5 rounded-lg border text-left text-xs sm:text-sm transition-all duration-150 outline-none opacity-40 bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 text-slate-400";
+      }
+    }
+
+    function showFeedback(isCorrect, explanation) {
+      feedbackBannerEl.classList.remove("opacity-0");
+      feedbackBannerEl.classList.add("opacity-100");
+
+      if (isCorrect) {
+        feedbackContentEl.className = "flex items-center gap-2 text-xs sm:text-sm font-semibold text-emerald-700 dark:text-emerald-400 truncate";
+        feedbackIconEl.textContent = "✓ Correct!";
+        feedbackTextEl.textContent = explanation;
+      } else {
+        feedbackContentEl.className = "flex items-center gap-2 text-xs sm:text-sm font-semibold text-rose-700 dark:text-rose-400 truncate";
+        feedbackIconEl.textContent = "✗ Incorrect!";
+        feedbackTextEl.textContent = explanation;
+      }
+    }
+
+    function enableNextButton() {
+      nextBtnEl.disabled = false;
+      nextBtnEl.className = "px-4 py-1.5 sm:px-5 sm:py-2 rounded-lg font-bold text-xs sm:text-sm shadow-md transition-all duration-150 flex items-center gap-1.5 bg-indigo-600 hover:bg-indigo-700 active:scale-95 text-white cursor-pointer";
+    }
+
+    function updateLiveCounts() {
+      let correct = 0;
+      let incorrect = 0;
+      Object.values(userAnswers).forEach(ans => {
+        if (ans.isCorrect) correct++;
+        else incorrect++;
+      });
+      headerCorrectEl.textContent = `✓ ${correct}`;
+      headerIncorrectEl.textContent = `✗ ${incorrect}`;
+    }
+
+    nextBtnEl.addEventListener("click", () => {
+      if (currentIndex < quizData.length - 1) {
+        currentIndex++;
+        loadQuestion(currentIndex);
+      } else {
+        showResults();
+      }
+    });
+
+    function showResults() {
+      quizViewEl.classList.add("hidden");
+      resultsViewEl.classList.remove("hidden");
+
+      let correctCount = 0;
+      let incorrectCount = 0;
+
+      quizData.forEach((q, idx) => {
+        const ans = userAnswers[idx];
+        if (ans && ans.isCorrect) {
+          correctCount++;
+        } else {
+          incorrectCount++;
+        }
+      });
+
+      const total = quizData.length;
+      const percentage = Math.round((correctCount / total) * 100);
+
+      resPercentageEl.textContent = `${percentage}%`;
+      resCorrectEl.textContent = correctCount;
+      resIncorrectEl.textContent = incorrectCount;
+      resTotalEl.textContent = total;
+
+      renderReviewList();
+    }
+
+    function renderReviewList() {
+      reviewItemsListEl.innerHTML = "";
+      
+      let renderedCount = 0;
+
+      quizData.forEach((q, idx) => {
+        const ans = userAnswers[idx] || { selectedKey: null, isCorrect: false };
+        
+        if (currentFilter === 'incorrect' && ans.isCorrect) {
+          return;
+        }
+
+        renderedCount++;
+        const card = document.createElement("div");
+        card.className = `p-3 rounded-lg border text-xs sm:text-sm transition-colors ${
+          ans.isCorrect 
+            ? 'bg-slate-50/70 dark:bg-slate-800/40 border-slate-200 dark:border-slate-800' 
+            : 'bg-rose-50/40 dark:bg-rose-950/20 border-rose-200 dark:border-rose-900/50'
+        }`;
+
+        // Question header inside card
+        let userChosenText = "Not Answered";
+        if (ans.selectedKey) {
+          const matchedOpt = q.options.find(o => o.key === ans.selectedKey);
+          userChosenText = `(${ans.selectedKey.toUpperCase()}) ${matchedOpt ? matchedOpt.text : ''}`;
+        }
+
+        const correctOpt = q.options.find(o => o.key === q.correctKey);
+        const correctText = `(${q.correctKey.toUpperCase()}) ${correctOpt ? correctOpt.text : ''}`;
+
+        card.innerHTML = `
+          <div class="flex items-start justify-between gap-2 mb-1.5">
+            <span class="font-bold text-slate-900 dark:text-slate-100 text-xs sm:text-sm">
+              Q.${q.id}. ${q.prompt}
+            </span>
+            <span class="text-[10px] uppercase font-bold px-1.5 py-0.5 rounded shrink-0 ${
+              ans.isCorrect 
+                ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/50 dark:text-emerald-300' 
+                : 'bg-rose-100 text-rose-700 dark:bg-rose-900/50 dark:text-rose-300'
+            }">
+              ${ans.isCorrect ? 'Correct' : 'Incorrect'}
+            </span>
+          </div>
+
+          ${q.context ? `
+            <div class="mb-2 p-1.5 rounded bg-slate-100 dark:bg-slate-800 text-[11px] text-slate-600 dark:text-slate-300 italic border-l-2 border-indigo-400">
+              "${q.context}"
+            </div>
+          ` : ''}
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-1.5 my-1.5 text-xs">
+            <div class="p-1.5 rounded bg-white dark:bg-slate-900 border ${ans.isCorrect ? 'border-slate-200 dark:border-slate-800' : 'border-rose-200 dark:border-rose-900'}">
+              <span class="text-[10px] text-slate-400 block font-semibold uppercase">Your Answer:</span>
+              <span class="${ans.isCorrect ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400'} font-semibold">${userChosenText}</span>
+            </div>
+            <div class="p-1.5 rounded bg-white dark:bg-slate-900 border border-emerald-200 dark:border-emerald-900">
+              <span class="text-[10px] text-slate-400 block font-semibold uppercase">Correct Answer:</span>
+              <span class="text-emerald-600 dark:text-emerald-400 font-semibold">${correctText}</span>
+            </div>
+          </div>
+
+          <p class="text-[11px] text-slate-500 dark:text-slate-400 mt-1">
+            <strong class="text-slate-600 dark:text-slate-300">Explanation:</strong> ${q.explanation}
+          </p>
+        `;
+
+        reviewItemsListEl.appendChild(card);
+      });
+
+      if (renderedCount === 0) {
+        reviewItemsListEl.innerHTML = `
+          <div class="text-center py-6 text-slate-500 dark:text-slate-400 text-xs">
+            🎉 Outstanding! You answered every question correctly!
+          </div>
+        `;
+      }
+    }
+
+    // Filter Buttons
+    showAllBtn.addEventListener("click", () => {
+      currentFilter = 'all';
+      showAllBtn.className = "px-2 py-0.5 rounded border border-indigo-500 bg-indigo-50 dark:bg-indigo-900/40 text-indigo-700 dark:text-indigo-300 font-semibold";
+      showIncorrectBtn.className = "px-2 py-0.5 rounded border border-slate-300 dark:border-slate-700 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800";
+      renderReviewList();
+    });
+
+    showIncorrectBtn.addEventListener("click", () => {
+      currentFilter = 'incorrect';
+      showIncorrectBtn.className = "px-2 py-0.5 rounded border border-indigo-500 bg-indigo-50 dark:bg-indigo-900/40 text-indigo-700 dark:text-indigo-300 font-semibold";
+      showAllBtn.className = "px-2 py-0.5 rounded border border-slate-300 dark:border-slate-700 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800";
+      renderReviewList();
+    });
+
+    restartQuizBtnEl.addEventListener("click", () => {
+      currentIndex = 0;
+      userAnswers = {};
+      currentFilter = 'all';
+      headerCorrectEl.textContent = "✓ 0";
+      headerIncorrectEl.textContent = "✗ 0";
+      resultsViewEl.classList.add("hidden");
+      quizViewEl.classList.remove("hidden");
+      loadQuestion(0);
+    });
+
+    // Keyboard Accessibility Support (1-4 or A-D for options, Enter/Space for Next)
+    window.addEventListener("keydown", (e) => {
+      if (resultsViewEl.classList.contains("hidden")) {
+        const key = e.key.toLowerCase();
+        if (['a', 'b', 'c', 'd'].includes(key)) {
+          if (!userAnswers.hasOwnProperty(currentIndex)) {
+            const btn = optionsGridEl.querySelector(`button[data-key="${key}"]`);
+            if (btn) btn.click();
+          }
+        } else if (e.key === "Enter" || e.key === " ") {
+          if (!nextBtnEl.disabled) {
+            e.preventDefault();
+            nextBtnEl.click();
+          }
+        }
+      }
+    });
+
+    // Initialize first question on load
+    window.addEventListener("DOMContentLoaded", () => {
+      loadQuestion(0);
+    });
+  </script>
+</body>
+</html>
