@@ -1,0 +1,1040 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>English Spelling Mastery - Exam Prep</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+  
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace']
+          },
+          colors: {
+            brand: {
+              50: '#eef2ff',
+              100: '#e0e7ff',
+              500: '#6366f1',
+              600: '#4f46e5',
+              700: '#4338ca',
+              900: '#312e81'
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* Viewport-locked app styling */
+    html, body {
+      height: 100%;
+      height: 100dvh;
+      overflow: hidden;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+    
+    /* Custom compact scrollbar for review modals or result lists */
+    ::-webkit-scrollbar {
+      width: 5px;
+      height: 5px;
+    }
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(156, 163, 175, 0.4);
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(156, 163, 175, 0.7);
+    }
+    
+    .pulse-soft {
+      animation: pulseSoft 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    }
+    @keyframes pulseSoft {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.88; transform: scale(1.015); }
+    }
+  </style>
+</head>
+
+<body class="bg-slate-100 text-slate-800 dark:bg-slate-950 dark:text-slate-100 font-sans transition-colors duration-200 antialiased h-[100dvh] flex flex-col justify-between">
+
+  <header class="w-full bg-white/90 dark:bg-slate-900/90 backdrop-blur border-b border-slate-200 dark:border-slate-800 px-3 sm:px-6 py-2.5 flex items-center justify-between shrink-0 shadow-sm z-20">
+    <div class="flex items-center gap-2.5">
+      <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-indigo-600 to-violet-500 text-white flex items-center justify-center font-black text-lg shadow-md shadow-indigo-500/20">
+        E
+      </div>
+      <div>
+        <h1 class="text-xs font-bold tracking-wider uppercase text-indigo-600 dark:text-indigo-400">Exam Simulator</h1>
+        <div class="text-sm font-semibold tracking-tight text-slate-800 dark:text-white leading-tight">Spelling & Vocabulary</div>
+      </div>
+    </div>
+
+    <!-- Center Progress Badges -->
+    <div class="flex items-center gap-2 sm:gap-4">
+      <!-- Question progress badge -->
+      <div class="bg-slate-100 dark:bg-slate-800 px-2.5 py-1 rounded-lg border border-slate-200 dark:border-slate-700 text-xs font-medium flex items-center gap-1.5">
+        <span class="text-slate-400">Q:</span>
+        <span id="current-q-index" class="font-bold text-indigo-600 dark:text-indigo-400">1</span>
+        <span class="text-slate-400">/</span>
+        <span id="total-q-count" class="text-slate-600 dark:text-slate-300">40</span>
+      </div>
+
+      <!-- Live timer badge -->
+      <div class="bg-slate-100 dark:bg-slate-800 px-2.5 py-1 rounded-lg border border-slate-200 dark:border-slate-700 text-xs font-mono font-semibold flex items-center gap-1.5 text-slate-700 dark:text-slate-300">
+        <svg class="w-3.5 h-3.5 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+        </svg>
+        <span id="quiz-timer">00:00</span>
+      </div>
+
+      <!-- Quick Jump Navigator Modal Trigger -->
+      <button id="open-grid-btn" title="View Question Palette" class="p-1.5 rounded-lg border border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 transition text-slate-600 dark:text-slate-300">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/>
+        </svg>
+      </button>
+
+      <!-- Theme Switcher -->
+      <button id="theme-toggle" class="p-1.5 rounded-lg border border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 transition text-slate-600 dark:text-slate-300">
+        <svg id="theme-sun" class="w-4 h-4 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+        </svg>
+        <svg id="theme-moon" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+        </svg>
+      </button>
+    </div>
+  </header>
+
+  <!-- Progress Bar Line -->
+  <div class="w-full bg-slate-200 dark:bg-slate-800 h-1 shrink-0">
+    <div id="top-progress-bar" class="bg-indigo-600 dark:bg-indigo-500 h-full transition-all duration-300 ease-out" style="width: 2.5%;"></div>
+  </div>
+
+  <main class="flex-1 max-w-4xl w-full mx-auto p-2.5 sm:p-4 flex flex-col justify-center min-h-0 overflow-hidden">
+    
+    <!-- Active Question View Container -->
+    <div id="quiz-view" class="w-full h-full max-h-[86vh] flex flex-col justify-between bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-xl p-3 sm:p-5 overflow-hidden transition-all duration-200">
+      
+      <!-- Top question info row -->
+      <div class="flex items-center justify-between pb-2 border-b border-slate-100 dark:border-slate-800 shrink-0">
+        <div class="flex items-center gap-2">
+          <span id="question-tag" class="px-2.5 py-0.5 text-xs font-semibold uppercase tracking-wider rounded-md bg-indigo-50 dark:bg-indigo-950/70 text-indigo-700 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-800">
+            Q.201
+          </span>
+          <span class="text-xs text-slate-400 font-medium">Single Choice Selection</span>
+        </div>
+        <div class="flex items-center gap-2 text-xs font-mono">
+          <span class="text-emerald-600 dark:text-emerald-400 font-bold" id="live-correct-count">✓ 0</span>
+          <span class="text-slate-300 dark:text-slate-700">|</span>
+          <span class="text-rose-600 dark:text-rose-400 font-bold" id="live-wrong-count">✕ 0</span>
+        </div>
+      </div>
+
+      <!-- Question Text Prompt Area -->
+      <div class="py-2.5 sm:py-3.5 shrink-0">
+        <div id="question-prompt" class="text-sm sm:text-base font-semibold text-slate-800 dark:text-slate-100 leading-snug">
+          <!-- Question text injected here -->
+        </div>
+
+        <!-- Optional Context Box for statements, sentences with underlined parts, or callouts -->
+        <div id="context-box" class="hidden mt-2 p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 text-xs sm:text-sm font-medium text-slate-700 dark:text-slate-200 leading-relaxed font-sans">
+          <!-- Formatted context / statements injected here -->
+        </div>
+      </div>
+
+      <!-- Interactive 4 Options Grid -->
+      <div id="options-grid" class="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-2.5 my-auto shrink-0">
+        <!-- 4 Option cards injected here dynamically -->
+      </div>
+
+      <!-- Feedback / Explanation Callout Box -->
+      <div id="explanation-box" class="hidden shrink-0 mt-2 p-2.5 sm:p-3 rounded-xl border transition-all duration-200 text-xs sm:text-sm">
+        <div class="flex items-start gap-2">
+          <div id="feedback-icon" class="w-4 h-4 mt-0.5 shrink-0"></div>
+          <div class="flex-1">
+            <div id="feedback-title" class="font-bold mb-0.5"></div>
+            <div id="feedback-explanation" class="text-slate-600 dark:text-slate-300 leading-relaxed font-medium"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Footer Control Actions (Prev, Skip/Palette, Next Button) -->
+      <div class="pt-2.5 mt-2 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between shrink-0">
+        <button id="prev-btn" class="px-3 sm:px-4 py-2 text-xs sm:text-sm font-semibold rounded-xl border border-slate-300 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition disabled:opacity-30 disabled:cursor-not-allowed flex items-center gap-1.5">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+          </svg>
+          <span>Previous</span>
+        </button>
+
+        <div class="flex items-center gap-2">
+          <button id="next-btn" class="px-5 sm:px-6 py-2 text-xs sm:text-sm font-bold rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white shadow-md shadow-indigo-600/25 active:scale-[0.98] transition flex items-center gap-2">
+            <span id="next-btn-text">Next Question</span>
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+            </svg>
+          </button>
+        </div>
+      </div>
+
+    </div>
+
+    <div id="results-view" class="hidden w-full h-full max-h-[86vh] flex flex-col justify-between bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-xl p-3 sm:p-5 overflow-hidden">
+      <div class="pb-2 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between shrink-0">
+        <div class="flex items-center gap-2">
+          <div class="w-7 h-7 rounded-lg bg-emerald-500 text-white flex items-center justify-center font-bold text-xs">✓</div>
+          <h2 class="text-base font-bold text-slate-800 dark:text-white">Exam Performance Report</h2>
+        </div>
+        <button id="restart-btn-top" class="text-xs font-semibold px-2.5 py-1 rounded-lg border border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 transition">
+          Restart Quiz
+        </button>
+      </div>
+
+      <!-- Quick Metrics Summary Cards -->
+      <div class="grid grid-cols-4 gap-2 sm:gap-3 py-3 shrink-0">
+        <div class="p-2 sm:p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-center">
+          <div class="text-[10px] sm:text-xs text-slate-500 dark:text-slate-400 font-semibold uppercase">Score</div>
+          <div id="res-score" class="text-base sm:text-xl font-black text-indigo-600 dark:text-indigo-400">0/40</div>
+        </div>
+        <div class="p-2 sm:p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-center">
+          <div class="text-[10px] sm:text-xs text-slate-500 dark:text-slate-400 font-semibold uppercase">Accuracy</div>
+          <div id="res-accuracy" class="text-base sm:text-xl font-black text-emerald-600 dark:text-emerald-400">0%</div>
+        </div>
+        <div class="p-2 sm:p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-center">
+          <div class="text-[10px] sm:text-xs text-slate-500 dark:text-slate-400 font-semibold uppercase">Time Taken</div>
+          <div id="res-time" class="text-base sm:text-xl font-black text-amber-600 dark:text-amber-400">00:00</div>
+        </div>
+        <div class="p-2 sm:p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-center">
+          <div class="text-[10px] sm:text-xs text-slate-500 dark:text-slate-400 font-semibold uppercase">Mistakes</div>
+          <div id="res-mistakes" class="text-base sm:text-xl font-black text-rose-600 dark:text-rose-400">0</div>
+        </div>
+      </div>
+
+      <!-- Incorrect Breakdown List (Scrollable only within its specific list container if many items) -->
+      <div class="flex-1 min-h-0 flex flex-col py-1">
+        <div class="flex items-center justify-between mb-1.5 shrink-0">
+          <span class="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">Detailed Review (Mistakes & Corrections)</span>
+          <span id="review-count-badge" class="text-xs font-medium text-slate-500">0 items</span>
+        </div>
+        <div id="review-list" class="flex-1 overflow-y-auto space-y-2 pr-1">
+          <!-- Injected dynamically -->
+        </div>
+      </div>
+
+      <!-- Results Footer Actions -->
+      <div class="pt-3 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between shrink-0">
+        <button id="review-all-btn" class="px-3 sm:px-4 py-2 text-xs font-semibold rounded-xl border border-slate-300 dark:border-slate-700 text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition">
+          Review All 40 Questions
+        </button>
+        <button id="restart-btn" class="px-5 sm:px-6 py-2 text-xs sm:text-sm font-bold rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white shadow-md shadow-indigo-600/25 transition">
+          Retake Quiz
+        </button>
+      </div>
+    </div>
+  </main>
+
+  <div id="palette-modal" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm hidden items-center justify-center p-3">
+    <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 w-full max-w-lg rounded-2xl p-4 shadow-2xl flex flex-col max-h-[80vh]">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800 shrink-0">
+        <h3 class="font-bold text-sm text-slate-800 dark:text-white">Question Navigator Palette</h3>
+        <button id="close-grid-btn" class="text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 p-1">✕</button>
+      </div>
+
+      <div class="py-2 flex items-center gap-3 text-xs shrink-0 font-medium">
+        <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-emerald-500 inline-block"></span> Correct</span>
+        <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-rose-500 inline-block"></span> Incorrect</span>
+        <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-slate-300 dark:bg-slate-700 inline-block"></span> Unanswered</span>
+      </div>
+
+      <div id="palette-grid" class="grid grid-cols-8 gap-2 overflow-y-auto py-2 pr-1 flex-1">
+        <!-- 40 Question pills injected here -->
+      </div>
+    </div>
+  </div>
+
+  <footer class="w-full bg-white/70 dark:bg-slate-900/70 border-t border-slate-200 dark:border-slate-800 px-4 py-1.5 text-[11px] text-slate-500 flex justify-between items-center shrink-0">
+    <div>English Spelling Prep &bull; SSC / Bank / Competitive Exam Module</div>
+    <div class="hidden sm:block font-mono">Use [1-4] keys for options, [Enter] for Next</div>
+  </footer>
+
+  <script>
+    // 40 Exam Questions Dataset Q.201 to Q.240
+    const questions = [
+      {
+        id: 201,
+        question: "Choose the correctly spelt word:",
+        context: null,
+        options: ["Supercede", "Supirsede", "Supersede", "Suppercede"],
+        correctIndex: 2, // (c)
+        correctLetter: "(c)",
+        explanation: "“Supersede” is the correct spelling. Note that it takes '-sede' from Latin supersedere, not '-cede'."
+      },
+      {
+        id: 202,
+        question: "Find the misspelt word.",
+        context: null,
+        options: ["Garrulous", "Grateful", "Guarantee", "Garulous"],
+        correctIndex: 3, // (d)
+        correctLetter: "(d)",
+        explanation: "“Garrulous” (double 'r') is correct; 'Garulous' is the misspelt word."
+      },
+      {
+        id: 203,
+        question: "Choose the correctly spelt word:",
+        context: null,
+        options: ["Magnanemous", "Magnanimus", "Magnanamous", "Magnanimous"],
+        correctIndex: 3, // (d)
+        correctLetter: "(d)",
+        explanation: "“Magnanimous” is the correct spelling (meaning generous or forgiving)."
+      },
+      {
+        id: 204,
+        question: "Choose the correct spelling for a word meaning 'not important'.",
+        context: null,
+        options: ["Triveal", "Trivial", "Triveel", "Triviel"],
+        correctIndex: 1, // (b)
+        correctLetter: "(b)",
+        explanation: "“Trivial” is the correct spelling."
+      },
+      {
+        id: 205,
+        question: "Identify the incorrect spelling.",
+        context: null,
+        options: ["Malfeasance", "Magnanimous", "Insatiable", "Perserverance"],
+        correctIndex: 3, // (d)
+        correctLetter: "(d)",
+        explanation: "The correct spelling is “Perseverance” (no 'r' between s and e)."
+      },
+      {
+        id: 206,
+        question: "Find the misspelt word.",
+        context: null,
+        options: ["Ubiquitous", "interference", "interrupt", "Ubiquitus"],
+        correctIndex: 3, // (d)
+        correctLetter: "(d)",
+        explanation: "“Ubiquitous” is the correct spelling; 'Ubiquitus' is misspelt."
+      },
+      {
+        id: 207,
+        question: "Choose the option that completes the sentence using the correct spelling.",
+        context: "It is my _____ that municipal employees handle their jobs with great professionalism.",
+        options: ["bilief", "beleif", "belief", "beleaf"],
+        correctIndex: 2, // (c)
+        correctLetter: "(c)",
+        explanation: "‘Belief’ is the correct noun spelling ('i' before 'e' except after 'c')."
+      },
+      {
+        id: 208,
+        question: "Which sentence contains a word that is spelled incorrectly?",
+        context: null,
+        options: [
+          "The children were fasinated by the glowing fireflies in the dark.",
+          "She was absolutely intrigued by the magician's clever tricks.",
+          "The audience sat still, completely hypnotized by the performance.",
+          "He explained the experiment in a way that was both clear and engaging."
+        ],
+        correctIndex: 0, // (a)
+        correctLetter: "(a)",
+        explanation: "In option (a), 'fasinated' is misspelt; the correct spelling is ‘Fascinated’."
+      },
+      {
+        id: 209,
+        question: "Which word is spelled wrongly?",
+        context: null,
+        options: ["Harass", "Government", "Calender", "Permanent"],
+        correctIndex: 2, // (c)
+        correctLetter: "(c)",
+        explanation: "‘Calendar’ (ending in -ar) is the correct spelling for a date chart; 'Calender' is incorrect in this context."
+      },
+      {
+        id: 210,
+        question: "Choose the correctly spelt word:",
+        context: null,
+        options: ["Embillish", "Imbellish", "Embellish", "Embelish"],
+        correctIndex: 2, // (c)
+        correctLetter: "(c)",
+        explanation: "‘Embellish’ (double 'l', starts with 'em-') is the correct spelling."
+      },
+      {
+        id: 211,
+        question: "Which sentence contains a word that is spelled incorrectly?",
+        context: null,
+        options: [
+          "His performance in the play was just mediocre.",
+          "She paid the tuition fee before the semester began.",
+          "They enjoyed a peaceful evening by the lake.",
+          "The view from the mountaintop was Tramendous"
+        ],
+        correctIndex: 3, // (d)
+        correctLetter: "(d)",
+        explanation: "‘Tremendous’ is the correct spelling; 'Tramendous' in option (d) is incorrect."
+      },
+      {
+        id: 212,
+        question: "Select the option with the incorrect spelling:",
+        context: null,
+        options: ["Obstinate", "Observence", "Occasional", "Odorous"],
+        correctIndex: 1, // (b)
+        correctLetter: "(b)",
+        explanation: "‘Observance’ (-ance, not -ence) is the correct spelling."
+      },
+      {
+        id: 213,
+        question: "Identify the incorrectly spelled word:",
+        context: null,
+        options: ["Hungery", "Hundred", "Hurdle", "Humour"],
+        correctIndex: 0, // (a)
+        correctLetter: "(a)",
+        explanation: "‘Hungry’ is the correct spelling (no 'e' before 'r')."
+      },
+      {
+        id: 214,
+        question: "Identify the incorrectly spelled word:",
+        context: null,
+        options: ["Irrelevent", "Irritable", "Irresponsible", "Irregular"],
+        correctIndex: 0, // (a)
+        correctLetter: "(a)",
+        explanation: "‘Irrelevant’ is the correct spelling (-ant, not -ent)."
+      },
+      {
+        id: 215,
+        question: "All criminal attitudes must be niped at the bud.",
+        context: "Identify the correct spelling of the underlined word: 'niped'",
+        options: ["Nipedd", "Nipped", "Nipeed", "Niiped"],
+        correctIndex: 1, // (b)
+        correctLetter: "(b)",
+        explanation: "‘Nipped’ (double 'p') is the correct spelling in the idiom 'nipped in the bud'."
+      },
+      {
+        id: 216,
+        question: "The trainer tried to guage the learners' understanding of the subject by asking several new questions.",
+        context: "Rectify the spelling of the underlined word: 'guage'",
+        options: ["Gaaug", "Gaugg", "Gauge", "Gaage"],
+        correctIndex: 2, // (c)
+        correctLetter: "(c)",
+        explanation: "‘Gauge’ is the correct spelling."
+      },
+      {
+        id: 217,
+        question: "Select the option with an incorrect spelling:",
+        context: null,
+        options: ["Apparent", "Practitionaire", "Recommend", "Memento"],
+        correctIndex: 1, // (b)
+        correctLetter: "(b)",
+        explanation: "‘Practitioner’ is the correct spelling; 'Practitionaire' is incorrect."
+      },
+      {
+        id: 218,
+        question: "Good characteristics are indispensible to succeed in life.",
+        context: "Choose the correct spelling of the underlined word: 'indispensible'",
+        options: ["Indispenscible", "Indispensable", "Indespensible", "Indespensable"],
+        correctIndex: 1, // (b)
+        correctLetter: "(b)",
+        explanation: "‘Indispensable’ ending with '-able' is the correct spelling."
+      },
+      {
+        id: 219,
+        question: "Replace the underlined word in the given sentence with its correctly spelt version:",
+        context: "I have been morning the death of my pet dog.",
+        options: ["mourning", "merning", "murning", "moruning"],
+        correctIndex: 0, // (a)
+        correctLetter: "(a)",
+        explanation: "‘Mourning’ (grieving the death) is the correct homophone and spelling."
+      },
+      {
+        id: 220,
+        question: "Select the option with the misspelled word:",
+        context: null,
+        options: ["Instinctual", "Intuition", "Initiative", "Implusive"],
+        correctIndex: 3, // (d)
+        correctLetter: "(d)",
+        explanation: "‘Impulsive’ is the correct spelling; 'Implusive' is misspelled."
+      },
+      {
+        id: 221,
+        question: "Find out the sentence with all words correctly spelt:",
+        context: "Prompt: He is wimsical by natur. No one can seek an explanation from him for his absurd atitude towards others.",
+        options: [
+          "He is wimsical by nature. No one can seek an explanation from him for his absurd attitude towards others.",
+          "He is whimsical by natur. No one can seek an explanation from him for his absurd attitude towards others.",
+          "He is whimsical by nature. No one can seek an explanation from him for his absurd atitude towards others.",
+          "He is whimsical by nature. No one can seek an explanation from him for his absurd attitude towards others."
+        ],
+        correctIndex: 3, // (d)
+        correctLetter: "(d)",
+        explanation: "Option (d) correctly spells 'whimsical', 'nature', and 'attitude'."
+      },
+      {
+        id: 222,
+        question: "Select the option that correctly rectifies the underlined spelling error:",
+        context: "The rainbow only appears after a hurican.",
+        options: ["hurrecane", "hurrecain", "hurrican", "hurricane"],
+        correctIndex: 3, // (d)
+        correctLetter: "(d)",
+        explanation: "‘Hurricane’ (double 'r', ends with '-ane') is the correct spelling."
+      },
+      {
+        id: 223,
+        question: "Rectify the following sentence by selecting the correct spelling of the underlined word:",
+        context: "Life is a collection of ephmeral moments.",
+        options: ["Epmeral", "Ephemeral", "Ephameral", "Ephemerl"],
+        correctIndex: 1, // (b)
+        correctLetter: "(b)",
+        explanation: "‘Ephemeral’ (meaning short-lived) is the correct spelling."
+      },
+      {
+        id: 224,
+        question: "Select the misspelt word from the given options:",
+        context: null,
+        options: ["Posthumous", "Extraneous", "Colloquiel", "Quiescent"],
+        correctIndex: 2, // (c)
+        correctLetter: "(c)",
+        explanation: "‘Colloquial’ (-ial, not -iel) is the correct spelling."
+      },
+      {
+        id: 225,
+        question: "The teacher assessed the student’s flyer for writing.",
+        context: "Select the correct spelling of the intended word meaning innate talent/aptitude:",
+        options: ["flair", "flare", "fire", "friar"],
+        correctIndex: 0, // (a)
+        correctLetter: "(a)",
+        explanation: "‘Flair’ means a special or instinctive aptitude or ability for doing something well."
+      },
+      {
+        id: 226,
+        question: "Select the correct spelling from the given options to fill in the blank:",
+        context: "They may vary and seem very different, but they are not ________.",
+        options: ["irreconcilable", "irrecincilable", "irrecosilable", "ireconcilable"],
+        correctIndex: 0, // (a)
+        correctLetter: "(a)",
+        explanation: "‘Irreconcilable’ (double 'r', '-conci-', '-able') is the correct spelling."
+      },
+      {
+        id: 227,
+        question: "Select the misspelt word:",
+        context: null,
+        options: ["Arrangement", "Kerbstone", "Inflamous", "Subjugator"],
+        correctIndex: 2, // (c)
+        correctLetter: "(c)",
+        explanation: "‘Infamous’ (or Inflammable) is intended; 'Inflamous' is incorrect."
+      },
+      {
+        id: 228,
+        question: "Select the correct spelling from the given options to fill in the blank:",
+        context: "We ________ to keep you informed of any delay to your expected delivery date.",
+        options: ["endevour", "endevor", "endeavour", "endavour"],
+        correctIndex: 2, // (c)
+        correctLetter: "(c)",
+        explanation: "‘Endeavour’ is the standard British/Indian exam spelling."
+      },
+      {
+        id: 229,
+        question: "Find the misspelt word:",
+        context: null,
+        options: ["Taciturn", "Outsource", "Stubbal", "Particulate"],
+        correctIndex: 2, // (c)
+        correctLetter: "(c)",
+        explanation: "‘Stubble’ is the correct spelling; 'Stubbal' is incorrect."
+      },
+      {
+        id: 230,
+        question: "Identify the misspelt word:",
+        context: null,
+        options: ["Somnambulism", "Chauvinism", "Noctummbulism", "Alcoholism"],
+        correctIndex: 2, // (c)
+        correctLetter: "(c)",
+        explanation: "‘Noctambulism’ (sleepwalking at night) is correct; 'Noctummbulism' has an erroneous 'mm'."
+      },
+      {
+        id: 231,
+        question: "Identify the incorrectly spelled word:",
+        context: null,
+        options: ["Embarrass", "Connoisseur", "Relevent", "Bureaucracy"],
+        correctIndex: 2, // (c)
+        correctLetter: "(c)",
+        explanation: "‘Relevant’ (-ant) is correct; 'Relevent' is misspelt."
+      },
+      {
+        id: 232,
+        question: "In the sentence, four words are underlined. Identify the INCORRECTLY spelt word:",
+        context: "After the recapture (A) of Tololing and the adjacent features, evacting (B) the enemy from this well-fortified (C) position became a priority (D).",
+        options: ["B", "D", "A", "C"],
+        correctIndex: 0, // (a) refers to B
+        correctLetter: "(a)",
+        explanation: "Word (B) is misspelt. The correct spelling is ‘Evicting’."
+      },
+      {
+        id: 233,
+        question: "Select the correctly spelled sentence:",
+        context: null,
+        options: [
+          "I will definitely attend the conference.",
+          "I will definitly attend the conference.",
+          "I will definetely attend the conference.",
+          "I will definately attend the conference."
+        ],
+        correctIndex: 0, // (a)
+        correctLetter: "(a)",
+        explanation: "‘Definitely’ (de-finite-ly) is the correct spelling."
+      },
+      {
+        id: 234,
+        question: "Find the misspelt word:",
+        context: null,
+        options: ["Accommodate", "Mischievious", "Millennium", "Privilege"],
+        correctIndex: 1, // (b)
+        correctLetter: "(b)",
+        explanation: "‘Mischievous’ (three syllables: mis-chie-vous) is correct; 'Mischievious' is incorrect."
+      },
+      {
+        id: 235,
+        question: "He has to be conscious of his public manners as he is a decendent of a reputed family in this region.",
+        context: "Select the correct spelling of the underlined word: 'decendent'",
+        options: ["Dicsendent", "Descendant", "Discendent", "Decendant"],
+        correctIndex: 1, // (b)
+        correctLetter: "(b)",
+        explanation: "‘Descendant’ (-ant) is the correct spelling."
+      },
+      {
+        id: 236,
+        question: "Select the correctly spelt word:",
+        context: null,
+        options: ["Conscensus", "Entrepreneurship", "Collaegue", "Bizzaire"],
+        correctIndex: 1, // (b)
+        correctLetter: "(b)",
+        explanation: "‘Entrepreneurship’ is correctly spelt. (Consensus, Colleague, Bizarre)."
+      },
+      {
+        id: 237,
+        question: "Select the correct spelling to fill in the blank:",
+        context: "Subir's long absence is likely to have ________ for employees in the office.",
+        options: ["repercusions", "repercussions", "reperrcussions", "rapercussions"],
+        correctIndex: 1, // (b)
+        correctLetter: "(b)",
+        explanation: "‘Repercussions’ (single 'p', double 's') is the correct spelling."
+      },
+      {
+        id: 238,
+        question: "Select the correctly spelt word:",
+        context: null,
+        options: ["Privelege", "Priviledge", "Privilege", "Privilej"],
+        correctIndex: 2, // (c)
+        correctLetter: "(c)",
+        explanation: "‘Privilege’ (two 'i's and two 'e's, no 'd') is correct."
+      },
+      {
+        id: 239,
+        question: "Select the correctly spelt word to fill in the blank:",
+        context: "The transistors are used as the main ____, which are built into computer chips.",
+        options: ["components", "cumponents", "kamponents", "kumponents"],
+        correctIndex: 0, // (a)
+        correctLetter: "(a)",
+        explanation: "‘Components’ is the correct spelling."
+      },
+      {
+        id: 240,
+        question: "Identify the misspelt word:",
+        context: null,
+        options: ["Verminous", "Vomitus", "Voluptuous", "Verifibility"],
+        correctIndex: 3, // (d)
+        correctLetter: "(d)",
+        explanation: "‘Verifiability’ is the correct spelling; 'Verifibility' omits the 'a'."
+      }
+    ];
+
+    let currentIndex = 0;
+    let userAnswers = new Array(questions.length).fill(null); // stores selected index
+    let timerSeconds = 0;
+    let timerInterval = null;
+    let isQuizCompleted = false;
+
+    // DOM Elements
+    const qIndexEl = document.getElementById('current-q-index');
+    const totalQCountEl = document.getElementById('total-q-count');
+    const qTagEl = document.getElementById('question-tag');
+    const qPromptEl = document.getElementById('question-prompt');
+    const contextBoxEl = document.getElementById('context-box');
+    const optionsGridEl = document.getElementById('options-grid');
+    const explanationBoxEl = document.getElementById('explanation-box');
+    const feedbackTitleEl = document.getElementById('feedback-title');
+    const feedbackExplEl = document.getElementById('feedback-explanation');
+    const feedbackIconEl = document.getElementById('feedback-icon');
+    const prevBtn = document.getElementById('prev-btn');
+    const nextBtn = document.getElementById('next-btn');
+    const nextBtnText = document.getElementById('next-btn-text');
+    const topProgressBar = document.getElementById('top-progress-bar');
+    const quizTimerEl = document.getElementById('quiz-timer');
+    const liveCorrectEl = document.getElementById('live-correct-count');
+    const liveWrongEl = document.getElementById('live-wrong-count');
+    const quizView = document.getElementById('quiz-view');
+    const resultsView = document.getElementById('results-view');
+    const paletteModal = document.getElementById('palette-modal');
+    const paletteGrid = document.getElementById('palette-grid');
+
+    function startTimer() {
+      if (timerInterval) clearInterval(timerInterval);
+      timerSeconds = 0;
+      timerInterval = setInterval(() => {
+        timerSeconds++;
+        const mins = Math.floor(timerSeconds / 60).toString().padStart(2, '0');
+        const secs = (timerSeconds % 60).toString().padStart(2, '0');
+        quizTimerEl.textContent = `${mins}:${secs}`;
+      }, 1000);
+    }
+
+    function updateLiveStats() {
+      let correct = 0;
+      let wrong = 0;
+      userAnswers.forEach((ans, idx) => {
+        if (ans !== null) {
+          if (ans === questions[idx].correctIndex) correct++;
+          else wrong++;
+        }
+      });
+      liveCorrectEl.textContent = `✓ ${correct}`;
+      liveWrongEl.textContent = `✕ ${wrong}`;
+      
+      const pct = Math.round(((currentIndex + 1) / questions.length) * 100);
+      topProgressBar.style.width = `${pct}%`;
+    }
+
+    function renderQuestion(index) {
+      const q = questions[index];
+      qIndexEl.textContent = index + 1;
+      totalQCountEl.textContent = questions.length;
+      qTagEl.textContent = `Q.${q.id}`;
+      qPromptEl.textContent = q.question;
+
+      // Handle contextual statements or underlined sentences
+      if (q.context) {
+        contextBoxEl.classList.remove('hidden');
+        contextBoxEl.innerHTML = `<span class="text-indigo-600 dark:text-indigo-400 font-bold mr-1.5">Context:</span> ${q.context}`;
+      } else {
+        contextBoxEl.classList.add('hidden');
+        contextBoxEl.innerHTML = '';
+      }
+
+      // Prev & Next Buttons state
+      prevBtn.disabled = index === 0;
+      if (index === questions.length - 1) {
+        nextBtnText.textContent = "Finish Exam";
+      } else {
+        nextBtnText.textContent = "Next Question";
+      }
+
+      // Build Options Grid
+      optionsGridEl.innerHTML = '';
+      const answered = userAnswers[index] !== null;
+      const letters = ['(a)', '(b)', '(c)', '(d)'];
+
+      q.options.forEach((optText, optIdx) => {
+        const btn = document.createElement('button');
+        btn.className = `w-full text-left p-2.5 sm:p-3 rounded-xl border font-medium text-xs sm:text-sm flex items-start gap-2.5 transition-all duration-150 relative ${
+          answered 
+            ? 'cursor-default' 
+            : 'hover:border-indigo-400 dark:hover:border-indigo-500 hover:bg-indigo-50/40 dark:hover:bg-slate-800/80 cursor-pointer active:scale-[0.99]'
+        }`;
+
+        // Coloring states if question has been answered
+        if (answered) {
+          if (optIdx === q.correctIndex) {
+            // Correct answer styling
+            btn.className += ' bg-emerald-50 dark:bg-emerald-950/40 border-emerald-500 text-emerald-900 dark:text-emerald-200 ring-1 ring-emerald-500';
+          } else if (optIdx === userAnswers[index]) {
+            // Wrong user selection styling
+            btn.className += ' bg-rose-50 dark:bg-rose-950/40 border-rose-500 text-rose-900 dark:text-rose-200 ring-1 ring-rose-500';
+          } else {
+            // Unselected neutral styling
+            btn.className += ' border-slate-200 dark:border-slate-800 text-slate-400 dark:text-slate-600 opacity-60';
+          }
+        } else {
+          btn.className += ' border-slate-200 dark:border-slate-800 text-slate-800 dark:text-slate-200 bg-white dark:bg-slate-850';
+        }
+
+        // Option inner layout
+        const badge = document.createElement('span');
+        badge.className = `w-6 h-6 rounded-lg text-xs font-bold flex items-center justify-center shrink-0 ${
+          answered && optIdx === q.correctIndex 
+            ? 'bg-emerald-500 text-white' 
+            : answered && optIdx === userAnswers[index]
+            ? 'bg-rose-500 text-white'
+            : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400'
+        }`;
+        badge.textContent = letters[optIdx].replace(/[()]/g, '').toUpperCase();
+
+        const label = document.createElement('span');
+        label.className = "flex-1 leading-snug break-words";
+        label.textContent = optText;
+
+        btn.appendChild(badge);
+        btn.appendChild(label);
+
+        // Click Handler
+        if (!answered) {
+          btn.onclick = () => handleSelectOption(optIdx);
+        }
+
+        optionsGridEl.appendChild(btn);
+      });
+
+      // Explanation box rendering
+      if (answered) {
+        showExplanation(index);
+      } else {
+        explanationBoxEl.classList.add('hidden');
+      }
+
+      updateLiveStats();
+    }
+
+    function handleSelectOption(optIdx) {
+      if (userAnswers[currentIndex] !== null) return; // Prevent double clicking
+
+      userAnswers[currentIndex] = optIdx;
+      renderQuestion(currentIndex);
+
+      // Pulse Next button slightly to invite progression
+      nextBtn.classList.add('pulse-soft');
+      setTimeout(() => nextBtn.classList.remove('pulse-soft'), 1200);
+    }
+
+    function showExplanation(index) {
+      const q = questions[index];
+      const isCorrect = userAnswers[index] === q.correctIndex;
+      explanationBoxEl.classList.remove('hidden');
+
+      if (isCorrect) {
+        explanationBoxEl.className = "shrink-0 mt-2 p-2.5 sm:p-3 rounded-xl border border-emerald-300 dark:border-emerald-800 bg-emerald-50/80 dark:bg-emerald-950/30 text-emerald-900 dark:text-emerald-100 text-xs sm:text-sm";
+        feedbackIconEl.innerHTML = `<svg class="w-4 h-4 text-emerald-600 dark:text-emerald-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>`;
+        feedbackTitleEl.textContent = `Correct Answer! ${q.correctLetter}`;
+        feedbackTitleEl.className = "font-bold text-emerald-800 dark:text-emerald-300 mb-0.5 text-xs sm:text-sm";
+      } else {
+        explanationBoxEl.className = "shrink-0 mt-2 p-2.5 sm:p-3 rounded-xl border border-rose-300 dark:border-rose-800 bg-rose-50/80 dark:bg-rose-950/30 text-rose-900 dark:text-rose-100 text-xs sm:text-sm";
+        feedbackIconEl.innerHTML = `<svg class="w-4 h-4 text-rose-600 dark:text-rose-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/></svg>`;
+        feedbackTitleEl.textContent = `Incorrect! Correct option is ${q.correctLetter}`;
+        feedbackTitleEl.className = "font-bold text-rose-800 dark:text-rose-300 mb-0.5 text-xs sm:text-sm";
+      }
+
+      feedbackExplEl.textContent = q.explanation;
+    }
+
+    nextBtn.onclick = () => {
+      if (currentIndex < questions.length - 1) {
+        currentIndex++;
+        renderQuestion(currentIndex);
+      } else {
+        showResults();
+      }
+    };
+
+    prevBtn.onclick = () => {
+      if (currentIndex > 0) {
+        currentIndex--;
+        renderQuestion(currentIndex);
+      }
+    };
+
+    // Keyboard navigation (1-4 for options, Enter for next, Left/Right arrows)
+    window.addEventListener('keydown', (e) => {
+      if (resultsView.classList.contains('hidden')) {
+        if (['1', '2', '3', '4'].includes(e.key)) {
+          handleSelectOption(parseInt(e.key) - 1);
+        } else if (e.key === 'Enter') {
+          nextBtn.click();
+        } else if (e.key === 'ArrowLeft' && !prevBtn.disabled) {
+          prevBtn.click();
+        } else if (e.key === 'ArrowRight') {
+          nextBtn.click();
+        }
+      }
+    });
+
+    function updatePalette() {
+      paletteGrid.innerHTML = '';
+      questions.forEach((q, idx) => {
+        const item = document.createElement('button');
+        item.className = 'w-full aspect-square rounded-lg font-bold text-xs flex items-center justify-center transition border';
+        
+        if (userAnswers[idx] === null) {
+          item.className += ' bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-700';
+        } else if (userAnswers[idx] === q.correctIndex) {
+          item.className += ' bg-emerald-500 text-white border-emerald-600';
+        } else {
+          item.className += ' bg-rose-500 text-white border-rose-600';
+        }
+
+        if (idx === currentIndex) {
+          item.className += ' ring-2 ring-indigo-500 ring-offset-2 dark:ring-offset-slate-900';
+        }
+
+        item.textContent = idx + 1;
+        item.onclick = () => {
+          currentIndex = idx;
+          renderQuestion(currentIndex);
+          paletteModal.classList.add('hidden');
+          paletteModal.classList.remove('flex');
+        };
+        paletteGrid.appendChild(item);
+      });
+    }
+
+    document.getElementById('open-grid-btn').onclick = () => {
+      updatePalette();
+      paletteModal.classList.remove('hidden');
+      paletteModal.classList.add('flex');
+    };
+
+    document.getElementById('close-grid-btn').onclick = () => {
+      paletteModal.classList.add('hidden');
+      paletteModal.classList.remove('flex');
+    };
+
+    paletteModal.onclick = (e) => {
+      if (e.target === paletteModal) {
+        paletteModal.classList.add('hidden');
+        paletteModal.classList.remove('flex');
+      }
+    };
+
+    function showResults() {
+      if (timerInterval) clearInterval(timerInterval);
+      isQuizCompleted = true;
+
+      let correctCount = 0;
+      let wrongCount = 0;
+      let incorrectList = [];
+
+      userAnswers.forEach((ans, i) => {
+        if (ans === questions[i].correctIndex) {
+          correctCount++;
+        } else {
+          wrongCount++;
+          incorrectList.push({
+            index: i,
+            question: questions[i],
+            userChoice: ans
+          });
+        }
+      });
+
+      const accuracy = Math.round((correctCount / questions.length) * 100);
+      const mins = Math.floor(timerSeconds / 60).toString().padStart(2, '0');
+      const secs = (timerSeconds % 60).toString().padStart(2, '0');
+
+      document.getElementById('res-score').textContent = `${correctCount}/${questions.length}`;
+      document.getElementById('res-accuracy').textContent = `${accuracy}%`;
+      document.getElementById('res-time').textContent = `${mins}:${secs}`;
+      document.getElementById('res-mistakes').textContent = wrongCount;
+      document.getElementById('review-count-badge').textContent = `${incorrectList.length} Mistakes Identified`;
+
+      // Render Mistakes Breakdown List
+      const reviewListContainer = document.getElementById('review-list');
+      reviewListContainer.innerHTML = '';
+
+      if (incorrectList.length === 0) {
+        reviewListContainer.innerHTML = `
+          <div class="p-6 text-center text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/20 rounded-xl border border-emerald-200 dark:border-emerald-800">
+            <div class="text-3xl mb-1">🎉</div>
+            <div class="font-bold text-sm">Flawless 100% Score!</div>
+            <div class="text-xs text-slate-500 mt-1">You mastered all 40 competitive spelling questions without a single mistake.</div>
+          </div>
+        `;
+      } else {
+        incorrectList.forEach(item => {
+          const card = document.createElement('div');
+          card.className = "p-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50/70 dark:bg-slate-800/50 text-xs flex flex-col gap-1.5";
+          
+          const letters = ['(a)', '(b)', '(c)', '(d)'];
+          const userText = item.userChoice !== null ? `${letters[item.userChoice]} ${item.question.options[item.userChoice]}` : "Not Answered";
+          const correctText = `${item.question.correctLetter} ${item.question.options[item.question.correctIndex]}`;
+
+          card.innerHTML = `
+            <div class="flex items-center justify-between">
+              <span class="font-bold text-indigo-600 dark:text-indigo-400">Q.${item.question.id}</span>
+              <span class="text-rose-500 font-semibold uppercase text-[10px]">Incorrect</span>
+            </div>
+            <div class="text-slate-800 dark:text-slate-200 font-medium">${item.question.question}</div>
+            ${item.question.context ? `<div class="p-1.5 rounded bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-300 text-[11px]">${item.question.context}</div>` : ''}
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-1.5 pt-1 text-[11px]">
+              <div class="p-1.5 rounded bg-rose-50 dark:bg-rose-950/40 text-rose-700 dark:text-rose-300 border border-rose-200 dark:border-rose-900">
+                <span class="font-bold">Your answer:</span> ${userText}
+              </div>
+              <div class="p-1.5 rounded bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-900">
+                <span class="font-bold">Correct:</span> ${correctText}
+              </div>
+            </div>
+            <div class="text-[11px] text-slate-500 dark:text-slate-400 pt-0.5"><span class="font-semibold text-slate-700 dark:text-slate-300">Explanation:</span> ${item.question.explanation}</div>
+          `;
+          reviewListContainer.appendChild(card);
+        });
+      }
+
+      quizView.classList.add('hidden');
+      resultsView.classList.remove('hidden');
+    }
+
+    // Review all button jumps back into interactive view with answers unlocked for review
+    document.getElementById('review-all-btn').onclick = () => {
+      resultsView.classList.add('hidden');
+      quizView.classList.remove('hidden');
+      currentIndex = 0;
+      renderQuestion(currentIndex);
+    };
+
+    // Restart Quiz Handler
+    function restartQuiz() {
+      userAnswers = new Array(questions.length).fill(null);
+      currentIndex = 0;
+      isQuizCompleted = false;
+      resultsView.classList.add('hidden');
+      quizView.classList.remove('hidden');
+      startTimer();
+      renderQuestion(0);
+    }
+    document.getElementById('restart-btn').onclick = restartQuiz;
+    document.getElementById('restart-btn-top').onclick = restartQuiz;
+
+    const themeToggleBtn = document.getElementById('theme-toggle');
+    const sunIcon = document.getElementById('theme-sun');
+    const moonIcon = document.getElementById('theme-moon');
+
+    function applyTheme(isDark) {
+      if (isDark) {
+        document.documentElement.classList.add('dark');
+        sunIcon.classList.remove('hidden');
+        moonIcon.classList.add('hidden');
+      } else {
+        document.documentElement.classList.remove('dark');
+        sunIcon.classList.add('hidden');
+        moonIcon.classList.remove('hidden');
+      }
+    }
+
+    // Default to dark or user system preference
+    const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    applyTheme(prefersDark);
+
+    themeToggleBtn.onclick = () => {
+      const currentlyDark = document.documentElement.classList.contains('dark');
+      applyTheme(!currentlyDark);
+    };
+
+    startTimer();
+    renderQuestion(0);
+  </script>
+</body>
+</html>
