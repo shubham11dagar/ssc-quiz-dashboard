@@ -1,0 +1,1330 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>English Spelling Mastery | Exam Preparation</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'system-ui', '-apple-system', 'Segoe UI', 'Roboto', 'sans-serif'],
+            mono: ['JetBrains Mono', 'Menlo', 'monospace']
+          },
+          colors: {
+            brand: {
+              50: '#eef2ff',
+              100: '#e0e7ff',
+              500: '#6366f1',
+              600: '#4f46e5',
+              700: '#4338ca',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+    html, body {
+      height: 100%;
+      height: 100dvh;
+      overflow: hidden;
+      font-family: 'Inter', sans-serif;
+    }
+    /* Compact custom scrollbars for review panels & question drawer */
+    ::-webkit-scrollbar {
+      width: 5px;
+      height: 5px;
+    }
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(156, 163, 175, 0.5);
+      border-radius: 9999px;
+    }
+    .dark ::-webkit-scrollbar-thumb {
+      background: rgba(75, 85, 99, 0.7);
+    }
+    /* Keyframe animations */
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      20%, 60% { transform: translateX(-4px); }
+      40%, 80% { transform: translateX(4px); }
+    }
+    .animate-shake {
+      animation: shake 0.35s ease-in-out;
+    }
+    @keyframes popIn {
+      0% { transform: scale(0.96); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+    .animate-pop {
+      animation: popIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+  </style>
+</head>
+<body class="h-full bg-slate-100 text-slate-800 dark:bg-slate-950 dark:text-slate-100 transition-colors duration-200 antialiased select-none flex flex-col justify-between">
+
+  <!-- HEADER BAR: Fixed compact height -->
+  <header class="w-full flex-none px-3.5 py-2 sm:px-6 sm:py-2.5 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 z-30 shadow-xs">
+    <div class="max-w-6xl mx-auto flex items-center justify-between gap-2">
+      <!-- Title & Exam Badge -->
+      <div class="flex items-center gap-2.5 min-w-0">
+        <div class="w-8 h-8 rounded-lg bg-gradient-to-tr from-indigo-600 to-violet-500 text-white flex items-center justify-center font-black text-sm shadow-sm flex-shrink-0">
+          Q
+        </div>
+        <div class="truncate">
+          <div class="flex items-center gap-2">
+            <h1 class="font-bold text-xs sm:text-sm tracking-tight text-slate-900 dark:text-white truncate">Spelling Mastery</h1>
+            <span class="hidden sm:inline-block px-2 py-0.5 text-[10px] font-semibold bg-indigo-50 dark:bg-indigo-950/70 text-indigo-600 dark:text-indigo-400 rounded-full border border-indigo-200 dark:border-indigo-800">SSC & Govt. Exam Practice</span>
+          </div>
+          <p class="text-[10px] text-slate-500 dark:text-slate-400 truncate">Q.241 – Q.280 (40 Questions)</p>
+        </div>
+      </div>
+
+      <!-- Live Counters & Controls -->
+      <div class="flex items-center gap-1.5 sm:gap-3 flex-shrink-0">
+        <!-- Live Stat Pills -->
+        <div class="flex items-center gap-1 text-[11px] font-mono font-semibold px-2 py-1 rounded-md bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
+          <span class="text-emerald-600 dark:text-emerald-400 flex items-center gap-0.5"><span id="live-correct">0</span>✓</span>
+          <span class="text-slate-300 dark:text-slate-600">|</span>
+          <span class="text-rose-600 dark:text-rose-400 flex items-center gap-0.5"><span id="live-wrong">0</span>✗</span>
+        </div>
+
+        <!-- Timer -->
+        <div class="hidden xs:flex items-center gap-1 px-2 py-1 rounded-md text-[11px] font-mono text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
+          <svg class="w-3.5 h-3.5 opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <span id="quiz-timer">00:00</span>
+        </div>
+
+        <!-- Question Drawer Button -->
+        <button id="palette-btn" onclick="toggleDrawer(true)" title="Question Palette" class="p-1.5 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 transition">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"/></svg>
+        </button>
+
+        <!-- Dark/Light Theme Toggle -->
+        <button id="theme-toggle" onclick="toggleTheme()" title="Toggle Theme" class="p-1.5 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 transition">
+          <svg id="theme-icon-sun" class="w-4 h-4 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+          <svg id="theme-icon-moon" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Progress Indicator Bar -->
+    <div class="w-full bg-slate-200 dark:bg-slate-800 h-1 mt-2 rounded-full overflow-hidden">
+      <div id="progress-bar-fill" class="bg-indigo-600 dark:bg-indigo-500 h-full w-0 transition-all duration-300"></div>
+    </div>
+  </header>
+
+  <!-- MAIN WORKSPACE: Fits screen height strictly with flex layout -->
+  <main class="flex-1 w-full max-w-4xl mx-auto px-2.5 sm:px-4 py-2 sm:py-3 flex flex-col justify-between overflow-hidden relative">
+
+    <!-- Active Question View -->
+    <section id="quiz-screen" class="flex-1 flex flex-col justify-between min-h-0 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl shadow-sm p-3 sm:p-5 transition-all">
+      
+      <!-- Top Meta Row -->
+      <div class="flex items-center justify-between pb-2 border-b border-slate-100 dark:border-slate-800 flex-none text-[11px] sm:text-xs">
+        <div class="flex items-center gap-1.5 sm:gap-2">
+          <span class="font-bold px-2 py-0.5 rounded bg-indigo-100 dark:bg-indigo-950/80 text-indigo-700 dark:text-indigo-300 font-mono tracking-tight" id="q-label">Q.241</span>
+          <span class="text-slate-400 font-semibold" id="q-category">Spelling Error</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <span class="text-slate-500 dark:text-slate-400 font-mono font-medium" id="q-count-display">1 / 40</span>
+        </div>
+      </div>
+
+      <!-- Scroll-safe Central Question Content Area (Shrinks/grows flexibly) -->
+      <div class="flex-1 min-h-0 py-2 sm:py-3 flex flex-col justify-center overflow-y-auto pr-1">
+        
+        <!-- Prompt text -->
+        <div id="q-prompt" class="text-sm sm:text-base font-medium text-slate-800 dark:text-slate-100 leading-snug sm:leading-relaxed">
+          <!-- Dynamic Content -->
+        </div>
+
+        <!-- Optional Structured Statement Box (For statement/multi-sentence types) -->
+        <div id="q-statements-box" class="hidden mt-2 p-2.5 sm:p-3 rounded-lg bg-slate-50 dark:bg-slate-800/70 border border-slate-200 dark:border-slate-700 text-xs sm:text-sm space-y-1.5 font-sans">
+          <!-- Inserted statements -->
+        </div>
+
+        <!-- Optional Underlined Segments or Sentence Split Box -->
+        <div id="q-split-box" class="hidden mt-2 p-2 sm:p-2.5 rounded-lg bg-indigo-50/50 dark:bg-indigo-950/30 border border-indigo-100 dark:border-indigo-900 text-xs sm:text-sm font-medium">
+          <!-- Formatted parts -->
+        </div>
+      </div>
+
+      <!-- Options Grid: Compact, high visibility 2x2 on desktop, stacked on small phones -->
+      <div class="flex-none pt-1">
+        <div id="options-container" class="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-2.5">
+          <!-- 4 option buttons dynamically populated -->
+        </div>
+      </div>
+
+      <!-- In-Card Compact Feedback & Explanation Bar -->
+      <div id="feedback-panel" class="hidden mt-2 p-2 sm:p-2.5 rounded-lg border text-xs sm:text-xs flex items-center justify-between gap-2 animate-pop">
+        <div class="flex items-center gap-2 min-w-0">
+          <span id="feedback-badge" class="flex-shrink-0 px-2 py-0.5 rounded font-bold uppercase tracking-wider text-[10px]">
+            Correct
+          </span>
+          <p id="feedback-explanation" class="text-slate-700 dark:text-slate-200 truncate sm:whitespace-normal leading-tight font-medium">
+            Explanation text goes here.
+          </p>
+        </div>
+        <div class="text-[10px] text-slate-400 font-mono flex-shrink-0 hidden sm:block">Press [Enter] or tap Next ➔</div>
+      </div>
+
+      <!-- Footer Action Row -->
+      <div class="flex-none pt-2 sm:pt-3 mt-1 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between">
+        <button id="prev-btn" onclick="prevQuestion()" class="px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 disabled:opacity-30 disabled:pointer-events-none transition flex items-center gap-1">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+          Previous
+        </button>
+
+        <div class="flex items-center gap-2">
+          <button id="skip-btn" onclick="skipQuestion()" class="px-2.5 py-1.5 rounded-lg text-xs font-medium text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 transition">
+            Skip
+          </button>
+          <button id="next-btn" onclick="nextQuestion()" class="px-4 py-1.5 rounded-lg text-xs sm:text-sm font-semibold text-white bg-indigo-600 hover:bg-indigo-500 active:scale-95 shadow-sm transition flex items-center gap-1.5 disabled:opacity-40 disabled:cursor-not-allowed">
+            <span id="next-btn-text">Next</span>
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- END-SCREEN RESULTS SUMMARY: Compact, scrollable breakdown -->
+    <section id="results-screen" class="hidden flex-1 flex flex-col min-h-0 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl shadow-sm p-3.5 sm:p-5">
+      <!-- Top Metrics Banner -->
+      <div class="flex-none text-center pb-3 border-b border-slate-200 dark:border-slate-800">
+        <h2 class="text-base sm:text-lg font-bold text-slate-900 dark:text-white">Exam Practice Summary</h2>
+        <p class="text-xs text-slate-500 dark:text-slate-400">English Spelling Questions (Q.241 - Q.280)</p>
+
+        <!-- Stats Grid -->
+        <div class="grid grid-cols-4 gap-2 mt-3 max-w-lg mx-auto">
+          <div class="p-2 rounded-lg bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700">
+            <div class="text-[10px] uppercase font-bold text-slate-400">Score</div>
+            <div id="res-score" class="text-base sm:text-lg font-bold text-indigo-600 dark:text-indigo-400 font-mono">0/40</div>
+          </div>
+          <div class="p-2 rounded-lg bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800">
+            <div class="text-[10px] uppercase font-bold text-emerald-600 dark:text-emerald-400">Correct</div>
+            <div id="res-correct" class="text-base sm:text-lg font-bold text-emerald-600 dark:text-emerald-400 font-mono">0</div>
+          </div>
+          <div class="p-2 rounded-lg bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800">
+            <div class="text-[10px] uppercase font-bold text-rose-600 dark:text-rose-400">Incorrect</div>
+            <div id="res-wrong" class="text-base sm:text-lg font-bold text-rose-600 dark:text-rose-400 font-mono">0</div>
+          </div>
+          <div class="p-2 rounded-lg bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700">
+            <div class="text-[10px] uppercase font-bold text-slate-400">Accuracy</div>
+            <div id="res-accuracy" class="text-base sm:text-lg font-bold text-slate-800 dark:text-slate-200 font-mono">0%</div>
+          </div>
+        </div>
+
+        <!-- Filter bar for reviews -->
+        <div class="flex items-center justify-center gap-2 mt-3">
+          <button id="filter-all-btn" onclick="filterReview('all')" class="px-2.5 py-1 text-[11px] font-semibold rounded-md bg-indigo-600 text-white transition">All (40)</button>
+          <button id="filter-wrong-btn" onclick="filterReview('wrong')" class="px-2.5 py-1 text-[11px] font-semibold rounded-md bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 transition">Incorrect Only (<span id="wrong-count-badge">0</span>)</button>
+        </div>
+      </div>
+
+      <!-- Scrollable Review List -->
+      <div id="results-review-list" class="flex-1 min-h-0 overflow-y-auto py-2.5 space-y-2 pr-1 my-1">
+        <!-- Injected via JS -->
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="flex-none pt-2.5 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between gap-3">
+        <button onclick="restartQuiz(true)" class="flex-1 py-2 px-3 rounded-lg text-xs font-semibold bg-rose-50 dark:bg-rose-950/40 hover:bg-rose-100 dark:hover:bg-rose-900/50 text-rose-700 dark:text-rose-300 border border-rose-200 dark:border-rose-800 transition">
+          Retake Incorrect Only
+        </button>
+        <button onclick="restartQuiz(false)" class="flex-1 py-2 px-3 rounded-lg text-xs font-semibold bg-indigo-600 hover:bg-indigo-500 text-white shadow-sm transition">
+          Restart Full Quiz
+        </button>
+      </div>
+    </section>
+  </main>
+
+  <!-- QUESTION PALETTE MODAL / SLIDE-IN DRAWER -->
+  <div id="palette-drawer" class="fixed inset-0 z-50 bg-black/50 backdrop-blur-xs flex justify-end transition-opacity duration-200 opacity-0 pointer-events-none">
+    <div class="w-72 sm:w-80 h-full bg-white dark:bg-slate-900 border-l border-slate-200 dark:border-slate-800 p-4 flex flex-col justify-between shadow-2xl">
+      <div>
+        <div class="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
+          <h3 class="text-sm font-bold text-slate-800 dark:text-white">Question Navigator</h3>
+          <button onclick="toggleDrawer(false)" class="p-1 rounded text-slate-400 hover:text-slate-600 dark:hover:text-slate-200">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+          </button>
+        </div>
+
+        <!-- Legend -->
+        <div class="grid grid-cols-3 gap-1.5 my-3 text-[10px] text-slate-500 dark:text-slate-400">
+          <div class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span> Correct</div>
+          <div class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-rose-500"></span> Incorrect</div>
+          <div class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-slate-300 dark:bg-slate-600"></span> Unvisited</div>
+        </div>
+
+        <!-- 40-cell grid -->
+        <div id="drawer-grid" class="grid grid-cols-5 gap-1.5 max-h-[65vh] overflow-y-auto pr-1 py-1">
+          <!-- Populated via JS -->
+        </div>
+      </div>
+
+      <div class="pt-3 border-t border-slate-100 dark:border-slate-800">
+        <button onclick="finishQuiz()" class="w-full py-2 rounded-lg text-xs font-semibold bg-indigo-600 hover:bg-indigo-500 text-white transition">
+          Submit & Finish Quiz
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // COMPLETE 40-QUESTION DATASET (Q.241 - Q.280)
+    const questionsData = [
+      {
+        qId: 241,
+        type: 'sentence-replacement',
+        category: 'Spelling Correction',
+        prompt: 'Select the correct spelling of the underlined word to make the sentence correct:',
+        sentence: 'I was <span class="underline decoration-wavy decoration-rose-500 font-bold text-rose-600 dark:text-rose-400">upstaires</span> when somebody rang the doorbell.',
+        options: [
+          { key: 'a', text: 'Upstares' },
+          { key: 'b', text: 'Upstaire' },
+          { key: 'c', text: 'upsatires' },
+          { key: 'd', text: 'Upstairs' }
+        ],
+        ans: 'd',
+        explanation: "‘Upstairs’ is the correct spelling."
+      },
+      {
+        qId: 242,
+        type: 'sentence-replacement',
+        category: 'Spelling Correction',
+        prompt: 'Identify the correct spelling for the underlined word:',
+        sentence: 'His <span class="underline decoration-wavy decoration-rose-500 font-bold text-rose-600 dark:text-rose-400">acquiantance</span> with the author led to many fruitful collaborations.',
+        options: [
+          { key: 'a', text: 'acuiantance' },
+          { key: 'b', text: 'acquaintance' },
+          { key: 'c', text: 'acquaintence' },
+          { key: 'd', text: 'aquaintance' }
+        ],
+        ans: 'b',
+        explanation: "‘Acquaintance’ is the correct spelling."
+      },
+      {
+        qId: 243,
+        type: 'sentence-replacement',
+        category: 'Identify Misspelt Word',
+        prompt: 'Select the misspelt word in the sentence below:',
+        sentence: 'She <span class="font-bold underline">recieved</span> an award for her outstanding performance.',
+        options: [
+          { key: 'a', text: 'recieved' },
+          { key: 'b', text: 'award' },
+          { key: 'c', text: 'performance' },
+          { key: 'd', text: 'outstanding' }
+        ],
+        ans: 'a',
+        explanation: "‘Received’ is the correct spelling (rule: 'i' before 'e' except after 'c')."
+      },
+      {
+        qId: 244,
+        type: 'fill-blank',
+        category: 'Fill in the Blank',
+        prompt: 'Select the correctly spelt word to fill in the blank:',
+        sentence: 'All the chefs in the world are famous because of their ______ skills.',
+        options: [
+          { key: 'a', text: 'kulinary' },
+          { key: 'b', text: 'kolinary' },
+          { key: 'c', text: 'culinary' },
+          { key: 'd', text: 'colinary' }
+        ],
+        ans: 'c',
+        explanation: "‘Culinary’ is the correct spelling."
+      },
+      {
+        qId: 245,
+        type: 'underlined-selection',
+        category: 'Error Detection',
+        prompt: 'In the following sentence, four words are marked with letters. Identify the INCORRECTLY spelt word:',
+        sentence: 'I took out a water tumbler <strong class="text-indigo-600 dark:text-indigo-400">(A)</strong> for a drink, but found the water in the metal container <strong class="text-indigo-600 dark:text-indigo-400">(B)</strong> had frozen so I couldn\'t quanch <strong class="text-indigo-600 dark:text-indigo-400">(C)</strong> my thirst. I ate some biscuits and offered <strong class="text-indigo-600 dark:text-indigo-400">(D)</strong> some to Hillary.',
+        options: [
+          { key: 'a', text: '(C) quanch' },
+          { key: 'b', text: '(D) offered' },
+          { key: 'c', text: '(B) container' },
+          { key: 'd', text: '(A) tumbler' }
+        ],
+        ans: 'a',
+        explanation: "‘Quench’ is the correct spelling (marked as C)."
+      },
+      {
+        qId: 246,
+        type: 'single-word',
+        category: 'Select Misspelt Word',
+        prompt: 'Identify the INCORRECTLY spelt word among the following options:',
+        options: [
+          { key: 'a', text: 'Embarrass' },
+          { key: 'b', text: 'Occurrence' },
+          { key: 'c', text: 'Exhilerate' },
+          { key: 'd', text: 'Accommodate' }
+        ],
+        ans: 'c',
+        explanation: "‘Exhilarate’ is the correct spelling (contains '-hil-', not '-hiler-')."
+      },
+      {
+        qId: 247,
+        type: 'sentence-choice',
+        category: 'Sentence Correctness',
+        prompt: 'Select the sentence that does NOT have a spelling error:',
+        options: [
+          { key: 'a', text: 'The paintings are structured chronologically, starting from cubism to surealism.' },
+          { key: 'b', text: 'The artist received recognition for her impressive etchings, buclic landscapes, and recreation of natural scenes around her.' },
+          { key: 'c', text: 'The insouciance of the rock star considering the importance of the occasion, came as a shock to the audience who expected stressful moments.' },
+          { key: 'd', text: 'The focus of the exibition is to reinforce versatility and creative thinking.' }
+        ],
+        ans: 'c',
+        explanation: "‘Surrealism’, ‘Bucolic’ and ‘Exhibition’ are the correct spellings for erroneous choices (a, b, d). Sentence (c) is error-free."
+      },
+      {
+        qId: 248,
+        type: 'sentence-replacement',
+        category: 'Identify Misspelt Word',
+        prompt: 'Identify the incorrectly spelt word in the given sentence:',
+        sentence: 'One must be confident of winning and gaining one’s goals and must face situations, disasters, trials and setbecks of life with confidence.',
+        options: [
+          { key: 'a', text: 'Trials' },
+          { key: 'b', text: 'Disasters' },
+          { key: 'c', text: 'Confident' },
+          { key: 'd', text: 'Setbecks' }
+        ],
+        ans: 'd',
+        explanation: "‘Setbacks’ is the correct spelling."
+      },
+      {
+        qId: 249,
+        type: 'single-word',
+        category: 'Select Misspelt Word',
+        prompt: 'Select the INCORRECTLY spelt word from the options:',
+        options: [
+          { key: 'a', text: 'Centenary' },
+          { key: 'b', text: 'Consumerist' },
+          { key: 'c', text: 'Capitalist' },
+          { key: 'd', text: 'Countemptible' }
+        ],
+        ans: 'd',
+        explanation: "‘Contemptible’ is the correct spelling."
+      },
+      {
+        qId: 250,
+        type: 'sentence-replacement',
+        category: 'Identify Misspelt Word',
+        prompt: 'Select the misspelt word in the following sentence:',
+        sentence: 'You need to be <span class="font-bold underline">concious</span> enough to listen to the question.',
+        options: [
+          { key: 'a', text: 'concious' },
+          { key: 'b', text: 'enough' },
+          { key: 'c', text: 'question' },
+          { key: 'd', text: 'listen' }
+        ],
+        ans: 'a',
+        explanation: "‘Conscious’ is the correct spelling."
+      },
+      {
+        qId: 251,
+        type: 'underlined-selection',
+        category: 'Error Detection',
+        prompt: 'In the following sentence, four words have been underlined. Which one is MISSPELT?',
+        sentence: 'In spite of the dilemma that <span class="underline decoration-wavy decoration-indigo-500 font-semibold">preveiled</span> during the discussion sessions, the <span class="underline">committee</span> remained committed to finding an <span class="underline">amicable</span> solution to the <span class="underline">dilemma</span>.',
+        options: [
+          { key: 'a', text: 'amicable' },
+          { key: 'b', text: 'committee' },
+          { key: 'c', text: 'preveiled' },
+          { key: 'd', text: 'dilemma' }
+        ],
+        ans: 'c',
+        explanation: "‘Prevailed’ is the correct spelling."
+      },
+      {
+        qId: 252,
+        type: 'single-word',
+        category: 'Select Misspelt Word',
+        prompt: 'Identify the INCORRECTLY spelt word:',
+        options: [
+          { key: 'a', text: 'Reinforcement' },
+          { key: 'b', text: 'Opportunity' },
+          { key: 'c', text: 'Atributes' },
+          { key: 'd', text: 'Motivational' }
+        ],
+        ans: 'c',
+        explanation: "‘Attributes’ is the correct spelling (double 't')."
+      },
+      {
+        qId: 253,
+        type: 'single-word',
+        category: 'Select Misspelt Word',
+        prompt: 'Select the INCORRECTLY spelt word from the options:',
+        options: [
+          { key: 'a', text: 'Tangiable' },
+          { key: 'b', text: 'Terracotta' },
+          { key: 'c', text: 'Tertial' },
+          { key: 'd', text: 'Terracide' }
+        ],
+        ans: 'a',
+        explanation: "‘Tangible’ is the correct spelling."
+      },
+      {
+        qId: 254,
+        type: 'single-word',
+        category: 'Select Misspelt Word',
+        prompt: 'Select the word with an INCORRECT spelling:',
+        options: [
+          { key: 'a', text: 'Occurence' },
+          { key: 'b', text: 'Harassment' },
+          { key: 'c', text: 'Supersede' },
+          { key: 'd', text: 'Exaggerate' }
+        ],
+        ans: 'a',
+        explanation: "‘Occurrence’ is the correct spelling (double 'c' and double 'r')."
+      },
+      {
+        qId: 255,
+        type: 'underlined-selection',
+        category: 'Error Detection',
+        prompt: 'Identify the INCORRECTLY spelt word marked with letters:',
+        sentence: 'I felt absolutely (A) fit at the summit. My mind was absolutely clear (B). I didn’t feel tired, I felt exhelarated (C). It was a very clear sensation (D).',
+        options: [
+          { key: 'a', text: '(C) exhelarated' },
+          { key: 'b', text: '(D) sensation' },
+          { key: 'c', text: '(B) clear' },
+          { key: 'd', text: '(A) absolutely' }
+        ],
+        ans: 'a',
+        explanation: "‘Exhilarated’ is the correct spelling."
+      },
+      {
+        qId: 256,
+        type: 'sentence-replacement',
+        category: 'Spelling Correction',
+        prompt: 'Select the correct spelling of the underlined word in the sentence:',
+        sentence: 'The government has ordered for the <span class="underline decoration-wavy decoration-rose-500 font-bold">maintainance</span> of the roads.',
+        options: [
+          { key: 'a', text: 'maintenance' },
+          { key: 'b', text: 'maintainence' },
+          { key: 'c', text: 'maintainiance' },
+          { key: 'd', text: 'maintennance' }
+        ],
+        ans: 'a',
+        explanation: "‘Maintenance’ is the correct spelling."
+      },
+      {
+        qId: 257,
+        type: 'single-word',
+        category: 'Select Misspelt Word',
+        prompt: 'Identify the INCORRECTLY spelt word:',
+        options: [
+          { key: 'a', text: 'Eficient' },
+          { key: 'b', text: 'Contribution' },
+          { key: 'c', text: 'Miscalculation' },
+          { key: 'd', text: 'Mediation' }
+        ],
+        ans: 'a',
+        explanation: "‘Efficient’ is the correct spelling (double 'f')."
+      },
+      {
+        qId: 258,
+        type: 'sentence-choice',
+        category: 'Find Error Sentence',
+        prompt: 'Select the sentence that contains a spelling error:',
+        options: [
+          { key: 'a', text: 'The host institution must provide the delegates with accomodation at a subsidised rate.' },
+          { key: 'b', text: 'The occurrence of the lunar eclipse is often a mystery for children.' },
+          { key: 'c', text: 'The boss addressed the meeting.' },
+          { key: 'd', text: 'Rail lines go parallel.' }
+        ],
+        ans: 'a',
+        explanation: "‘Accommodation’ is the correct spelling (double 'c' and double 'm')."
+      },
+      {
+        qId: 259,
+        type: 'fill-blank',
+        category: 'Fill in the Blank',
+        prompt: 'Select the correct spelling to fill in the blank:',
+        sentence: 'The thought of eating half-cooked food under compulsion fills me with _____.',
+        options: [
+          { key: 'a', text: 'ripugnance' },
+          { key: 'b', text: 'repegnance' },
+          { key: 'c', text: 'repugnance' },
+          { key: 'd', text: 'repugnence' }
+        ],
+        ans: 'c',
+        explanation: "‘Repugnance’ is the correct spelling."
+      },
+      {
+        qId: 260,
+        type: 'sentence-replacement',
+        category: 'Identify Misspelt Word',
+        prompt: 'Identify the misspelt word in the sentence below:',
+        sentence: 'The <span class="font-bold underline">resturant</span> offers a wide variety of dishes.',
+        options: [
+          { key: 'a', text: 'variety' },
+          { key: 'b', text: 'resturant' },
+          { key: 'c', text: 'dishes' },
+          { key: 'd', text: 'offers' }
+        ],
+        ans: 'b',
+        explanation: "‘Restaurant’ is the correct spelling."
+      },
+      {
+        qId: 261,
+        type: 'sentence-replacement',
+        category: 'Identify Misspelt Word',
+        prompt: 'Find the misspelt word in the following sentence:',
+        sentence: 'Educational technology has become a <span class="font-bold underline">necesity</span> if one desires excellent output.',
+        options: [
+          { key: 'a', text: 'necesity' },
+          { key: 'b', text: 'excellent' },
+          { key: 'c', text: 'Educational' },
+          { key: 'd', text: 'technology' }
+        ],
+        ans: 'a',
+        explanation: "‘Necessity’ is the correct spelling (double 's')."
+      },
+      {
+        qId: 262,
+        type: 'sentence-choice',
+        category: 'Sentence Correctness',
+        prompt: 'Select the sentence that does NOT have a spelling error:',
+        options: [
+          { key: 'a', text: 'The new caches of materials reveal a secret pleascence that was hidden away from the rest of the world.' },
+          { key: 'b', text: 'Statistical patterns and historical data cannot predict the futristic problems that await a civilisation like ours.' },
+          { key: 'c', text: 'Many friends and memoirists have described the author in detail but there are no photos of the author available to the press.' },
+          { key: 'd', text: 'The author is famous for leading a life of subterfuge and contredictions which has led to challenges in understanding past works.' }
+        ],
+        ans: 'c',
+        explanation: "Sentence (c) is completely correct. ‘Pleasance’, ‘Futuristic’ and ‘Contradictions’ are the correct spellings in the others."
+      },
+      {
+        qId: 263,
+        type: 'fill-blank',
+        category: 'Fill in the Blank',
+        prompt: 'Select the correctly spelt word to fill in the blank:',
+        sentence: 'Helium is used with oxygen for asthma treatment because it _____ very easily.',
+        options: [
+          { key: 'a', text: 'difusez' },
+          { key: 'b', text: 'difuses' },
+          { key: 'c', text: 'diffuses' },
+          { key: 'd', text: 'diffuzes' }
+        ],
+        ans: 'c',
+        explanation: "‘Diffuses’ is the correct spelling."
+      },
+      {
+        qId: 264,
+        type: 'fill-blank',
+        category: 'Fill in the Blank',
+        prompt: 'Select the correct spelling to fill in the blank:',
+        sentence: 'When numerous ideas are presented in a historical context, more than mere _____ can be seen.',
+        options: [
+          { key: 'a', text: 'parallelism' },
+          { key: 'b', text: 'paralialism' },
+          { key: 'c', text: 'paralelism' },
+          { key: 'd', text: 'parollelism' }
+        ],
+        ans: 'a',
+        explanation: "‘Parallelism’ is the correct spelling."
+      },
+      {
+        qId: 265,
+        type: 'fill-blank',
+        category: 'Fill in the Blank',
+        prompt: 'Select the correctly spelt word to fill in the blank:',
+        sentence: 'Calder Hall is a nuclear power station in England which is known as the first nuclear power station to generate electricity for _____ purposes.',
+        options: [
+          { key: 'a', text: 'comercial' },
+          { key: 'b', text: 'comercail' },
+          { key: 'c', text: 'commerceil' },
+          { key: 'd', text: 'commercial' }
+        ],
+        ans: 'd',
+        explanation: "‘Commercial’ is the correct spelling."
+      },
+      {
+        qId: 266,
+        type: 'sentence-replacement',
+        category: 'Identify Misspelt Word',
+        prompt: 'Find the misspelt word in the following sentence:',
+        sentence: 'Economics began with growth and <span class="font-bold underline">removel</span> of poverty as its grand theme.',
+        options: [
+          { key: 'a', text: 'Poverty' },
+          { key: 'b', text: 'Grand' },
+          { key: 'c', text: 'Removel' },
+          { key: 'd', text: 'Economics' }
+        ],
+        ans: 'c',
+        explanation: "‘Removal’ is the correct spelling."
+      },
+      {
+        qId: 267,
+        type: 'sentence-replacement',
+        category: 'Identify Misspelt Word',
+        prompt: 'Select the incorrectly spelt word from the sentence below:',
+        sentence: '<span class="font-bold underline">Fundamentels</span> of every subject need to be learnt on priority basis.',
+        options: [
+          { key: 'a', text: 'priority' },
+          { key: 'b', text: 'basis' },
+          { key: 'c', text: 'Fundamentels' },
+          { key: 'd', text: 'learnt' }
+        ],
+        ans: 'c',
+        explanation: "‘Fundamentals’ is the correct spelling."
+      },
+      {
+        qId: 268,
+        type: 'sentence-choice',
+        category: 'Sentence Correctness',
+        prompt: 'Out of the four sentences given, three have spelling errors. Identify the sentence that has NO spelling error:',
+        options: [
+          { key: 'a', text: 'What advice did he give to young entreprenuers?' },
+          { key: 'b', text: 'She tried to manoeuvre her trolley around people.' },
+          { key: 'c', text: 'The computer\'s software detected an anamoly caused by a virus.' },
+          { key: 'd', text: 'A clergyman read the litturgy from the prayer-book.' }
+        ],
+        ans: 'b',
+        explanation: "‘Entrepreneurs’, ‘Anomaly’ and ‘Liturgy’ are the correct spellings. Sentence (b) is fully correct."
+      },
+      {
+        qId: 269,
+        type: 'sentence-split',
+        category: 'Sentence Segment Error',
+        prompt: 'The following sentence has been split into four segments. Identify the segment that contains a spelling error:',
+        sentenceSegments: [
+          "Big Data has inandated",
+          "the education industry.",
+          "It has transformed it",
+          "by leaps and bounds."
+        ],
+        options: [
+          { key: 'a', text: 'It has transformed it' },
+          { key: 'b', text: 'by leaps and bounds' },
+          { key: 'c', text: 'the education industry' },
+          { key: 'd', text: 'Big Data has inandated' }
+        ],
+        ans: 'd',
+        explanation: "‘Inundated’ is the correct spelling (not 'inandated')."
+      },
+      {
+        qId: 270,
+        type: 'sentence-choice',
+        category: 'Sentence Correctness',
+        prompt: 'Select the correctly spelled sentence:',
+        options: [
+          { key: 'a', text: 'The athlete’s achievements are impressive.' },
+          { key: 'b', text: 'The athlete\'s acheivements are impressive.' },
+          { key: 'c', text: 'The athlete’s achievements are imprressive.' },
+          { key: 'd', text: 'The athletees achievements are impressive.' }
+        ],
+        ans: 'a',
+        explanation: "‘Achievements’ is the correct spelling."
+      },
+      {
+        qId: 271,
+        type: 'sentence-replacement',
+        category: 'Spelling Correction',
+        prompt: 'Select the correct spelling of the underlined word:',
+        sentence: 'The <span class="font-bold underline decoration-wavy decoration-rose-500">occurence</span> of this phenomenon is quite rare.',
+        options: [
+          { key: 'a', text: 'occurrance' },
+          { key: 'b', text: 'occerence' },
+          { key: 'c', text: 'occurrence' },
+          { key: 'd', text: 'occurance' }
+        ],
+        ans: 'c',
+        explanation: "‘Occurrence’ is the correct spelling."
+      },
+      {
+        qId: 272,
+        type: 'single-word',
+        category: 'Select Misspelt Word',
+        prompt: 'Identify the word with the INCORRECT spelling:',
+        options: [
+          { key: 'a', text: 'interrupt' },
+          { key: 'b', text: 'Occurrence' },
+          { key: 'c', text: 'Beggining' },
+          { key: 'd', text: 'Cemetery' }
+        ],
+        ans: 'c',
+        explanation: "‘Beginning’ is the correct spelling (single 'g', double 'n')."
+      },
+      {
+        qId: 273,
+        type: 'statement-based',
+        category: 'Multi-Statement Error Analysis',
+        prompt: 'Select the option that contains all the MISSPELT words in the following four sentences:',
+        statements: [
+          "The new restraunt offers a wide variety of delicious dishes.",
+          "I can't beleive he made such a silly mistake in his presentation.",
+          "The teacher asked the students to complete the assigment by Friday.",
+          "She felt utterly embarassed by her colleague’s comments."
+        ],
+        options: [
+          { key: 'a', text: 'delicious, beleive, assigment, utterly' },
+          { key: 'b', text: 'restraunt, silly, assigment, colleague' },
+          { key: 'c', text: 'delicious, silly, assigment, colleague' },
+          { key: 'd', text: 'restraunt, beleive, assigment, embarassed' }
+        ],
+        ans: 'd',
+        explanation: "‘Restaurant’, ‘Believe’, ‘Assignment’ and ‘Embarrassed’ are the correct spellings."
+      },
+      {
+        qId: 274,
+        type: 'fill-blank',
+        category: 'Fill in the Blank',
+        prompt: 'Select the correctly spelt word to fill in the blank:',
+        sentence: 'My mother said that every relationship must have some amount of _______.',
+        options: [
+          { key: 'a', text: 'phlexibility' },
+          { key: 'b', text: 'flexebelity' },
+          { key: 'c', text: 'flexibility' },
+          { key: 'd', text: 'flaxibilety' }
+        ],
+        ans: 'c',
+        explanation: "‘Flexibility’ is the correct spelling."
+      },
+      {
+        qId: 275,
+        type: 'fill-blank',
+        category: 'Fill in the Blank',
+        prompt: 'Select the correctly spelt word to fill in the blank:',
+        sentence: 'My grandmother _______ the preparation of every festival celebration in my house.',
+        options: [
+          { key: 'a', text: 'initiates' },
+          { key: 'b', text: 'inetiates' },
+          { key: 'c', text: 'enitiates' },
+          { key: 'd', text: 'enetiates' }
+        ],
+        ans: 'a',
+        explanation: "‘Initiates’ is the correct spelling."
+      },
+      {
+        qId: 276,
+        type: 'sentence-replacement',
+        category: 'Spelling Correction',
+        prompt: 'Select the correct spelling of the underlined word in the sentence:',
+        sentence: 'Can you please come back to reality from the <span class="font-bold underline decoration-wavy decoration-rose-500">fectitious</span> world you live in?',
+        options: [
+          { key: 'a', text: 'factitious' },
+          { key: 'b', text: 'fractional' },
+          { key: 'c', text: 'factional' },
+          { key: 'd', text: 'fictitious' }
+        ],
+        ans: 'd',
+        explanation: "‘Fictitious’ is the correct spelling."
+      },
+      {
+        qId: 277,
+        type: 'fill-blank',
+        category: 'Fill in the Blank',
+        prompt: 'Select the correct spelling to fill in the blank:',
+        sentence: 'I often fail to _______ remember someone’s name.',
+        options: [
+          { key: 'a', text: 'accuriately' },
+          { key: 'b', text: 'accuratially' },
+          { key: 'c', text: 'acusatively' },
+          { key: 'd', text: 'accurately' }
+        ],
+        ans: 'd',
+        explanation: "‘Accurately’ is the correct spelling."
+      },
+      {
+        qId: 278,
+        type: 'single-word',
+        category: 'Select Misspelt Word',
+        prompt: 'Identify the INCORRECTLY spelt word among the following options:',
+        options: [
+          { key: 'a', text: 'Measerement' },
+          { key: 'b', text: 'Region' },
+          { key: 'c', text: 'Confidential' },
+          { key: 'd', text: 'Strengths' }
+        ],
+        ans: 'a',
+        explanation: "‘Measurement’ is the correct spelling."
+      },
+      {
+        qId: 279,
+        type: 'single-word',
+        category: 'Select Misspelt Word',
+        prompt: 'Select the INCORRECTLY spelt word:',
+        options: [
+          { key: 'a', text: 'Connoisseur' },
+          { key: 'b', text: 'Neccessary' },
+          { key: 'c', text: 'Privilege' },
+          { key: 'd', text: 'Dilemma' }
+        ],
+        ans: 'b',
+        explanation: "‘Necessary’ is the correct spelling (single 'c', double 's')."
+      },
+      {
+        qId: 280,
+        type: 'fill-blank',
+        category: 'Fill in the Blank',
+        prompt: 'Select the correct spelling to fill in the blank:',
+        sentence: 'Definitions of _______ are subjective to various interpretations.',
+        options: [
+          { key: 'a', text: 'sovereignty' },
+          { key: 'b', text: 'suvereignty' },
+          { key: 'c', text: 'sovereinity' },
+          { key: 'd', text: 'soverenty' }
+        ],
+        ans: 'a',
+        explanation: "‘Sovereignty’ is the correct spelling."
+      }
+    ];
+
+    // Quiz State
+    let activeQuestions = [...questionsData];
+    let currentIndex = 0;
+    let userAnswers = {}; // { index: { selected: 'a', isCorrect: true } }
+    let timerSeconds = 0;
+    let timerInterval = null;
+    let isReviewModeOnly = false;
+
+    // Theme Management
+    function initTheme() {
+      const isDark = localStorage.getItem('quiz_theme') === 'dark' || 
+        (!('quiz_theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches);
+      if (isDark) {
+        document.documentElement.classList.add('dark');
+        document.getElementById('theme-icon-moon').classList.add('hidden');
+        document.getElementById('theme-icon-sun').classList.remove('hidden');
+      } else {
+        document.documentElement.classList.remove('dark');
+        document.getElementById('theme-icon-moon').classList.remove('hidden');
+        document.getElementById('theme-icon-sun').classList.add('hidden');
+      }
+    }
+
+    function toggleTheme() {
+      const isCurrentlyDark = document.documentElement.classList.contains('dark');
+      if (isCurrentlyDark) {
+        document.documentElement.classList.remove('dark');
+        localStorage.setItem('quiz_theme', 'light');
+        document.getElementById('theme-icon-moon').classList.remove('hidden');
+        document.getElementById('theme-icon-sun').classList.add('hidden');
+      } else {
+        document.documentElement.classList.add('dark');
+        localStorage.setItem('quiz_theme', 'dark');
+        document.getElementById('theme-icon-moon').classList.add('hidden');
+        document.getElementById('theme-icon-sun').classList.remove('hidden');
+      }
+    }
+
+    function startTimer() {
+      clearInterval(timerInterval);
+      timerInterval = setInterval(() => {
+        timerSeconds++;
+        const mins = Math.floor(timerSeconds / 60).toString().padStart(2, '0');
+        const secs = (timerSeconds % 60).toString().padStart(2, '0');
+        document.getElementById('quiz-timer').innerText = `${mins}:${secs}`;
+      }, 1000);
+    }
+
+    function renderQuestion() {
+      const q = activeQuestions[currentIndex];
+      const answered = userAnswers[currentIndex];
+
+      // Update question badges & progress
+      document.getElementById('q-label').innerText = `Q.${q.qId}`;
+      document.getElementById('q-category').innerText = q.category;
+      document.getElementById('q-count-display').innerText = `${currentIndex + 1} / ${activeQuestions.length}`;
+      
+      const pct = ((currentIndex + 1) / activeQuestions.length) * 100;
+      document.getElementById('progress-bar-fill').style.width = `${pct}%`;
+
+      // Prompt rendering
+      let promptHtml = `<span class="text-slate-900 dark:text-white font-semibold">${q.prompt}</span>`;
+      if (q.sentence) {
+        promptHtml += `<div class="mt-2 text-slate-800 dark:text-slate-200 bg-slate-50 dark:bg-slate-800/50 p-2 sm:p-2.5 rounded-lg border border-slate-200/70 dark:border-slate-700 leading-relaxed">${q.sentence}</div>`;
+      }
+      document.getElementById('q-prompt').innerHTML = promptHtml;
+
+      // Handle Complex Question Types: Statements (Q.273)
+      const stBox = document.getElementById('q-statements-box');
+      if (q.statements && q.statements.length) {
+        stBox.classList.remove('hidden');
+        stBox.innerHTML = q.statements.map((s, idx) => `
+          <div class="flex items-start gap-2">
+            <span class="flex-shrink-0 w-5 h-5 rounded bg-indigo-100 dark:bg-indigo-900/60 text-indigo-700 dark:text-indigo-300 font-mono font-bold text-[11px] flex items-center justify-center">${idx + 1}</span>
+            <span class="text-slate-700 dark:text-slate-300 leading-snug">${s}</span>
+          </div>
+        `).join('');
+      } else {
+        stBox.classList.add('hidden');
+      }
+
+      // Handle Sentence Split Segments (e.g. Q.269)
+      const splitBox = document.getElementById('q-split-box');
+      if (q.sentenceSegments && q.sentenceSegments.length) {
+        splitBox.classList.remove('hidden');
+        splitBox.innerHTML = `
+          <div class="text-[11px] font-bold uppercase text-indigo-600 dark:text-indigo-400 mb-1">Sentence Segments:</div>
+          <div class="flex flex-wrap gap-1.5 items-center">
+            ${q.sentenceSegments.map((seg, i) => `
+              <span class="px-2 py-0.5 rounded bg-white dark:bg-slate-900 border border-indigo-200 dark:border-indigo-800 text-slate-800 dark:text-slate-200 text-xs shadow-2xs">
+                ${seg} ${i < q.sentenceSegments.length - 1 ? '<span class="text-indigo-400 dark:text-indigo-600 font-bold ml-1">/</span>' : ''}
+              </span>
+            `).join('')}
+          </div>
+        `;
+      } else {
+        splitBox.classList.add('hidden');
+      }
+
+      // Render Options
+      const optContainer = document.getElementById('options-container');
+      optContainer.innerHTML = '';
+
+      q.options.forEach((opt) => {
+        const btn = document.createElement('button');
+        btn.id = `opt-btn-${opt.key}`;
+        btn.onclick = () => selectOption(opt.key);
+        btn.className = `w-full text-left p-2.5 sm:p-3 rounded-lg border text-xs sm:text-sm font-medium transition-all duration-150 flex items-center gap-2.5 group relative select-none`;
+
+        // Baseline styling if not answered
+        if (!answered) {
+          btn.className += ` bg-white dark:bg-slate-800/90 border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 hover:border-indigo-400 dark:hover:border-indigo-500 hover:bg-indigo-50/40 dark:hover:bg-indigo-950/30`;
+        } else {
+          btn.disabled = true;
+          // Apply results state styling
+          if (opt.key === q.ans) {
+            btn.className += ` bg-emerald-50 dark:bg-emerald-950/60 border-emerald-500 text-emerald-800 dark:text-emerald-200 font-bold ring-1 ring-emerald-500`;
+          } else if (opt.key === answered.selected && !answered.isCorrect) {
+            btn.className += ` bg-rose-50 dark:bg-rose-950/60 border-rose-500 text-rose-800 dark:text-rose-200 font-semibold ring-1 ring-rose-500 animate-shake`;
+          } else {
+            btn.className += ` bg-white dark:bg-slate-800/40 border-slate-200 dark:border-slate-800 text-slate-400 dark:text-slate-500 opacity-60`;
+          }
+        }
+
+        // Indicator key badge
+        let badgeClasses = 'w-6 h-6 rounded-md font-mono text-xs flex items-center justify-center font-bold flex-shrink-0 transition-colors ';
+        if (!answered) {
+          badgeClasses += 'bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 group-hover:bg-indigo-600 group-hover:text-white';
+        } else if (opt.key === q.ans) {
+          badgeClasses += 'bg-emerald-500 text-white';
+        } else if (opt.key === answered.selected) {
+          badgeClasses += 'bg-rose-500 text-white';
+        } else {
+          badgeClasses += 'bg-slate-100 dark:bg-slate-800 text-slate-400';
+        }
+
+        btn.innerHTML = `
+          <span class="${badgeClasses}">(${opt.key})</span>
+          <span class="truncate sm:whitespace-normal flex-1 leading-snug">${opt.text}</span>
+          ${answered && opt.key === q.ans ? '<svg class="w-4 h-4 text-emerald-600 dark:text-emerald-400 ml-auto flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>' : ''}
+          ${answered && opt.key === answered.selected && !answered.isCorrect ? '<svg class="w-4 h-4 text-rose-600 dark:text-rose-400 ml-auto flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"/></svg>' : ''}
+        `;
+        optContainer.appendChild(btn);
+      });
+
+      // Update feedback panel
+      const fbPanel = document.getElementById('feedback-panel');
+      const fbBadge = document.getElementById('feedback-badge');
+      const fbExpl = document.getElementById('feedback-explanation');
+
+      if (answered) {
+        fbPanel.classList.remove('hidden');
+        fbExpl.innerText = q.explanation;
+        if (answered.isCorrect) {
+          fbPanel.className = `mt-2 p-2 sm:p-2.5 rounded-lg border text-xs sm:text-xs flex items-center justify-between gap-2 bg-emerald-50 dark:bg-emerald-950/40 border-emerald-300 dark:border-emerald-800 animate-pop`;
+          fbBadge.className = 'flex-shrink-0 px-2 py-0.5 rounded font-bold uppercase tracking-wider text-[10px] bg-emerald-600 text-white';
+          fbBadge.innerText = 'Correct';
+        } else {
+          fbPanel.className = `mt-2 p-2 sm:p-2.5 rounded-lg border text-xs sm:text-xs flex items-center justify-between gap-2 bg-rose-50 dark:bg-rose-950/40 border-rose-300 dark:border-rose-800 animate-pop`;
+          fbBadge.className = 'flex-shrink-0 px-2 py-0.5 rounded font-bold uppercase tracking-wider text-[10px] bg-rose-600 text-white';
+          fbBadge.innerText = 'Incorrect';
+        }
+      } else {
+        fbPanel.classList.add('hidden');
+      }
+
+      // Prev / Next button states
+      document.getElementById('prev-btn').disabled = (currentIndex === 0);
+      const nextBtnText = document.getElementById('next-btn-text');
+      if (currentIndex === activeQuestions.length - 1) {
+        nextBtnText.innerText = 'View Results';
+      } else {
+        nextBtnText.innerText = 'Next';
+      }
+
+      updateLiveStats();
+      updatePaletteDrawerGrid();
+    }
+
+    function selectOption(selectedKey) {
+      if (userAnswers[currentIndex]) return; // prevent re-answering
+
+      const q = activeQuestions[currentIndex];
+      const isCorrect = (selectedKey === q.ans);
+
+      userAnswers[currentIndex] = {
+        selected: selectedKey,
+        isCorrect: isCorrect,
+        qId: q.qId
+      };
+
+      renderQuestion();
+    }
+
+    function nextQuestion() {
+      if (currentIndex < activeQuestions.length - 1) {
+        currentIndex++;
+        renderQuestion();
+      } else {
+        finishQuiz();
+      }
+    }
+
+    function prevQuestion() {
+      if (currentIndex > 0) {
+        currentIndex--;
+        renderQuestion();
+      }
+    }
+
+    function skipQuestion() {
+      nextQuestion();
+    }
+
+    function updateLiveStats() {
+      let correct = 0;
+      let wrong = 0;
+      Object.values(userAnswers).forEach(ans => {
+        if (ans.isCorrect) correct++;
+        else wrong++;
+      });
+
+      document.getElementById('live-correct').innerText = correct;
+      document.getElementById('live-wrong').innerText = wrong;
+    }
+
+    function toggleDrawer(open) {
+      const drawer = document.getElementById('palette-drawer');
+      if (open) {
+        drawer.classList.remove('opacity-0', 'pointer-events-none');
+        drawer.classList.add('opacity-100');
+      } else {
+        drawer.classList.add('opacity-0', 'pointer-events-none');
+        drawer.classList.remove('opacity-100');
+      }
+    }
+
+    function updatePaletteDrawerGrid() {
+      const grid = document.getElementById('drawer-grid');
+      grid.innerHTML = '';
+
+      activeQuestions.forEach((q, idx) => {
+        const btn = document.createElement('button');
+        btn.onclick = () => {
+          currentIndex = idx;
+          renderQuestion();
+          toggleDrawer(false);
+        };
+
+        const ans = userAnswers[idx];
+        let baseStyle = 'h-8 rounded text-xs font-mono font-bold flex items-center justify-center transition border ';
+        
+        if (idx === currentIndex) {
+          baseStyle += 'ring-2 ring-indigo-500 font-extrabold ';
+        }
+
+        if (ans) {
+          if (ans.isCorrect) {
+            baseStyle += 'bg-emerald-500 text-white border-emerald-600';
+          } else {
+            baseStyle += 'bg-rose-500 text-white border-rose-600';
+          }
+        } else {
+          baseStyle += 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:bg-slate-200';
+        }
+
+        btn.className = baseStyle;
+        btn.innerText = idx + 1;
+        btn.title = `Question ${q.qId}`;
+        grid.appendChild(btn);
+      });
+    }
+
+    let currentFilter = 'all';
+
+    function finishQuiz() {
+      toggleDrawer(false);
+      clearInterval(timerInterval);
+
+      document.getElementById('quiz-screen').classList.add('hidden');
+      document.getElementById('results-screen').classList.remove('hidden');
+
+      let correctCount = 0;
+      let wrongCount = 0;
+      const total = activeQuestions.length;
+
+      activeQuestions.forEach((q, idx) => {
+        const u = userAnswers[idx];
+        if (u) {
+          if (u.isCorrect) correctCount++;
+          else wrongCount++;
+        }
+      });
+
+      const accuracy = total > 0 ? Math.round((correctCount / total) * 100) : 0;
+      document.getElementById('res-score').innerText = `${correctCount}/${total}`;
+      document.getElementById('res-correct').innerText = correctCount;
+      document.getElementById('res-wrong').innerText = wrongCount;
+      document.getElementById('res-accuracy').innerText = `${accuracy}%`;
+      document.getElementById('wrong-count-badge').innerText = wrongCount;
+
+      renderReviewList();
+    }
+
+    function filterReview(mode) {
+      currentFilter = mode;
+      const allBtn = document.getElementById('filter-all-btn');
+      const wrongBtn = document.getElementById('filter-wrong-btn');
+
+      if (mode === 'all') {
+        allBtn.className = 'px-2.5 py-1 text-[11px] font-semibold rounded-md bg-indigo-600 text-white transition';
+        wrongBtn.className = 'px-2.5 py-1 text-[11px] font-semibold rounded-md bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 transition';
+      } else {
+        wrongBtn.className = 'px-2.5 py-1 text-[11px] font-semibold rounded-md bg-indigo-600 text-white transition';
+        allBtn.className = 'px-2.5 py-1 text-[11px] font-semibold rounded-md bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 transition';
+      }
+      renderReviewList();
+    }
+
+    function renderReviewList() {
+      const container = document.getElementById('results-review-list');
+      container.innerHTML = '';
+
+      let displayedQuestions = [];
+      activeQuestions.forEach((q, idx) => {
+        const u = userAnswers[idx];
+        const isWrong = !u || !u.isCorrect;
+        if (currentFilter === 'all' || (currentFilter === 'wrong' && isWrong)) {
+          displayedQuestions.push({ q, idx, u });
+        }
+      });
+
+      if (displayedQuestions.length === 0) {
+        container.innerHTML = `
+          <div class="text-center py-8 text-slate-400 text-xs">
+            <svg class="w-8 h-8 mx-auto mb-2 text-emerald-500 opacity-80" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            No questions to display in this filter. Perfect score!
+          </div>
+        `;
+        return;
+      }
+
+      displayedQuestions.forEach(({ q, idx, u }) => {
+        const card = document.createElement('div');
+        const isCorrect = u && u.isCorrect;
+        card.className = `p-2.5 sm:p-3 rounded-lg border text-xs ${
+          isCorrect 
+            ? 'bg-slate-50/70 dark:bg-slate-800/40 border-slate-200 dark:border-slate-800' 
+            : 'bg-rose-50/30 dark:bg-rose-950/20 border-rose-200 dark:border-rose-900/60'
+        }`;
+
+        // Get option text
+        const correctOptObj = q.options.find(o => o.key === q.ans);
+        const userOptObj = u ? q.options.find(o => o.key === u.selected) : null;
+
+        card.innerHTML = `
+          <div class="flex items-center justify-between gap-2 mb-1.5">
+            <span class="font-mono font-bold text-slate-700 dark:text-slate-300">Q.${q.qId}</span>
+            <span class="px-2 py-0.5 rounded text-[10px] font-bold ${
+              isCorrect ? 'bg-emerald-100 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-300' : 'bg-rose-100 dark:bg-rose-950 text-rose-700 dark:text-rose-300'
+            }">
+              ${isCorrect ? 'Correct' : (u ? 'Incorrect' : 'Skipped')}
+            </span>
+          </div>
+
+          <div class="text-slate-800 dark:text-slate-200 font-medium mb-1.5 leading-snug">
+            ${q.prompt} ${q.sentence ? `<span class="italic text-slate-600 dark:text-slate-400">"${q.sentence.replace(/<[^>]*>?/gm, '')}"</span>` : ''}
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 mt-2 pt-2 border-t border-slate-200/60 dark:border-slate-800">
+            <div class="p-1.5 rounded bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800">
+              <span class="text-[10px] text-slate-400 uppercase font-bold block">Your Answer:</span>
+              <span class="${isCorrect ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400'} font-semibold">
+                ${userOptObj ? `(${userOptObj.key}) ${userOptObj.text}` : 'None (Skipped)'}
+              </span>
+            </div>
+
+            <div class="p-1.5 rounded bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800">
+              <span class="text-[10px] text-slate-400 uppercase font-bold block">Correct Answer:</span>
+              <span class="text-emerald-600 dark:text-emerald-400 font-semibold">
+                (${correctOptObj.key}) ${correctOptObj.text}
+              </span>
+            </div>
+          </div>
+
+          <div class="mt-2 text-[11px] text-slate-600 dark:text-slate-400 bg-slate-100/60 dark:bg-slate-800/80 p-1.5 rounded border border-slate-200 dark:border-slate-700">
+            <span class="font-bold text-slate-700 dark:text-slate-300">Explanation:</span> ${q.explanation}
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    // Restart logic
+    function restartQuiz(incorrectOnly = false) {
+      if (incorrectOnly) {
+        const wrongQs = activeQuestions.filter((q, idx) => !userAnswers[idx] || !userAnswers[idx].isCorrect);
+        if (wrongQs.length === 0) {
+          return;
+        }
+        activeQuestions = wrongQs;
+      } else {
+        activeQuestions = [...questionsData];
+      }
+
+      currentIndex = 0;
+      userAnswers = {};
+      timerSeconds = 0;
+      document.getElementById('quiz-timer').innerText = "00:00";
+      
+      document.getElementById('results-screen').classList.add('hidden');
+      document.getElementById('quiz-screen').classList.remove('hidden');
+
+      startTimer();
+      renderQuestion();
+    }
+
+    // Keyboard Shortcuts (Option A, B, C, D & Enter)
+    window.addEventListener('keydown', (e) => {
+      // Don't trigger if results screen is visible
+      if (!document.getElementById('results-screen').classList.contains('hidden')) return;
+
+      const key = e.key.toLowerCase();
+      if (['a', 'b', 'c', 'd'].includes(key)) {
+        selectOption(key);
+      } else if (e.key === 'Enter' || e.key === 'ArrowRight') {
+        nextQuestion();
+      } else if (e.key === 'ArrowLeft') {
+        prevQuestion();
+      }
+    });
+
+    // Initialize application on load
+    window.onload = () => {
+      initTheme();
+      startTimer();
+      renderQuestion();
+    };
+  </script>
+</body>
+</html>
