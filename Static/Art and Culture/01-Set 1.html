@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>SSC Exam Prep - Art, Culture & Heritage</title>
+    <title>SSC Exam Prep - Indian Art & Culture Quiz</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -21,9 +21,9 @@
                         brand: {
                             50: '#eef2ff',
                             100: '#e0e7ff',
-                            500: '#4f46e5',
-                            600: '#4338ca',
-                            700: '#3730a3',
+                            500: '#6366f1',
+                            600: '#4f46e5',
+                            700: '#4338ca',
                         }
                     }
                 }
@@ -37,55 +37,949 @@
         }
         body {
             font-family: 'Inter', sans-serif;
-            overflow: hidden;
             height: 100dvh;
             width: 100vw;
+            overflow: hidden;
         }
-        /* Custom scrollbar for review list */
-        ::-webkit-scrollbar {
-            width: 5px;
-            height: 5px;
+        .custom-scroll::-webkit-scrollbar {
+            width: 6px;
         }
-        ::-webkit-scrollbar-track {
-            background: transparent;
+        .custom-scroll::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.04);
+            border-radius: 8px;
         }
-        ::-webkit-scrollbar-thumb {
-            background: rgba(156, 163, 175, 0.4);
-            border-radius: 9999px;
+        .dark .custom-scroll::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.04);
         }
-        .anim-fade {
-            animation: fadeIn 0.22s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        .custom-scroll::-webkit-scrollbar-thumb {
+            background: rgba(148, 163, 184, 0.5);
+            border-radius: 8px;
         }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(4px); }
+        .custom-scroll::-webkit-scrollbar-thumb:hover {
+            background: rgba(100, 116, 139, 0.7);
+        }
+        .anim-slide-in {
+            animation: slideIn 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(6px); }
             to { opacity: 1; transform: translateY(0); }
         }
     </style>
 </head>
-<body class="bg-slate-100 text-slate-800 dark:bg-slate-950 dark:text-slate-100 transition-colors duration-200 antialiased flex flex-col justify-between select-none">
+<body class="bg-slate-100 text-slate-800 dark:bg-slate-950 dark:text-slate-100 antialiased flex flex-col justify-between transition-colors duration-200">
 
-    <!-- App Header (Compact single row) -->
-    <header class="w-full bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 px-4 py-2 flex items-center justify-between shadow-xs shrink-0 z-20">
-        <div class="flex items-center space-x-2">
-            <span class="flex h-7 w-7 items-center justify-center rounded-lg bg-indigo-600 text-white font-bold text-xs shadow">
+    <header class="w-full bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 px-3 sm:px-6 py-2.5 flex items-center justify-between shrink-0 shadow-xs z-20">
+        <div class="flex items-center space-x-3">
+            <div class="w-8 h-8 rounded-lg bg-indigo-600 text-white flex items-center justify-center font-extrabold text-sm shadow-sm">
                 SSC
-            </span>
+            </div>
             <div>
-                <h1 class="text-sm font-bold tracking-tight text-slate-800 dark:text-slate-100 leading-none">Art & Culture Mock Test</h1>
-                <p class="text-[11px] text-slate-500 dark:text-slate-400 font-medium">PYQ Series • High-Yield Edition</p>
+                <h1 class="text-sm font-bold tracking-tight text-slate-900 dark:text-white flex items-center gap-1.5">
+                    Art, Culture & History
+                    <span class="text-[10px] uppercase font-bold tracking-wider px-1.5 py-0.5 rounded bg-indigo-100 dark:bg-indigo-950/70 text-indigo-700 dark:text-indigo-300">Live Mock</span>
+                </h1>
+                <p class="text-[11px] text-slate-500 dark:text-slate-400 font-medium">Official TCS & NTA Pattern • 50 High-Yield Questions</p>
             </div>
         </div>
 
-        <div class="flex items-center space-x-2.5">
-            <!-- Question Pill Indicator -->
-            <div id="top-counter" class="text-[12px] font-semibold px-2.5 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
-                <span id="header-curr" class="text-indigo-600 dark:text-indigo-400 font-bold">1</span> / <span id="header-total">50</span>
+        <div class="flex items-center space-x-2 sm:space-x-3">
+            <!-- Progress Counter -->
+            <div class="px-2.5 py-1 rounded-full bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs font-semibold text-slate-700 dark:text-slate-300">
+                Q: <span id="nav-current" class="text-indigo-600 dark:text-indigo-400 font-bold">1</span> / <span id="nav-total">50</span>
             </div>
 
             <!-- Score Pill -->
-            <div class="hidden sm:flex items-center text-[12px] font-semibold px-2.5 py-1 rounded-full bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800">
-                Score: <span id="header-score" class="ml-1 font-bold">0</span>
+            <div class="px-2.5 py-1 rounded-full bg-emerald-50 dark:bg-emerald-950/50 border border-emerald-200 dark:border-emerald-800/80 text-xs font-semibold text-emerald-700 dark:text-emerald-300 flex items-center gap-1">
+                <span>Score:</span>
+                <span id="nav-score" class="font-bold">0</span>
             </div>
 
-            <!-- Theme Toggle -->
-            <button id="theme-toggle" type="button" aria
+            <!-- Dark / Light Switcher -->
+            <button id="theme-btn" class="p-2 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700 transition" title="Toggle Theme">
+                <svg id="sun-icon" class="w-4 h-4 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+                <svg id="moon-icon" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
+            </button>
+        </div>
+    </header>
+
+    <!-- Progress Bar Tracker -->
+    <div class="w-full h-1 bg-slate-200 dark:bg-slate-800 shrink-0">
+        <div id="progress-bar" class="h-full bg-indigo-600 transition-all duration-300 ease-out" style="width: 2%;"></div>
+    </div>
+
+    <main class="flex-1 overflow-hidden p-2 sm:p-4 flex items-center justify-center">
+        <!-- Active Quiz Container -->
+        <div id="quiz-container" class="w-full max-w-4xl h-full max-h-[88vh] bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-xl p-3.5 sm:p-6 flex flex-col justify-between anim-slide-in">
+            
+            <!-- Top Card Info Bar -->
+            <div class="flex items-center justify-between pb-2.5 border-b border-slate-100 dark:border-slate-800/80 shrink-0">
+                <div class="flex items-center gap-2">
+                    <span id="badge-question-num" class="px-2.5 py-0.5 rounded-md bg-indigo-50 dark:bg-indigo-950/70 border border-indigo-200 dark:border-indigo-800 text-indigo-700 dark:text-indigo-300 font-mono text-xs font-bold">Question 01</span>
+                    <span id="badge-source" class="text-[11px] font-medium text-slate-400 dark:text-slate-500 truncate max-w-[220px] sm:max-w-xs">SSC CGL / CHSL / MTS</span>
+                </div>
+                <span class="text-xs font-medium text-slate-400 font-mono">Exam Section: General Awareness</span>
+            </div>
+
+            <!-- Question Prompt Area -->
+            <div class="my-auto py-2 overflow-y-auto custom-scroll pr-1">
+                <div id="question-text" class="text-sm sm:text-base font-semibold text-slate-900 dark:text-slate-100 leading-relaxed">
+                    <!-- Dynamic Question Text -->
+                </div>
+
+                <!-- Structured Statement / List Insert Area (Shown dynamically when question has statements) -->
+                <div id="statements-box" class="hidden mt-2.5 p-3 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 text-xs sm:text-sm font-medium space-y-1.5">
+                    <!-- Dynamic Statements -->
+                </div>
+
+                <!-- 4 Options Grid -->
+                <div id="options-grid" class="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-2.5 mt-3 sm:mt-4">
+                    <!-- Option buttons will be injected here -->
+                </div>
+            </div>
+
+            <!-- Bottom Interactive Deck: Feedback card + Next Button -->
+            <div class="pt-3 border-t border-slate-100 dark:border-slate-800 shrink-0 flex items-center justify-between gap-3">
+                <!-- Feedback Strip -->
+                <div id="feedback-strip" class="flex-1 min-h-[46px] rounded-xl px-3 py-1.5 flex items-center text-xs font-medium transition-all bg-slate-50 dark:bg-slate-800/40 border border-dashed border-slate-200 dark:border-slate-700 text-slate-400">
+                    <span class="flex items-center gap-1.5">
+                        <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        Choose an option to verify your answer and unlock the next question.
+                    </span>
+                </div>
+
+                <!-- Next Action Button -->
+                <button id="next-btn" disabled class="px-5 py-2.5 rounded-xl bg-slate-200 dark:bg-slate-800 text-slate-400 dark:text-slate-600 font-bold text-xs sm:text-sm shadow-xs transition-all flex items-center gap-1.5 cursor-not-allowed">
+                    <span>Next Question</span>
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                </button>
+            </div>
+        </div>
+
+        <!-- Quiz Completion Screen (Initially Hidden) -->
+        <div id="result-container" class="hidden w-full max-w-4xl h-full max-h-[88vh] bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-xl p-4 sm:p-6 flex flex-col justify-between anim-slide-in">
+            
+            <!-- Result Header Banner -->
+            <div class="text-center pb-3 border-b border-slate-100 dark:border-slate-800 shrink-0">
+                <h2 class="text-lg sm:text-xl font-extrabold text-slate-900 dark:text-white">SSC Performance Report</h2>
+                <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Comprehensive answer analysis and score breakdown</p>
+            </div>
+
+            <!-- Score Summary Cards -->
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 my-3 shrink-0">
+                <div class="p-3 rounded-xl bg-indigo-50 dark:bg-indigo-950/40 border border-indigo-200 dark:border-indigo-800 text-center">
+                    <div class="text-xs text-indigo-600 dark:text-indigo-400 font-semibold uppercase">Final Score</div>
+                    <div id="res-score" class="text-xl sm:text-2xl font-black text-indigo-700 dark:text-indigo-300 mt-0.5">0 / 50</div>
+                </div>
+                <div class="p-3 rounded-xl bg-blue-50 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-800 text-center">
+                    <div class="text-xs text-blue-600 dark:text-blue-400 font-semibold uppercase">Percentage</div>
+                    <div id="res-percent" class="text-xl sm:text-2xl font-black text-blue-700 dark:text-blue-300 mt-0.5">0%</div>
+                </div>
+                <div class="p-3 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 text-center">
+                    <div class="text-xs text-emerald-600 dark:text-emerald-400 font-semibold uppercase">Correct</div>
+                    <div id="res-correct" class="text-xl sm:text-2xl font-black text-emerald-700 dark:text-emerald-300 mt-0.5">0</div>
+                </div>
+                <div class="p-3 rounded-xl bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800 text-center">
+                    <div class="text-xs text-rose-600 dark:text-rose-400 font-semibold uppercase">Incorrect</div>
+                    <div id="res-wrong" class="text-xl sm:text-2xl font-black text-rose-700 dark:text-rose-300 mt-0.5">0</div>
+                </div>
+            </div>
+
+            <!-- Detailed Breakdown Scroll Area -->
+            <div class="flex-1 overflow-y-auto custom-scroll pr-1.5 space-y-2.5 my-1">
+                <div class="flex items-center justify-between text-xs font-bold text-slate-700 dark:text-slate-300 px-1">
+                    <span>Performance Log & Detailed Review</span>
+                    <span id="res-mistake-count" class="text-rose-600 dark:text-rose-400 text-[11px] font-semibold">0 Mistakes to review</span>
+                </div>
+
+                <div id="review-list" class="space-y-2">
+                    <!-- Injected via JavaScript -->
+                </div>
+            </div>
+
+            <!-- Restart Footer -->
+            <div class="pt-3 border-t border-slate-100 dark:border-slate-800 shrink-0 flex items-center justify-end">
+                <button id="restart-btn" class="px-6 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-sm shadow-md transition-all flex items-center gap-2">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+                    <span>Restart Test (Attempt Again)</span>
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        const quizData = [
+            {
+                id: 1,
+                source: "SSC Phase XIII 29 July, 2025 Shift 2",
+                question: "Which harvest festival is celebrated in Punjab during January?",
+                options: ["Pongal", "Bihu", "Makar Sankranti", "Lohri"],
+                answer: "D",
+                note: "Lohri marks the winter solstice and harvesting of rabi crops in Punjab."
+            },
+            {
+                id: 2,
+                source: "MTS 2025 19 Feb 2026 Shift 1",
+                question: "The painting 'Engagement Ring' (1961) by Roy Lichtenstein was based on a comic panel from which strip?",
+                options: ["Peanuts", "Dilbert", "Winnie Winkle", "Blondie"],
+                answer: "C",
+                note: "Lichtenstein sourced this famous pop art painting from the comic strip Winnie Winkle."
+            },
+            {
+                id: 3,
+                source: "SSC CGL 2025 24 Sept, 2025 Shift 2",
+                question: "Consider the following statements regarding the Karma ritual:",
+                statements: [
+                    "Statement 1: The ritual honours the Karam tree on Bhadra Ekadashi in Chhattisgarh.",
+                    "Statement 2: The drum most associated with it is the Madal."
+                ],
+                questionSuffix: "Which of the statements given above is/are correct?",
+                options: ["Only 1 correct", "Only 2 correct", "Both 1 & 2 correct", "Neither 1 nor 2 correct"],
+                answer: "A",
+                note: "Statement 1 is authentic; the Mandar/Madal drum association does not override Chhattisgarh's specific traditional attribution in official key."
+            },
+            {
+                id: 4,
+                source: "SSC CGL 2025 13 Sept, 2025 Shift 3",
+                question: "What does the offering of green melons by unmarried girls during the Jawa festival symbolise in Jharkhand's tribal tradition?",
+                options: ["Wealth and long life", "Rain and crop yield", "Son and fertility", "Marriage and devotion"],
+                answer: "C",
+                note: "In Jawa festival of Jharkhand, girls offer green melons symbolising prayers for fertility and healthy offspring."
+            },
+            {
+                id: 5,
+                source: "SSC CPO 10 Dec 2025 Shift 1",
+                question: "Which of the following statements about traditional and semi-classical Indian music forms are correct?",
+                statements: [
+                    "1. Dhrupad is the oldest surviving classical vocal genre.",
+                    "2. Thumri originated exclusively as courtly martial poetry.",
+                    "3. Khayal gives greater freedom for improvisation compared to Dhrupad.",
+                    "4. Tappa evolved from the camel riders' folk songs of Punjab."
+                ],
+                options: ["1, 2 and 3 only", "1, 3 and 4 only", "2, 3 and 4 only", "1, 2 and 4 only"],
+                answer: "B",
+                note: "Thumri is romantic-devotional rather than martial poetry. Hence 1, 3, and 4 are correct."
+            },
+            {
+                id: 6,
+                source: "MTS 2025 05 Feb 2026 Shift 3",
+                question: "Daskathia is a form of ballad singing prevalent in which Indian state?",
+                options: ["Punjab", "Tamil Nadu", "Maharashtra", "Odisha"],
+                answer: "D",
+                note: "Daskathia is a traditional ballad singing and storytelling folk art of Odisha using kathi castanets."
+            },
+            {
+                id: 7,
+                source: "SSC CGL 2025 25 Sept, 2025 Shift 3",
+                question: "The life-size standing image of Yakshini holding a chauri (flywhisk) discovered at Didarganj is a masterpiece of the sculptural tradition of which period?",
+                options: ["Mauryan Period", "Gupta Period", "Kushan Period", "Sunga Period"],
+                answer: "A",
+                note: "The Didarganj Yakshini is carved from polished Chunar sandstone belonging to the Mauryan sculptural tradition."
+            },
+            {
+                id: 8,
+                source: "SSC CHSL 2025 Tier-1 12 Nov, 2025 Shift 3",
+                question: "Which of the following folk dances of Chhattisgarh is also known as 'Parrot dance'?",
+                options: ["Suwa Dance", "Kolatam Dance", "Lambadi Dance", "Aoling Monyu Dance"],
+                answer: "A",
+                note: "Suwa (or Sua) dance represents the parrot, where women dance clapping rhythmically around an image of a parrot."
+            },
+            {
+                id: 9,
+                source: "DP Constable 24 Dec 2025 Shift 1",
+                question: "The classical dance form 'Sattriya' originates from which region/state of India?",
+                options: ["Assam", "Tamil Nadu", "Kerala", "Andhra Pradesh"],
+                answer: "A",
+                note: "Sattriya was originated in Assam by Srimanta Sankardev in the 15th century CE inside Vaishnavite Sattras."
+            },
+            {
+                id: 10,
+                source: "DP Constable 20 Dec 2025 Shift 1",
+                question: "Which of the following is classified as a 'Ghan Vadya' (Idiophone / Solid instrument)?",
+                options: ["Das-kathi", "Naal", "Jantar", "Magudi"],
+                answer: "A",
+                note: "Das-kathi consists of solid resonant wooden clappers struck together, making it a Ghan Vadya."
+            },
+            {
+                id: 11,
+                source: "DP Constable 29 Dec 2025 Shift 3",
+                question: "Which of the following is a traditional dance-drama form of Karnataka based on stories from epics?",
+                options: ["Yakshagana", "Kuchipudi", "Mohiniyattam", "Garba"],
+                answer: "A",
+                note: "Yakshagana combines dance, dialogue, costume, and classical Carnatic-derived music based on Puranas."
+            },
+            {
+                id: 12,
+                source: "DP HC 12 Jan 2026 Shift 2",
+                question: "Which of the following is true about the Vishnu Cave (Cave 3) murals at Badami?",
+                options: [
+                    "They depict Jain themes on the sanctum wall.",
+                    "They began a new southern miniature style, unrelated to earlier art.",
+                    "They appear on the maṇḍapa roof and continue the Ajanta mural tradition.",
+                    "The cave was built in the 12th century under the Cholas."
+                ],
+                answer: "C",
+                note: "Badami cave paintings on the mandapa ceiling represent Chalukyan continuation of the Ajanta fresco/mural lineage."
+            },
+            {
+                id: 13,
+                source: "MTS 2025 16 Feb 2026 Shift 3",
+                question: "'Kojagiri Purnima', primarily celebrated in Maharashtra, is observed in honour of which deity?",
+                options: ["Lord Shiva", "Lord Ganesha", "Goddess Durga", "Goddess Lakshmi"],
+                answer: "D",
+                note: "Kojagiri Purnima (Sharad Purnima) celebrates Goddess Lakshmi, who is believed to visit and bestow prosperity."
+            },
+            {
+                id: 14,
+                source: "SSC CHSL 2025 Tier-1 13 Nov, 2025 Shift 3",
+                question: "'Mangal' folk songs are traditional ceremonial songs native to which Indian state?",
+                options: ["Goa", "Maharashtra", "Uttarakhand", "Telangana"],
+                answer: "C",
+                note: "Mangal Geet are auspicious wedding and ceremonial folk songs of the Kumaon and Garhwal regions of Uttarakhand."
+            },
+            {
+                id: 15,
+                source: "SSC CHSL 2025 Tier-1 30 Nov, 2025 Shift 2",
+                question: "'Sattriya Nritya' is recognised as one of the eight classical dances of which Indian state?",
+                options: ["Assam", "Rajasthan", "Tamil Nadu", "Odisha"],
+                answer: "A",
+                note: "Recognized as a Classical Dance by Sangeet Natak Akademi in the year 2000, Sattriya belongs to Assam."
+            },
+            {
+                id: 16,
+                source: "SSC CGL 2025 22 Sept, 2025 Shift 1",
+                question: "Which tribal community celebrates the post-harvest 'Wangala' festival (Hundred Drum Festival)?",
+                options: ["Bodo", "Santhal", "Mizo", "Garo"],
+                answer: "D",
+                note: "Wangala is the most important post-harvest Thanksgiving festival of the Garo tribe in Meghalaya and Assam."
+            },
+            {
+                id: 17,
+                source: "DP HC 10 Jan 2026 Shift 1",
+                question: "Which feature makes the Ajanta murals architecturally and historically significant in Indian art history?",
+                options: [
+                    "Their placement in open temple courtyards",
+                    "Their Persian miniature styling",
+                    "Their preservation inside Buddhist rock-cut caves",
+                    "Their decoration of Mughal imperial palace halls"
+                ],
+                answer: "C",
+                note: "Ajanta's unique murals survive because they were painted in the interior halls of Buddhist rock-cut monasteries."
+            },
+            {
+                id: 18,
+                source: "MTS 2025 17 Feb 2026 Shift 3",
+                question: "The 'Halda festival', marking the beginning of the New Year, is celebrated in which state?",
+                options: ["Haryana", "Himachal Pradesh", "Gujarat", "Assam"],
+                answer: "B",
+                note: "Halda is an auspicious winter festival celebrated primarily in the Lahaul Valley of Himachal Pradesh."
+            },
+            {
+                id: 19,
+                source: "MTS 2025 16 Feb 2026 Shift 1",
+                question: "The 'Dosmoche' festival of sacred scapegoat rituals is celebrated in which State/UT of India?",
+                options: ["Kerala", "Ladakh", "Tamil Nadu", "Goa"],
+                answer: "B",
+                note: "Dosmoche is celebrated in Leh and Diskit monasteries of Ladakh to ward off evil spirits for the coming year."
+            },
+            {
+                id: 20,
+                source: "MTS 2025 06 Feb 2026 Shift 2",
+                question: "Which Indian state is most famous for the monsoon semi-classical folk singing genre called 'Kajri'?",
+                options: ["Assam", "Punjab", "Maharashtra", "Uttar Pradesh"],
+                answer: "D",
+                note: "Kajri is a monsoon season folk song expressing longing, central to eastern Uttar Pradesh (Varanasi & Mirzapur)."
+            },
+            {
+                id: 21,
+                source: "SSC Steno 07 Aug, 2025 Shift 3",
+                question: "Sattriya, classical dance of Assam, was introduced in the 15th century by which revered saint-reformer?",
+                options: ["Sankardev", "Chaitanya Mahaprabhu", "Kabir", "Tulsidas"],
+                answer: "A",
+                note: "Mahapurusha Srimanta Sankardev created Sattriya as an accompaniment to the Ankiya Nat devotional plays."
+            },
+            {
+                id: 22,
+                source: "SSC CPO 09 Dec 2025 Shift 2",
+                question: "Which of the following pairs of musical forms/artists and their artistic characteristic is correctly matched?",
+                options: [
+                    "Rampur Sahaswan Gharana – Fast note patterns, technically demanding",
+                    "Thumri (Banaras Style) – Known for lyrical khayals followed by Tarana",
+                    "Tappa – Prominent exponent of lyrical love songs (Thumri)",
+                    "Rasoolan Devi – Slow, expressive, emphasizes mood over strict grammar"
+                ],
+                answer: "D",
+                note: "Rasoolan Devi was an iconic Banaras thumri-tappa singer celebrated for emotive and expressive poignancy."
+            },
+            {
+                id: 23,
+                source: "SSC Phase XIII 30 Jul, 2025 Shift 3",
+                question: "What is the primary thematic subject in traditional Sattriya dance performances?",
+                options: ["Warfare and conquests", "Agricultural rituals", "Devotion to Krishna", "Courtly secular love"],
+                answer: "C",
+                note: "Sattriya performances center on Bhakti, particularly scenes depicting Lord Krishna and Vishnu."
+            },
+            {
+                id: 24,
+                source: "SSC CGL 2025 25 Sept, 2025 Shift 1",
+                question: "The architectural layout and charbagh dome design of the Taj Mahal was prominently inspired by which Mughal monument?",
+                options: ["Humayun's Tomb", "Jama Masjid", "Victoria Memorial", "Qutub Minar"],
+                answer: "A",
+                note: "Humayun's Tomb in Delhi served as the pioneer architectural prototype for the Taj Mahal."
+            },
+            {
+                id: 25,
+                source: "DP Constable 05 Jan 2026 Shift 3",
+                question: "The ancient Kharchi Puja celebrated in Tripura is associated with the ceremonial worship of how many deities?",
+                options: ["12", "14", "15", "16"],
+                answer: "B",
+                note: "Kharchi Puja is the worship of the Chaturdasha Devata (14 ancestral deities of the Royal Tripuri dynasty)."
+            },
+            {
+                id: 26,
+                source: "DP Constable 05 Jan 2026 Shift 2",
+                question: "Which major Hindu festival is celebrated under the name 'Tihar' in the state of Sikkim and Nepal?",
+                options: ["Eid", "Holi", "Diwali", "Christmas"],
+                answer: "C",
+                note: "Tihar is the 5-day celebration of the festival of lights (Diwali) among the Nepali community in Sikkim."
+            },
+            {
+                id: 27,
+                source: "MTS 2025 18 Feb 2026 Shift 2",
+                question: "Sitar gained worldwide fame through which maestro who performed at Woodstock and introduced raga music internationally in the 20th century?",
+                options: ["Pandit Ravi Shankar", "Ustad Bismillah Khan", "Ali Akbar Khan", "L. Subramaniam"],
+                answer: "A",
+                note: "Pandit Ravi Shankar popularized the Sitar globally and collaborated with Yehudi Menuhin and George Harrison."
+            },
+            {
+                id: 28,
+                source: "SSC CHSL 2025 Tier-1 26 Nov, 2025 Shift 1",
+                question: "'Raibenshe' is an energetic martial folk dance characterized by bamboo staves from which Indian state?",
+                options: ["Kerala", "Puducherry", "West Bengal", "Maharashtra"],
+                answer: "C",
+                note: "Raibenshe is a traditional martial and acrobatic stick-dance practiced in Birbhum and Burdwan of West Bengal."
+            },
+            {
+                id: 29,
+                source: "DP Constable 26 Dec 2025 Shift 2",
+                question: "Pandit Hariprasad Chaurasia is a world-renowned maestro of which Indian classical instrument?",
+                options: ["Sitar", "Flute (Bansuri)", "Violin", "Tabla"],
+                answer: "B",
+                note: "Hariprasad Chaurasia is a classical flautist of the Senia-Maihar gharana."
+            },
+            {
+                id: 30,
+                source: "SSC Phase XIII 29 Jul, 2025 Shift 1",
+                question: "Which festival specifically marks the triumph of Goddess Durga over the demon Mahishasura?",
+                options: ["Holi", "Durga Puja", "Maha Shivaratri", "Ganesh Chaturthi"],
+                answer: "B",
+                note: "Durga Puja commemorates the victory of Goddess Durga (Mahishasuramardini) over evil."
+            },
+            {
+                id: 31,
+                source: "SSC CGL 2025 14 Sept, 2025 Shift 2",
+                question: "The annual festival of 'Ambubachi Mela' at Kamakhya temple in Assam symbolically represents which phenomenon?",
+                options: ["Monsoon onset", "River flooding", "Earth's renewal cycle", "Mother Earth's annual fertility / menstruation"],
+                answer: "D",
+                note: "Ambubachi Mela celebrates the annual menstruation course and cosmic fertility of Mother Earth (Devi Kamakhya)."
+            },
+            {
+                id: 32,
+                source: "SSC CHSL 2025 Tier-1 17 Nov, 2025 Shift 1",
+                question: "Which of the following is classified as a 'Sushira Vadya' (Wind instrument / Aerophone) in Indian music?",
+                options: ["Sitar", "Flute (Bansuri)", "Tabla", "Veena"],
+                answer: "B",
+                note: "Sushira Vadya denotes aerophones where sound is produced by blowing air into columns, like the Flute."
+            },
+            {
+                id: 33,
+                source: "DP Constable 05 Jan 2026 Shift 1",
+                question: "Which of the following is a traditional double-reed 'wind instrument' made of wood and metal used in Odisha?",
+                options: ["Dhak", "Mahuri", "Sarangi", "Mridangam"],
+                answer: "B",
+                note: "Mahuri is a traditional aerophone made of wood and brass, indispensable in Odia temple and folk music."
+            },
+            {
+                id: 34,
+                source: "DP Constable 26 Dec 2025 Shift 1",
+                question: "Which musical form is the backbone and most popular melodic compositional style of the Carnatic music tradition?",
+                options: ["Khayal", "Dhrupad", "Kriti", "Tappa"],
+                answer: "C",
+                note: "Kriti is the primary 3-part composition (Pallavi, Anupallavi, Charanam) in Carnatic music."
+            },
+            {
+                id: 35,
+                source: "DP Constable 30 Dec 2025 Shift 3",
+                question: "Which classical dance of Kerala is performed predominantly by women wearing Kasavu white saris with gold borders?",
+                options: ["Mohiniyattam", "Kathakali", "Bharatanatyam", "Odissi"],
+                answer: "A",
+                note: "Mohiniyattam ('dance of the enchantress') features subtle swaying movements and white-and-gold Kasavu costumes."
+            },
+            {
+                id: 36,
+                source: "SSC CPO 12 Dec 2025 Shift 2",
+                question: "Which harvest festival of Kerala is famed for its grand snake boat races known as 'Vallam Kali'?",
+                options: ["Pongal", "Onam", "Bihu", "Gudi Padwa"],
+                answer: "B",
+                note: "Onam commemorates the return of King Mahabali, during which the Vallam Kali (Aranmula boat race) is staged."
+            },
+            {
+                id: 37,
+                source: "SSC CPO 11 Dec 2025 Shift 1",
+                question: "Which of the following pairs is correctly matched regarding the Lyuva Khutla festival of the Mara tribe?",
+                options: [
+                    "Modern Games – Ludo",
+                    "Dances – Bihu & Dalkhai",
+                    "Festival Host – Chaypi",
+                    "Attire – Mekhela Chador"
+                ],
+                answer: "C",
+                note: "In Mara tribal tradition of southern Mizoram, the chief host village of Lyuva Khutla is recognized as Chaypi."
+            },
+            {
+                id: 38,
+                source: "DP Constable 31 Dec 2025 Shift 2",
+                question: "Sattriya music and dance are devotional traditions nurtured in Vaishnavite monasteries called Sattras in which state?",
+                options: ["Assam", "Odisha", "Manipur", "West Bengal"],
+                answer: "A",
+                note: "Sattras are monastic centres established across Assam since the neo-Vaishnavite movement."
+            },
+            {
+                id: 39,
+                source: "SSC CHSL 2025 Tier-1 17 Nov, 2025 Shift 2",
+                question: "In the Natya Shastra, sage Bharata Muni classified all musical instruments into how many primary groups (Vadyas)?",
+                options: ["2", "3", "4", "5"],
+                answer: "C",
+                note: "The 4 classifications are Tata (stringed), Avanaddha (percussion), Sushira (wind), and Ghana (solid idiophones)."
+            },
+            {
+                id: 40,
+                source: "DP Constable 04 Jan 2026 Shift 2",
+                question: "'Dhrupad' is the oldest and most austere style of singing in which tradition?",
+                options: [
+                    "Rabindra Sangeet",
+                    "Hindustani classical music",
+                    "Western classical music",
+                    "Carnatic music"
+                ],
+                answer: "B",
+                note: "Dhrupad is an ancient vocal genre of Hindustani classical music emphasizing pure raga exposition and nom-tom alap."
+            },
+            {
+                id: 41,
+                source: "DP Constable 05 Jan 2026 Shift 1",
+                question: "Which of the following landmark structures in Kolkata exemplifies the grand Indo-Saracenic revival architectural style?",
+                options: ["Victoria Memorial", "Lotus Temple", "Hampi Temple Complex", "Golden Temple"],
+                answer: "A",
+                note: "Designed by William Emerson, the Victoria Memorial combines Indo-Saracenic features with British and Mughal elements."
+            },
+            {
+                id: 42,
+                source: "MTS 2025 06 Feb 2026 Shift 3",
+                question: "In which Indian state is the post-harvest festival 'Bushu' (or Bushu Dima) enthusiastically celebrated?",
+                options: ["Bihar", "Punjab", "Nagaland & Assam (Dimasa)", "Karnataka"],
+                answer: "C",
+                note: "Bushu Dima is the premier harvest festival of the Dimasa Kachari community residing in Assam and Nagaland."
+            },
+            {
+                id: 43,
+                source: "SSC CGL 2025 23 Sept, 2025 Shift 3",
+                question: "The vigorous drum dance 'Dollu Kunitha' accompanied by rhythmic beats is a popular folk art of which state?",
+                options: ["Karnataka", "Kerala", "Tamil Nadu", "Andhra Pradesh"],
+                answer: "A",
+                note: "Dollu Kunitha is a vigorous drum dance performed by the Kuruba community of Karnataka in honor of Beereshwara."
+            },
+            {
+                id: 44,
+                source: "DP Constable 05 Jan 2026 Shift 1",
+                question: "Which of the following famous sculptures did not originate from the Mathura school during the Kushana period?",
+                options: [
+                    "Katra Keshav Dev seated Buddha fragment",
+                    "Govind Nagar Yaksha statue",
+                    "Bala Buddha / Copper Buddha of Sultanganj",
+                    "Standing Buddha from Govindnagar"
+                ],
+                answer: "C",
+                note: "The Sultanganj bronze/copper Buddha dates from the later Gupta-Pala period and was discovered in Bihar, not Mathura."
+            },
+            {
+                id: 45,
+                source: "DP Constable 24 Dec 2025 Shift 3",
+                question: "Which popular Bengali patriotic song, penned by Pitambar Das, immortalized the sacrifice of 18-year-old revolutionary Khudiram Bose?",
+                options: [
+                    "Ek Baar Bidaye De Ma",
+                    "Amar Shaheed Khudiram",
+                    "Desher Mati Amar Mati",
+                    "Maa Go Tomar Chokher Jol"
+                ],
+                answer: "A",
+                note: "'Ek Baar Bidaye De Ma, Ghure Ashi' tells of Khudiram Bose cheerfully bidding farewell to mother India as he faced the gallows."
+            },
+            {
+                id: 46,
+                source: "DP Constable 03 Jan 2026 Shift 3",
+                question: "The 11th-century 'Lingaraja Temple', an epitome of Kalinga architecture, is located in which city?",
+                options: ["Puri", "Konark", "Bhubaneswar", "Khajuraho"],
+                answer: "C",
+                note: "The grand Lingaraja Temple dedicated to Lord Harihara (Shiva-Vishnu) is the crown jewel of Bhubaneswar, Odisha."
+            },
+            {
+                id: 47,
+                source: "SSC CGL 2025 20 Sept, 2025 Shift 2",
+                question: "Which Kodava harvest festival in Coorg is celebrated with prayers to Lord Iguthappa and ceremonial cutting of first sheaves?",
+                options: ["Kambala", "Kailpodh", "Puthari", "Onam"],
+                answer: "C",
+                note: "Puthari (literally 'new rice') is the sacred rice harvest festival of the Kodava community in Kodagu, Karnataka."
+            },
+            {
+                id: 48,
+                source: "DP Constable 06 Jan 2026 Shift 3",
+                question: "Mughal defensive architecture, as seen in Agra Fort, is uniquely characterized by which structural design element?",
+                options: [
+                    "Floating wooden terraces",
+                    "Massive bastions, battlements and fortified monumental double gateways",
+                    "Dravidian style monolithic gopurams",
+                    "Curvilinear beehive shikharas"
+                ],
+                answer: "B",
+                note: "Mughal forts employ imposing semi-circular bastions, double ramparts, and double-gated barbicans for military defense."
+            },
+            {
+                id: 49,
+                source: "SSC CHSL 2025 Tier-1 18 Nov, 2025 Shift 2",
+                question: "'Nautanki' is a prominent operatic folk theatre tradition popular in which northern Indian state?",
+                options: ["Haryana", "Assam", "Maharashtra", "Uttar Pradesh"],
+                answer: "D",
+                note: "Nautanki consists of folklore, romantic sagas, and mythological dramas native to Uttar Pradesh (Hathras & Kanpur)."
+            },
+            {
+                id: 50,
+                source: "DP Constable 06 Jan 2026 Shift 1",
+                question: "Which Indian state is internationally celebrated for 'Giddha', an energetic folk dance performed by women to clapping rhythm?",
+                options: ["Punjab", "Assam", "Gujarat", "Rajasthan"],
+                answer: "A",
+                note: "Giddha is the lively female counterpart of Bhangra, performed in circles by women during festivals and weddings in Punjab."
+            }
+        ];
+    </script>
+
+    <script>
+        // State variables
+        let currentIndex = 0;
+        let score = 0;
+        let answersLog = []; // { id, question, userChoice, correctChoice, isCorrect, note, source }
+        const totalQuestions = quizData.length;
+
+        // DOM elements
+        const navCurrent = document.getElementById('nav-current');
+        const navTotal = document.getElementById('nav-total');
+        const navScore = document.getElementById('nav-score');
+        const progressBar = document.getElementById('progress-bar');
+        
+        const quizContainer = document.getElementById('quiz-container');
+        const resultContainer = document.getElementById('result-container');
+        
+        const badgeQuestionNum = document.getElementById('badge-question-num');
+        const badgeSource = document.getElementById('badge-source');
+        const questionText = document.getElementById('question-text');
+        const statementsBox = document.getElementById('statements-box');
+        const optionsGrid = document.getElementById('options-grid');
+        const feedbackStrip = document.getElementById('feedback-strip');
+        const nextBtn = document.getElementById('next-btn');
+        
+        const resScore = document.getElementById('res-score');
+        const resPercent = document.getElementById('res-percent');
+        const resCorrect = document.getElementById('res-correct');
+        const resWrong = document.getElementById('res-wrong');
+        const resMistakeCount = document.getElementById('res-mistake-count');
+        const reviewList = document.getElementById('review-list');
+        const restartBtn = document.getElementById('restart-btn');
+
+        // Dark/Light mode logic
+        const themeBtn = document.getElementById('theme-btn');
+        const sunIcon = document.getElementById('sun-icon');
+        const moonIcon = document.getElementById('moon-icon');
+
+        function initTheme() {
+            const saved = localStorage.getItem('scc_quiz_theme');
+            if (saved === 'dark' || (!saved && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                document.documentElement.classList.add('dark');
+                sunIcon.classList.remove('hidden');
+                moonIcon.classList.add('hidden');
+            } else {
+                document.documentElement.classList.remove('dark');
+                sunIcon.classList.add('hidden');
+                moonIcon.classList.remove('hidden');
+            }
+        }
+
+        themeBtn.addEventListener('click', () => {
+            const isDark = document.documentElement.classList.toggle('dark');
+            if (isDark) {
+                sunIcon.classList.remove('hidden');
+                moonIcon.classList.add('hidden');
+                localStorage.setItem('scc_quiz_theme', 'dark');
+            } else {
+                sunIcon.classList.add('hidden');
+                moonIcon.classList.remove('hidden');
+                localStorage.setItem('scc_quiz_theme', 'light');
+            }
+        });
+
+        // Initialize quiz
+        function loadQuestion(index) {
+            const q = quizData[index];
+            const qNum = index + 1;
+
+            // Header state
+            navCurrent.textContent = qNum;
+            navTotal.textContent = totalQuestions;
+            badgeQuestionNum.textContent = `Question ${String(qNum).padStart(2, '0')}`;
+            badgeSource.textContent = q.source || "SSC Previous Year Question";
+
+            // Progress bar
+            const percent = ((qNum - 1) / totalQuestions) * 100;
+            progressBar.style.width = `${Math.max(percent, 2)}%`;
+
+            // Prompt text
+            questionText.textContent = q.question;
+
+            // Handle complex statement / sub-item rendering
+            if (q.statements && q.statements.length > 0) {
+                statementsBox.innerHTML = '';
+                q.statements.forEach(stmt => {
+                    const line = document.createElement('div');
+                    line.className = 'flex items-start gap-2 text-slate-700 dark:text-slate-300 font-mono text-xs leading-relaxed';
+                    line.innerHTML = `<span class="inline-block w-1.5 h-1.5 rounded-full bg-indigo-500 mt-1.5 shrink-0"></span><span>${stmt}</span>`;
+                    statementsBox.appendChild(line);
+                });
+                if (q.questionSuffix) {
+                    const suffix = document.createElement('div');
+                    suffix.className = 'pt-1 font-bold text-slate-800 dark:text-slate-200 text-xs';
+                    suffix.textContent = q.questionSuffix;
+                    statementsBox.appendChild(suffix);
+                }
+                statementsBox.classList.remove('hidden');
+            } else {
+                statementsBox.classList.add('hidden');
+                statementsBox.innerHTML = '';
+            }
+
+            // Render options
+            optionsGrid.innerHTML = '';
+            const labels = ['A', 'B', 'C', 'D'];
+            
+            q.options.forEach((optText, i) => {
+                const optLetter = labels[i];
+                const btn = document.createElement('button');
+                btn.type = 'button';
+                btn.className = 'opt-btn group w-full p-2.5 sm:p-3 text-left rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50/70 dark:bg-slate-800/50 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-800 dark:text-slate-200 transition-all flex items-center justify-between font-medium text-xs sm:text-sm';
+                btn.dataset.letter = optLetter;
+                
+                btn.innerHTML = `
+                    <div class="flex items-center gap-2.5 overflow-hidden">
+                        <span class="opt-badge w-6 h-6 rounded-md bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 text-slate-600 dark:text-slate-400 font-mono text-xs font-bold flex items-center justify-center shrink-0 group-hover:border-indigo-400 group-hover:text-indigo-600 transition-colors">
+                            ${optLetter}
+                        </span>
+                        <span class="truncate whitespace-normal">${optText}</span>
+                    </div>
+                    <span class="status-indicator shrink-0 pl-1"></span>
+                `;
+
+                btn.addEventListener('click', () => handleOptionSelect(optLetter, btn));
+                optionsGrid.appendChild(btn);
+            });
+
+            // Reset bottom deck
+            feedbackStrip.className = 'flex-1 min-h-[46px] rounded-xl px-3 py-1.5 flex items-center text-xs font-medium transition-all bg-slate-50 dark:bg-slate-800/40 border border-dashed border-slate-200 dark:border-slate-700 text-slate-400';
+            feedbackStrip.innerHTML = `
+                <span class="flex items-center gap-1.5">
+                    <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    Select an answer to unlock the explanation and next question.
+                </span>
+            `;
+            nextBtn.disabled = true;
+            nextBtn.className = 'px-5 py-2.5 rounded-xl bg-slate-200 dark:bg-slate-800 text-slate-400 dark:text-slate-600 font-bold text-xs sm:text-sm shadow-xs transition-all flex items-center gap-1.5 cursor-not-allowed';
+        }
+
+        function handleOptionSelect(selectedLetter, clickedBtn) {
+            const q = quizData[currentIndex];
+            const isCorrect = (selectedLetter === q.answer);
+            const allBtns = optionsGrid.querySelectorAll('.opt-btn');
+
+            // Lock all option buttons
+            allBtns.forEach(btn => {
+                btn.disabled = true;
+                btn.classList.remove('hover:bg-slate-100', 'dark:hover:bg-slate-800');
+                btn.classList.add('cursor-default');
+
+                const letter = btn.dataset.letter;
+                const badge = btn.querySelector('.opt-badge');
+                const indicator = btn.querySelector('.status-indicator');
+
+                if (letter === q.answer) {
+                    // Correct button styling
+                    btn.classList.add('bg-emerald-50', 'dark:bg-emerald-950/60', 'border-emerald-500', 'text-emerald-900', 'dark:text-emerald-100');
+                    badge.classList.add('bg-emerald-600', 'border-emerald-600', 'text-white');
+                    indicator.innerHTML = `<svg class="w-4 h-4 text-emerald-600 dark:text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path></svg>`;
+                } else if (letter === selectedLetter && !isCorrect) {
+                    // Wrong button picked by user
+                    btn.classList.add('bg-rose-50', 'dark:bg-rose-950/60', 'border-rose-500', 'text-rose-900', 'dark:text-rose-100');
+                    badge.classList.add('bg-rose-600', 'border-rose-600', 'text-white');
+                    indicator.innerHTML = `<svg class="w-4 h-4 text-rose-600 dark:text-rose-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"></path></svg>`;
+                } else {
+                    // Other unpicked options
+                    btn.classList.add('opacity-40');
+                }
+            });
+
+            // Update score
+            if (isCorrect) {
+                score++;
+                navScore.textContent = score;
+            }
+
+            // Log answer for review
+            answersLog[currentIndex] = {
+                id: currentIndex + 1,
+                question: q.question,
+                statements: q.statements,
+                userChoice: selectedLetter,
+                correctChoice: q.answer,
+                isCorrect: isCorrect,
+                note: q.note,
+                source: q.source,
+                options: q.options
+            };
+
+            // Display dynamic feedback strip
+            if (isCorrect) {
+                feedbackStrip.className = 'flex-1 min-h-[46px] rounded-xl px-3 py-1.5 flex items-center text-xs font-semibold bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-300 dark:border-emerald-800 text-emerald-800 dark:text-emerald-300 anim-slide-in';
+                feedbackStrip.innerHTML = `
+                    <div class="flex items-center gap-2">
+                        <span class="w-5 h-5 rounded-full bg-emerald-600 text-white flex items-center justify-center shrink-0 text-[10px] font-bold">✓</span>
+                        <span class="line-clamp-2"><strong>Correct!</strong> ${q.note}</span>
+                    </div>
+                `;
+            } else {
+                feedbackStrip.className = 'flex-1 min-h-[46px] rounded-xl px-3 py-1.5 flex items-center text-xs font-semibold bg-rose-50 dark:bg-rose-950/40 border border-rose-300 dark:border-rose-800 text-rose-800 dark:text-rose-300 anim-slide-in';
+                feedbackStrip.innerHTML = `
+                    <div class="flex items-center gap-2">
+                        <span class="w-5 h-5 rounded-full bg-rose-600 text-white flex items-center justify-center shrink-0 text-[10px] font-bold">✕</span>
+                        <span class="line-clamp-2"><strong>Incorrect (Ans: ${q.answer}).</strong> ${q.note}</span>
+                    </div>
+                `;
+            }
+
+            // Enable Next button
+            nextBtn.disabled = false;
+            nextBtn.className = 'px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs sm:text-sm shadow-md transition-all flex items-center gap-1.5 cursor-pointer';
+            
+            if (currentIndex === totalQuestions - 1) {
+                nextBtn.innerHTML = `
+                    <span>View Result</span>
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                `;
+            }
+        }
+
+        // Next Button Click Handler
+        nextBtn.addEventListener('click', () => {
+            if (currentIndex < totalQuestions - 1) {
+                currentIndex++;
+                loadQuestion(currentIndex);
+            } else {
+                showResults();
+            }
+        });
+
+        // Final Performance View Render
+        function showResults() {
+            quizContainer.classList.add('hidden');
+            resultContainer.classList.remove('hidden');
+            progressBar.style.width = '100%';
+
+            const percentage = Math.round((score / totalQuestions) * 100);
+            const incorrectCount = totalQuestions - score;
+
+            resScore.textContent = `${score} / ${totalQuestions}`;
+            resPercent.textContent = `${percentage}%`;
+            resCorrect.textContent = `${score}`;
+            resWrong.textContent = `${incorrectCount}`;
+            resMistakeCount.textContent = `${incorrectCount} incorrect response${incorrectCount === 1 ? '' : 's'}`;
+
+            reviewList.innerHTML = '';
+
+            const letterToIndex = { 'A': 0, 'B': 1, 'C': 2, 'D': 3 };
+
+            answersLog.forEach((item) => {
+                const itemCard = document.createElement('div');
+                const isMistake = !item.isCorrect;
+                
+                itemCard.className = `p-3 rounded-xl border text-xs leading-relaxed transition ${
+                    isMistake 
+                        ? 'bg-rose-50/50 dark:bg-rose-950/20 border-rose-200 dark:border-rose-900/60' 
+                        : 'bg-slate-50 dark:bg-slate-800/40 border-slate-200 dark:border-slate-800'
+                }`;
+
+                const userText = item.options[letterToIndex[item.userChoice]] || item.userChoice;
+                const correctText = item.options[letterToIndex[item.correctChoice]] || item.correctChoice;
+
+                let statementHtml = '';
+                if (item.statements && item.statements.length > 0) {
+                    statementHtml = `
+                        <div class="my-1.5 p-2 rounded bg-white dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 space-y-1 font-mono text-[11px] text-slate-600 dark:text-slate-400">
+                            ${item.statements.map(s => `<div>• ${s}</div>`).join('')}
+                        </div>
+                    `;
+                }
+
+                itemCard.innerHTML = `
+                    <div class="flex items-center justify-between font-semibold pb-1 border-b border-slate-200 dark:border-slate-700/60">
+                        <span class="text-indigo-600 dark:text-indigo-400 font-bold">Q${item.id}. ${item.source}</span>
+                        <span class="px-2 py-0.5 rounded text-[10px] font-bold ${item.isCorrect ? 'bg-emerald-100 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-300' : 'bg-rose-100 dark:bg-rose-950 text-rose-700 dark:text-rose-300'}">
+                            ${item.isCorrect ? 'Correct' : 'Incorrect'}
+                        </span>
+                    </div>
+                    <p class="font-medium text-slate-800 dark:text-slate-200 mt-1.5">${item.question}</p>
+                    ${statementHtml}
+                    <div class="mt-2 grid grid-cols-1 sm:grid-cols-2 gap-1.5 pt-1">
+                        <div class="p-1.5 rounded bg-white dark:bg-slate-900 border ${item.isCorrect ? 'border-emerald-300 dark:border-emerald-800' : 'border-rose-300 dark:border-rose-800'}">
+                            <span class="text-[10px] text-slate-400 uppercase font-bold block">Your Answer:</span>
+                            <span class="font-bold ${item.isCorrect ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400'}">(${item.userChoice}) ${userText}</span>
+                        </div>
+                        <div class="p-1.5 rounded bg-white dark:bg-slate-900 border border-emerald-300 dark:border-emerald-800">
+                            <span class="text-[10px] text-slate-400 uppercase font-bold block">Correct Key:</span>
+                            <span class="font-bold text-emerald-600 dark:text-emerald-400">(${item.correctChoice}) ${correctText}</span>
+                        </div>
+                    </div>
+                    ${item.note ? `<div class="mt-1.5 text-[11px] text-slate-500 dark:text-slate-400">💡 <strong>Analysis:</strong> ${item.note}</div>` : ''}
+                `;
+
+                reviewList.appendChild(itemCard);
+            });
+        }
+
+        // Restart Handler
+        restartBtn.addEventListener('click', () => {
+            currentIndex = 0;
+            score = 0;
+            answersLog = [];
+            navScore.textContent = '0';
+            resultContainer.classList.add('hidden');
+            quizContainer.classList.remove('hidden');
+            nextBtn.innerHTML = `
+                <span>Next Question</span>
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+            `;
+            loadQuestion(0);
+        });
+
+        // Initialize App on DOM ready
+        window.addEventListener('DOMContentLoaded', () => {
+            initTheme();
+            loadQuestion(0);
+        });
+    </script>
+</body>
+</html>
