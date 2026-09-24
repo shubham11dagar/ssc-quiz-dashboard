@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>English Vocabulary & Spelling Exam Prep</title>
+<style>
+    :root {
+        --bg-color: #f4f7f6;
+        --card-bg: #ffffff;
+        --text-color: #2c3e50;
+        --text-muted: #7f8c8d;
+        --primary: #3498db;
+        --primary-hover: #2980b9;
+        --correct: #27ae60;
+        --correct-bg: #eafaf1;
+        --incorrect: #e74c3c;
+        --incorrect-bg: #fdedec;
+        --border: #e0e6ed;
+        --pill-bg: #ecf0f1;
+    }
+
+    [data-theme="dark"] {
+        --bg-color: #121212;
+        --card-bg: #1e1e1e;
+        --text-color: #e0e0e0;
+        --text-muted: #aaaaaa;
+        --primary: #bb86fc;
+        --primary-hover: #9b59b6;
+        --correct: #00c853;
+        --correct-bg: rgba(0, 200, 83, 0.1);
+        --incorrect: #ff5252;
+        --incorrect-bg: rgba(255, 82, 82, 0.1);
+        --border: #333333;
+        --pill-bg: #2c2c2c;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    
+    body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        background-color: var(--bg-color);
+        color: var(--text-color);
+        height: 100vh; /* Strict viewport height */
+        display: flex;
+        justify-content: center;
+        overflow: hidden; /* No scroll layout */
+        transition: background-color 0.3s, color 0.3s;
+    }
+
+    #app {
+        width: 100%;
+        max-width: 800px;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        background: var(--card-bg);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+
+    /* Header */
+    header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 12px 20px;
+        border-bottom: 1px solid var(--border);
+        flex-shrink: 0;
+    }
+    .header-left { display: flex; flex-direction: column; }
+    .quiz-title { font-size: 1rem; font-weight: bold; }
+    .progress-text { font-size: 0.85rem; color: var(--text-muted); margin-top: 2px; }
+    
+    .header-right { display: flex; align-items: center; gap: 10px; }
+    .score-badge { background: var(--primary); color: white; padding: 4px 10px; border-radius: 12px; font-size: 0.85rem; font-weight: bold; }
+    .theme-btn { background: none; border: none; font-size: 1.2rem; cursor: pointer; color: var(--text-color); }
+
+    /* Progress Bar */
+    .progress-container { width: 100%; height: 4px; background: var(--pill-bg); flex-shrink: 0; }
+    .progress-bar { height: 100%; background: var(--primary); width: 0%; transition: width 0.3s ease; }
+
+    /* Main Content Area */
+    main {
+        flex: 1;
+        overflow-y: auto; /* Allows internal scroll only if absolutely necessary on tiny screens */
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+    }
+
+    /* Question Formatting */
+    .question-header { margin-bottom: 15px; }
+    .q-num-badge { display: inline-block; background: var(--border); padding: 4px 8px; border-radius: 4px; font-size: 0.8rem; font-weight: bold; margin-bottom: 8px; color: var(--text-color); }
+    .q-prompt { font-size: 1.05rem; line-height: 1.5; margin-bottom: 10px; }
+    
+    /* Complex question styling */
+    .segment-box { background: var(--pill-bg); padding: 10px; border-radius: 6px; border-left: 3px solid var(--primary); font-family: monospace; font-size: 0.95rem; line-height: 1.6; margin-bottom: 15px; }
+    .segment { background: rgba(0,0,0,0.05); padding: 2px 6px; border-radius: 4px; display: inline-block; margin-bottom: 4px; }
+    [data-theme="dark"] .segment { background: rgba(255,255,255,0.05); }
+
+    /* Options Grid */
+    .options-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+        margin-bottom: 15px;
+    }
+    @media (max-width: 500px) { .options-grid { grid-template-columns: 1fr; } }
+    
+    .option-btn {
+        background: var(--card-bg);
+        border: 2px solid var(--border);
+        color: var(--text-color);
+        padding: 12px 15px;
+        border-radius: 8px;
+        text-align: left;
+        font-size: 0.95rem;
+        cursor: pointer;
+        transition: all 0.2s;
+        display: flex;
+        align-items: center;
+    }
+    .option-btn:hover:not(:disabled) { border-color: var(--primary); background: rgba(52, 152, 219, 0.05); }
+    .option-btn:disabled { cursor: not-allowed; opacity: 0.9; }
+    
+    .opt-label { font-weight: bold; margin-right: 10px; color: var(--text-muted); }
+
+    .option-btn.correct { border-color: var(--correct); background: var(--correct-bg); color: var(--correct); }
+    .option-btn.correct .opt-label { color: var(--correct); }
+    .option-btn.incorrect { border-color: var(--incorrect); background: var(--incorrect-bg); color: var(--incorrect); }
+    .option-btn.incorrect .opt-label { color: var(--incorrect); }
+
+    /* Feedback Box */
+    .feedback-box {
+        display: none;
+        padding: 12px 15px;
+        border-radius: 8px;
+        font-size: 0.95rem;
+        animation: slideDown 0.3s ease;
+        margin-bottom: 10px;
+        border-left: 4px solid transparent;
+    }
+    .feedback-box.show { display: block; }
+    .feedback-box.correct-fb { background: var(--correct-bg); border-left-color: var(--correct); color: var(--text-color); }
+    .feedback-box.incorrect-fb { background: var(--incorrect-bg); border-left-color: var(--incorrect); color: var(--text-color); }
+    
+    @keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* Footer / Actions */
+    footer {
+        padding: 15px 20px;
+        border-top: 1px solid var(--border);
+        display: flex;
+        justify-content: flex-end;
+        background: var(--card-bg);
+        flex-shrink: 0;
+    }
+    .btn-next {
+        background: var(--primary); color: white; border: none; padding: 12px 24px; border-radius: 6px; font-size: 1rem; font-weight: bold; cursor: pointer; transition: background 0.2s;
+    }
+    .btn-next:hover:not(:disabled) { background: var(--primary-hover); }
+    .btn-next:disabled { background: var(--border); color: var(--text-muted); cursor: not-allowed; }
+
+    /* Results Screen */
+    #results-screen { display: none; flex-direction: column; height: 100%; overflow-y: auto; }
+    .results-header { text-align: center; margin-bottom: 20px; }
+    .results-score { font-size: 3rem; font-weight: bold; color: var(--primary); }
+    .review-list { display: flex; flex-direction: column; gap: 15px; }
+    .review-item { background: var(--pill-bg); padding: 15px; border-radius: 8px; font-size: 0.9rem; }
+    .review-item.wrong { border-left: 4px solid var(--incorrect); }
+    .review-item.right { border-left: 4px solid var(--correct); }
+    .review-q { font-weight: bold; margin-bottom: 8px; }
+    .review-ans { color: var(--incorrect); margin-bottom: 4px; }
+    .review-correct { color: var(--correct); font-weight: bold; }
+    
+    .restart-btn { width: 100%; background: var(--primary); color: white; padding: 15px; border: none; border-radius: 8px; font-size: 1.1rem; font-weight: bold; margin-top: 20px; cursor: pointer; }
+</style>
+</head>
+<body data-theme="light">
+
+<div id="app">
+    <header>
+        <div class="header-left">
+            <div class="quiz-title">SSC English Prep</div>
+            <div class="progress-text" id="progress-text">Q 1 of 39</div>
+        </div>
+        <div class="header-right">
+            <div class="score-badge">Score: <span id="score-display">0</span></div>
+            <button class="theme-btn" onclick="toggleTheme()" title="Toggle Dark Mode">🌙</button>
+        </div>
+    </header>
+    
+    <div class="progress-container">
+        <div class="progress-bar" id="progress-bar"></div>
+    </div>
+
+    <!-- Quiz Mode -->
+    <main id="quiz-screen">
+        <div class="question-header">
+            <span class="q-num-badge" id="q-badge">Q.281</span>
+            <div class="q-prompt" id="q-text"></div>
+        </div>
+        
+        <div class="options-grid" id="options-container">
+            <!-- Options injected by JS -->
+        </div>
+        
+        <div class="feedback-box" id="feedback-container"></div>
+    </main>
+
+    <!-- Results Mode -->
+    <main id="results-screen">
+        <div class="results-header">
+            <h2>Quiz Complete!</h2>
+            <div class="results-score"><span id="final-score">0</span> / 39</div>
+            <p>Accuracy: <span id="final-percent">0</span>%</p>
+        </div>
+        <div class="review-list" id="review-container">
+            <!-- Review items injected by JS -->
+        </div>
+        <button class="restart-btn" onclick="restartQuiz()">Restart Quiz</button>
+    </main>
+
+    <footer id="footer-actions">
+        <button class="btn-next" id="next-btn" disabled onclick="nextQuestion()">Next Question (Enter ↵)</button>
+    </footer>
+</div>
+
+<script>
+// Quiz Data Repository (All 39 Questions)
+const quizData = [
+    { qNo: "281", text: "Select the INCORRECTLY spelt word.", options: ["Guilty", "Atempt", "Admit", "Agree"], ans: 1, exp: "‘Attempt’ is the correct spelling." },
+    { qNo: "282", text: "Select the INCORRECTLY spelt word.", options: ["Possession", "Unfourseen", "Referred", "Weather"], ans: 1, exp: "‘Unforeseen’ is the correct spelling." },
+    { qNo: "283", text: "Select the correctly spelled sentence.", options: ["The restaurant serves delicious meals.", "The resturaunt serves delisious meals.", "The resturant serves deliscious meals.", "The resteraunt serves delicious meals."], ans: 0, exp: "‘Restaurant’ is the correct spelling." },
+    { qNo: "284", text: "The following sentence contains a word with a spelling error. Rectify the sentence by selecting the correct spelling of the identified word from the given options.<br><br>Later on, he was truely apologetic for his misconduct in the meeting.", options: ["Trooly", "Truily", "Truly", "Treuly"], ans: 2, exp: "‘Truly’ is the correct spelling." },
+    { qNo: "285", text: "Select the sentence that does NOT have a spelling error.", options: ["There were no intermittent showers in the city, as was predicted during the whether forecast.", "She is very particular about pronounciation in her classes.", "The movie was very successful in the urban areas, but not among rural audiences.", "There wedding was during the summer, which is why we didn't attend it."], ans: 2, exp: "‘Weather’, ‘Pronunciation’ and ‘Their’ are the correct spellings." },
+    { qNo: "286", text: "Parul is known as a rigteous and honest lady.", options: ["rigteous", "known", "lady", "honest"], ans: 0, exp: "‘Righteous’ is the correct spelling." },
+    { qNo: "287", text: "In any time of crisis, there is always one mument that stands out from all the others.", options: ["mumunt", "mumont", "momont", "moment"], ans: 3, exp: "‘Moment’ is the correct spelling." },
+    { qNo: "288", text: "Select the sentence that contains a spelling error.", options: ["Fermented apple juice is touted to have many health benefits though most are anecdotal and not supported by scientific facts.", "Intriguing as it is, the house was never sold because it was thought to be haunted.", "It is important for scientists to acknowledge their humanity and the implications of their inventions.", "There are many believes about ancient artefacts that some of them are patently not true."], ans: 3, exp: "‘Beliefs’ is the correct spelling." },
+    { qNo: "289", text: "Select the sentence that contains a spelling error.", options: ["Researchers recommend that pesticides should not be used indiscriminately as they eliminate biodiversity for future generations.", "Journalism is often the work of painstaking rigour and perseverence that detail the socio-political experiences of our worlds.", "The venerated singer was also secretive, moody and very intense, famous for erratic and difficult behaviour.", "Elephants are in trouble mainly because people desire ivory trinkets that are made of tusks, often gruesomely killing them to achieve their purpose."], ans: 1, exp: "‘Perseverance’ is the correct spelling." },
+    { qNo: "290", text: "In our quest for power, we often fail to acknowlege the existence of other people.", options: ["acknowledje", "accknowledge", "acknowledge", "acknowlede"], ans: 2, exp: "‘Acknowledge’ is the correct spelling." },
+    { qNo: "291", text: "Select the INCORRECTLY spelt word.", options: ["Accessibility", "Aptitude", "Apparatus", "Atrocios"], ans: 3, exp: "‘Atrocious’ is the correct spelling." },
+    { qNo: "292", text: "Select the correct spelling of the word that means 'to replace'.", options: ["Superceed", "Supersed", "Superseed", "Supersede"], ans: 3, exp: "‘Supersede’ is the correct spelling." },
+    { qNo: "293", text: "Select the INCORRECTLY spelt word.", options: ["Convinient", "Embarrass", "National", "Discipline"], ans: 0, exp: "‘Convenient’ is the correct spelling." },
+    { qNo: "294", text: "Select the INCORRECTLY spelt word.", options: ["Obtain", "Encraoch", "Delegate", "Illusion"], ans: 1, exp: "‘Encroach’ is the correct spelling." },
+    { qNo: "295", text: "The following sentence has been split into four segments. Identify the segment that contains a spelling error.<br><div class='segment-box'><span class='segment'>I begged him</span> / <span class='segment'>to reconcider</span> / <span class='segment'>the decision but</span> / <span class='segment'>he refused to yield.</span></div>", options: ["he refused to yield", "the decision but", "I begged him", "to reconcider"], ans: 3, exp: "‘Reconsider’ is the correct spelling." },
+    { qNo: "296", text: "A distinguished academecian, Amartya Sen has taught in India, Britain and the United States.", options: ["Taught", "Distinguished", "Academecian", "Britain"], ans: 2, exp: "‘Academician’ is the correct spelling." },
+    { qNo: "297", text: "Select the INCORRECTLY spelt word.", options: ["Aquire", "Congratulate", "Hygiene", "Category"], ans: 0, exp: "‘Acquire’ is the correct spelling." },
+    { qNo: "298", text: "'Vande Mataram', a poignant poem, is obviously and indisputebly the premier national song of India.", options: ["Premier", "Poignant", "Indisputebly", "Obviously"], ans: 2, exp: "‘Indisputably’ is the correct spelling." },
+    { qNo: "299", text: "Select the INCORRECTLY spelt word.", options: ["Seize", "Dissappoint", "Rebuke", "Forese"], ans: 1, exp: "‘Disappoint’ is the correct spelling." }, // Note options slightly differ from prompt if it had D as Foresee, but using exact provided
+    { qNo: "300", text: "The committee heard that he had been negliegent in his duty.", options: ["dutie", "comittee", "negligent", "hurd"], ans: 2, exp: "‘Negligent’ is the correct spelling." },
+    { qNo: "301", text: "The precious bookshelf was carefully decorated with religiuos books.", options: ["religiuos", "carefully", "precious", "decorated"], ans: 0, exp: "‘Religious’ is the correct spelling." },
+    { qNo: "302", text: "Select the INCORRECTLY spelt word.", options: ["stationery", "marijuena", "lascivious", "dictator"], ans: 1, exp: "‘Marijuana’ is the correct spelling." },
+    { qNo: "303", text: "Select the correctly spelt word.", options: ["Illuseon", "Illuzion", "Illusion", "Ilusion"], ans: 2, exp: "‘Illusion’ is the correct spelling." },
+    { qNo: "304", text: "The prison is euphemistically called a ‘rehabillitation centre’.", options: ["rehabilation", "rehabilitition", "rehbilitation", "rehabilitation"], ans: 3, exp: "‘Rehabilitation’ is the correct spelling." },
+    { qNo: "305", text: "Wether we want to admit it or not, we all wish everyone would like us.", options: ["whether", "addmit", "whither", "admitt"], ans: 0, exp: "‘Whether’ is the correct spelling." },
+    { qNo: "306", text: "Select the INCORRECTLY spelt word.", options: ["Demolish", "Destroy", "Develop", "Betrey"], ans: 3, exp: "‘Betray’ is the correct spelling." },
+    { qNo: "307", text: "This will sound weired, but bear with me.", options: ["wired", "bier", "beer", "weird"], ans: 3, exp: "‘Weird’ is the correct spelling." },
+    { qNo: "308", text: "Maybe he wanted to make sure he didn't embarrese her.", options: ["embarrass", "emberess", "shure", "sware"], ans: 0, exp: "‘Embarrass’ is the correct spelling." },
+    { qNo: "309", text: "Select the most appropriate spelling of the underlined word in the given sentence.<br>Nobody could move on after such a scandlous allegation is made on them.", options: ["skandelous", "scandalous", "scendolous", "scandelous"], ans: 1, exp: "‘Scandalous’ is the correct spelling." },
+    { qNo: "310", text: "Select the INCORRECTLY spelt word.", options: ["Schedule", "Miserable", "Reformation", "Litrature"], ans: 3, exp: "‘Literature’ is the correct spelling." },
+    { qNo: "311", text: "Select the INCORRECTLY spelt word.", options: ["Immigrete", "Relevant", "Professional", "Combat"], ans: 0, exp: "‘Immigrate’ is the correct spelling." },
+    { qNo: "312", text: "Select the INCORRECTLY spelt word.", options: ["Judgment", "Chief", "Colleague", "Relevant"], ans: 0, exp: "‘Judgement’ is the correct spelling. (Note: standard UK English preferred in exams)" },
+    { qNo: "313", text: "Select the INCORRECTLY spelt word.", options: ["Magnanimos", "Psychology", "Fascination", "Accompanied"], ans: 0, exp: "‘Magnanimous’ is the correct spelling." },
+    { qNo: "314", text: "Select the option to replace the incorrect word in the following sentence.<br>Chotu is a bright young child, who yearn to go to school but works in his uncle's dhaba.", options: ["yearned", "working", "worked", "yearns"], ans: 3, exp: "‘Yearns’ is the correct usage." },
+    { qNo: "315", text: "The following sentence has been split into four segments. Identify the segment that contains a spelling error.<br><div class='segment-box'><span class='segment'>In all instances of frustrasion,</span> / <span class='segment'>you will always find</span> / <span class='segment'>the anger directed towards</span> / <span class='segment'>a single person only.</span></div>", options: ["a single person only", "the anger directed towards", "you will always find", "In all instances of frustrasion"], ans: 3, exp: "‘Frustration’ is the correct spelling." },
+    { qNo: "316", text: "Select the correct spelling of the underlined word in the following sentence.<br>I am contant with my day's work.", options: ["contint", "contante", "content", "cuntent"], ans: 2, exp: "‘Content’ is the correct spelling." },
+    { qNo: "317", text: "Select the INCORRECTLY spelt word.", options: ["Amendment", "Adulterous", "Advertisment", "Astounding"], ans: 2, exp: "‘Advertisement’ is the correct spelling." },
+    { qNo: "318", text: "The west Africans have a heritage of produsing sculpture using wax and bronze.", options: ["Producing", "Heritage", "Bronze", "Sculpture"], ans: 0, exp: "‘Producing’ is the correct spelling." },
+    { qNo: "319", text: "The boy found the project to be a peice of cake because it was incredibly easy.", options: ["piece", "foaund", "incrediblly", "praject"], ans: 0, exp: "‘Piece’ is the correct spelling." }
+];
+
+let currentIndex = 0;
+let score = 0;
+let answered = false;
+const userAnswers = [];
+
+// DOM Elements
+const qBadge = document.getElementById("q-badge");
+const qText = document.getElementById("q-text");
+const optionsContainer = document.getElementById("options-container");
+const feedbackContainer = document.getElementById("feedback-container");
+const nextBtn = document.getElementById("next-btn");
+const progressText = document.getElementById("progress-text");
+const progressBar = document.getElementById("progress-bar");
+const scoreDisplay = document.getElementById("score-display");
+const quizScreen = document.getElementById("quiz-screen");
+const resultsScreen = document.getElementById("results-screen");
+const footerActions = document.getElementById("footer-actions");
+
+function initQuiz() {
+    currentIndex = 0;
+    score = 0;
+    userAnswers.length = 0;
+    scoreDisplay.innerText = score;
+    quizScreen.style.display = "flex";
+    resultsScreen.style.display = "none";
+    footerActions.style.display = "flex";
+    loadQuestion();
+}
+
+function loadQuestion() {
+    answered = false;
+    const q = quizData[currentIndex];
+    
+    // Update Header & Progress
+    qBadge.innerText = `Q.${q.qNo}`;
+    qText.innerHTML = q.text;
+    progressText.innerText = `Question ${currentIndex + 1} of ${quizData.length}`;
+    progressBar.style.width = `${((currentIndex + 1) / quizData.length) * 100}%`;
+    
+    // Render Options
+    optionsContainer.innerHTML = "";
+    feedbackContainer.className = "feedback-box";
+    feedbackContainer.innerHTML = "";
+    nextBtn.disabled = true;
+    nextBtn.innerText = "Next Question (Enter ↵)";
+
+    const labels = ["(a)", "(b)", "(c)", "(d)"];
+    
+    q.options.forEach((optText, index) => {
+        const btn = document.createElement("button");
+        btn.className = "option-btn";
+        btn.innerHTML = `<span class="opt-label">${labels[index]}</span> <span>${optText}</span>`;
+        btn.onclick = () => selectOption(index, btn);
+        optionsContainer.appendChild(btn);
+    });
+}
+
+function selectOption(selectedIndex, selectedBtn) {
+    if (answered) return;
+    answered = true;
+    nextBtn.disabled = false;
+    
+    const q = quizData[currentIndex];
+    const isCorrect = selectedIndex === q.ans;
+    
+    if (isCorrect) score++;
+    scoreDisplay.innerText = score;
+
+    userAnswers.push({
+        qNo: q.qNo,
+        text: q.text,
+        userAns: q.options[selectedIndex],
+        correctAns: q.options[q.ans],
+        exp: q.exp,
+        isCorrect: isCorrect
+    });
+
+    // Style buttons
+    const allBtns = optionsContainer.querySelectorAll(".option-btn");
+    allBtns.forEach((btn, idx) => {
+        btn.disabled = true;
+        if (idx === q.ans) btn.classList.add("correct");
+        else if (idx === selectedIndex && !isCorrect) btn.classList.add("incorrect");
+    });
+
+    // Show Feedback
+    feedbackContainer.innerHTML = `<strong>${isCorrect ? '✓ Correct' : '✗ Incorrect'}</strong><br>${q.exp}`;
+    feedbackContainer.className = `feedback-box show ${isCorrect ? 'correct-fb' : 'incorrect-fb'}`;
+    
+    if (currentIndex === quizData.length - 1) {
+        nextBtn.innerText = "Finish Quiz (Enter ↵)";
+    }
+}
+
+function nextQuestion() {
+    if (!answered) return;
+    if (currentIndex < quizData.length - 1) {
+        currentIndex++;
+        loadQuestion();
+    } else {
+        showResults();
+    }
+}
+
+function showResults() {
+    quizScreen.style.display = "none";
+    footerActions.style.display = "none";
+    resultsScreen.style.display = "flex";
+    
+    document.getElementById("final-score").innerText = score;
+    document.getElementById("final-percent").innerText = Math.round((score / quizData.length) * 100);
+    
+    const reviewContainer = document.getElementById("review-container");
+    reviewContainer.innerHTML = "";
+    
+    userAnswers.forEach(ans => {
+        const div = document.createElement("div");
+        div.className = `review-item ${ans.isCorrect ? 'right' : 'wrong'}`;
+        div.innerHTML = `
+            <div class="review-q">Q.${ans.qNo}: ${ans.text}</div>
+            ${!ans.isCorrect ? `<div class="review-ans">Your Answer: ${ans.userAns}</div>` : ''}
+            <div class="review-correct">Correct Answer: ${ans.correctAns}</div>
+            <div style="margin-top: 5px; font-size:0.85rem;"><em>${ans.exp}</em></div>
+        `;
+        reviewContainer.appendChild(div);
+    });
+}
+
+function restartQuiz() { initQuiz(); }
+
+// Theme Toggle
+function toggleTheme() {
+    const body = document.body;
+    const currentTheme = body.getAttribute("data-theme");
+    const newTheme = currentTheme === "dark" ? "light" : "dark";
+    body.setAttribute("data-theme", newTheme);
+    document.querySelector(".theme-btn").innerText = newTheme === "dark" ? "☀️" : "🌙";
+}
+
+// Keyboard Shortcuts
+document.addEventListener("keydown", (e) => {
+    if (!answered && quizScreen.style.display !== "none") {
+        const key = e.key.toLowerCase();
+        const map = { 'a': 0, '1': 0, 'b': 1, '2': 1, 'c': 2, '3': 2, 'd': 3, '4': 3 };
+        if (map[key] !== undefined) {
+            const btns = optionsContainer.querySelectorAll(".option-btn");
+            if(btns[map[key]]) btns[map[key]].click();
+        }
+    } else if (answered && quizScreen.style.display !== "none") {
+        if (e.key === "Enter" || e.key === "ArrowRight") nextQuestion();
+    }
+});
+
+// Start the app
+initQuiz();
+</script>
+</body>
+</html>
