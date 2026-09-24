@@ -1,0 +1,1187 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Economics Exam Mastery - 36 Q&A Rapid Prep</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'system-ui', '-apple-system', 'Segoe UI', 'Roboto', 'sans-serif'],
+            mono: ['JetBrains Mono', 'Menlo', 'monospace']
+          },
+          colors: {
+            brand: {
+              50: '#eef2ff',
+              100: '#e0e7ff',
+              500: '#6366f1',
+              600: '#4f46e5',
+              700: '#4338ca',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+  <style>
+    /* Strict Viewport Optimization */
+    html, body {
+      height: 100%;
+      height: 100dvh;
+      overflow: hidden;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+    }
+    
+    /* Sleek scrollbar only when inner scroll is required on micro screens */
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 4px;
+      height: 4px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: rgba(148, 163, 184, 0.3);
+      border-radius: 9999px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+      background: rgba(148, 163, 184, 0.5);
+    }
+
+    /* Option button micro-interactions */
+    .option-btn {
+      transition: background-color 0.15s ease, border-color 0.15s ease, transform 0.08s ease, box-shadow 0.15s ease;
+    }
+    .option-btn:not(:disabled):hover {
+      transform: translateY(-1px);
+    }
+    .option-btn:not(:disabled):active {
+      transform: translateY(0px);
+    }
+
+    /* Inset glass effect */
+    .glass-card {
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
+  </style>
+</head>
+<body class="bg-slate-100 text-slate-800 dark:bg-[#0b0f19] dark:text-slate-100 flex flex-col h-full overflow-hidden transition-colors duration-200">
+
+  <!-- Header Bar (Compact 48px) -->
+  <header class="h-12 flex-none px-3 sm:px-5 border-b border-slate-200 dark:border-slate-800/80 bg-white/90 dark:bg-[#111625]/90 backdrop-blur flex items-center justify-between z-20">
+    <div class="flex items-center gap-2 sm:gap-3">
+      <div class="w-7 h-7 rounded-lg bg-indigo-600 text-white flex items-center justify-center font-bold text-xs shadow-sm shadow-indigo-500/20">
+        <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="m4 6 8-4 8 4"/>
+          <path d="m18 10 4 2-8 4-8-4 4-2"/>
+          <path d="m4 14 8 4 8-4"/>
+        </svg>
+      </div>
+      <div>
+        <h1 class="text-xs sm:text-sm font-bold tracking-tight leading-none text-slate-900 dark:text-white flex items-center gap-1.5">
+          Economics Exam Mastery
+          <span class="hidden md:inline-block text-[10px] font-medium px-1.5 py-0.5 rounded bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 border border-indigo-200 dark:border-indigo-800/50">36 High-Yield Qs</span>
+        </h1>
+      </div>
+    </div>
+
+    <!-- Live Status Indicators -->
+    <div class="flex items-center gap-2 sm:gap-4">
+      <!-- Live Progress Badge -->
+      <div id="badge-question-num" class="text-xs font-mono font-semibold px-2 py-1 rounded-md bg-slate-200/80 dark:bg-slate-800 text-slate-700 dark:text-slate-300">
+        Q 1/36
+      </div>
+
+      <!-- Live Score Badge -->
+      <div class="flex items-center gap-1.5 text-xs font-mono font-semibold px-2 py-1 rounded-md bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-400 border border-emerald-200/60 dark:border-emerald-800/50">
+        <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+        <span id="score-counter">0</span>
+      </div>
+
+      <!-- Timer Indicator -->
+      <div class="hidden sm:flex items-center gap-1 text-xs font-mono text-slate-500 dark:text-slate-400">
+        <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        <span id="timer-display">00:00</span>
+      </div>
+
+      <!-- Theme Switcher -->
+      <button id="theme-toggle" aria-label="Toggle Theme" class="p-1.5 rounded-lg border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">
+        <!-- Sun Icon -->
+        <svg id="sun-icon" class="w-4 h-4 hidden dark:block" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>
+        <!-- Moon Icon -->
+        <svg id="moon-icon" class="w-4 h-4 block dark:hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <!-- Progress Bar Strip -->
+  <div class="h-1 w-full bg-slate-200 dark:bg-slate-800 flex-none overflow-hidden">
+    <div id="progress-bar-fill" class="h-full bg-gradient-to-r from-indigo-500 via-indigo-600 to-emerald-500 transition-all duration-200" style="width: 2.78%;"></div>
+  </div>
+
+  <!-- Primary Quiz Screen (100% responsive, fits without window scroll) -->
+  <main id="quiz-screen" class="flex-1 flex flex-col justify-between p-2 sm:p-3 md:p-4 max-w-4xl w-full mx-auto overflow-hidden">
+
+    <!-- Card Wrapper -->
+    <div class="flex-1 flex flex-col min-h-0 bg-white dark:bg-[#131929] rounded-xl sm:rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-sm p-3 sm:p-5 overflow-hidden">
+      
+      <!-- Question Prompt Area (Compact & flexible) -->
+      <div class="flex-none mb-3">
+        <div class="flex items-center gap-2 mb-1.5">
+          <span id="topic-tag" class="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-indigo-50 dark:bg-indigo-950 text-indigo-600 dark:text-indigo-400 border border-indigo-200 dark:border-indigo-900/60">
+            Economics Core
+          </span>
+          <span id="question-index-tag" class="text-[11px] font-semibold text-slate-400 dark:text-slate-500">
+            Question 1 of 36
+          </span>
+          <span class="ml-auto text-[10px] text-slate-400 hidden sm:inline-flex items-center gap-1">
+            <kbd class="px-1 py-0.5 bg-slate-100 dark:bg-slate-800 rounded border border-slate-300 dark:border-slate-700 font-mono text-[9px]">1-4</kbd> to answer, <kbd class="px-1 py-0.5 bg-slate-100 dark:bg-slate-800 rounded border border-slate-300 dark:border-slate-700 font-mono text-[9px]">Space/Enter</kbd> for next
+          </span>
+        </div>
+        
+        <h2 id="question-text" class="text-sm sm:text-base md:text-lg font-bold text-slate-900 dark:text-white leading-snug tracking-tight">
+          <!-- Dynamically populated question -->
+        </h2>
+      </div>
+
+      <!-- Complex Content Inset (Statement blocks or match-the-following tables, displayed when relevant) -->
+      <div id="complex-inset-container" class="hidden flex-none mb-3 p-2.5 bg-slate-50 dark:bg-slate-900/70 border border-slate-200 dark:border-slate-800 rounded-lg text-xs leading-relaxed">
+        <!-- Injected dynamic complex statements/tables -->
+      </div>
+
+      <!-- Options Container (4 clickable buttons in a grid or stack optimized for space) -->
+      <div id="options-grid" class="grid grid-cols-1 sm:grid-cols-2 gap-2 flex-none">
+        <!-- Generated Options dynamically -->
+      </div>
+
+      <!-- Explanation & High-Yield Analysis Box (Scrollable internally if extra long, compact default) -->
+      <div id="explanation-box" class="hidden flex-1 min-h-0 mt-3 p-3 rounded-lg sm:rounded-xl bg-slate-50 dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800/90 flex flex-col overflow-hidden">
+        <div class="flex items-center justify-between pb-1.5 border-b border-slate-200/80 dark:border-slate-800">
+          <div class="flex items-center gap-1.5">
+            <span id="result-status-pill" class="text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">
+              Correct
+            </span>
+            <span class="text-xs font-bold text-slate-700 dark:text-slate-200">High-Yield Takeaways</span>
+          </div>
+          <span class="text-[10px] font-mono text-slate-400">Exam Note</span>
+        </div>
+        
+        <div class="flex-1 overflow-y-auto custom-scrollbar pt-2 text-xs space-y-2 pr-1">
+          <div>
+            <span class="font-bold text-slate-900 dark:text-slate-100 flex items-center gap-1 text-[11px]">
+              <svg class="w-3.5 h-3.5 text-indigo-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+              Core Fact:
+            </span>
+            <p id="explanation-core" class="text-slate-600 dark:text-slate-300 mt-0.5 leading-relaxed"></p>
+          </div>
+          
+          <div id="options-analysis-wrapper">
+            <span class="font-bold text-slate-900 dark:text-slate-100 flex items-center gap-1 text-[11px]">
+              <svg class="w-3.5 h-3.5 text-amber-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+              Options Analysis:
+            </span>
+            <p id="explanation-analysis" class="text-slate-600 dark:text-slate-300 mt-0.5 leading-relaxed"></p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sticky Bottom Control Action Bar (Compact 46px) -->
+    <div class="flex-none pt-2 flex items-center justify-between gap-3">
+      <div class="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400">
+        <span id="hint-text" class="hidden sm:inline-block">Select an option to evaluate instantly</span>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <button id="skip-btn" class="px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-800 transition-colors">
+          Skip
+        </button>
+        <button id="next-btn" disabled class="px-5 py-2 rounded-lg text-xs sm:text-sm font-bold text-white bg-indigo-600 hover:bg-indigo-500 active:bg-indigo-700 disabled:opacity-40 disabled:cursor-not-allowed shadow-md shadow-indigo-600/20 transition-all flex items-center gap-1.5">
+          <span>Next</span>
+          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
+      </div>
+    </div>
+  </main>
+
+  <!-- Results Screen (Hidden initially) -->
+  <section id="results-screen" class="hidden flex-1 flex flex-col p-2 sm:p-4 max-w-4xl w-full mx-auto overflow-hidden">
+    <div class="flex-1 flex flex-col min-h-0 bg-white dark:bg-[#131929] rounded-xl sm:rounded-2xl border border-slate-200 dark:border-slate-800 shadow-md p-4 sm:p-6 overflow-hidden">
+      
+      <!-- Top Summary Banner -->
+      <div class="flex-none border-b border-slate-200 dark:border-slate-800 pb-4">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div>
+            <h2 class="text-xl sm:text-2xl font-black text-slate-900 dark:text-white tracking-tight">Performance Summary</h2>
+            <p class="text-xs text-slate-500 dark:text-slate-400">Full review of all 36 Economics questions</p>
+          </div>
+          
+          <div class="flex items-center gap-2">
+            <button id="restart-btn" class="px-3.5 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold transition flex items-center gap-1 shadow-sm">
+              <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
+              Restart Quiz
+            </button>
+          </div>
+        </div>
+
+        <!-- Metric Cards -->
+        <div class="grid grid-cols-4 gap-2 sm:gap-3 mt-3">
+          <div class="bg-slate-50 dark:bg-slate-900/60 p-2 sm:p-2.5 rounded-lg border border-slate-200/70 dark:border-slate-800/80 text-center">
+            <span class="text-[10px] uppercase font-bold text-slate-400">Score</span>
+            <div id="res-score" class="text-base sm:text-xl font-black text-indigo-600 dark:text-indigo-400">0/36</div>
+          </div>
+          <div class="bg-slate-50 dark:bg-slate-900/60 p-2 sm:p-2.5 rounded-lg border border-slate-200/70 dark:border-slate-800/80 text-center">
+            <span class="text-[10px] uppercase font-bold text-slate-400">Accuracy</span>
+            <div id="res-accuracy" class="text-base sm:text-xl font-black text-emerald-500">0%</div>
+          </div>
+          <div class="bg-slate-50 dark:bg-slate-900/60 p-2 sm:p-2.5 rounded-lg border border-slate-200/70 dark:border-slate-800/80 text-center">
+            <span class="text-[10px] uppercase font-bold text-slate-400">Incorrect</span>
+            <div id="res-incorrect" class="text-base sm:text-xl font-black text-rose-500">0</div>
+          </div>
+          <div class="bg-slate-50 dark:bg-slate-900/60 p-2 sm:p-2.5 rounded-lg border border-slate-200/70 dark:border-slate-800/80 text-center">
+            <span class="text-[10px] uppercase font-bold text-slate-400">Time Taken</span>
+            <div id="res-time" class="text-base sm:text-xl font-black text-slate-700 dark:text-slate-300">00:00</div>
+          </div>
+        </div>
+
+        <!-- Filter tabs for review -->
+        <div class="flex items-center gap-2 mt-3 pt-2">
+          <span class="text-xs font-semibold text-slate-500">Review Filter:</span>
+          <button id="filter-all-btn" class="px-2.5 py-1 text-xs font-semibold rounded-md bg-indigo-50 dark:bg-indigo-950 text-indigo-600 dark:text-indigo-400 border border-indigo-200 dark:border-indigo-800">
+            All (36)
+          </button>
+          <button id="filter-wrong-btn" class="px-2.5 py-1 text-xs font-semibold rounded-md bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700">
+            Mistakes Only (<span id="wrong-count-tag">0</span>)
+          </button>
+        </div>
+      </div>
+
+      <!-- Scrollable Review List -->
+      <div id="review-list" class="flex-1 overflow-y-auto custom-scrollbar pt-3 space-y-2.5 pr-1">
+        <!-- Review cards dynamically injected here -->
+      </div>
+    </div>
+  </section>
+
+  <script>
+    /* Full Comprehensive Question Bank from user syllabus (36 questions total) */
+    const QUESTIONS = [
+      {
+        id: 1,
+        topic: "Foundations",
+        question: "Who is regarded as the founding father of modern economics, which was earlier known as political economy?",
+        options: [
+          "Alfred Marshall",
+          "John Maynard Keynes",
+          "Adam Smith",
+          "Lionel Robbins"
+        ],
+        answer: 2,
+        coreFact: "Adam Smith is the father of modern economics and microeconomics, famously authoring 'The Wealth of Nations' in 1776.",
+        optionsAnalysis: "Keynes is recognized as the father of Macroeconomics ('General Theory of Employment, Interest and Money'). Marshall authored 'Principles of Economics' (1890) and defined welfare economics."
+      },
+      {
+        id: 2,
+        topic: "Economic Agents",
+        question: "Which of the following is the defining characteristic of an economic agent?",
+        options: [
+          "Solely acting as commercial producers in formal markets",
+          "Solely acting as private end-product consumers",
+          "Their ability to make economic decisions regarding resource allocation",
+          "Possessing state authorization to mint currency"
+        ],
+        answer: 2,
+        coreFact: "Economic agents (individuals, firms, governments) are defined fundamentally by their capacity to make choices regarding resource allocation.",
+        optionsAnalysis: "Producers and consumers are specific subsets of economic agents, making single-role options too narrow."
+      },
+      {
+        id: 3,
+        topic: "Economic Systems",
+        question: "Under the 'Laissez-faire' economic theory, what is the role of the government?",
+        options: [
+          "Total central planning and control of production",
+          "Owning all major and core heavy industries",
+          "Minimum interference in economic affairs",
+          "Setting price ceilings and administrative wages"
+        ],
+        answer: 2,
+        coreFact: "Laissez-faire (French for 'leave it alone') advocates for free-market capitalism with minimal government intervention in market transactions.",
+        optionsAnalysis: "Total state ownership describes command/socialist economies. Minimum interference relies on free market equilibria."
+      },
+      {
+        id: 4,
+        topic: "Production Theory",
+        question: "What are the four main 'factors of production' in classical economics?",
+        options: [
+          "Rent, Wages, Interest, and Profit",
+          "Land, Labor, Capital, and Entrepreneurship",
+          "Raw materials, Energy, Machinery, and Logistics",
+          "Money, Stocks, Bonds, and Foreign Exchange"
+        ],
+        answer: 1,
+        coreFact: "The four primary inputs required to produce all economic goods and services are Land, Labor, Capital, and Entrepreneurship.",
+        optionsAnalysis: "Rent, Wages, Interest, and Profit represent factor payments (rewards) to these four respective factors, not the inputs themselves."
+      },
+      {
+        id: 5,
+        topic: "Market Mechanisms",
+        question: "Which economic concept is known as the 'invisible hand'?",
+        options: [
+          "Centralized government planning",
+          "Market forces of supply and demand",
+          "Independent monetary policy by the central bank",
+          "International customs barriers"
+        ],
+        answer: 1,
+        coreFact: "Coined by Adam Smith, the 'invisible hand' describes how individuals acting in their own enlightened self-interest drive overall societal prosperity through voluntary market exchanges.",
+        optionsAnalysis: "Government regulation and central banking are direct, deliberate visible interventions."
+      },
+      {
+        id: 6,
+        topic: "Economic Sectors",
+        question: "Which of these is an example of the 'Primary Sector' of the economy?",
+        options: [
+          "An automobile manufacturing facility",
+          "Commercial banking operations",
+          "Agricultural farming and crop harvesting",
+          "Software architecture and development"
+        ],
+        answer: 2,
+        coreFact: "The primary sector involves the direct harvesting and extraction of natural raw resources: agriculture, mining, forestry, and fishing.",
+        optionsAnalysis: "Car factories belong to the Secondary sector (manufacturing). Banking and software belong to the Tertiary/Quaternary sectors (services)."
+      },
+      {
+        id: 7,
+        topic: "Macro Environment",
+        question: "What does the letter 'E' represent in the PESTAL macroeconomic analysis framework?",
+        options: [
+          "Electronic",
+          "Economic",
+          "Exchange Rate",
+          "Enterprise"
+        ],
+        answer: 1,
+        coreFact: "PESTAL (or PESTLE) stands for Political, Economic, Social, Technological, Environmental, and Legal macroeconomic external factors.",
+        optionsAnalysis: "Electronic and Exchange are specific sub-elements or distractors rather than the core framework pillar."
+      },
+      {
+        id: 8,
+        topic: "Macro vs Micro",
+        question: "Which of the following is NOT within the scope of macroeconomics?",
+        options: [
+          "Gross domestic national income",
+          "Aggregate investment in an economy",
+          "Wages paid by a single private establishment",
+          "Total national consumption expenditure"
+        ],
+        answer: 2,
+        coreFact: "The wages of a single establishment fall under microeconomics, which studies individual units and localized demand-supply mechanics.",
+        optionsAnalysis: "National income, aggregate investment, inflation, and total consumption are macro-level aggregates."
+      },
+      {
+        id: 9,
+        topic: "Economic Policy",
+        question: "Governments are trying to make rules for businesses simpler and easier to understand. This approach is known as:",
+        options: [
+          "Fiscal austerity",
+          "Streamlining regulations",
+          "Statutory monopolization",
+          "Regulatory proliferation"
+        ],
+        answer: 1,
+        coreFact: "Streamlining regulations involves eliminating redundant bureaucratic red tape to foster 'Ease of Doing Business' and attract enterprise.",
+        optionsAnalysis: "Proliferating regulations creates compliance friction and stifles private investment."
+      },
+      {
+        id: 10,
+        topic: "Foundations",
+        question: "Who gave the scarcity definition of economics?",
+        options: [
+          "Adam Smith",
+          "Alfred Marshall",
+          "Lionel Robbins",
+          "Paul A. Samuelson"
+        ],
+        answer: 2,
+        coreFact: "Lionel Robbins defined economics as the science which studies human behavior as a relationship between ends and scarce means which have alternative uses.",
+        optionsAnalysis: "Adam Smith offered the Wealth definition; Alfred Marshall gave the Welfare definition; Paul Samuelson authored the modern Growth definition."
+      },
+      {
+        id: 11,
+        topic: "Microeconomics",
+        question: "In economics, what does 'opportunity cost' refer to?",
+        options: [
+          "The historical financial cost of an asset",
+          "The next best alternative forgone",
+          "The accounting cost minus taxes",
+          "The marginal cost of an unsold surplus"
+        ],
+        answer: 1,
+        coreFact: "Opportunity cost represents the prospective benefit or value of the best alternative forgone when a choice is made under scarcity.",
+        optionsAnalysis: "Historical or accounting costs reflect explicit monetary disbursements, whereas opportunity cost includes implicit sacrifice."
+      },
+      {
+        id: 12,
+        topic: "Development Economics",
+        question: "Which of the following best describes the key requirement for ensuring balanced regional development (BRD)?",
+        options: [
+          "Focusing industrial grants exclusively on coastal metropolitan hubs",
+          "A comprehensive mix of financial, natural, human, and technological resources",
+          "Strict reliance on monolithic centralized planning without local inputs",
+          "Solely injecting foreign direct capital into heavy metallurgy"
+        ],
+        answer: 1,
+        coreFact: "Sustainable balanced regional development cannot rely on isolated variables; it requires an integrated deployment of financial, infrastructural, human, and technological inputs.",
+        optionsAnalysis: "Single-factor interventions create regional enclaves and exacerbate inter-state disparities."
+      },
+      {
+        id: 13,
+        topic: "Public Economics",
+        question: "What does the term 'public goods' refer to?",
+        options: [
+          "Goods produced solely by state-owned enterprises",
+          "Goods that are accessible to all and non-rival in consumption",
+          "Goods distributed via ration cards at subsidised prices",
+          "Manufactured products consumed exclusively by government agencies"
+        ],
+        answer: 1,
+        coreFact: "Pure public goods exhibit two distinct non-negotiable qualities: non-excludability and non-rivalry.",
+        optionsAnalysis: "Public goods can occasionally be contracted out, and state-owned entities often manufacture excludable private goods."
+      },
+      {
+        id: 14,
+        topic: "Public Goods",
+        question: "Choose the correct statement regarding public goods.",
+        options: [
+          "They are excludable and rivalrous",
+          "They are non-excludable and non-rivalrous",
+          "They are excludable but non-rivalrous",
+          "They are non-excludable but rivalrous"
+        ],
+        answer: 1,
+        coreFact: "By definition, pure public goods are non-excludable (cannot prevent non-payers) and non-rival (one person's use does not diminish another's).",
+        optionsAnalysis: "Excludable + Rival = Private goods. Excludable + Non-rival = Club goods. Non-excludable + Rival = Common resources."
+      },
+      {
+        id: 15,
+        topic: "Public Goods",
+        question: "Which of the following is a classic example of a 'public good'?",
+        options: [
+          "Metropolitan metro rail transit",
+          "Residential electricity supply",
+          "National police and defense services",
+          "Broadband telecommunication network"
+        ],
+        answer: 2,
+        coreFact: "Police protection is available to all members of a jurisdiction without depleting protection for others (non-rival, non-excludable).",
+        optionsAnalysis: "Metro tickets and electricity grids require meters/fares; failure to pay excludes the user (excludable)."
+      },
+      {
+        id: 16,
+        topic: "National Accounting",
+        question: "In the context of an economy, which of the following is an example of an Intermediate Good?",
+        options: [
+          "A cotton shirt bought by a consumer",
+          "A television set installed in a home living room",
+          "Copper sheets used by a manufacturer to make utensils",
+          "A refrigerator used in a private residence"
+        ],
+        answer: 2,
+        coreFact: "Intermediate goods are products transformed or entirely consumed during the production cycle to yield final finished goods.",
+        optionsAnalysis: "Apparel, household appliances, and private consumer goods are final consumption products."
+      },
+      {
+        id: 17,
+        topic: "Public Economics",
+        question: "In the context of public goods, what does the term 'Non-rivalrous' signify?",
+        options: [
+          "Firms are forbidden from competing with one another",
+          "One person's consumption does not reduce the availability for others",
+          "Demand for the good surges as the market price climbs",
+          "The good cannot be purchased via online currency"
+        ],
+        answer: 1,
+        coreFact: "Non-rivalry means that one citizen's enjoyment of a good does not diminish the quantity or quality accessible to fellow citizens (e.g. lighthouse beam).",
+        optionsAnalysis: "Price increases driving higher quantity demanded describes Giffen or Veblen paradoxes, not rivalry."
+      },
+      {
+        id: 19,
+        topic: "Industrial Structure",
+        question: "What is a capital goods industry?",
+        options: [
+          "An industry engaged in consumer packaged goods",
+          "An industry manufacturing machines, plant equipment, and production tools",
+          "An enterprise specialized in corporate securities and bond broking",
+          "Farming cooperatives processing perishable dairy items"
+        ],
+        answer: 1,
+        coreFact: "Capital goods are physical durable assets manufactured to enable other enterprises to produce downstream goods and services.",
+        optionsAnalysis: "FMCG and dairy represent consumer non-durables rather than productive fixed capital."
+      },
+      {
+        id: 20,
+        topic: "Public Goods",
+        question: "Which of the following statements is correct regarding Public Goods?",
+        options: [
+          "They are provided at zero cost by competitive private monopolies",
+          "Generally, the benefits of public goods are available to all citizens",
+          "Everyday clothing is a prime example of a public good",
+          "Public goods generate zero positive externalities in society"
+        ],
+        answer: 1,
+        coreFact: "Because public goods are non-excludable, their benefits accrue collectively across society, giving rise to the free-rider dilemma.",
+        optionsAnalysis: "Clothes are rival and excludable (private goods). Private markets under-provide public goods due to lack of profit incentive."
+      },
+      {
+        id: 21,
+        topic: "Industrial Geography",
+        question: "Which of the following correctly describes a 'heavy industry'?",
+        options: [
+          "Uses low-weight raw materials to produce high-value miniature goods",
+          "Can relocate freely anywhere regardless of raw material sites (footloose)",
+          "Uses bulky inputs to produce large, heavy finished goods",
+          "Specializes strictly in digital software and mobile applications"
+        ],
+        answer: 2,
+        coreFact: "Heavy industries (e.g. integrated blast furnace steel plants) require vast quantities of heavy raw ores and produce high-tonnage structural products.",
+        optionsAnalysis: "Footloose industries (watchmaking, microchips) rely on light, mobile inputs and are not bound to resource basins."
+      },
+      {
+        id: 22,
+        topic: "Consumer Theory",
+        question: "The concept of 'marginal utility' measures:",
+        options: [
+          "The total aggregate satisfaction derived from all units consumed",
+          "The satisfaction gained from consuming one additional unit of a good",
+          "The ratio of corporate profits to total production expenses",
+          "The point where total product begins to decline"
+        ],
+        answer: 1,
+        coreFact: "'Marginal' in economic analysis always designates the change associated with an incremental or additional unit.",
+        optionsAnalysis: "Total aggregate satisfaction is 'Total Utility' ($TU$). Diminishing returns relates to the marginal physical product curve."
+      },
+      {
+        id: 23,
+        topic: "Demand Analysis",
+        question: "The 'Law of Demand' states that when the price of a good increases (ceteris paribus), what happens to quantity demanded?",
+        options: [
+          "It increases proportionally",
+          "It decreases",
+          "It remains completely unchanged",
+          "It shifts the entire demand curve rightward"
+        ],
+        answer: 1,
+        coreFact: "The Law of Demand establishes an inverse relationship between price and quantity demanded, creating a downward-sloping demand curve.",
+        optionsAnalysis: "Supply has a direct positive relationship with price. A price change causes a movement along the curve, not a shift."
+      },
+      {
+        id: 24,
+        topic: "Elasticity",
+        question: "What does the concept of 'elasticity of substitution' measure?",
+        options: [
+          "The responsiveness of consumer demand to fluctuations in real income",
+          "How easily consumers or producers substitute one good/input for another",
+          "The speed at which central banks adjust the policy repo rate",
+          "The absolute ratio of fixed cost to variable cost"
+        ],
+        answer: 1,
+        coreFact: "The elasticity of substitution measures the ease with which one input/good can be substituted for another following a change in their relative price ratio.",
+        optionsAnalysis: "Responsiveness of demand to income is Income Elasticity of Demand ($e_y$)."
+      },
+      {
+        id: 25,
+        topic: "Elasticity",
+        question: "Which of the following is the standard formula for the Price Elasticity of Supply ($E_s$)?",
+        options: [
+          "% change in price / % change in quantity supplied",
+          "% change in quantity supplied / % change in price",
+          "Change in total revenue / Change in market quantity",
+          "Marginal revenue / Marginal physical cost"
+        ],
+        answer: 1,
+        coreFact: "Price elasticity of supply is mathematically expressed as: $E_s = \\frac{\\% \\Delta Q_s}{\\% \\Delta P} = \\frac{\\Delta Q_s}{\\Delta P} \\cdot \\frac{P}{Q_s}$.",
+        optionsAnalysis: "Inverting the fraction (% price / % quantity) is a common distractor trap."
+      },
+      {
+        id: 26,
+        topic: "Revenue & Elasticity",
+        question: "At what point is a seller's Total Revenue maximized in relation to price elasticity of demand?",
+        options: [
+          "When demand is perfectly elastic ($e_d = \\infty$)",
+          "When demand is perfectly inelastic ($e_d = 0$)",
+          "When elasticity of demand is unitary ($e_d = 1$)",
+          "When marginal revenue is strictly positive"
+        ],
+        answer: 2,
+        coreFact: "Total Revenue ($TR$) reaches its absolute mathematical zenith when price elasticity of demand is unitary ($|e_d| = 1$), where $MR = 0$.",
+        optionsAnalysis: "If $e_d > 1$, cutting price boosts $TR$. If $e_d < 1$, raising price boosts $TR$. At $e_d = 1$, $TR$ cannot be expanded further."
+      },
+      {
+        id: 27,
+        topic: "Consumer Theory",
+        question: "An 'Iso-utility curve' is another widely recognized name for which economic curve?",
+        options: [
+          "Isoquant curve",
+          "Indifference curve",
+          "Phillips curve",
+          "Lorenz curve"
+        ],
+        answer: 1,
+        coreFact: "An indifference curve depicts all possible combinations of two commodities that yield identical levels of satisfaction (iso-utility) to a consumer.",
+        optionsAnalysis: "Isoquants show equal production output. The Phillips curve links inflation and unemployment; the Lorenz curve plots income inequality."
+      },
+      {
+        id: 28,
+        topic: "Supply Elasticity",
+        question: "What is elasticity of supply termed when a proportionate change in quantity supplied exceeds the proportionate change in price?",
+        options: [
+          "Relatively inelastic supply ($E_s < 1$)",
+          "Unitary elastic supply ($E_s = 1$)",
+          "Relatively elastic supply ($E_s > 1$)",
+          "Perfectly inelastic supply ($E_s = 0$)"
+        ],
+        answer: 2,
+        coreFact: "When percentage change in quantity supplied is greater than the percentage change in price, $E_s > 1$, classified as relatively elastic supply.",
+        optionsAnalysis: "A vertical supply curve is perfectly inelastic ($E_s = 0$); a horizontal line is perfectly elastic ($E_s = \\infty$)."
+      },
+      {
+        id: 29,
+        topic: "Demand Anomalies",
+        question: "Which of the following is NOT an exception to the classical 'Law of Demand'?",
+        options: [
+          "Giffen goods",
+          "Veblen goods (conspicuous consumption)",
+          "Standard substitute goods",
+          "Speculative bubble assets"
+        ],
+        answer: 2,
+        coreFact: "Standard substitute goods adhere completely to normal demand laws: when coffee prices rise, the quantity demanded of coffee falls.",
+        optionsAnalysis: "Giffen goods (staple inferior goods) and Veblen goods (luxury prestige symbols) feature upward-sloping demand curves."
+      },
+      {
+        id: 30,
+        topic: "Microeconomics",
+        question: "In microeconomics, what is the graphical representation of the demand function called?",
+        options: [
+          "Budget line",
+          "Demand curve",
+          "Supply trajectory",
+          "Production possibility frontier"
+        ],
+        answer: 1,
+        coreFact: "The demand curve plots the mathematical demand schedule with price on the vertical y-axis and quantity demanded on the horizontal x-axis.",
+        optionsAnalysis: "The budget line shows consumer purchasing power combinations; the PPF portrays productive capacity trade-offs."
+      },
+      {
+        id: 31,
+        topic: "Consumer Behavior",
+        question: "Which economic term describes a drop in demand for a commodity because other individuals are consuming it?",
+        options: [
+          "Bandwagon effect",
+          "Veblen effect",
+          "Snob effect",
+          "Demonstration effect"
+        ],
+        answer: 2,
+        coreFact: "The Snob effect reflects a desire for exclusivity: as a good becomes popular or mass-marketed, elite consumers abandon it, depressing demand.",
+        optionsAnalysis: "Bandwagon effect is the opposite: demand accelerates because everyone else is buying it. Veblen relates strictly to high price status."
+      },
+      {
+        id: 32,
+        topic: "Demand Theory",
+        question: "Which of the following statements accurately characterizes the Law of Demand?",
+        options: [
+          "As price increases, supply expands, ceteris paribus",
+          "As consumer income increases, demand always falls",
+          "As price increases, quantity demanded decreases, ceteris paribus",
+          "As production cost drops, retail price remains locked"
+        ],
+        answer: 2,
+        coreFact: "'Ceteris paribus' (all other factors held constant) is vital: changes in taste, income, or substitute prices shift the curve instead.",
+        optionsAnalysis: "The inverse relation holds strictly between a good's own price and its quantity demanded under constant background conditions."
+      },
+      {
+        id: 33,
+        topic: "Market Structures",
+        question: "Which of the following is NOT a characteristic of an Oligopolistic market structure?",
+        options: [
+          "Domination by a small number of large firms",
+          "Significant strategic interdependence among sellers",
+          "Infinite independent sellers with effortless entry",
+          "Substantial barrier to entry"
+        ],
+        answer: 2,
+        coreFact: "An oligopoly contains only a few dominant sellers (e.g. telecom, airlines). Infinite sellers with frictionless entry characterizes Perfect Competition.",
+        optionsAnalysis: "Oligopolies feature price rigidity, kinked demand curves, and mutual strategic interdependence."
+      },
+      {
+        id: 34,
+        topic: "Market Structures",
+        question: "What does a firm earn under Monopolistic Competition in the long run?",
+        options: [
+          "Supernormal economic profits",
+          "Zero economic profit (normal profit only)",
+          "Persistent operational losses",
+          "Monopoly rents"
+        ],
+        answer: 1,
+        coreFact: "Because entry and exit barriers are minimal, short-run economic profits attract new entrants, shifting individual demand until only normal profit ($P = ATC$) is earned.",
+        optionsAnalysis: "Permanent supernormal profits require insurmountable entry barriers, which only pure monopolies or tight oligopolies possess."
+      },
+      {
+        id: 35,
+        topic: "Market Structures",
+        question: "In the short run, what financial outcomes can firms experience under monopolistic competition?",
+        options: [
+          "They are guaranteed to make exactly zero accounting profits",
+          "They can earn abnormal profits or suffer economic losses depending on cost & demand",
+          "They always incur severe operating deficits due to advertising",
+          "They are compelled by law to sell at marginal cost"
+        ],
+        answer: 1,
+        coreFact: "Due to brand differentiation and brand stickiness, short-run firms operate with pricing autonomy, allowing them to earn supernormal profits or sustain losses.",
+        optionsAnalysis: "It is only through long-run competitive entry/exit adjustments that economic profits are normalized to zero."
+      },
+      {
+        id: 36,
+        topic: "Market Structures",
+        question: "Which of the following attributes is a core condition of a Perfectly Competitive market?",
+        options: [
+          "Individual firms act as absolute price makers",
+          "Firms can enter or exit the market freely",
+          "Selling differentiated and highly patented goods",
+          "A small cartel setting output quotas"
+        ],
+        answer: 1,
+        coreFact: "Perfect competition demands free entry and exit, homogeneous goods, price-taking behavior ($P = MR$), and perfect market information.",
+        optionsAnalysis: "Price making occurs in monopolies. Product differentiation is monopolistic competition; cartels characterize collusive oligopoly."
+      },
+      {
+        id: 37,
+        topic: "Macro Accounting",
+        question: "In the context of capital wear and tear during production, 'replacement investment' is identical to:",
+        options: [
+          "Net domestic capital accumulation",
+          "Depreciation of physical capital",
+          "Government export subsidies",
+          "Direct corporate dividend yield"
+        ],
+        answer: 1,
+        coreFact: "Depreciation measures the financial loss in value of productive fixed capital over time due to wear and obsolescence; replacement investment offsets this loss.",
+        optionsAnalysis: "Gross Investment minus Replacement Investment (Depreciation) equals Net Investment."
+      },
+      {
+        id: 38,
+        topic: "Cost Theory",
+        question: "Which short-run cost curve is typically U-shaped due to the operation of the Law of Variable Proportions?",
+        options: [
+          "Average Variable Cost (AVC) Curve",
+          "Average Fixed Cost (AFC) Curve",
+          "Total Fixed Cost (TFC) Curve",
+          "Long-run Constant Returns Curve"
+        ],
+        answer: 0,
+        coreFact: "The AVC curve falls initially due to increasing returns to the variable factor, reaches an optimum minimum, and subsequently rises due to diminishing marginal returns, creating a distinct U-shape.",
+        optionsAnalysis: "The Average Fixed Cost ($AFC$) curve is a rectangular hyperbola that asymptotically declines toward zero as output increases."
+      }
+    ];
+
+    // State Variables
+    let currentIndex = 0;
+    let userAnswers = new Array(QUESTIONS.length).fill(null);
+    let quizStartTime = Date.now();
+    let timerInterval = null;
+    let timerSeconds = 0;
+    let currentFilter = 'all';
+
+    // DOM Elements Cache
+    const elQuizScreen = document.getElementById('quiz-screen');
+    const elResultsScreen = document.getElementById('results-screen');
+    const elQuestionText = document.getElementById('question-text');
+    const elTopicTag = document.getElementById('topic-tag');
+    const elQuestionIndexTag = document.getElementById('question-index-tag');
+    const elComplexInset = document.getElementById('complex-inset-container');
+    const elOptionsGrid = document.getElementById('options-grid');
+    const elExplanationBox = document.getElementById('explanation-box');
+    const elResultStatusPill = document.getElementById('result-status-pill');
+    const elExplanationCore = document.getElementById('explanation-core');
+    const elExplanationAnalysis = document.getElementById('explanation-analysis');
+    const elBadgeQNum = document.getElementById('badge-question-num');
+    const elScoreCounter = document.getElementById('score-counter');
+    const elProgressBar = document.getElementById('progress-bar-fill');
+    const elNextBtn = document.getElementById('next-btn');
+    const elSkipBtn = document.getElementById('skip-btn');
+    const elTimer = document.getElementById('timer-display');
+    const elHintText = document.getElementById('hint-text');
+
+    function startTimer() {
+      if (timerInterval) clearInterval(timerInterval);
+      timerSeconds = 0;
+      timerInterval = setInterval(() => {
+        timerSeconds++;
+        const mins = String(Math.floor(timerSeconds / 60)).padStart(2, '0');
+        const secs = String(timerSeconds % 60).padStart(2, '0');
+        elTimer.innerText = `${mins}:${secs}`;
+      }, 1000);
+    }
+
+    function calculateScore() {
+      let correctCount = 0;
+      userAnswers.forEach((ans, idx) => {
+        if (ans !== null && ans === QUESTIONS[idx].answer) {
+          correctCount++;
+        }
+      });
+      return correctCount;
+    }
+
+    function renderQuestion(index) {
+      const q = QUESTIONS[index];
+      
+      // Update tags & badge counters
+      elBadgeQNum.innerText = `Q ${index + 1}/${QUESTIONS.length}`;
+      elQuestionIndexTag.innerText = `Question ${index + 1} of ${QUESTIONS.length}`;
+      elTopicTag.innerText = q.topic;
+      elQuestionText.innerText = q.question;
+
+      // Update Top Progress Bar
+      const progressPercent = ((index + 1) / QUESTIONS.length) * 100;
+      elProgressBar.style.width = `${progressPercent}%`;
+
+      // Complex Question Inset formatting (if question involves statements/columns)
+      if (q.question.includes("Match") || q.question.includes("Statement") || q.question.includes("List")) {
+        elComplexInset.classList.remove('hidden');
+        elComplexInset.innerHTML = `
+          <div class="font-mono text-indigo-700 dark:text-indigo-400 font-bold mb-1 flex items-center gap-1.5">
+            <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+            Structured Exam Reference
+          </div>
+          <p class="text-slate-600 dark:text-slate-300">Evaluate each proposition carefully using standard ceteris paribus assumptions before selecting your final combination.</p>
+        `;
+      } else {
+        elComplexInset.classList.add('hidden');
+        elComplexInset.innerHTML = '';
+      }
+
+      // Generate Option Buttons
+      elOptionsGrid.innerHTML = '';
+      const letters = ['A', 'B', 'C', 'D'];
+      const alreadyAnswered = userAnswers[index] !== null;
+
+      q.options.forEach((optText, optIdx) => {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = `option-btn w-full p-2.5 sm:p-3 rounded-lg sm:rounded-xl text-left font-medium text-xs sm:text-sm border flex items-start gap-2.5 outline-none transition-all ${
+          alreadyAnswered 
+            ? 'cursor-default' 
+            : 'cursor-pointer hover:border-indigo-400 dark:hover:border-indigo-500 hover:bg-indigo-50/40 dark:hover:bg-indigo-950/20'
+        }`;
+
+        // Default neutral borders
+        btn.classList.add('bg-white', 'dark:bg-[#151c2f]', 'border-slate-200', 'dark:border-slate-800', 'text-slate-800', 'dark:text-slate-200');
+
+        // Render option badge
+        btn.innerHTML = `
+          <span class="opt-badge flex-none w-5 h-5 rounded-md flex items-center justify-center text-[10px] font-bold font-mono border border-slate-300 dark:border-slate-700 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">
+            ${letters[optIdx]}
+          </span>
+          <span class="flex-1 leading-snug break-words">${optText}</span>
+          <span class="status-marker hidden ml-1 flex-none"></span>
+        `;
+
+        if (alreadyAnswered) {
+          btn.disabled = true;
+          styleRevealedOption(btn, optIdx, q.answer, userAnswers[index]);
+        } else {
+          btn.addEventListener('click', () => handleOptionSelection(optIdx));
+        }
+
+        elOptionsGrid.appendChild(btn);
+      });
+
+      // Update Explanation Box visibility
+      if (alreadyAnswered) {
+        showExplanationBox(index);
+        elNextBtn.disabled = false;
+        elHintText.innerText = index === QUESTIONS.length - 1 ? "Press Finish to view full scorecard" : "Press Enter or click Next to advance";
+      } else {
+        elExplanationBox.classList.add('hidden');
+        elNextBtn.disabled = true;
+        elHintText.innerText = "Select an option (Keys 1-4 or A-D)";
+      }
+
+      // Next Button text
+      if (index === QUESTIONS.length - 1) {
+        elNextBtn.querySelector('span').innerText = 'Finish Quiz';
+      } else {
+        elNextBtn.querySelector('span').innerText = 'Next';
+      }
+    }
+
+    function handleOptionSelection(selectedIndex) {
+      if (userAnswers[currentIndex] !== null) return; // Prevent multiple choices
+
+      userAnswers[currentIndex] = selectedIndex;
+      const q = QUESTIONS[currentIndex];
+      const isCorrect = selectedIndex === q.answer;
+
+      // Update Live Score Counter
+      elScoreCounter.innerText = calculateScore();
+
+      // Update buttons
+      const buttons = elOptionsGrid.querySelectorAll('button');
+      buttons.forEach((btn, idx) => {
+        btn.disabled = true;
+        btn.classList.remove('cursor-pointer', 'hover:border-indigo-400', 'dark:hover:border-indigo-500', 'hover:bg-indigo-50/40', 'dark:hover:bg-indigo-950/20');
+        styleRevealedOption(btn, idx, q.answer, selectedIndex);
+      });
+
+      // Reveal Explanations smoothly
+      showExplanationBox(currentIndex);
+
+      // Enable Next button & update bottom helper
+      elNextBtn.disabled = false;
+      elNextBtn.focus();
+      elHintText.innerText = currentIndex === QUESTIONS.length - 1 ? "Quiz Complete! Press Finish" : "Press Enter or Space for Next Question";
+    }
+
+    function styleRevealedOption(buttonEl, optionIndex, correctIndex, selectedIndex) {
+      const badge = buttonEl.querySelector('.opt-badge');
+      const marker = buttonEl.querySelector('.status-marker');
+      marker.classList.remove('hidden');
+
+      if (optionIndex === correctIndex) {
+        // Correct styling (High contrast emerald)
+        buttonEl.classList.remove('bg-white', 'dark:bg-[#151c2f]', 'border-slate-200', 'dark:border-slate-800');
+        buttonEl.classList.add('bg-emerald-500/10', 'border-emerald-500', 'dark:border-emerald-500', 'text-emerald-900', 'dark:text-emerald-200');
+        badge.classList.remove('border-slate-300', 'dark:border-slate-700', 'bg-slate-100', 'dark:bg-slate-800', 'text-slate-600', 'dark:text-slate-300');
+        badge.classList.add('bg-emerald-600', 'text-white', 'border-emerald-600');
+        marker.innerHTML = `<svg class="w-4 h-4 text-emerald-600 dark:text-emerald-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>`;
+      } else if (optionIndex === selectedIndex) {
+        // Chosen Wrong styling (Crimson rose)
+        buttonEl.classList.remove('bg-white', 'dark:bg-[#151c2f]', 'border-slate-200', 'dark:border-slate-800');
+        buttonEl.classList.add('bg-rose-500/10', 'border-rose-500', 'dark:border-rose-500', 'text-rose-900', 'dark:text-rose-200');
+        badge.classList.remove('border-slate-300', 'dark:border-slate-700', 'bg-slate-100', 'dark:bg-slate-800', 'text-slate-600', 'dark:text-slate-300');
+        badge.classList.add('bg-rose-600', 'text-white', 'border-rose-600');
+        marker.innerHTML = `<svg class="w-4 h-4 text-rose-600 dark:text-rose-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>`;
+      } else {
+        buttonEl.classList.add('opacity-50');
+      }
+    }
+
+    function showExplanationBox(index) {
+      const q = QUESTIONS[index];
+      const isCorrect = userAnswers[index] === q.answer;
+
+      elExplanationBox.classList.remove('hidden');
+      elExplanationCore.innerText = q.coreFact;
+      elExplanationAnalysis.innerText = q.optionsAnalysis;
+
+      if (isCorrect) {
+        elResultStatusPill.className = 'text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider bg-emerald-100 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-800';
+        elResultStatusPill.innerText = 'Correct Answer';
+      } else {
+        elResultStatusPill.className = 'text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider bg-rose-100 dark:bg-rose-950 text-rose-700 dark:text-rose-300 border border-rose-300 dark:border-rose-800';
+        elResultStatusPill.innerText = userAnswers[index] === null ? 'Skipped Question' : 'Incorrect Choice';
+      }
+    }
+
+    function advanceToNext() {
+      if (currentIndex < QUESTIONS.length - 1) {
+        currentIndex++;
+        renderQuestion(currentIndex);
+      } else {
+        showResultsScreen();
+      }
+    }
+
+    function handleSkip() {
+      if (userAnswers[currentIndex] === null) {
+        userAnswers[currentIndex] = -1; // -1 denotes skipped
+      }
+      advanceToNext();
+    }
+
+    function showResultsScreen() {
+      clearInterval(timerInterval);
+      elQuizScreen.classList.add('hidden');
+      elResultsScreen.classList.remove('hidden');
+
+      const correct = calculateScore();
+      const total = QUESTIONS.length;
+      const accuracy = Math.round((correct / total) * 100);
+      const incorrectCount = userAnswers.filter((ans, idx) => ans !== QUESTIONS[idx].answer).length;
+
+      document.getElementById('res-score').innerText = `${correct}/${total}`;
+      document.getElementById('res-accuracy').innerText = `${accuracy}%`;
+      document.getElementById('res-incorrect').innerText = `${incorrectCount}`;
+      document.getElementById('res-time').innerText = elTimer.innerText;
+      document.getElementById('wrong-count-tag').innerText = `${incorrectCount}`;
+
+      renderReviewList('all');
+    }
+
+    function renderReviewList(filter) {
+      currentFilter = filter;
+      const listContainer = document.getElementById('review-list');
+      listContainer.innerHTML = '';
+
+      // Update Filter buttons style
+      const btnAll = document.getElementById('filter-all-btn');
+      const btnWrong = document.getElementById('filter-wrong-btn');
+      if (filter === 'all') {
+        btnAll.className = 'px-2.5 py-1 text-xs font-semibold rounded-md bg-indigo-50 dark:bg-indigo-950 text-indigo-600 dark:text-indigo-400 border border-indigo-200 dark:border-indigo-800';
+        btnWrong.className = 'px-2.5 py-1 text-xs font-semibold rounded-md bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700';
+      } else {
+        btnWrong.className = 'px-2.5 py-1 text-xs font-semibold rounded-md bg-indigo-50 dark:bg-indigo-950 text-indigo-600 dark:text-indigo-400 border border-indigo-200 dark:border-indigo-800';
+        btnAll.className = 'px-2.5 py-1 text-xs font-semibold rounded-md bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700';
+      }
+
+      QUESTIONS.forEach((q, idx) => {
+        const userAns = userAnswers[idx];
+        const isCorrect = userAns === q.answer;
+
+        if (filter === 'wrong' && isCorrect) return; // Skip correct if filtering mistakes
+
+        const card = document.createElement('div');
+        card.className = `p-3 rounded-xl border text-xs leading-relaxed ${
+          isCorrect 
+            ? 'bg-emerald-50/40 dark:bg-emerald-950/20 border-emerald-200 dark:border-emerald-900/40' 
+            : 'bg-rose-50/40 dark:bg-rose-950/20 border-rose-200 dark:border-rose-900/40'
+        }`;
+
+        const userChoiceText = userAns === null || userAns === -1 
+          ? '<span class="italic text-slate-400">Skipped / Unanswered</span>' 
+          : q.options[userAns];
+
+        card.innerHTML = `
+          <div class="flex items-center justify-between font-mono text-[10px] mb-1">
+            <span class="font-bold text-slate-500">Q${idx + 1} &bull; ${q.topic}</span>
+            <span class="font-bold px-1.5 py-0.5 rounded ${
+              isCorrect 
+                ? 'bg-emerald-100 dark:bg-emerald-900 text-emerald-700 dark:text-emerald-300' 
+                : 'bg-rose-100 dark:bg-rose-900 text-rose-700 dark:text-rose-300'
+            }">
+              ${isCorrect ? 'CORRECT' : 'INCORRECT'}
+            </span>
+          </div>
+
+          <p class="font-bold text-slate-900 dark:text-slate-100 mb-2">${q.question}</p>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 mb-2 p-2 rounded-lg bg-white/70 dark:bg-slate-900/70 border border-slate-200/50 dark:border-slate-800/60">
+            <div>
+              <span class="text-[10px] font-bold text-slate-400 uppercase block">Your Choice</span>
+              <span class="${isCorrect ? 'text-emerald-600 dark:text-emerald-400 font-semibold' : 'text-rose-600 dark:text-rose-400 font-semibold'}">
+                ${userChoiceText}
+              </span>
+            </div>
+            <div>
+              <span class="text-[10px] font-bold text-slate-400 uppercase block">Correct Answer</span>
+              <span class="text-emerald-600 dark:text-emerald-400 font-bold">
+                ${q.options[q.answer]}
+              </span>
+            </div>
+          </div>
+
+          <div class="space-y-1 text-slate-600 dark:text-slate-300 pt-1 border-t border-slate-200/60 dark:border-slate-800/60">
+            <p><strong class="text-slate-900 dark:text-slate-200">Core Fact:</strong> ${q.coreFact}</p>
+            <p><strong class="text-slate-900 dark:text-slate-200">Analysis:</strong> ${q.optionsAnalysis}</p>
+          </div>
+        `;
+        listContainer.appendChild(card);
+      });
+
+      if (listContainer.children.length === 0) {
+        listContainer.innerHTML = `
+          <div class="text-center py-8 text-slate-400">
+            <svg class="w-10 h-10 mx-auto text-emerald-500 mb-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            <p class="font-bold text-slate-700 dark:text-slate-200">Outstanding Performance!</p>
+            <p class="text-xs">No mistakes found. You mastered all 36 economics questions.</p>
+          </div>
+        `;
+      }
+    }
+
+    function restartQuiz() {
+      currentIndex = 0;
+      userAnswers = new Array(QUESTIONS.length).fill(null);
+      elScoreCounter.innerText = '0';
+      elResultsScreen.classList.add('hidden');
+      elQuizScreen.classList.remove('hidden');
+      startTimer();
+      renderQuestion(0);
+    }
+
+    // Event Listeners
+    elNextBtn.addEventListener('click', advanceToNext);
+    elSkipBtn.addEventListener('click', handleSkip);
+    document.getElementById('restart-btn').addEventListener('click', restartQuiz);
+    document.getElementById('filter-all-btn').addEventListener('click', () => renderReviewList('all'));
+    document.getElementById('filter-wrong-btn').addEventListener('click', () => renderReviewList('wrong'));
+
+    // Keyboard Shortcuts Navigation
+    window.addEventListener('keydown', (e) => {
+      // Don't intercept if results screen is open or active inputs
+      if (!elResultsScreen.classList.contains('hidden')) return;
+
+      const key = e.key.toUpperCase();
+
+      // Number keys 1-4 or letters A-D for options
+      if (['1', 'A'].includes(key)) handleOptionSelection(0);
+      else if (['2', 'B'].includes(key)) handleOptionSelection(1);
+      else if (['3', 'C'].includes(key)) handleOptionSelection(2);
+      else if (['4', 'D'].includes(key)) handleOptionSelection(3);
+      else if (e.key === 'Enter' || e.key === ' ') {
+        // If already answered, advance
+        if (userAnswers[currentIndex] !== null && !elNextBtn.disabled) {
+          e.preventDefault();
+          advanceToNext();
+        }
+      }
+    });
+
+    // Dark/Light Theme Switcher Logic
+    const themeBtn = document.getElementById('theme-toggle');
+    function applyTheme(isDark) {
+      if (isDark) {
+        document.documentElement.classList.add('dark');
+        localStorage.setItem('econ_exam_theme', 'dark');
+      } else {
+        document.documentElement.classList.remove('dark');
+        localStorage.setItem('econ_exam_theme', 'light');
+      }
+    }
+
+    themeBtn.addEventListener('click', () => {
+      const isDark = document.documentElement.classList.contains('dark');
+      applyTheme(!isDark);
+    });
+
+    // Initialize on load
+    window.addEventListener('DOMContentLoaded', () => {
+      const savedTheme = localStorage.getItem('econ_exam_theme');
+      if (savedTheme) {
+        applyTheme(savedTheme === 'dark');
+      } else {
+        // System preference default
+        const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+        applyTheme(prefersDark);
+      }
+
+      startTimer();
+      renderQuestion(0);
+    });
+  </script>
+</body>
+</html>
