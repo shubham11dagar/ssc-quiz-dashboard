@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>SSC Exam Prep - Art, Culture & Heritage</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#eef2ff',
+                            100: '#e0e7ff',
+                            500: '#4f46e5',
+                            600: '#4338ca',
+                            700: '#3730a3',
+                        }
+                    }
+                }
+            }
+        };
+    </script>
+    <style>
+        * {
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            overflow: hidden;
+            height: 100dvh;
+            width: 100vw;
+        }
+        /* Custom scrollbar for review list */
+        ::-webkit-scrollbar {
+            width: 5px;
+            height: 5px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(156, 163, 175, 0.4);
+            border-radius: 9999px;
+        }
+        .anim-fade {
+            animation: fadeIn 0.22s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(4px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="bg-slate-100 text-slate-800 dark:bg-slate-950 dark:text-slate-100 transition-colors duration-200 antialiased flex flex-col justify-between select-none">
+
+    <!-- App Header (Compact single row) -->
+    <header class="w-full bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 px-4 py-2 flex items-center justify-between shadow-xs shrink-0 z-20">
+        <div class="flex items-center space-x-2">
+            <span class="flex h-7 w-7 items-center justify-center rounded-lg bg-indigo-600 text-white font-bold text-xs shadow">
+                SSC
+            </span>
+            <div>
+                <h1 class="text-sm font-bold tracking-tight text-slate-800 dark:text-slate-100 leading-none">Art & Culture Mock Test</h1>
+                <p class="text-[11px] text-slate-500 dark:text-slate-400 font-medium">PYQ Series • High-Yield Edition</p>
+            </div>
+        </div>
+
+        <div class="flex items-center space-x-2.5">
+            <!-- Question Pill Indicator -->
+            <div id="top-counter" class="text-[12px] font-semibold px-2.5 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
+                <span id="header-curr" class="text-indigo-600 dark:text-indigo-400 font-bold">1</span> / <span id="header-total">50</span>
+            </div>
+
+            <!-- Score Pill -->
+            <div class="hidden sm:flex items-center text-[12px] font-semibold px-2.5 py-1 rounded-full bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800">
+                Score: <span id="header-score" class="ml-1 font-bold">0</span>
+            </div>
+
+            <!-- Theme Toggle -->
+            <button id="theme-toggle" type="button" aria
