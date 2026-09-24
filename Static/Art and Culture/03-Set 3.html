@@ -1,0 +1,1441 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Indian Art, Culture & Heritage Master Exam Series</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#eef2ff',
+              100: '#e0e7ff',
+              500: '#4f46e5',
+              600: '#4338ca',
+              700: '#3730a3',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap');
+    
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+    }
+    
+    body {
+      font-family: 'Inter', sans-serif;
+    }
+    
+    .font-mono-code {
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    /* Subtle custom scrollbar for breakdown list */
+    .custom-scroll::-webkit-scrollbar {
+      width: 5px;
+      height: 5px;
+    }
+    .custom-scroll::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    .custom-scroll::-webkit-scrollbar-thumb {
+      background: rgba(156, 163, 175, 0.4);
+      border-radius: 9999px;
+    }
+
+    /* Option transitions */
+    .option-btn {
+      transition: all 0.18s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    /* Animation pulse for timer warning */
+    @keyframes subtlePulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.75; }
+    }
+    .pulse-warning {
+      animation: subtlePulse 1.2s infinite;
+    }
+  </style>
+</head>
+<body class="h-full bg-slate-100 text-slate-800 dark:bg-slate-950 dark:text-slate-100 flex flex-col overflow-hidden transition-colors duration-300">
+
+  <header class="flex-none bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 shadow-sm z-20">
+    <div class="max-w-6xl mx-auto px-3 sm:px-4 py-2 sm:py-2.5 flex items-center justify-between gap-2">
+      <!-- Title & Branding -->
+      <div class="flex items-center space-x-2 sm:space-x-3 truncate">
+        <div class="w-8 h-8 rounded-lg bg-gradient-to-tr from-indigo-600 to-violet-500 flex items-center justify-center text-white font-bold shadow-md shadow-indigo-500/20 text-sm">
+          <span>SSC</span>
+        </div>
+        <div class="truncate">
+          <h1 class="text-xs sm:text-sm font-bold tracking-tight truncate text-slate-900 dark:text-white">
+            Culture & Heritage Pro Series
+          </h1>
+          <p class="text-[10px] text-slate-500 dark:text-slate-400 truncate">
+            Q101 – Q150 • 2025-2026 PYQ Focus
+          </p>
+        </div>
+      </div>
+
+      <!-- Controls: Palette Drawer, Timer, Mode Toggle -->
+      <div class="flex items-center space-x-1.5 sm:space-x-3 flex-none">
+        <!-- Palette button -->
+        <button id="openPaletteBtn" class="flex items-center gap-1.5 px-2.5 py-1 text-xs font-semibold rounded-md border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-750 transition text-slate-700 dark:text-slate-200" title="Question Grid">
+          <svg class="w-3.5 h-3.5 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/>
+          </svg>
+          <span class="hidden sm:inline">Grid</span>
+          <span id="gridProgressBadge" class="text-[10px] bg-indigo-100 text-indigo-700 dark:bg-indigo-900/60 dark:text-indigo-300 px-1 rounded">0/50</span>
+        </button>
+
+        <!-- Timer -->
+        <div class="flex items-center gap-1 px-2.5 py-1 rounded-md bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-mono-code text-xs font-semibold">
+          <svg class="w-3.5 h-3.5 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+          </svg>
+          <span id="timerDisplay">00:00</span>
+        </div>
+
+        <!-- Dark/Light Mode Switch -->
+        <button id="themeToggleBtn" aria-label="Toggle theme" class="p-1.5 rounded-md text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition">
+          <!-- Sun icon -->
+          <svg id="sunIcon" class="w-4 h-4 hidden dark:block text-amber-400" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" clip-rule="evenodd"/>
+          </svg>
+          <!-- Moon icon -->
+          <svg id="moonIcon" class="w-4 h-4 block dark:hidden text-slate-600" fill="currentColor" viewBox="0 0 20 20">
+            <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Slim top progress bar -->
+    <div class="w-full bg-slate-200 dark:bg-slate-800 h-1">
+      <div id="quizProgressBar" class="bg-indigo-600 h-1 transition-all duration-300 ease-out" style="width: 2%;"></div>
+    </div>
+  </header>
+
+  <main class="flex-1 flex flex-col justify-center items-center p-2 sm:p-4 max-w-5xl w-full mx-auto overflow-hidden">
+    
+    <!-- Quiz Card View (Strict 100vh fitted, responsive) -->
+    <div id="quizView" class="w-full h-full flex flex-col bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl shadow-lg overflow-hidden">
+      
+      <!-- Question Header Bar -->
+      <div class="flex-none px-4 py-2 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between bg-slate-50/70 dark:bg-slate-850">
+        <div class="flex items-center gap-2">
+          <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-bold bg-indigo-600 text-white font-mono-code" id="questionNumberTag">
+            Q.101
+          </span>
+          <span class="text-[11px] text-slate-500 dark:text-slate-400 font-medium" id="questionOriginalMeta">
+            (MTS 2025 10 Feb 2026 Shift 2)
+          </span>
+        </div>
+        <div class="flex items-center gap-2">
+          <span class="text-[11px] font-semibold text-slate-400 dark:text-slate-500 font-mono-code" id="scoreQuickCounter">
+            Score: <span class="text-emerald-600 dark:text-emerald-400 font-bold" id="quickCorrect">0</span>/<span class="text-slate-600 dark:text-slate-300" id="quickTotal">0</span>
+          </span>
+        </div>
+      </div>
+
+      <!-- Question Content Area (Tight and compact) -->
+      <div class="flex-none px-4 pt-2.5 pb-2">
+        <h2 id="questionPrompt" class="text-sm sm:text-base font-semibold text-slate-900 dark:text-white leading-snug">
+          <!-- Dynamic Question text goes here -->
+        </h2>
+        <!-- Complex Element Container: Statements, Assertion/Reason, or Match Tables -->
+        <div id="complexQuestionBox" class="mt-2 hidden">
+          <!-- Formatted dynamically -->
+        </div>
+      </div>
+
+      <!-- Options Container (4 clickable cards, flex-1 to utilize space) -->
+      <div class="flex-1 px-4 py-1.5 flex flex-col justify-center">
+        <div id="optionsGrid" class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+          <!-- Dynamic Options Generated via JS -->
+        </div>
+      </div>
+
+      <!-- Explanation & Feedback Banner (Revealed after selection) -->
+      <div id="explanationBar" class="flex-none px-4 py-2 bg-slate-50 dark:bg-slate-850 border-t border-slate-200 dark:border-slate-800 hidden">
+        <div class="flex items-center gap-2 text-xs">
+          <span id="feedbackBadge" class="px-2 py-0.5 rounded font-bold uppercase tracking-wider text-[10px]"></span>
+          <p id="explanationText" class="text-slate-600 dark:text-slate-300 truncate sm:whitespace-normal font-medium"></p>
+        </div>
+      </div>
+
+      <!-- Sticky Action Footer Navigation -->
+      <div class="flex-none px-4 py-2.5 bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between">
+        <div class="text-[11px] text-slate-400 dark:text-slate-500 hidden sm:flex items-center gap-1.5">
+          <span>Shortcuts:</span>
+          <kbd class="px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-[10px] font-mono-code font-bold">1-4</kbd> /
+          <kbd class="px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-[10px] font-mono-code font-bold">A-D</kbd>
+          <span class="ml-1">Next:</span>
+          <kbd class="px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-[10px] font-mono-code font-bold">Space/Enter</kbd>
+        </div>
+
+        <div class="flex items-center gap-2 ml-auto">
+          <button id="prevBtn" class="px-3 py-1.5 rounded-lg border border-slate-300 dark:border-slate-700 text-xs font-semibold text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition disabled:opacity-30 disabled:cursor-not-allowed">
+            Previous
+          </button>
+          <button id="nextBtn" class="px-4 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-700 active:scale-95 text-xs font-bold text-white shadow-md shadow-indigo-600/30 transition flex items-center gap-1.5">
+            <span id="nextBtnText">Next Question</span>
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Results View Screen (Hidden initially) -->
+    <div id="resultsView" class="w-full h-full flex flex-col bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl shadow-lg p-4 sm:p-6 overflow-hidden hidden">
+      <!-- Results Header -->
+      <div class="flex-none text-center pb-4 border-b border-slate-200 dark:border-slate-800">
+        <span class="inline-block px-3 py-1 rounded-full text-xs font-semibold bg-indigo-100 text-indigo-700 dark:bg-indigo-900/50 dark:text-indigo-300 mb-1">
+          Performance Summary
+        </span>
+        <h2 class="text-xl sm:text-2xl font-black text-slate-900 dark:text-white">Exam Practice Completed!</h2>
+      </div>
+
+      <!-- Stats Grid -->
+      <div class="flex-none grid grid-cols-2 sm:grid-cols-4 gap-3 py-3">
+        <div class="p-3 rounded-lg bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700/60 text-center">
+          <p class="text-[11px] text-slate-500 dark:text-slate-400 font-medium">Final Score</p>
+          <p class="text-xl sm:text-2xl font-extrabold text-indigo-600 dark:text-indigo-400" id="finalScoreText">0/50</p>
+        </div>
+        <div class="p-3 rounded-lg bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700/60 text-center">
+          <p class="text-[11px] text-slate-500 dark:text-slate-400 font-medium">Accuracy</p>
+          <p class="text-xl sm:text-2xl font-extrabold text-slate-800 dark:text-slate-100" id="accuracyText">0%</p>
+        </div>
+        <div class="p-3 rounded-lg bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-800/60 text-center">
+          <p class="text-[11px] text-emerald-600 dark:text-emerald-400 font-medium">Correct</p>
+          <p class="text-xl sm:text-2xl font-extrabold text-emerald-600 dark:text-emerald-400" id="totalCorrectText">0</p>
+        </div>
+        <div class="p-3 rounded-lg bg-rose-50 dark:bg-rose-950/30 border border-rose-200 dark:border-rose-800/60 text-center">
+          <p class="text-[11px] text-rose-600 dark:text-rose-400 font-medium">Incorrect</p>
+          <p class="text-xl sm:text-2xl font-extrabold text-rose-600 dark:text-rose-400" id="totalIncorrectText">0</p>
+        </div>
+      </div>
+
+      <!-- Incorrect Breakdown Section -->
+      <div class="flex-1 flex flex-col min-h-0 border border-slate-200 dark:border-slate-800 rounded-lg p-3 bg-slate-50/50 dark:bg-slate-900/50">
+        <div class="flex items-center justify-between pb-2 mb-2 border-b border-slate-200 dark:border-slate-800">
+          <h3 class="text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wide">
+            Review of Mistakes & Unanswered
+          </h3>
+          <span id="mistakeCountBadge" class="text-xs font-semibold px-2 py-0.5 rounded bg-rose-100 text-rose-700 dark:bg-rose-900/60 dark:text-rose-300">
+            0 Questions
+          </span>
+        </div>
+        
+        <div id="incorrectListContainer" class="flex-1 overflow-y-auto space-y-2 pr-1 custom-scroll">
+          <!-- Dynamic list of incorrect questions -->
+        </div>
+      </div>
+
+      <!-- Results Footer Actions -->
+      <div class="flex-none pt-3 flex items-center justify-end gap-2">
+        <button id="restartQuizBtn" class="px-4 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-700 active:scale-95 text-xs font-bold text-white shadow-md shadow-indigo-600/30 transition">
+          Restart Quiz
+        </button>
+      </div>
+    </div>
+
+  </main>
+
+  <div id="paletteModal" class="fixed inset-0 bg-slate-950/60 backdrop-blur-xs flex items-center justify-center p-3 z-50 hidden transition-opacity">
+    <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 w-full max-w-md rounded-2xl shadow-2xl p-4 flex flex-col max-h-[85vh]">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-200 dark:border-slate-800">
+        <div>
+          <h3 class="text-sm font-bold text-slate-900 dark:text-white">Question Navigator</h3>
+          <p class="text-[11px] text-slate-500">Jump directly to any numbered question</p>
+        </div>
+        <button id="closePaletteBtn" class="p-1.5 rounded-lg text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+          </svg>
+        </button>
+      </div>
+
+      <div class="py-2 flex items-center gap-3 text-[10px] text-slate-500 border-b border-slate-100 dark:border-slate-800">
+        <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded bg-emerald-500"></span> Correct</span>
+        <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded bg-rose-500"></span> Incorrect</span>
+        <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded bg-indigo-600"></span> Current</span>
+        <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded bg-slate-200 dark:bg-slate-700"></span> Unvisited</span>
+      </div>
+
+      <!-- Palette Grid (50 buttons) -->
+      <div id="paletteGrid" class="flex-1 overflow-y-auto py-3 grid grid-cols-5 sm:grid-cols-10 gap-1.5 custom-scroll">
+        <!-- Generated dynamically via JS -->
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const questionsData = [
+      {
+        id: 101,
+        sourceNum: 3452,
+        meta: "MTS 2025 10 Feb 2026 Shift 2",
+        type: "standard",
+        prompt: "Which of the following pairs of festival – religion associated with is correct?",
+        options: [
+          { key: "A", text: "Mahavir Jayanti – Buddhism" },
+          { key: "B", text: "Guru Nanak Jayanti – Christianity" },
+          { key: "C", text: "Buddha Jayanti – Jainism" },
+          { key: "D", text: "Barah Wafat – Islam" }
+        ],
+        correct: "D",
+        explanation: "Barah Wafat (Eid-e-Milad) marks the birth and death anniversary of Prophet Muhammad in Islam. Mahavir Jayanti belongs to Jainism and Buddha Jayanti to Buddhism."
+      },
+      {
+        id: 102,
+        sourceNum: 3460,
+        meta: "MTS 2025 05 Feb 2026 Shift 1",
+        type: "standard",
+        prompt: "Which instrument is associated with U. Srinivas?",
+        options: [
+          { key: "A", text: "Sitar" },
+          { key: "B", text: "Mandolin" },
+          { key: "C", text: "Tambura" },
+          { key: "D", text: "Nadaswaram" }
+        ],
+        correct: "B",
+        explanation: "Uppalapu Srinivas was an internationally renowned Indian Carnatic virtuoso of the electric mandolin."
+      },
+      {
+        id: 103,
+        sourceNum: 3462,
+        meta: "SSC CPO 13 Dec 2025 Shift 1",
+        type: "standard",
+        prompt: "Which of the following Indian temple towns is a UNESCO World Heritage Site known for the Vijayanagara-style of architecture?",
+        options: [
+          { key: "A", text: "Pattadakal" },
+          { key: "B", text: "Hampi" },
+          { key: "C", text: "Kanchipuram" },
+          { key: "D", text: "Thanjavur" }
+        ],
+        correct: "B",
+        explanation: "Hampi in Karnataka was the capital of the Vijayanagara Empire and is celebrated for its stunning Dravidian-Vijayanagara architecture."
+      },
+      {
+        id: 104,
+        sourceNum: 3454,
+        meta: "DP HC 09 Jan 2026 Shift 3",
+        type: "standard",
+        prompt: "What unique feature of rock art sites like Bhimbetka highlights the continuity of painting practices?",
+        options: [
+          { key: "A", text: "Use of metallic pigments" },
+          { key: "B", text: "Paintings were only drawn on ceilings" },
+          { key: "C", text: "Up to 20 layers of paintings over time" },
+          { key: "D", text: "Carving of stone inscriptions in Persian" }
+        ],
+        correct: "C",
+        explanation: "Bhimbetka rock shelters exhibit superimposition of paintings in up to 20 layers ranging from the Upper Paleolithic to the Medieval period."
+      },
+      {
+        id: 105,
+        sourceNum: 3455,
+        meta: "DP AWO TPO 20 Jan 2026 Shift 3",
+        type: "standard",
+        prompt: "In which Indian state is the tribal festival 'Bhagoria' celebrated, known for its unique swayamvara tradition?",
+        options: [
+          { key: "A", text: "Chhattisgarh" },
+          { key: "B", text: "Jharkhand" },
+          { key: "C", text: "Madhya Pradesh" },
+          { key: "D", text: "Odisha" }
+        ],
+        correct: "C",
+        explanation: "Bhagoria Haat festival is celebrated by Bhil and Bhilala tribes primarily in the Jhabua and Alirajpur districts of Madhya Pradesh."
+      },
+      {
+        id: 106,
+        sourceNum: 3456,
+        meta: "MTS 2025 18 Feb 2026 Shift 3",
+        type: "standard",
+        prompt: "Which of the following is a UNESCO World Heritage Site?",
+        options: [
+          { key: "A", text: "Kamakhya Temple" },
+          { key: "B", text: "Meenakshi Temple" },
+          { key: "C", text: "Kashi Vishwanath Temple" },
+          { key: "D", text: "Gangaikonda Cholapuram Temple" }
+        ],
+        correct: "D",
+        explanation: "Brihadisvara Temple at Gangaikonda Cholapuram is part of the UNESCO World Heritage Site designated as 'Great Living Chola Temples'."
+      },
+      {
+        id: 107,
+        sourceNum: 3463,
+        meta: "MTS 2025 10 Feb 2026 Shift 1",
+        type: "standard",
+        prompt: "Where is the 'International Mango Festival' primarily celebrated in India?",
+        options: [
+          { key: "A", text: "Delhi" },
+          { key: "B", text: "Shimla" },
+          { key: "C", text: "Dispur" },
+          { key: "D", text: "Mysore" }
+        ],
+        correct: "A",
+        explanation: "The International Mango Festival is held annually in New Delhi showcasing hundreds of mango varieties from across India."
+      },
+      {
+        id: 108,
+        sourceNum: 3464,
+        meta: "SSC CGL 2025 18 Sept, 2025 Shift 2",
+        type: "standard",
+        prompt: "Fill in the Blank: Tippani arises from the ______ region of Gujarat.",
+        options: [
+          { key: "A", text: "Kutch" },
+          { key: "B", text: "Saurashtra" },
+          { key: "C", text: "Surat" },
+          { key: "D", text: "Vadodara" }
+        ],
+        correct: "B",
+        explanation: "Tippani Nritya originated among Koli and Kharva fisherwomen of the Chorwad and Saurashtra region of Gujarat."
+      },
+      {
+        id: 109,
+        sourceNum: 3465,
+        meta: "MTS 2025 05 Feb 2026 Shift 1",
+        type: "standard",
+        prompt: "Which of the following monuments is located in Delhi?",
+        options: [
+          { key: "A", text: "Humayun's Tomb" },
+          { key: "B", text: "Charminar" },
+          { key: "C", text: "Victoria Memorial" },
+          { key: "D", text: "Gateway of India" }
+        ],
+        correct: "A",
+        explanation: "Humayun's Tomb is located in Nizamuddin East, Delhi (Charminar is in Hyderabad, Victoria Memorial in Kolkata, Gateway of India in Mumbai)."
+      },
+      {
+        id: 110,
+        sourceNum: 3466,
+        meta: "SSC CGL 2025 19 Sept, 2025 Shift 3",
+        type: "standard",
+        prompt: "Fill in the Blank: Tamasha is a folk theatre form mainly found in ______.",
+        options: [
+          { key: "A", text: "Kerala" },
+          { key: "B", text: "Karnataka" },
+          { key: "C", text: "Maharashtra" },
+          { key: "D", text: "Odisha" }
+        ],
+        correct: "C",
+        explanation: "Tamasha is a traditional Marathi folk theatre form accompanied by Lavani songs and rhythmic Dholki beats."
+      },
+      {
+        id: 111,
+        sourceNum: 3457,
+        meta: "DP Constable 26 Dec 2025 Shift 2",
+        type: "standard",
+        prompt: "Which famous Indian painter is renowned for his bold strokes and significant influence on modern Indian art, also referred to as the 'Picasso of India'?",
+        options: [
+          { key: "A", text: "S.H. Raza" },
+          { key: "B", text: "M.F. Husain" },
+          { key: "C", text: "Tyeb Mehta" },
+          { key: "D", text: "Nandalal Bose" }
+        ],
+        correct: "B",
+        explanation: "Maqbool Fida Husain (M.F. Husain) was dubbed the 'Picasso of India' by Forbes magazine in 2006."
+      },
+      {
+        id: 112,
+        sourceNum: 3458,
+        meta: "SSC CGL 2025 20 Sept, 2025 Shift 1",
+        type: "standard",
+        prompt: "What is the main tower of a Draviḍa-style temple known as?",
+        options: [
+          { key: "A", text: "Shikhara" },
+          { key: "B", text: "Vihāra" },
+          { key: "C", text: "Gopuram" },
+          { key: "D", text: "Vimāna" }
+        ],
+        correct: "D",
+        explanation: "In Dravidian architecture, the main sanctum tower over the garbhagriha is known as the Vimana, while Gopuram refers to the monumental entrance gateway."
+      },
+      {
+        id: 113,
+        sourceNum: 3461,
+        meta: "SSC CGL 2025 22 Sept, 2025 Shift 3",
+        type: "standard",
+        prompt: "“Dalkhai” is a folk dance performed in which Indian state, showcasing women's rhythmic movements during festivals and celebrations?",
+        options: [
+          { key: "A", text: "Odisha" },
+          { key: "B", text: "Assam" },
+          { key: "C", text: "Gujarat" },
+          { key: "D", text: "Rajasthan" }
+        ],
+        correct: "A",
+        explanation: "Dalkhai is one of the most popular folk dances of Western Odisha, traditionally performed during Bhaijiuntia, Dussehra, and Phagun Puni."
+      },
+      {
+        id: 114,
+        sourceNum: 3453,
+        meta: "DP Constable 03 Jan 2026 Shift 3",
+        type: "statements",
+        prompt: "Consider the statements about Ghoomar:",
+        statements: [
+          { num: "1", text: "Its earliest performers were Bhil women; Rajputs later adopted it." },
+          { num: "2", text: "Ghoomar was inscribed on UNESCO ICH list in 2015." }
+        ],
+        questionSubtext: "Which is/are correct?",
+        options: [
+          { key: "A", text: "Only 1 correct" },
+          { key: "B", text: "Only 2 correct" },
+          { key: "C", text: "Both 1 & 2 correct" },
+          { key: "D", text: "Neither 1 nor 2 correct" }
+        ],
+        correct: "A",
+        explanation: "Statement 1 is correct (originated with Bhil community). Statement 2 is incorrect because Ghoomar is not on the UNESCO ICH list (Kalbelia was inscribed in 2010)."
+      },
+      {
+        id: 115,
+        sourceNum: 3467,
+        meta: "SSC Phase XIII 24 Jul, 2025 Shift 1",
+        type: "standard",
+        prompt: "Which material was commonly used in Mathura sculptures?",
+        options: [
+          { key: "A", text: "Marble" },
+          { key: "B", text: "Red sandstone" },
+          { key: "C", text: "Bronze" },
+          { key: "D", text: "Wood" }
+        ],
+        correct: "B",
+        explanation: "Mathura School of Art predominantly utilized spotted red sandstone quarried from Sikri."
+      },
+      {
+        id: 116,
+        sourceNum: 3468,
+        meta: "DP Constable 26 Dec 2025 Shift 3",
+        type: "standard",
+        prompt: "Which festival in Sikkim involves worship of Mount Kanchenjunga and includes prayers, masked dances and local fairs?",
+        options: [
+          { key: "A", text: "Losar" },
+          { key: "B", text: "Saga Dawa" },
+          { key: "C", text: "Pang Lhabsol" },
+          { key: "D", text: "Tendong Lho Rumfaat" }
+        ],
+        correct: "C",
+        explanation: "Pang Lhabsol is unique to Sikkim, commemorating the consecration of Mount Kanchenjunga as the guardian deity of the state."
+      },
+      {
+        id: 117,
+        sourceNum: 3459,
+        meta: "DP Constable 20 Dec 2025 Shift 3",
+        type: "standard",
+        prompt: "The \"Gotipua\" tradition is a precursor to which classical dance form?",
+        options: [
+          { key: "A", text: "Kathak" },
+          { key: "B", text: "Odissi" },
+          { key: "C", text: "Sattriya" },
+          { key: "D", text: "Kuchipudi" }
+        ],
+        correct: "B",
+        explanation: "Gotipua involves young boys dressed as women performing acrobatics and devotional poses in Odisha, forming the historical foundation for modern Odissi."
+      },
+      {
+        id: 118,
+        sourceNum: 3469,
+        meta: "DP Constable 31 Dec 2025 Shift 2",
+        type: "standard",
+        prompt: "Who painted the iconic artwork 'Bharat Mata', symbolizing India as a divine mother and inspiring nationalist sentiments during India's freedom movement?",
+        options: [
+          { key: "A", text: "Abanindranath Tagore" },
+          { key: "B", text: "Nandalal Bose" },
+          { key: "C", text: "Jamini Roy" },
+          { key: "D", text: "Asit Haldar" }
+        ],
+        correct: "A",
+        explanation: "Abanindranath Tagore painted Bharat Mata in 1905 during the Swadeshi movement, depicting her as an ascetic four-armed goddess."
+      },
+      {
+        id: 119,
+        sourceNum: 3470,
+        meta: "SSC Phase XIII 29 July, 2025 Shift 2",
+        type: "standard",
+        prompt: "Chhau dance is practiced in which regions of India?",
+        options: [
+          { key: "A", text: "Northern India (Uttar Pradesh, Himachal Pradesh, Uttarakhand)" },
+          { key: "B", text: "Eastern India (Orissa, Jharkhand, West Bengal)" },
+          { key: "C", text: "Southern India (Telangana, Andhra Pradesh, Tamil Nadu)" },
+          { key: "D", text: "Western India (Gujarat, Maharashtra, Rajasthan)" }
+        ],
+        correct: "B",
+        explanation: "Chhau is practiced across Eastern India with three prominent styles: Purulia (West Bengal), Seraikela (Jharkhand), and Mayurbhanj (Odisha)."
+      },
+      {
+        id: 120,
+        sourceNum: 3471,
+        meta: "SSC Steno 06 Aug, 2025 Shift 1",
+        type: "assertion_reason",
+        prompt: "Given below are the statements in Assertion and Reason. Choose the correct option:",
+        assertion: "The naming of 'Good Friday' as a positive term is universally accepted among Christian scholars and traditions.",
+        reason: "The day is termed 'Good' to signify the positive theological meaning of Jesus's sacrificial death.",
+        options: [
+          { key: "A", text: "Both A and R are false." },
+          { key: "B", text: "Both A and R are true, and R is the correct explanation of A." },
+          { key: "C", text: "Both A and R are true, but R is not the correct explanation of A." },
+          { key: "D", text: "A is false, but R is true." }
+        ],
+        correct: "D",
+        explanation: "Etymologists debate whether 'Good' derived from 'God's Friday' or 'holy/good', so universal consensus does not exist (A is false), while the theological rationale of Christ's redemptive sacrifice is true (R is true)."
+      },
+      {
+        id: 121,
+        sourceNum: 3472,
+        meta: "SSC Phase XIII 29 Aug, 2025 Shift 1",
+        type: "standard",
+        prompt: "Fill in the Blank: Ghoomar means ______ in Rajasthani.",
+        options: [
+          { key: "A", text: "Jump" },
+          { key: "B", text: "Twirl" },
+          { key: "C", text: "Sing" },
+          { key: "D", text: "Celebrate" }
+        ],
+        correct: "B",
+        explanation: "Ghoomar derives its name from 'ghoomna', which refers to the pirouetting and twirling motion of the dancers in swirling robes."
+      },
+      {
+        id: 122,
+        sourceNum: 3473,
+        meta: "DP Constable 29 Dec 2025 Shift 1",
+        type: "standard",
+        prompt: "Which of the following is true about 'Raga Bhairav'?",
+        options: [
+          { key: "A", text: "It is sung in the evening" },
+          { key: "B", text: "It is sung during the night" },
+          { key: "C", text: "It is sung in the morning" },
+          { key: "D", text: "It is sung at midnight" }
+        ],
+        correct: "C",
+        explanation: "Raga Bhairav is a fundamental morning raga in Hindustani classical music, performed at daybreak (Pratham Prahar)."
+      },
+      {
+        id: 123,
+        sourceNum: 3474,
+        meta: "MTS 2025 18 Feb 2026 Shift 3",
+        type: "standard",
+        prompt: "'Madai festival' is celebrated in which of the following Indian state?",
+        options: [
+          { key: "A", text: "Haryana" },
+          { key: "B", text: "Goa" },
+          { key: "C", text: "Chhattisgarh" },
+          { key: "D", text: "Gujarat" }
+        ],
+        correct: "C",
+        explanation: "Madai is a grand tribal festival celebrated by Gond and other indigenous communities in the Bastar region of Chhattisgarh."
+      },
+      {
+        id: 124,
+        sourceNum: 3475,
+        meta: "DP Constable 05 Jan 2026 Shift 2",
+        type: "standard",
+        prompt: "Charminar in Hyderabad incorporates which combination of architectural influences in its arches, minarets, and stucco decoration?",
+        options: [
+          { key: "A", text: "Rajput and Maratha" },
+          { key: "B", text: "Persian, Hindu, and Islamic" },
+          { key: "C", text: "Dravidian and Vijayanagara" },
+          { key: "D", text: "French Colonial" }
+        ],
+        correct: "B",
+        explanation: "Commissioned by Muhammad Quli Qutb Shah in 1591, Charminar exhibits Indo-Islamic architecture blended with Persian and local Hindu motifs."
+      },
+      {
+        id: 125,
+        sourceNum: 3476,
+        meta: "MTS 2025 06 Feb 2026 Shift 1",
+        type: "standard",
+        prompt: "The Kumbh Mela in Uttarakhand is celebrated in which city?",
+        options: [
+          { key: "A", text: "Haridwar" },
+          { key: "B", text: "Rishikesh" },
+          { key: "C", text: "Nainital" },
+          { key: "D", text: "Dehradun" }
+        ],
+        correct: "A",
+        explanation: "In Uttarakhand, the sacred Kumbh Mela takes place on the banks of the river Ganga in Haridwar."
+      },
+      {
+        id: 126,
+        sourceNum: 3477,
+        meta: "SSC CPO 12 Dec 2025 Shift 2",
+        type: "standard",
+        prompt: "Which architectural style is the Brihadeeswarar Temple in Tamil Nadu known for?",
+        options: [
+          { key: "A", text: "Vesara" },
+          { key: "B", text: "Dravidian" },
+          { key: "C", text: "Nagara" },
+          { key: "D", text: "Indo-Saracenic" }
+        ],
+        correct: "B",
+        explanation: "Built by Rajaraja Chola I in Thanjavur, Brihadeeswarar Temple is one of the greatest masterworks of Dravidian temple architecture."
+      },
+      {
+        id: 127,
+        sourceNum: 3478,
+        meta: "MTS 2025 20 Feb 2026 Shift 2",
+        type: "standard",
+        prompt: "Which of the following is a Sushir Vadya (wind instrument)?",
+        options: [
+          { key: "A", text: "Dimdi" },
+          { key: "B", text: "Santoor" },
+          { key: "C", text: "Jhanja" },
+          { key: "D", text: "Gagana" }
+        ],
+        correct: "D",
+        explanation: "Gagana (Gogona) is a traditional Assamese vibrating reed wind instrument made of bamboo, played by mouth during Bihu."
+      },
+      {
+        id: 128,
+        sourceNum: 3479,
+        meta: "DP Constable 06 Jan 2026 Shift 1",
+        type: "standard",
+        prompt: "Raga Shankara is a Hindustani classical raga performed at a specific time. During which part of the day is it traditionally rendered, conveying a meditative and devotional mood?",
+        options: [
+          { key: "A", text: "Morning" },
+          { key: "B", text: "Afternoon" },
+          { key: "C", text: "Evening" },
+          { key: "D", text: "Night" }
+        ],
+        correct: "D",
+        explanation: "Raga Shankara belongs to Bilawal Thaat and is sung late at night (around midnight), depicting heroism and deep devotion to Lord Shiva."
+      },
+      {
+        id: 129,
+        sourceNum: 3480,
+        meta: "DP Constable 22 Dec 2025 Shift 3",
+        type: "standard",
+        prompt: "Which festival in Maharashtra involves worshipping the goddess Parvati and is considered a festival for marital bliss?",
+        options: [
+          { key: "A", text: "Gudi Padwa" },
+          { key: "B", text: "Teej" },
+          { key: "C", text: "Ganesh Chaturthi" },
+          { key: "D", text: "Makar Sankranti" }
+        ],
+        correct: "B",
+        explanation: "Hartalika Teej (worshipping Gauri/Parvati) is observed by women praying for a devoted partner and harmonious marital life."
+      },
+      {
+        id: 130,
+        sourceNum: 3481,
+        meta: "DP Constable 20 Dec 2025 Shift 3",
+        type: "standard",
+        prompt: "The Natyanjali Dance Festival celebrated in Chidambaram, Tamil Nadu is dedicated to which deity?",
+        options: [
+          { key: "A", text: "Lord Vishnu, the Protector" },
+          { key: "B", text: "Lord Nataraja, the Cosmic Dancer" },
+          { key: "C", text: "Lord Ganesha, the Remover of Obstacles" },
+          { key: "D", text: "Lord Brahma, the Creator" }
+        ],
+        correct: "B",
+        explanation: "Natyanjali is held annually around Maha Shivaratri at the Nataraja Temple in Chidambaram, paying homage to Lord Nataraja (Shiva)."
+      },
+      {
+        id: 131,
+        sourceNum: 3482,
+        meta: "DP Constable 05 Jan 2026 Shift 2",
+        type: "standard",
+        prompt: "Chhattisgarhi Pandavani songs are a form of traditional folk narrative. Which epic or story do these songs primarily narrate?",
+        options: [
+          { key: "A", text: "Mahabharata" },
+          { key: "B", text: "Ramayana" },
+          { key: "C", text: "Puranas" },
+          { key: "D", text: "Folk tales" }
+        ],
+        correct: "A",
+        explanation: "Pandavani portrays stories from the Mahabharata, spotlighting the adventures of the Pandavas (especially Bhima)."
+      },
+      {
+        id: 132,
+        sourceNum: 3483,
+        meta: "SSC CHSL 2025 Tier-1 19 Nov, 2025 Shift 2",
+        type: "standard",
+        prompt: "Which of the following influential philosophers were born in Kerala in the eighth century?",
+        options: [
+          { key: "A", text: "Chaitanya" },
+          { key: "B", text: "Ramanuja" },
+          { key: "C", text: "Shankara" },
+          { key: "D", text: "Namdev" }
+        ],
+        correct: "C",
+        explanation: "Adi Shankaracharya was born at Kaladi in Kerala in the 8th century and systematized the Advaita Vedanta philosophy."
+      },
+      {
+        id: 133,
+        sourceNum: 3484,
+        meta: "MTS 2025 18 Feb 2026 Shift 1",
+        type: "standard",
+        prompt: "'Bihu-geet', a popular form of folk music, belongs to which Indian state?",
+        options: [
+          { key: "A", text: "Kerala" },
+          { key: "B", text: "Assam" },
+          { key: "C", text: "Uttarakhand" },
+          { key: "D", text: "Odisha" }
+        ],
+        correct: "B",
+        explanation: "Bihu-geet consists of traditional songs sung during Rongali and Kongali Bihu celebrations in Assam."
+      },
+      {
+        id: 134,
+        sourceNum: 3485,
+        meta: "DP Constable 06 Jan 2026 Shift 3",
+        type: "standard",
+        prompt: "Raga Bageshree is typically performed during which time, conveying moods of longing, devotion, and serenity in Hindustani classical music?",
+        options: [
+          { key: "A", text: "Morning" },
+          { key: "B", text: "Noon" },
+          { key: "C", text: "Evening" },
+          { key: "D", text: "Night" }
+        ],
+        correct: "D",
+        explanation: "Raga Bageshree is a nocturnal raga belonging to the Kafi Thaat, rendered in the second prahar of the night."
+      },
+      {
+        id: 135,
+        sourceNum: 3486,
+        meta: "DP Constable 23 Dec 2025 Shift 3",
+        type: "statements",
+        prompt: "Read the following statements and choose the correct option.",
+        statements: [
+          { num: "I", text: "Pongal is celebrated primarily in Tamil Nadu as a harvest festival." },
+          { num: "II", text: "Baisakhi is celebrated in Punjab, marking the Sikh New Year." }
+        ],
+        questionSubtext: "",
+        options: [
+          { key: "A", text: "Only Statement I is correct." },
+          { key: "B", text: "Only Statement II is correct." },
+          { key: "C", text: "Both Statement I and II are correct." },
+          { key: "D", text: "Neither Statement I nor Statement II is correct." }
+        ],
+        correct: "C",
+        explanation: "Both statements are completely accurate. Pongal celebrates solar harvest in Tamil Nadu, and Baisakhi marks harvest and the Sikh new year."
+      },
+      {
+        id: 136,
+        sourceNum: 3487,
+        meta: "MTS 2025 12 Feb 2026 Shift 3",
+        type: "standard",
+        prompt: "'Pankhida', sung by peasants while working in the fields, is a traditional song of which Indian state?",
+        options: [
+          { key: "A", text: "Karnataka" },
+          { key: "B", text: "Rajasthan" },
+          { key: "C", text: "Telangana" },
+          { key: "D", text: "Manipur" }
+        ],
+        correct: "B",
+        explanation: "Pankhida is an agricultural folk song sung by rural farmers in Rajasthan, often accompanied by the algoza and manjira."
+      },
+      {
+        id: 137,
+        sourceNum: 3488,
+        meta: "SSC CHSL 2025 Tier-1 29 Nov, 2025 Shift 1",
+        type: "standard",
+        prompt: "Which Indian state is known for the folk dance \"Dekhni\"?",
+        options: [
+          { key: "A", text: "Goa" },
+          { key: "B", text: "Jharkhand" },
+          { key: "C", text: "Haryana" },
+          { key: "D", text: "Uttar Pradesh" }
+        ],
+        correct: "A",
+        explanation: "Dekhni is a traditional semi-classical dance performed by Christian and Hindu women of Goa to westernized Konkani melodies."
+      },
+      {
+        id: 138,
+        sourceNum: 3489,
+        meta: "MTS 2025 12 Feb 2026 Shift 2",
+        type: "standard",
+        prompt: "The sad plays and songs popular in 19th-century Bihar's Bhojpur region are known as _____.",
+        options: [
+          { key: "A", text: "Chaiti" },
+          { key: "B", text: "Tappa" },
+          { key: "C", text: "Biraha" },
+          { key: "D", text: "Hori" }
+        ],
+        correct: "C",
+        explanation: "Biraha (meaning separation/lament) gained immense popularity reflecting the pain of indentured laborers migrating from Bhojpur."
+      },
+      {
+        id: 139,
+        sourceNum: 3490,
+        meta: "SSC CGL 2025 24 Sept, 2025 Shift 1",
+        type: "standard",
+        prompt: "Which of the following statements most accurately describes a key difference between the Mathura and Gandhara schools of art?",
+        options: [
+          { key: "A", text: "Mathura art primarily used green phyllite, while Gandhara art used spotted red sandstone." },
+          { key: "B", text: "Gandhara art developed on purely indigenous lines, whereas Mathura art showed foreign influences." },
+          { key: "C", text: "Mathura art predominantly focused on Buddhist themes, while Gandhara focused on Hindu deities." },
+          { key: "D", text: "Mathura art depicted Buddha in an indigenous Yaksha-like style, whereas Gandhara art reflected Hellenistic (Greco-Roman) features." }
+        ],
+        correct: "D",
+        explanation: "Mathura images drew upon early indigenous Yaksha iconography, whereas Gandhara was heavily shaped by Hellenistic Greek realism with flowing drapery and curly hair."
+      },
+      {
+        id: 140,
+        sourceNum: 3491,
+        meta: "DP Constable 18 Dec 2025 Shift 1",
+        type: "standard",
+        prompt: "Which dance style among the following represents a classical form from the North East region?",
+        options: [
+          { key: "A", text: "Kathak" },
+          { key: "B", text: "Mohiniyattam" },
+          { key: "C", text: "Manipuri" },
+          { key: "D", text: "Bharatnatyam" }
+        ],
+        correct: "C",
+        explanation: "Manipuri (along with Sattriya from Assam) is an officially recognized classical dance originating in Northeast India."
+      },
+      {
+        id: 141,
+        sourceNum: 3492,
+        meta: "SSC Phase XIII 30 Jul, 2025 Shift 1",
+        type: "standard",
+        prompt: "The Baul music tradition belongs to which state?",
+        options: [
+          { key: "A", text: "Rajasthan" },
+          { key: "B", text: "West Bengal" },
+          { key: "C", text: "Gujarat" },
+          { key: "D", text: "Tamil Nadu" }
+        ],
+        correct: "B",
+        explanation: "Baul is a mystic folk-singing tradition recognized by UNESCO, practiced widely across West Bengal and Bangladesh."
+      },
+      {
+        id: 142,
+        sourceNum: 3493,
+        meta: "SSC CGL 2025 24 Sept, 2025 Shift 2",
+        type: "standard",
+        prompt: "The Sun Temple at Konark looks like a big chariot. How many horses does it have?",
+        options: [
+          { key: "A", text: "5" },
+          { key: "B", text: "6" },
+          { key: "C", text: "8" },
+          { key: "D", text: "7" }
+        ],
+        correct: "D",
+        explanation: "Konark Sun Temple represents Surya's celestial chariot pulled by 7 carved stone horses representing the days of the week."
+      },
+      {
+        id: 143,
+        sourceNum: 3494,
+        meta: "DP Constable 30 Dec 2025 Shift 2",
+        type: "standard",
+        prompt: "Which folk dance of Gujarat is performed during Navaratri?",
+        options: [
+          { key: "A", text: "Garba" },
+          { key: "B", text: "Giddha" },
+          { key: "C", text: "Tamasha" },
+          { key: "D", text: "Lavani" }
+        ],
+        correct: "A",
+        explanation: "Garba is the iconic circular dance of Gujarat performed in honor of Goddess Durga during the nine nights of Navaratri."
+      },
+      {
+        id: 144,
+        sourceNum: 3495,
+        meta: "DP Constable 18 Dec 2025 Shift 2",
+        type: "standard",
+        prompt: "Which classical dance is associated with the 'Bhagavata Mela' tradition?",
+        options: [
+          { key: "A", text: "Bharatanatyam" },
+          { key: "B", text: "Kathakali" },
+          { key: "C", text: "Kuchipudi" },
+          { key: "D", text: "Sattriya" }
+        ],
+        correct: "C",
+        explanation: "Kuchipudi has deep roots in the Bhagavata Mela dance-drama traditions performed by male Brahmin bhagavathulus."
+      },
+      {
+        id: 145,
+        sourceNum: 3496,
+        meta: "SSC Steno 07 Aug, 2025 Shift 1",
+        type: "standard",
+        prompt: "Which classical dance form is associated with the state of Kerala?",
+        options: [
+          { key: "A", text: "Kathak" },
+          { key: "B", text: "Kuchipudi" },
+          { key: "C", text: "Kathakali" },
+          { key: "D", text: "Sattriya" }
+        ],
+        correct: "C",
+        explanation: "Kathakali (along with Mohiniyattam) is native to Kerala, famed for its elaborate face makeup and colorful headgear."
+      },
+      {
+        id: 146,
+        sourceNum: 3497,
+        meta: "DP Constable 05 Jan 2026 Shift 2",
+        type: "standard",
+        prompt: "\"Kulasai Dasara,\" famous for ferocious demon-themed make-up, is celebrated in which state?",
+        options: [
+          { key: "A", text: "Andhra Pradesh" },
+          { key: "B", text: "Tamil Nadu" },
+          { key: "C", text: "Kerala" },
+          { key: "D", text: "Karnataka" }
+        ],
+        correct: "B",
+        explanation: "Kulasai Dasara is celebrated at the Mutharamman Temple in Kulasekharapatnam, Thoothukudi district of Tamil Nadu."
+      },
+      {
+        id: 147,
+        sourceNum: 3498,
+        meta: "SSC CHSL 2025 Tier-1 14 Nov, 2025 Shift 1",
+        type: "standard",
+        prompt: "’Adhratiya’ is a traditional folk song of which Indian state?",
+        options: [
+          { key: "A", text: "Telangana" },
+          { key: "B", text: "Jharkhand" },
+          { key: "C", text: "Punjab" },
+          { key: "D", text: "Maharashtra" }
+        ],
+        correct: "B",
+        explanation: "Adhratiya (midnight songs) is a classical-folk midnight tune popular in the tribal cultures of Jharkhand."
+      },
+      {
+        id: 148,
+        sourceNum: 3499,
+        meta: "SSC CGL 2025 12 Sept, 2025 Shift 1",
+        type: "standard",
+        prompt: "Fill in the blanks: In Carnatic music, a laghu with five beats is known as ____ jaati.",
+        options: [
+          { key: "A", text: "Tishra" },
+          { key: "B", text: "Chaturashra" },
+          { key: "C", text: "Khanda" },
+          { key: "D", text: "Mishra" }
+        ],
+        correct: "C",
+        explanation: "Carnatic jaatis: Tisra (3), Chatusra (4), Khanda (5), Misra (7), and Sankeerna (9)."
+      },
+      {
+        id: 149,
+        sourceNum: 3500,
+        meta: "MTS 2025 05 Feb 2026 Shift 1",
+        type: "standard",
+        prompt: "What is the architectural pattern of the Panch Mahal in Fatehpur Sikri based on?",
+        options: [
+          { key: "A", text: "Jain temple" },
+          { key: "B", text: "Buddhist Vihara" },
+          { key: "C", text: "Rajput fortress" },
+          { key: "D", text: "Persian mosque" }
+        ],
+        correct: "B",
+        explanation: "Panch Mahal is a five-tiered columnar pavilion designed on the tiered principle of an ancient Buddhist Vihara."
+      },
+      {
+        id: 150,
+        sourceNum: 3501,
+        meta: "SSC CHSL 2025 Tier-1 19 Nov, 2025 Shift 2",
+        type: "standard",
+        prompt: "The Kailasa Temple built in the 8th century is in which of the following state?",
+        options: [
+          { key: "A", text: "Madhya Pradesh" },
+          { key: "B", text: "Rajasthan" },
+          { key: "C", text: "Maharashtra" },
+          { key: "D", text: "Gujarat" }
+        ],
+        correct: "C",
+        explanation: "The monolithic rock-cut Kailasa Temple (Cave 16) was carved under Rashtrakuta King Krishna I at Ellora, Maharashtra."
+      }
+    ];
+  </script>
+
+  <script>
+    // State management
+    const state = {
+      currentIndex: 0,
+      userAnswers: {}, // key: question index (0 to 49), value: "A" | "B" | "C" | "D"
+      secondsElapsed: 0,
+      timerInterval: null
+    };
+
+    // DOM Elements
+    const questionNumberTag = document.getElementById("questionNumberTag");
+    const questionOriginalMeta = document.getElementById("questionOriginalMeta");
+    const questionPrompt = document.getElementById("questionPrompt");
+    const complexQuestionBox = document.getElementById("complexQuestionBox");
+    const optionsGrid = document.getElementById("optionsGrid");
+    const explanationBar = document.getElementById("explanationBar");
+    const feedbackBadge = document.getElementById("feedbackBadge");
+    const explanationText = document.getElementById("explanationText");
+    const quizProgressBar = document.getElementById("quizProgressBar");
+    const quickCorrectEl = document.getElementById("quickCorrect");
+    const quickTotalEl = document.getElementById("quickTotal");
+    const prevBtn = document.getElementById("prevBtn");
+    const nextBtn = document.getElementById("nextBtn");
+    const nextBtnText = document.getElementById("nextBtnText");
+    const timerDisplay = document.getElementById("timerDisplay");
+    
+    // Palette elements
+    const paletteModal = document.getElementById("paletteModal");
+    const openPaletteBtn = document.getElementById("openPaletteBtn");
+    const closePaletteBtn = document.getElementById("closePaletteBtn");
+    const paletteGrid = document.getElementById("paletteGrid");
+    const gridProgressBadge = document.getElementById("gridProgressBadge");
+    
+    // Results elements
+    const quizView = document.getElementById("quizView");
+    const resultsView = document.getElementById("resultsView");
+    const finalScoreText = document.getElementById("finalScoreText");
+    const accuracyText = document.getElementById("accuracyText");
+    const totalCorrectText = document.getElementById("totalCorrectText");
+    const totalIncorrectText = document.getElementById("totalIncorrectText");
+    const incorrectListContainer = document.getElementById("incorrectListContainer");
+    const mistakeCountBadge = document.getElementById("mistakeCountBadge");
+    const restartQuizBtn = document.getElementById("restartQuizBtn");
+
+    // Theme elements
+    const themeToggleBtn = document.getElementById("themeToggleBtn");
+
+    // Initialize Theme
+    function initTheme() {
+      const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+      const storedTheme = localStorage.getItem('exam_quiz_theme');
+      if (storedTheme === 'dark' || (!storedTheme && prefersDark)) {
+        document.documentElement.classList.add('dark');
+      } else {
+        document.documentElement.classList.remove('dark');
+      }
+    }
+
+    themeToggleBtn.addEventListener('click', () => {
+      document.documentElement.classList.toggle('dark');
+      const isDark = document.documentElement.classList.contains('dark');
+      localStorage.setItem('exam_quiz_theme', isDark ? 'dark' : 'light');
+    });
+
+    // Start Timer
+    function startTimer() {
+      if (state.timerInterval) clearInterval(state.timerInterval);
+      state.timerInterval = setInterval(() => {
+        state.secondsElapsed++;
+        const mins = String(Math.floor(state.secondsElapsed / 60)).padStart(2, '0');
+        const secs = String(state.secondsElapsed % 60).padStart(2, '0');
+        timerDisplay.textContent = `${mins}:${secs}`;
+      }, 1000);
+    }
+
+    function renderQuestion(index) {
+      const q = questionsData[index];
+      if (!q) return;
+
+      // Update question badges
+      questionNumberTag.textContent = `Q.${q.id}`;
+      questionOriginalMeta.textContent = `(${q.meta} • Orig #${q.sourceNum})`;
+      questionPrompt.textContent = q.prompt;
+
+      // Render statement or assertion complex elements
+      if (q.type === 'statements' && q.statements) {
+        complexQuestionBox.classList.remove('hidden');
+        complexQuestionBox.innerHTML = `
+          <div class="space-y-1.5 p-2 rounded-lg bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700/70">
+            ${q.statements.map(s => `
+              <div class="flex items-start gap-2 text-xs text-slate-800 dark:text-slate-200">
+                <span class="font-mono-code font-bold text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-950 px-1.5 py-0.5 rounded text-[11px] flex-none">
+                  ${s.num}
+                </span>
+                <span class="leading-relaxed">${s.text}</span>
+              </div>
+            `).join('')}
+            ${q.questionSubtext ? `<p class="text-xs font-semibold text-slate-600 dark:text-slate-300 pt-1">${q.questionSubtext}</p>` : ''}
+          </div>
+        `;
+      } else if (q.type === 'assertion_reason') {
+        complexQuestionBox.classList.remove('hidden');
+        complexQuestionBox.innerHTML = `
+          <div class="space-y-1.5 p-2 rounded-lg bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700/70">
+            <div class="flex items-start gap-2 text-xs">
+              <span class="font-mono-code font-bold text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-950/70 px-1.5 py-0.5 rounded text-[11px] flex-none">
+                Assertion (A)
+              </span>
+              <span class="text-slate-800 dark:text-slate-200 leading-snug">${q.assertion}</span>
+            </div>
+            <div class="flex items-start gap-2 text-xs">
+              <span class="font-mono-code font-bold text-teal-600 dark:text-teal-400 bg-teal-50 dark:bg-teal-950/70 px-1.5 py-0.5 rounded text-[11px] flex-none">
+                Reason (R)
+              </span>
+              <span class="text-slate-800 dark:text-slate-200 leading-snug">${q.reason}</span>
+            </div>
+          </div>
+        `;
+      } else {
+        complexQuestionBox.classList.add('hidden');
+        complexQuestionBox.innerHTML = '';
+      }
+
+      // Check if user has answered this question already
+      const userAnswer = state.userAnswers[index];
+      const isAnswered = userAnswer !== undefined;
+
+      // Render Options
+      optionsGrid.innerHTML = '';
+      q.options.forEach((opt, idx) => {
+        const btn = document.createElement('button');
+        btn.dataset.key = opt.key;
+        btn.className = `option-btn w-full text-left p-2.5 rounded-lg border text-xs sm:text-sm font-medium flex items-center gap-2.5 outline-none transition-all`;
+
+        let colorClasses = 'border-slate-200 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-800/60 hover:bg-indigo-50/50 dark:hover:bg-indigo-950/30 text-slate-800 dark:text-slate-100 cursor-pointer';
+
+        if (isAnswered) {
+          if (opt.key === q.correct) {
+            // Correct answer styling (Emerald)
+            colorClasses = 'border-emerald-500 bg-emerald-50 dark:bg-emerald-950/50 text-emerald-800 dark:text-emerald-200 font-bold ring-2 ring-emerald-500/40';
+          } else if (opt.key === userAnswer) {
+            // User marked wrong choice (Crimson)
+            colorClasses = 'border-rose-500 bg-rose-50 dark:bg-rose-950/50 text-rose-800 dark:text-rose-200 line-through ring-2 ring-rose-500/40';
+          } else {
+            colorClasses = 'opacity-40 border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900 cursor-default';
+          }
+          btn.disabled = true;
+        }
+
+        btn.className += ` ${colorClasses}`;
+
+        btn.innerHTML = `
+          <span class="w-6 h-6 rounded-md flex-none flex items-center justify-center font-mono-code font-bold text-xs ${
+            isAnswered && opt.key === q.correct 
+              ? 'bg-emerald-600 text-white' 
+              : isAnswered && opt.key === userAnswer 
+              ? 'bg-rose-600 text-white' 
+              : 'bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300'
+          }">
+            ${opt.key}
+          </span>
+          <span class="flex-1 leading-snug">${opt.text}</span>
+        `;
+
+        if (!isAnswered) {
+          btn.addEventListener('click', () => handleOptionSelect(opt.key));
+        }
+
+        optionsGrid.appendChild(btn);
+      });
+
+      // Show/Hide Explanation banner
+      if (isAnswered) {
+        explanationBar.classList.remove('hidden');
+        if (userAnswer === q.correct) {
+          feedbackBadge.className = 'px-2 py-0.5 rounded font-bold uppercase tracking-wider text-[10px] bg-emerald-100 text-emerald-800 dark:bg-emerald-900 dark:text-emerald-200';
+          feedbackBadge.textContent = 'Correct';
+        } else {
+          feedbackBadge.className = 'px-2 py-0.5 rounded font-bold uppercase tracking-wider text-[10px] bg-rose-100 text-rose-800 dark:bg-rose-900 dark:text-rose-200';
+          feedbackBadge.textContent = `Correct: (${q.correct})`;
+        }
+        explanationText.textContent = q.explanation;
+      } else {
+        explanationBar.classList.add('hidden');
+      }
+
+      // Update Nav Buttons
+      prevBtn.disabled = (index === 0);
+      if (index === questionsData.length - 1) {
+        nextBtnText.textContent = "Finish & Results";
+      } else {
+        nextBtnText.textContent = "Next Question";
+      }
+
+      // Update Progress indicators
+      const answeredCount = Object.keys(state.userAnswers).length;
+      gridProgressBadge.textContent = `${answeredCount}/${questionsData.length}`;
+      quizProgressBar.style.width = `${((index + 1) / questionsData.length) * 100}%`;
+
+      // Quick header scores
+      let correctSoFar = 0;
+      Object.keys(state.userAnswers).forEach(idx => {
+        if (state.userAnswers[idx] === questionsData[idx].correct) correctSoFar++;
+      });
+      quickCorrectEl.textContent = correctSoFar;
+      quickTotalEl.textContent = answeredCount;
+    }
+
+    function handleOptionSelect(selectedKey) {
+      if (state.userAnswers[state.currentIndex] !== undefined) return;
+      
+      state.userAnswers[state.currentIndex] = selectedKey;
+      renderQuestion(state.currentIndex);
+      updatePaletteGrid();
+    }
+
+    // Navigation functions
+    function goNext() {
+      if (state.currentIndex < questionsData.length - 1) {
+        state.currentIndex++;
+        renderQuestion(state.currentIndex);
+      } else {
+        showResults();
+      }
+    }
+
+    function goPrev() {
+      if (state.currentIndex > 0) {
+        state.currentIndex--;
+        renderQuestion(state.currentIndex);
+      }
+    }
+
+    prevBtn.addEventListener('click', goPrev);
+    nextBtn.addEventListener('click', goNext);
+
+    function openPalette() {
+      updatePaletteGrid();
+      paletteModal.classList.remove('hidden');
+    }
+
+    function closePalette() {
+      paletteModal.classList.add('hidden');
+    }
+
+    openPaletteBtn.addEventListener('click', openPalette);
+    closePaletteBtn.addEventListener('click', closePalette);
+    paletteModal.addEventListener('click', (e) => {
+      if (e.target === paletteModal) closePalette();
+    });
+
+    function updatePaletteGrid() {
+      paletteGrid.innerHTML = '';
+      questionsData.forEach((q, idx) => {
+        const itemBtn = document.createElement('button');
+        const userChoice = state.userAnswers[idx];
+        let color = 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-300 dark:border-slate-700';
+
+        if (userChoice !== undefined) {
+          if (userChoice === q.correct) {
+            color = 'bg-emerald-600 text-white border-emerald-600';
+          } else {
+            color = 'bg-rose-600 text-white border-rose-600';
+          }
+        }
+
+        if (idx === state.currentIndex) {
+          color += ' ring-2 ring-indigo-500 font-bold';
+        }
+
+        itemBtn.className = `p-1 text-xs font-mono-code rounded border ${color} hover:opacity-85 transition`;
+        itemBtn.textContent = q.id;
+        itemBtn.addEventListener('click', () => {
+          state.currentIndex = idx;
+          renderQuestion(state.currentIndex);
+          closePalette();
+        });
+        paletteGrid.appendChild(itemBtn);
+      });
+    }
+
+    function showResults() {
+      if (state.timerInterval) clearInterval(state.timerInterval);
+
+      quizView.classList.add('hidden');
+      resultsView.classList.remove('hidden');
+
+      let correctCount = 0;
+      let incorrectCount = 0;
+      let unattemptedCount = 0;
+      const mistakesList = [];
+
+      questionsData.forEach((q, idx) => {
+        const marked = state.userAnswers[idx];
+        if (marked === undefined) {
+          unattemptedCount++;
+          mistakesList.push({ question: q, marked: 'None', correct: q.correct });
+        } else if (marked === q.correct) {
+          correctCount++;
+        } else {
+          incorrectCount++;
+          mistakesList.push({ question: q, marked: marked, correct: q.correct });
+        }
+      });
+
+      const total = questionsData.length;
+      const percentage = Math.round((correctCount / total) * 100);
+
+      finalScoreText.textContent = `${correctCount}/${total}`;
+      accuracyText.textContent = `${percentage}%`;
+      totalCorrectText.textContent = correctCount;
+      totalIncorrectText.textContent = incorrectCount + unattemptedCount;
+      mistakeCountBadge.textContent = `${mistakesList.length} Mistakes / Unattempted`;
+
+      // Render incorrect review items
+      incorrectListContainer.innerHTML = '';
+      if (mistakesList.length === 0) {
+        incorrectListContainer.innerHTML = `
+          <div class="h-full flex flex-col items-center justify-center py-8 text-center">
+            <div class="w-12 h-12 rounded-full bg-emerald-100 text-emerald-600 dark:bg-emerald-950 flex items-center justify-center mb-2 font-bold text-xl">
+              ✓
+            </div>
+            <p class="text-sm font-bold text-emerald-600 dark:text-emerald-400">Flawless Score! 50 out of 50 correct.</p>
+          </div>
+        `;
+      } else {
+        mistakesList.forEach(item => {
+          const div = document.createElement('div');
+          div.className = 'p-3 rounded-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs space-y-1.5';
+          div.innerHTML = `
+            <div class="flex items-center justify-between text-[11px] text-slate-500">
+              <span class="font-bold text-indigo-600 dark:text-indigo-400">Q.${item.question.id}</span>
+              <span>${item.question.meta}</span>
+            </div>
+            <p class="font-semibold text-slate-800 dark:text-slate-100">${item.question.prompt}</p>
+            <div class="flex items-center gap-3 pt-1 text-[11px]">
+              <span class="text-rose-600 dark:text-rose-400">Marked: <strong>(${item.marked})</strong></span>
+              <span class="text-emerald-600 dark:text-emerald-400">Correct: <strong>(${item.correct})</strong></span>
+            </div>
+            <p class="text-[11px] text-slate-500 dark:text-slate-400 italic">${item.question.explanation}</p>
+          `;
+          incorrectListContainer.appendChild(div);
+        });
+      }
+    }
+
+    // Restart Quiz
+    restartQuizBtn.addEventListener('click', () => {
+      state.currentIndex = 0;
+      state.userAnswers = {};
+      state.secondsElapsed = 0;
+      resultsView.classList.add('hidden');
+      quizView.classList.remove('hidden');
+      startTimer();
+      renderQuestion(0);
+    });
+
+    window.addEventListener('keydown', (e) => {
+      // Don't trigger if modal or inputs are focused
+      if (!paletteModal.classList.contains('hidden')) {
+        if (e.key === 'Escape') closePalette();
+        return;
+      }
+
+      const key = e.key.toUpperCase();
+
+      // Key 1-4 or A-D for options
+      const keyMap = { '1': 'A', '2': 'B', '3': 'C', '4': 'D', 'A': 'A', 'B': 'B', 'C': 'C', 'D': 'D' };
+      if (keyMap[key] && !resultsView.offsetParent) {
+        handleOptionSelect(keyMap[key]);
+      } else if (e.key === ' ' || e.key === 'Enter') {
+        // Space or Enter for Next
+        e.preventDefault();
+        goNext();
+      } else if (e.key === 'ArrowRight') {
+        goNext();
+      } else if (e.key === 'ArrowLeft') {
+        goPrev();
+      }
+    });
+
+    // Boot initial state
+    initTheme();
+    renderQuestion(0);
+    startTimer();
+  </script>
+</body>
+</html>
